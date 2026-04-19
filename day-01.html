@@ -83,6 +83,7 @@
     display: flex; gap: 0; padding: 0 60px;
     border-bottom: 1px solid var(--border);
     background: var(--cream-dark); overflow-x: auto;
+    position: sticky; top: 0; z-index: 100;
   }
 
   .nav-tab {
@@ -206,7 +207,7 @@
       <span class="day-badge-dot"></span>
       DAY 01 — SUNDAY, 19 APRIL 2026
     </div>
-    <h1>Zscaler Overview<br><em>&amp; Architecture</em></h1>
+    <h1>Architecture <em>&amp;</em><br><em>Identity Services</em></h1>
     <div class="header-meta-row">
       <span class="tag tag-arch">Architecture</span>
       <span class="tag tag-zia">ZIA</span>
@@ -223,18 +224,24 @@
 </header>
 
 <nav class="section-nav">
-  <button class="nav-tab active" onclick="setTab(this)">Overview</button>
-  <button class="nav-tab" onclick="setTab(this)">Core Concepts</button>
-  <button class="nav-tab" onclick="setTab(this)">Mental Notes</button>
-  <button class="nav-tab" onclick="setTab(this)">Analogies</button>
-  <button class="nav-tab" onclick="setTab(this)">Exam Tips</button>
+  <button class="nav-tab active" onclick="navTo('section-overview', this)">Overview</button>
+  <button class="nav-tab" onclick="navTo('section-core', this)">Core Concepts</button>
+  <button class="nav-tab" onclick="navTo('section-notes', this)">Mental Notes</button>
+  <button class="nav-tab" onclick="navTo('section-identity', this)">Identity Services</button>
+  <button class="nav-tab" onclick="navTo('section-saml', this)">SAML Flow</button>
+  <button class="nav-tab" onclick="navTo('section-stepup', this)">Step-Up Auth</button>
+  <button class="nav-tab" onclick="navTo('section-ldap', this)">LDAP</button>
+  <button class="nav-tab" onclick="navTo('section-proxy', this)">Identity Proxy</button>
+  <button class="nav-tab" onclick="navTo('section-oidc', this)">OIDC</button>
+  <button class="nav-tab" onclick="navTo('section-analogies', this)">Analogies</button>
+  <button class="nav-tab" onclick="navTo('section-exam', this)">Exam Tips</button>
 </nav>
 
 <main>
   <div class="main-content">
 
     <!-- OVERVIEW -->
-    <div class="section-block">
+    <div class="section-block" id="section-overview">
       <div class="section-label">OVERVIEW</div>
       <h2>Why the old model broke — and what replaced it</h2>
       <p>Traditional network security assumed that location equals trust. Inside the corporate network meant trusted. Security lived at the perimeter — firewalls, VPNs, a hard boundary between "inside" and "outside." This worked when users sat at desks in office buildings and apps lived on on-premises servers.</p>
@@ -245,7 +252,7 @@
     </div>
 
     <!-- CORE CONCEPTS -->
-    <div class="section-block">
+    <div class="section-block" id="section-core">
       <div class="section-label">CORE CONCEPTS</div>
       <h2>How Zscaler's architecture works</h2>
 
@@ -293,7 +300,7 @@
     </div>
 
     <!-- MENTAL NOTES -->
-    <div class="section-block">
+    <div class="section-block" id="section-notes">
       <div class="section-label">MENTAL NOTES</div>
       <h2>Things to remember</h2>
 
@@ -314,7 +321,7 @@
     </div>
 
     <!-- ANALOGIES -->
-    <div class="section-block">
+    <div class="section-block" id="section-analogies">
       <div class="section-label">ANALOGIES</div>
       <h2>Ways to think about it</h2>
 
@@ -335,7 +342,7 @@
     </div>
 
     <!-- EXAM TIPS -->
-    <div class="section-block">
+    <div class="section-block" id="section-exam">
       <div class="section-label">EXAM TIPS</div>
       <h2>What the exam tests</h2>
 
@@ -355,6 +362,193 @@
         <li>Engineer-level scope goes beyond ZIA/ZPA Administrator — expect questions on how components integrate, not just individual configuration steps.</li>
         <li>Multi-tenant architecture questions may ask why it's preferable to on-premises alternatives — answer: global scale, elasticity, no hardware, continuous updates.</li>
         <li>ZTNA grants access to applications, never to the network — this distinction will reappear across multiple exam domains.</li>
+      </ul>
+    </div>
+
+    <!-- ─── IDENTITY SERVICES ─────────────────────────────────────── -->
+
+    <!-- IDENTITY OVERVIEW -->
+    <div class="section-block" id="section-identity">
+      <div class="section-label">IDENTITY SERVICES</div>
+      <h2>What is Identity Services?</h2>
+      <p>Before Zscaler can inspect traffic, apply policies, or make any access decision, it needs to know one thing: <strong>who is this user?</strong> Identity Services is the set of mechanisms that establish and verify user identity at every point in the Zscaler platform.</p>
+      <p>Zscaler does not store identity itself — it delegates that responsibility to an external Identity Provider (IdP) such as Entra ID or Okta. This makes Zscaler fundamentally <strong>stateless with respect to identity</strong>: it trusts assertions from the IdP rather than managing sessions directly.</p>
+      <div class="key-concept">
+        <strong>Core insight:</strong> Zscaler is the bouncer. The IdP is the VIP agency with the list. The bouncer never decides who's on the list — he just checks the signed credential the agency provides.
+      </div>
+    </div>
+
+    <!-- SAML FLOW -->
+    <div class="section-block" id="section-saml">
+      <div class="section-label">SAML FLOW</div>
+      <h2>SP-Initiated SAML Authentication</h2>
+      <p>The most common flow is <strong>SP-initiated</strong> — the user tries to reach a resource, Zscaler (the Service Provider) redirects them to the IdP for authentication, and the IdP sends back a signed assertion.</p>
+
+      <div class="definition">
+        <div class="definition-term">Step 1 — User requests access</div>
+        <div class="definition-body">Browser hits a resource protected by Zscaler — e.g. a ZPA app or internet traffic through ZIA.</div>
+      </div>
+      <div class="definition">
+        <div class="definition-term">Step 2 — Redirect to IdP</div>
+        <div class="definition-body">Zscaler sees no valid assertion. Sends a SAML AuthnRequest to the IdP (e.g. Entra ID). This request can include an <code>authnContextClassRef</code> specifying the required authentication level.</div>
+      </div>
+      <div class="definition">
+        <div class="definition-term">Step 3 — User authenticates</div>
+        <div class="definition-body">The IdP checks its SSO session cookie. If the user is already authenticated at the required level, no password prompt. If not, the IdP challenges them.</div>
+      </div>
+      <div class="definition">
+        <div class="definition-term">Step 4 — IdP issues SAML Assertion</div>
+        <div class="definition-body">Assertion is signed with the IdP's private key. Contains user identity, group memberships, attributes, and the authentication method used.</div>
+      </div>
+      <div class="definition">
+        <div class="definition-term">Step 5 — Zscaler verifies and enforces</div>
+        <div class="definition-body">Zscaler verifies the assertion signature using the IdP's public certificate (pre-configured). Now it knows who the user is and can evaluate policies.</div>
+      </div>
+
+      <h3>Trust Exchange — What Gets Configured Up Front</h3>
+      <div class="definition">
+        <div class="definition-term">IdP → Zscaler</div>
+        <div class="definition-body">The IdP's signing certificate is uploaded into Zscaler so it can verify assertion signatures at runtime.</div>
+      </div>
+      <div class="definition">
+        <div class="definition-term">Zscaler → IdP</div>
+        <div class="definition-body">Zscaler's Entity ID and ACS (Assertion Consumer Service) URL are registered in the IdP so it only responds to trusted requests.</div>
+      </div>
+
+      <div class="key-concept">
+        <strong>Zscaler never holds the SSO session.</strong> The cookie lives with the IdP. Zscaler is stateless — it receives a fresh assertion each time, but the user never notices because the browser handles the roundtrip invisibly.
+      </div>
+    </div>
+
+    <!-- STEP-UP AUTH -->
+    <div class="section-block" id="section-stepup">
+      <div class="section-label">STEP-UP AUTHENTICATION</div>
+      <h2>Demanding Stronger Proof Mid-Session</h2>
+      <p>Step-Up Authentication says: <strong>for this resource, the current authentication level is not enough — prove yourself again, at a higher level.</strong></p>
+
+      <table class="compare-table">
+        <thead><tr><th>Level</th><th>Method</th><th>Strength</th></tr></thead>
+        <tbody>
+          <tr><td>Level 1</td><td>Password only</td><td>Weakest — phishable, reusable</td></tr>
+          <tr><td>Level 2</td><td>Password + SMS / Authenticator app</td><td>Better — but SMS can be SIM-swapped</td></tr>
+          <tr><td>Level 3</td><td>Hardware key (YubiKey) / Certificate-based</td><td>Strongest — cryptographic, physical possession required</td></tr>
+        </tbody>
+      </table>
+
+      <p>When Zscaler redirects to the IdP for step-up, it includes an <code>authnContextClassRef</code> inside the SAML AuthnRequest. This tells the IdP: <em>"I need authentication at this specific level — do not just accept the existing SSO cookie if it doesn't meet this bar."</em></p>
+
+      <h3>Policy Evaluation Order</h3>
+      <p>Zscaler always evaluates <strong>Authentication Policy before Access Policy</strong>. Identity must be resolved before access can be granted — Zscaler can't match group memberships or user rules against an unknown identity.</p>
+
+      <div class="callout callout-warn">
+        <div class="callout-header"><div class="callout-icon">!</div>WHY ORDER MATTERS</div>
+        <div class="callout-body">If Access Policy ran first, Zscaler wouldn't know who the user is yet. <strong>Identity must always be resolved before access can be evaluated.</strong> This is a reliable exam signal — any answer that skips identity resolution is wrong.</div>
+      </div>
+    </div>
+
+    <!-- LDAP -->
+    <div class="section-block" id="section-ldap">
+      <div class="section-label">LDAP AUTHENTICATION</div>
+      <h2>Legacy Identity — When There's No Modern IdP</h2>
+      <p>LDAP validates credentials directly against on-premises Active Directory using an <strong>LDAP BIND request</strong> — a binary yes/no. It is ZIA only; ZPA requires rich identity assertions (groups, attributes) that BIND cannot provide.</p>
+
+      <table class="compare-table">
+        <thead><tr><th>Dimension</th><th>SAML</th><th>LDAP</th></tr></thead>
+        <tbody>
+          <tr><td>Password visibility</td><td>Zscaler never sees it</td><td>Zscaler receives it directly</td></tr>
+          <tr><td>Group membership freshness</td><td>Fresh in every assertion</td><td>Only as fresh as last sync</td></tr>
+          <tr><td>On-prem infrastructure</td><td>None</td><td>Authentication Bridge required</td></tr>
+          <tr><td>ZIA support</td><td>Yes</td><td>Yes</td></tr>
+          <tr><td>ZPA support</td><td>Yes</td><td>No</td></tr>
+        </tbody>
+      </table>
+
+      <div class="callout callout-warn">
+        <div class="callout-header"><div class="callout-icon">!</div>SYNC STALENESS RISK</div>
+        <div class="callout-body">If a user is terminated Monday but the next LDAP sync isn't until Tuesday, Zscaler's cached directory still shows them as active. They may still authenticate via BIND during that window — up to 24 hours of exposure. SAML has no such gap: user status is reflected in every fresh assertion.</div>
+      </div>
+    </div>
+
+    <!-- IDENTITY PROXY & OIDC -->
+    <div class="section-block" id="section-proxy">
+      <div class="section-label">IDENTITY PROXY</div>
+      <h2>Zscaler as the IdP for SaaS Applications</h2>
+      <p>Identity Proxy <strong>inverts the SAML relationship</strong>. Zscaler becomes the IdP for certain SaaS applications — sitting in the middle of every authentication attempt to that app, regardless of device or network.</p>
+
+      <div class="key-concept">
+        <strong>The problem it solves:</strong> A user on an unmanaged device goes directly to salesforce.com, bypassing Zscaler entirely. Identity Proxy closes this gap — if Salesforce is configured to use Zscaler as its IdP, authentication must flow through Zscaler. There is no bypass route.
+      </div>
+
+      <p><strong>Supported apps:</strong> Box, GitHub, Google Apps, Microsoft O365, Salesforce, ServiceNow, ShareFile, Slack.</p>
+      <p><strong>Policy actions for unmanaged devices:</strong> Block (deny entirely) or Browser Isolate (allow via isolated browser with no local download/copy/paste).</p>
+    </div>
+
+    <div class="section-block" id="section-oidc">
+      <div class="section-label">OIDC AUTHENTICATION</div>
+      <h2>OpenID Connect — Modern SSO for APIs and Apps</h2>
+      <p>OIDC uses <strong>JSON Web Tokens (JWTs)</strong> instead of XML assertions — making it native to modern APIs, mobile apps, and CLI tools that weren't designed around browser redirects.</p>
+
+      <table class="compare-table">
+        <thead><tr><th>Dimension</th><th>SAML</th><th>OIDC</th></tr></thead>
+        <tbody>
+          <tr><td>Token format</td><td>XML assertion</td><td>JSON Web Token (JWT)</td></tr>
+          <tr><td>Best for</td><td>Browser-based enterprise web apps</td><td>APIs, mobile, CLI, developer tools</td></tr>
+          <tr><td>Trust credentials</td><td>Entity ID + ACS URL + certificate</td><td>Client ID + Client Secret</td></tr>
+          <tr><td>ZIA / ZPA support</td><td>Both</td><td>Both</td></tr>
+        </tbody>
+      </table>
+
+      <p>OIDC uses three separate IdP endpoints: <strong>Authorization</strong> (user challenge), <strong>Token</strong> (server-to-server code exchange), and <strong>UserInfo</strong> (extra attributes if scopes beyond "openid" are configured). JIT provisioning creates accounts automatically on first login — no pre-provisioning required.</p>
+
+      <div class="callout callout-tip">
+        <div class="callout-header"><div class="callout-icon">→</div>WHEN TO USE EACH PROTOCOL</div>
+        <div class="callout-body">LDAP = ZIA only, legacy on-prem AD. SAML = browser SSO, XML, mature IdP. OIDC = modern apps, APIs, JWTs. If an exam question involves a CLI tool, mobile app, or API integration, the answer is OIDC. If it involves ZPA, eliminate LDAP immediately.</div>
+      </div>
+    </div>
+
+    <!-- IDENTITY ANALOGIES (appended to existing analogies section above) -->
+    <div class="section-block" id="section-id-analogies">
+      <div class="section-label">IDENTITY ANALOGIES</div>
+      <h2>Ways to think about identity</h2>
+
+      <div class="callout callout-analogy">
+        <div class="callout-header"><div class="callout-icon">⟳</div>THE GOVERNMENT PASSPORT</div>
+        <div class="callout-body">A SAML assertion is like a passport. The IdP is the government that issued it — signed with a seal no one can forge. Zscaler is the border agent who checks it. The agent doesn't call the issuing government on every crossing — they just verify the signature. Step-up authentication is like a customs officer asking for a secondary check before you enter a restricted zone.</div>
+      </div>
+
+      <div class="callout callout-analogy">
+        <div class="callout-header"><div class="callout-icon">⟳</div>THE HOSPITAL VISITOR LIST</div>
+        <div class="callout-body">LDAP sync is like a hospital's visitor list printed each morning. Security can check who's on the list — but if someone was removed at 2pm and the list isn't reprinted until tomorrow, they can still walk in. SAML is the live system at the desk: it checks in real-time with the registry on every entry.</div>
+      </div>
+
+      <div class="callout callout-analogy">
+        <div class="callout-header"><div class="callout-icon">⟳</div>THE HOTEL CONCIERGE</div>
+        <div class="callout-body">Identity Proxy is like a hotel concierge who stands between guests and every service in the building. If you want to access the spa, you go through the concierge — they verify who you are via the real IdP and check your membership level. Someone trying to sneak in through a side entrance still has to deal with the concierge, because the spa was configured to only accept bookings through him.</div>
+      </div>
+    </div>
+
+    <!-- IDENTITY EXAM TIPS (appended to existing exam section above) -->
+    <div class="section-block" id="section-id-exam">
+      <div class="section-label">IDENTITY EXAM TIPS</div>
+      <h2>Identity Services — What the exam tests</h2>
+
+      <div class="callout callout-tip">
+        <div class="callout-header"><div class="callout-icon">→</div>LDAP SCOPE</div>
+        <div class="callout-body">LDAP is ZIA only — never ZPA. If a ZPA scenario offers LDAP as an option, eliminate it immediately. ZPA requires rich identity context that LDAP BIND cannot provide.</div>
+      </div>
+
+      <div class="callout callout-tip">
+        <div class="callout-header"><div class="callout-icon">→</div>IDENTITY PROXY BYPASS PREVENTION</div>
+        <div class="callout-body">Identity Proxy works because the SaaS app is configured to trust Zscaler as its IdP. Even if a user bypasses ZCC entirely, they cannot bypass Salesforce's IdP configuration. The control is enforced at the SaaS app level, not the network level.</div>
+      </div>
+
+      <ul class="content-list">
+        <li>Zscaler is stateless with respect to identity — it trusts assertions, never stores sessions.</li>
+        <li>SAML trust setup requires: IdP certificate in Zscaler, and Zscaler Entity ID + ACS URL registered in the IdP.</li>
+        <li>SSO works because the browser presents the IdP's session cookie silently — Zscaler is not involved in that session.</li>
+        <li>LDAP sync freshness is a security risk — termination creates a window of continued access up to 24 hours.</li>
+        <li>Identity Proxy supported apps: Box, GitHub, Google Apps, Microsoft O365, Salesforce, ServiceNow, ShareFile, Slack.</li>
+        <li>Authentication Policy runs before Access Policy — always resolve identity first.</li>
       </ul>
     </div>
 
@@ -385,6 +579,30 @@
         <li onclick="toggleDone(this)">
           <div class="subtopic-check"></div>
           <span>Zscaler API infrastructure overview</span>
+        </li>
+        <li onclick="toggleDone(this)">
+          <div class="subtopic-check"></div>
+          <span>Identity Services — Zidentity &amp; tenant structure</span>
+        </li>
+        <li onclick="toggleDone(this)">
+          <div class="subtopic-check"></div>
+          <span>SAML SP-initiated flow end-to-end</span>
+        </li>
+        <li onclick="toggleDone(this)">
+          <div class="subtopic-check"></div>
+          <span>Step-up authentication &amp; policy evaluation order</span>
+        </li>
+        <li onclick="toggleDone(this)">
+          <div class="subtopic-check"></div>
+          <span>LDAP flow and Authentication Bridge</span>
+        </li>
+        <li onclick="toggleDone(this)">
+          <div class="subtopic-check"></div>
+          <span>Identity Proxy — how and why it works</span>
+        </li>
+        <li onclick="toggleDone(this)">
+          <div class="subtopic-check"></div>
+          <span>OIDC flow and ZIdentity 9 steps</span>
         </li>
       </ul>
     </div>
@@ -453,9 +671,14 @@
 </footer>
 
 <script>
-  function setTab(el) {
+  function navTo(id, el) {
     document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
     el.classList.add('active');
+    const target = document.getElementById(id);
+    if (target) {
+      const offset = document.querySelector('.section-nav').offsetHeight + 16;
+      window.scrollTo({ top: target.getBoundingClientRect().top + window.scrollY - offset, behavior: 'smooth' });
+    }
   }
 
   function toggleDone(li) {

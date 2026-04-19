@@ -1,0 +1,211 @@
+ZSCALER DIGITAL TRANSFORMATION ENGINEER (ZDTE) — STUDY PLAN
+=============================================================
+Exam: Saturday, 2 May 2026 | 60 questions | 90 minutes | Online Proctored
+Prerequisite: Zscaler for Users - Engineer (EDU 202)
+Study period: 19 April 2026 – 1 May 2026 (14 study days)
+
+Format: Each day includes a Socratic session with Claude.
+
+-------------------------------------------------------------
+DAY 01 — Sunday, 19 April 2026
+Topic: Zscaler Overview & Architecture & Identity Services
+Blueprint weight: 
+6% + 10% + 10% = 26%
+Subtopics:
+  - Going beyond ZIA/ZPA Administrator — Engineer-level scope
+  - Multi-tenant cloud architecture and enforcement nodes
+  - Zero Trust Network Access (ZTNA) principles
+  - Additional Zscaler platform capabilities
+  - Zscaler API infrastructure and functionality overview
+  - Zidentity architecture and tenant structure
+  - SAML authentication workflow end-to-end
+  - Step-up authentication and conditional triggers
+  - Authentication levels, methods, and types
+  - Configuring external identity providers (IdPs)
+  - Admin sign-on and password policy configuration
+Domains: Architecture, ZIA, ZPA
+
+-------------------------------------------------------------
+DAY 02 — Monday, 20 April 2026
+Topic: Mock Exam #1 — All Domains Diagnostic
+Blueprint weight: Full diagnostic (all domains)
+
+Strong Areas:
+  - Sandbox/ATP layered logic
+  - Step-up authentication
+  - Branch Connector / DNS geolocation
+  - Risk360 four pillars
+  - Inline vs API-based CASB
+  - Deep Trace vs Cloud Path
+  - Workflow Automation vs OneAPI
+
+Identified Gaps (flagged for review on relevant days):
+  - Authentication levels 1, 2, 3 — needs detail (Day 3 / Day 9)
+  - ZEN vs PSE naming — terminology precision (Day 3 / Day 9)
+  - Device Posture Profiles in ZPA — feature name (Day 3 / Day 10)
+  - PISE naming for ZIA Private Service Edge (Day 4 / Day 9)
+  - OneAPI vs Workflow Automation — direction of integration (Day 8)
+
+Domains: All
+
+-------------------------------------------------------------
+DAY 03 — Tuesday, 21 April 2026
+Topic: Connectivity Services
+Blueprint weight: 10%
+Subtopics:
+  - Zscaler Client Connector — deployment, modes, troubleshooting
+  - Zscaler Branch Connector — architecture and use cases
+  - Browser Access — agentless ZPA access
+  - SD-WAN / Router integration with Zscaler
+Domains: ZPA, ZIA
+
+-------------------------------------------------------------
+DAY 04 — Wednesday, 22 April 2026
+Topic: Platform Services & Access Control Services
+Blueprint weight: 9% + 10% = 19%
+Subtopics:
+  - Zscaler Private Service Edges (ZPA PSE + ZIA PISE)
+  - Analytics & Reporting capabilities
+  - Policy Framework — structure and hierarchy
+  - Firewall policy and DNS Control
+  - Tenant Restrictions
+  - Segmentation & Conditional Access through Policies
+Domains: ZIA, ZPA
+
+-------------------------------------------------------------
+DAY 05 — Thursday, 23 April 2026
+Topic: Cyberthreat Protection Services
+Blueprint weight: 12%
+Subtopics:
+  - Advanced Threat Protection (ATP)
+  - Cloud Sandbox — file analysis pipeline
+  - Intrusion Prevention System (IPS)
+  - Browser Isolation (local and cloud)
+  - Deception technology
+  - Identity Threat Detection and Response (ITDR)
+  - Private Access AppProtection
+Domains: ZIA, ZPA
+
+-------------------------------------------------------------
+DAY 06 — Friday, 24 April 2026
+Topic: Data Protection Services
+Blueprint weight: 11%
+Subtopics:
+  - Secure Data in Motion — SSL inspection, DLP inline
+  - Secure SaaS Data — CASB inline and API-based
+  - Secure Cloud Data and Endpoint Data
+  - Secure SaaS Access from BYOD
+  - Incident Management workflows
+Domains: ZIA
+
+-------------------------------------------------------------
+DAY 07 — Saturday, 25 April 2026
+Topic: Risk Management & ZDX Part 1
+Blueprint weight: 4% + 8% (partial)
+Subtopics:
+  - Risk360 — holistic risk scoring
+  - Unified Vulnerability Management
+  - Deception, ITDR Posture, EASM, Breach Predictor
+  - ZDX metrics — device, app, network scores
+  - Configuring Probes and Diagnostics
+  - Configuring Alerts and Data Explorer
+Domains: ZDX, ZIA
+
+-------------------------------------------------------------
+DAY 08 — Sunday, 26 April 2026
+Topic: ZDX Part 2 & Zero Trust Automation
+Blueprint weight: 8% (partial) + 10% = 18%
+Subtopics:
+  - Configuring RBAC in ZDX
+  - Device Software and Process Inventory
+  - ZDX Dashboard, Hosted Monitoring, Visualization & Reporting
+  - AI Influence and Workflow Automation Integration
+  - OneAPI Framework and Architecture
+  - OneAPI capabilities and use cases
+  - Configuring OneAPI integrations
+Domains: ZDX, Architecture
+
+-------------------------------------------------------------
+DAY 09 — Monday, 27 April 2026
+Topic: Deep Dive Review — ZIA
+Blueprint weight: Consolidated ZIA review
+Subtopics:
+  - SSL inspection, traffic forwarding methods, PAC files
+  - URL filtering, Cloud App Control, Bandwidth Control
+  - DLP policies, dictionaries, and engines
+  - Firewall rules, NAT, application services
+  - Malware protection pipeline review
+  - Targeted practice questions across all ZIA domains
+Domains: ZIA, Review
+
+-------------------------------------------------------------
+DAY 10 — Tuesday, 28 April 2026
+Topic: Deep Dive Review — ZPA & ZDX
+Blueprint weight: Consolidated ZPA + ZDX review
+Subtopics:
+  - ZPA App Connectors, Server Groups, App Segments
+  - Access Policies, Timeout Policies, Inspection Policies
+  - Privileged Remote Access and App Protection
+  - ZDX end-to-end troubleshooting scenarios
+  - Targeted practice questions across ZPA and ZDX domains
+Domains: ZPA, ZDX, Review
+
+-------------------------------------------------------------
+DAY 11 — Wednesday, 29 April 2026
+Topic: Weak Spots & Mixed Practice
+Blueprint weight: Full exam simulation prep
+Subtopics:
+  - Revisit flagged topics from previous sessions
+  - Mixed 30-question timed practice set
+  - Identity + Connectivity edge cases
+  - Architecture scenario questions
+  - OneAPI and automation integration scenarios
+Domains: Review, Architecture
+
+-------------------------------------------------------------
+DAY 12 — Thursday, 30 April 2026
+Topic: Final Revision & Confidence Session
+Blueprint weight: Light consolidation — don't cram
+Subtopics:
+  - Key definitions and concepts rapid review
+  - Blueprint weight reminders — high-value domains focus
+  - Exam logistics and strategy tips
+  - Light 20-question warm-up set — no new material
+  - Rest and preparation for exam day
+Domains: Review
+
+-------------------------------------------------------------
+DAY 13 — Friday, 1 May 2026
+Topic: Final Revision & Confidence Session
+Blueprint weight: Light consolidation — don't cram
+Subtopics:
+  - Key definitions and concepts rapid review
+  - Blueprint weight reminders — high-value domains focus
+  - Exam logistics and strategy tips
+  - Light 20-question warm-up set — no new material
+  - Rest and preparation for exam day
+Domains: Review
+
+-------------------------------------------------------------
+EXAM DAY — Saturday, 2 May 2026
+ZDTE Certification Exam
+60 questions · 90 minutes · Online Proctored · Professional Level
+  - Eat well, hydrate, arrive early to the proctor session
+  - Flag uncertain questions and return to them
+  - Trust your preparation — you've covered every domain
+
+=============================================================
+EXAM BLUEPRINT SUMMARY (all domains & weightings)
+=============================================================
+  Zscaler for Users-Engineer Overview     6%
+  Zscaler Architecture                   10%
+  Identity Services                      10%
+  Connectivity Services                  10%
+  Platform Services                       9%
+  Access Control Services                10%
+  Cyberthreat Protection Services        12%
+  Data Protection Services               11%
+  Risk Management                         4%
+  Zscaler Digital Experience (ZDX)        8%
+  Zscaler Zero Trust Automation          10%
+  TOTAL                                 100%

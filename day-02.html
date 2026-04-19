@@ -1,0 +1,1046 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ZDTE Study Guide — Day 2: Mock Exam Diagnostic</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;0,700;1,400&family=Epilogue:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #fef9f0;
+    --cream-dark: #f5eddb;
+    --ink: #1a1209;
+    --ink-soft: #5a4a35;
+    --ink-muted: #8a7660;
+    --orange: #ff6b35;
+    --orange-light: #fff3ec;
+    --orange-border: #ffd5c0;
+    --amber-light: #fffbe6;
+    --green: #3a7d44;
+    --green-light: #edf7ee;
+    --green-border: #b2dfb4;
+    --purple: #5c35cc;
+    --purple-light: #ece8ff;
+    --purple-border: #c8bbff;
+    --blue-light: #e8f0fb;
+    --blue-border: #b3ccf0;
+    --blue: #1a6bcc;
+    --red-light: #fce8e8;
+    --red-border: #f7c1c1;
+    --red: #a32d2d;
+    --border: #ede5d8;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Epilogue', sans-serif;
+    background: var(--cream);
+    color: var(--ink);
+    min-height: 100vh;
+  }
+
+  /* ── HEADER ── */
+  header {
+    padding: 40px 60px 28px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 32px;
+    background: var(--cream);
+  }
+
+  .header-left { flex: 1; }
+
+  .breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+    color: var(--ink-muted);
+    letter-spacing: 0.08em;
+    margin-bottom: 12px;
+  }
+
+  .breadcrumb a { color: var(--orange); text-decoration: none; cursor: pointer; }
+  .breadcrumb-sep { color: var(--border); }
+
+  .day-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--ink);
+    color: var(--cream);
+    padding: 5px 14px;
+    border-radius: 20px;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    margin-bottom: 14px;
+  }
+
+  .day-badge-dot { width: 5px; height: 5px; background: var(--orange); border-radius: 50%; }
+
+  h1 {
+    font-family: 'Fraunces', serif;
+    font-size: 44px;
+    font-weight: 700;
+    line-height: 1.0;
+    color: var(--ink);
+    margin-bottom: 10px;
+  }
+
+  h1 em { font-style: italic; font-weight: 400; color: var(--orange); }
+
+  .header-meta-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+    margin-top: 14px;
+  }
+
+  .tag {
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 500;
+    border: 1px solid;
+    display: inline-block;
+  }
+
+  .tag-zia   { background: var(--blue-light);   color: var(--blue);   border-color: var(--blue-border); }
+  .tag-zpa   { background: var(--green-light);  color: var(--green);  border-color: var(--green-border); }
+  .tag-zdx   { background: var(--purple-light); color: var(--purple); border-color: var(--purple-border); }
+  .tag-arch  { background: var(--amber-light);  color: #a07c00;       border-color: #ffe680; }
+  .tag-weight { background: var(--orange-light); color: #cc4a18;      border-color: var(--orange-border); }
+  .tag-strong { background: var(--green-light); color: var(--green);  border-color: var(--green-border); }
+  .tag-gap    { background: var(--red-light);   color: var(--red);    border-color: var(--red-border); }
+
+  .header-right {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: flex-end;
+    flex-shrink: 0;
+  }
+
+  .progress-card {
+    background: var(--ink);
+    color: var(--cream);
+    padding: 14px 20px;
+    border-radius: 14px;
+    text-align: center;
+    min-width: 110px;
+  }
+
+  .progress-card .big {
+    font-family: 'Fraunces', serif;
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--orange);
+    line-height: 1;
+  }
+
+  .progress-card .lbl {
+    font-size: 10px;
+    color: #7a6a55;
+    letter-spacing: 0.1em;
+    margin-top: 4px;
+  }
+
+  /* ── NAV TABS ── */
+  .section-nav {
+    display: flex;
+    gap: 0;
+    padding: 0 60px;
+    border-bottom: 1px solid var(--border);
+    background: var(--cream-dark);
+    overflow-x: auto;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .nav-tab {
+    padding: 14px 20px;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--ink-muted);
+    letter-spacing: 0.06em;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    white-space: nowrap;
+    transition: color 0.15s, border-color 0.15s;
+    background: none;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    font-family: 'Epilogue', sans-serif;
+  }
+
+  .nav-tab:hover { color: var(--ink); }
+  .nav-tab.active { color: var(--orange); border-bottom-color: var(--orange); }
+
+  /* ── MAIN LAYOUT ── */
+  main {
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    gap: 0;
+    min-height: calc(100vh - 200px);
+  }
+
+  .main-content {
+    padding: 36px 48px 60px 60px;
+    border-right: 1px solid var(--border);
+  }
+
+  .sidebar {
+    padding: 36px 28px 60px;
+    background: var(--cream-dark);
+  }
+
+  /* ── SECTION BLOCKS ── */
+  .section-block { margin-bottom: 40px; }
+
+  .section-label {
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    color: var(--ink-muted);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  h2 {
+    font-family: 'Fraunces', serif;
+    font-size: 24px;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 14px;
+    line-height: 1.2;
+  }
+
+  h3 {
+    font-family: 'Fraunces', serif;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 10px;
+    margin-top: 24px;
+  }
+
+  p {
+    font-size: 14px;
+    color: var(--ink-soft);
+    line-height: 1.8;
+    margin-bottom: 12px;
+  }
+
+  ul.content-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+
+  ul.content-list li {
+    font-size: 14px;
+    color: var(--ink-soft);
+    padding-left: 16px;
+    position: relative;
+    line-height: 1.6;
+  }
+
+  ul.content-list li::before {
+    content: '·';
+    position: absolute;
+    left: 2px;
+    color: var(--orange);
+    font-weight: 700;
+    font-size: 18px;
+    line-height: 1.2;
+  }
+
+  /* ── CALLOUT CARDS ── */
+  .callout {
+    border-radius: 14px;
+    padding: 18px 20px;
+    margin-bottom: 16px;
+    border: 1px solid;
+  }
+
+  .callout-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    margin-bottom: 8px;
+  }
+
+  .callout-icon {
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  .callout-body { font-size: 14px; line-height: 1.7; }
+
+  .callout-note   { background: var(--amber-light); border-color: #ffe680; }
+  .callout-note   .callout-header { color: #7a6a00; }
+  .callout-note   .callout-icon   { background: #ffe680; color: #7a6a00; }
+  .callout-note   .callout-body   { color: #5a4a00; }
+
+  .callout-warn   { background: var(--red-light); border-color: var(--red-border); }
+  .callout-warn   .callout-header { color: var(--red); }
+  .callout-warn   .callout-icon   { background: var(--red-border); color: var(--red); }
+  .callout-warn   .callout-body   { color: #6b1a1a; }
+
+  .callout-tip    { background: var(--blue-light); border-color: var(--blue-border); }
+  .callout-tip    .callout-header { color: var(--blue); }
+  .callout-tip    .callout-icon   { background: var(--blue-border); color: var(--blue); }
+  .callout-tip    .callout-body   { color: #1a3a6b; }
+
+  .callout-analogy { background: var(--purple-light); border-color: var(--purple-border); }
+  .callout-analogy .callout-header { color: var(--purple); }
+  .callout-analogy .callout-icon   { background: var(--purple-border); color: var(--purple); }
+  .callout-analogy .callout-body   { color: #2d1a6b; }
+
+  .callout-success { background: var(--green-light); border-color: var(--green-border); }
+  .callout-success .callout-header { color: var(--green); }
+  .callout-success .callout-icon   { background: var(--green-border); color: var(--green); }
+  .callout-success .callout-body   { color: #1a3a1e; }
+
+  /* ── KEY CONCEPT ── */
+  .key-concept {
+    background: var(--ink);
+    color: var(--cream);
+    border-radius: 12px;
+    padding: 16px 20px;
+    font-size: 14px;
+    line-height: 1.7;
+    margin: 16px 0;
+  }
+
+  .key-concept strong { color: var(--orange); }
+
+  /* ── DEFINITION ── */
+  .definition {
+    border-left: 3px solid var(--orange);
+    padding: 12px 16px;
+    margin-bottom: 14px;
+    background: var(--orange-light);
+    border-radius: 0 10px 10px 0;
+  }
+
+  .definition-term {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    color: var(--orange);
+    margin-bottom: 4px;
+  }
+
+  .definition-body { font-size: 14px; color: var(--ink-soft); line-height: 1.6; }
+
+  /* ── COMPARE TABLE ── */
+  .compare-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    font-size: 13px;
+  }
+
+  .compare-table th {
+    background: var(--ink);
+    color: var(--cream);
+    padding: 10px 14px;
+    text-align: left;
+    font-weight: 500;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+  }
+
+  .compare-table th:first-child { border-radius: 8px 0 0 0; }
+  .compare-table th:last-child  { border-radius: 0 8px 0 0; }
+
+  .compare-table td {
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+    color: var(--ink-soft);
+    line-height: 1.5;
+  }
+
+  .compare-table tr:nth-child(even) td { background: var(--cream-dark); }
+  .compare-table tr:last-child td:first-child { border-radius: 0 0 0 8px; }
+  .compare-table tr:last-child td:last-child  { border-radius: 0 0 8px 0; }
+
+  /* ── SCORE GRID ── */
+  .score-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+
+  .score-card {
+    border-radius: 12px;
+    padding: 14px 16px;
+    border: 1px solid;
+  }
+
+  .score-card.strong {
+    background: var(--green-light);
+    border-color: var(--green-border);
+  }
+
+  .score-card.gap {
+    background: var(--red-light);
+    border-color: var(--red-border);
+  }
+
+  .score-card-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    margin-bottom: 6px;
+  }
+
+  .score-card.strong .score-card-label { color: var(--green); }
+  .score-card.gap    .score-card-label { color: var(--red); }
+
+  .score-card-domain {
+    font-family: 'Fraunces', serif;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 4px;
+  }
+
+  .score-card-note {
+    font-size: 12px;
+    color: var(--ink-muted);
+    line-height: 1.5;
+  }
+
+  /* ── SIDEBAR ── */
+  .sidebar-section { margin-bottom: 28px; }
+
+  .sidebar-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    color: var(--ink-muted);
+    margin-bottom: 12px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .subtopic-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .subtopic-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 13px;
+    color: var(--ink-soft);
+    cursor: pointer;
+    line-height: 1.4;
+    padding: 2px 0;
+    transition: color 0.15s;
+  }
+
+  .subtopic-list li:hover { color: var(--ink); }
+
+  .subtopic-check {
+    width: 14px; height: 14px;
+    border: 1.5px solid var(--ink-muted);
+    border-radius: 3px;
+    flex-shrink: 0;
+    margin-top: 1px;
+    transition: background 0.15s, border-color 0.15s;
+  }
+
+  .subtopic-list li.done { color: var(--ink-muted); text-decoration: line-through; }
+  .subtopic-list li.done .subtopic-check { background: var(--green); border-color: var(--green); }
+
+  .quick-ref {
+    padding: 10px 12px;
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    margin-bottom: 8px;
+  }
+
+  .quick-ref-term {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    color: var(--orange);
+    margin-bottom: 3px;
+  }
+
+  .quick-ref-def { font-size: 12px; color: var(--ink-soft); line-height: 1.5; }
+
+  .sidebar-note {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-size: 12px;
+    color: var(--ink-soft);
+    line-height: 1.6;
+    margin-bottom: 8px;
+    font-style: italic;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    padding: 24px 60px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--cream-dark);
+  }
+
+  .footer-left {
+    font-family: 'Fraunces', serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--ink);
+  }
+
+  .footer-left span { color: var(--orange); }
+
+  .footer-right {
+    font-size: 11px;
+    color: var(--ink-muted);
+    letter-spacing: 0.06em;
+  }
+
+  /* ── GAP / STRONG BADGES ── */
+  .gap-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: var(--red-light);
+    border: 1px solid var(--red-border);
+    color: var(--red);
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    margin-left: 8px;
+    vertical-align: middle;
+  }
+
+  .strong-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: var(--green-light);
+    border: 1px solid var(--green-border);
+    color: var(--green);
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    margin-left: 8px;
+    vertical-align: middle;
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    header { padding: 24px 20px 20px; flex-direction: column; }
+    h1 { font-size: 30px; }
+    main { grid-template-columns: 1fr; }
+    .main-content { padding: 24px 20px 40px; border-right: none; }
+    .sidebar { padding: 24px 20px 40px; border-top: 1px solid var(--border); }
+    .section-nav { padding: 0 20px; }
+    footer { padding: 20px; flex-direction: column; gap: 8px; text-align: center; }
+    .score-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-left">
+    <div class="breadcrumb">
+      <a href="index.html">Study Plan</a>
+      <span class="breadcrumb-sep">›</span>
+      <span>Study Guides</span>
+      <span class="breadcrumb-sep">›</span>
+      <span>Mock Exam #1</span>
+    </div>
+
+    <div class="day-badge">
+      <span class="day-badge-dot"></span>
+      DAY 02 — MONDAY, 20 APRIL 2026
+    </div>
+
+    <h1>Mock Exam #1<br><em>Diagnostic — All Domains</em></h1>
+
+    <div class="header-meta-row">
+      <span class="tag tag-zia">ZIA</span>
+      <span class="tag tag-zpa">ZPA</span>
+      <span class="tag tag-zdx">ZDX</span>
+      <span class="tag tag-arch">ARCH</span>
+      <span class="tag tag-weight">Blueprint: All Domains</span>
+    </div>
+  </div>
+
+  <div class="header-right">
+    <div class="progress-card">
+      <div class="big">0<span style="font-size:18px;color:#7a6a55;">%</span></div>
+      <div class="lbl">GAPS RESOLVED</div>
+    </div>
+  </div>
+</header>
+
+<nav class="section-nav">
+  <button class="nav-tab active" onclick="navTo('section-results', this)">Diagnostic Results</button>
+  <button class="nav-tab" onclick="navTo('section-strong', this)">Strong Areas</button>
+  <button class="nav-tab" onclick="navTo('section-gaps', this)">Gaps to Fix</button>
+  <button class="nav-tab" onclick="navTo('section-analogies', this)">Analogies</button>
+  <button class="nav-tab" onclick="navTo('section-exam', this)">Exam Tips</button>
+</nav>
+
+<main>
+  <div class="main-content">
+
+    <!-- ══ DIAGNOSTIC RESULTS ══ -->
+    <div class="section-block" id="section-results">
+      <div class="section-label">DIAGNOSTIC RESULTS</div>
+      <h2>Where you stand across all domains</h2>
+      <p>
+        This mock exam covered all 11 ZDTE blueprint domains. The results below show which areas you can rely on and which need focused attention before the exam on 2 May.
+      </p>
+
+      <div class="score-grid">
+        <div class="score-card strong">
+          <div class="score-card-label">✓ STRONG</div>
+          <div class="score-card-domain">Cyberthreat Protection</div>
+          <div class="score-card-note">ATP layers + sandbox logic solid. Distinction between ATP and Cloud Sandbox understood.</div>
+        </div>
+        <div class="score-card gap">
+          <div class="score-card-label">⚠ GAP — Day 3 / Day 9</div>
+          <div class="score-card-domain">Authentication Levels</div>
+          <div class="score-card-note">Levels 1/2/3 — concept known, detail missing. Needs precision.</div>
+        </div>
+        <div class="score-card strong">
+          <div class="score-card-label">✓ STRONG</div>
+          <div class="score-card-domain">Identity Services</div>
+          <div class="score-card-note">Step-up auth and trigger conditions correct. Auth level detail is the gap.</div>
+        </div>
+        <div class="score-card gap">
+          <div class="score-card-label">⚠ GAP — Day 3 / Day 9</div>
+          <div class="score-card-domain">ZEN vs PSE Naming</div>
+          <div class="score-card-note">PSE recalled but ZEN (ZIA enforcement node) missed. Terminology needs sharpening.</div>
+        </div>
+        <div class="score-card strong">
+          <div class="score-card-label">✓ STRONG</div>
+          <div class="score-card-domain">Zscaler Architecture</div>
+          <div class="score-card-note">DNS geolocation routing understood. Enforcement node naming partially correct.</div>
+        </div>
+        <div class="score-card gap">
+          <div class="score-card-label">⚠ GAP — Day 3 / Day 10</div>
+          <div class="score-card-domain">Device Posture Profiles</div>
+          <div class="score-card-note">Concept of device compliance understood but feature name in ZPA not recalled.</div>
+        </div>
+        <div class="score-card strong">
+          <div class="score-card-label">✓ STRONG</div>
+          <div class="score-card-domain">Risk Management</div>
+          <div class="score-card-note">Risk360 all four pillars named correctly. Full marks.</div>
+        </div>
+        <div class="score-card gap">
+          <div class="score-card-label">⚠ GAP — Day 4 / Day 9</div>
+          <div class="score-card-domain">PISE Naming (ZIA)</div>
+          <div class="score-card-note">PSE recalled for ZPA but ZIA's Private Service Edge is called PISE — distinct name.</div>
+        </div>
+        <div class="score-card strong">
+          <div class="score-card-label">✓ STRONG</div>
+          <div class="score-card-domain">Data Protection</div>
+          <div class="score-card-note">Inline DLP vs API-based CASB distinction clear. In-motion vs at-rest logic solid.</div>
+        </div>
+        <div class="score-card gap">
+          <div class="score-card-label">⚠ GAP — Day 8</div>
+          <div class="score-card-domain">OneAPI vs Workflow Automation</div>
+          <div class="score-card-note">Direction of integration confused. OneAPI = external → Zscaler. Workflow Automation = Zscaler → external.</div>
+        </div>
+        <div class="score-card strong">
+          <div class="score-card-label">✓ STRONG</div>
+          <div class="score-card-domain">ZDX Troubleshooting</div>
+          <div class="score-card-note">Deep Trace vs Cloud Path distinction clear. Correct feature for each scenario.</div>
+        </div>
+        <div class="score-card strong">
+          <div class="score-card-label">✓ STRONG</div>
+          <div class="score-card-domain">Zero Trust Automation</div>
+          <div class="score-card-note">Workflow Automation named correctly. 3-step configuration sequence understood.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ STRONG AREAS ══ -->
+    <div class="section-block" id="section-strong">
+      <div class="section-label">STRONG AREAS</div>
+      <h2>What you can rely on</h2>
+
+      <h3>ATP + Cloud Sandbox Layered Logic <span class="strong-badge">✓ SOLID</span></h3>
+      <p>You correctly identified that ATP and Cloud Sandbox are distinct, sequential layers — not the same thing. ATP handles fast, cheap checks first; Sandbox is selective and triggered by risk score.</p>
+      <div class="definition">
+        <div class="definition-term">ATP — Advanced Threat Protection</div>
+        <div class="definition-body">Operates in 5 layers: URL Filtering → Content-based blocking → Reputation → IPS Signatures → ML/AI Analysis. Each layer is progressively more expensive. ATP verdicts happen inline, in real time.</div>
+      </div>
+      <div class="definition">
+        <div class="definition-term">Cloud Sandbox</div>
+        <div class="definition-body">Detonates files in an isolated environment to observe behaviour. Triggered selectively — only when ATP's upstream checks produce an uncertain or elevated risk score. Not applied to every file.</div>
+      </div>
+
+      <h3>Step-Up Authentication <span class="strong-badge">✓ SOLID</span></h3>
+      <p>You correctly identified that step-up is triggered by a change in application context — specifically an application configured to require a higher authentication level than the user's current session provides.</p>
+
+      <h3>Risk360 Pillars <span class="strong-badge">✓ SOLID</span></h3>
+      <p>All four pillars named correctly: Attack Surface, Compromise Likelihood, Lateral Movement Threat, and Data Loss Exposure. This is exactly the level of detail the exam tests.</p>
+
+      <h3>Inline CASB vs API-based CASB <span class="strong-badge">✓ SOLID</span></h3>
+      <p>You correctly reasoned that API-based CASB is needed when data is at rest inside a SaaS app — because it never passes through ZIA's inline proxy. The distinction is architectural, not just definitional.</p>
+
+      <h3>Deep Trace vs Cloud Path <span class="strong-badge">✓ SOLID</span></h3>
+      <p>Deep Trace = on-demand, real-time, per-user diagnostic. Cloud Path = continuous, aggregated path monitoring across users over time.</p>
+    </div>
+
+    <!-- ══ GAPS TO FIX ══ -->
+    <div class="section-block" id="section-gaps">
+      <div class="section-label">GAPS TO FIX</div>
+      <h2>What needs work before exam day</h2>
+
+      <h3>Authentication Levels 1 / 2 / 3 <span class="gap-badge">⚠ GAP</span></h3>
+      <p>The three levels are a ZPA construct used in Authentication Policy to define how strongly a user must prove their identity before accessing an application.</p>
+      <table class="compare-table">
+        <thead>
+          <tr><th>Level</th><th>Requirement</th><th>When to use</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Level 1</td><td>Password only</td><td>Low-sensitivity applications</td></tr>
+          <tr><td>Level 2</td><td>Password + MFA</td><td>Standard corporate applications</td></tr>
+          <tr><td>Level 3</td><td>Password + MFA + Managed device</td><td>Highly sensitive / regulated applications</td></tr>
+        </tbody>
+      </table>
+      <div class="key-concept">
+        <strong>Mental model:</strong> Airport security lanes. Level 1 = standard queue. Level 2 = security screening. Level 3 = screening + passport + biometric. The application decides which lane you must use.
+      </div>
+
+      <h3>ZEN vs PSE — Enforcement Node Naming <span class="gap-badge">⚠ GAP</span></h3>
+      <p>Both ZIA and ZPA have enforcement nodes, but they have different names. This is a terminology precision point the exam will test.</p>
+      <table class="compare-table">
+        <thead>
+          <tr><th>Product</th><th>Node Name</th><th>Purpose</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>ZIA</td><td>ZEN — Zscaler Enforcement Node</td><td>Internet-facing inspection gates for internet-bound traffic</td></tr>
+          <tr><td>ZPA</td><td>PSE — Public Service Edge</td><td>Brokers that connect users to private applications</td></tr>
+        </tbody>
+      </table>
+
+      <h3>Device Posture Profiles in ZPA <span class="gap-badge">⚠ GAP</span></h3>
+      <p>You understood the concept (device must meet security requirements) but couldn't recall the feature name. In ZPA, a <strong>Device Posture Profile</strong> defines the criteria a device must satisfy — OS version, certificate, ZCC status — and is referenced as a condition in the Access Policy.</p>
+      <div class="definition">
+        <div class="definition-term">DEVICE POSTURE PROFILE</div>
+        <div class="definition-body">A named set of device compliance criteria in ZPA. Referenced in Access Policy conditions. Think of it as the bouncer's checklist — the Access Policy is the door rule, the Device Posture Profile is what gets checked.</div>
+      </div>
+
+      <h3>PISE — ZIA Private Infrastructure Service Edge <span class="gap-badge">⚠ GAP</span></h3>
+      <p>When ZIA enforcement needs to run within an organisation's own infrastructure (e.g. for latency reasons), the component is called a <strong>PISE</strong> — Private Infrastructure Service Edge. ZPA calls its equivalent a PSE. Don't confuse the two.</p>
+      <table class="compare-table">
+        <thead>
+          <tr><th>Product</th><th>Private Node Name</th><th>Traffic type</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>ZIA</td><td>PISE — Private Infrastructure Service Edge</td><td>Internet-bound traffic inspection</td></tr>
+          <tr><td>ZPA</td><td>PSE — Private Service Edge</td><td>Private application access brokering</td></tr>
+        </tbody>
+      </table>
+
+      <h3>OneAPI vs Workflow Automation — Direction of Integration <span class="gap-badge">⚠ GAP</span></h3>
+      <p>These two capabilities are easy to conflate but solve different problems. The key is <strong>direction</strong>.</p>
+      <table class="compare-table">
+        <thead>
+          <tr><th>Capability</th><th>Direction</th><th>Use case</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>OneAPI</td><td>External system → Zscaler</td><td>External tools query or configure Zscaler programmatically</td></tr>
+          <tr><td>Workflow Automation</td><td>Zscaler → External system</td><td>ZDX alerts trigger automatic tickets in ServiceNow, etc.</td></tr>
+        </tbody>
+      </table>
+      <div class="key-concept">
+        <strong>Mental model:</strong> OneAPI is the front door — external systems knock and come in. Workflow Automation is the alarm system — Zscaler rings the external bell when something happens inside.
+      </div>
+    </div>
+
+    <!-- ══ ANALOGIES ══ -->
+    <div class="section-block" id="section-analogies">
+      <div class="section-label">ANALOGIES</div>
+      <h2>Mental models from today</h2>
+
+      <div class="callout callout-analogy">
+        <div class="callout-header">
+          <div class="callout-icon">⟳</div>
+          ATP → SANDBOX FUNNEL
+        </div>
+        <div class="callout-body">
+          ATP is a series of progressively expensive filters. Each layer narrows the pool of suspicious traffic. Only files that survive all upstream checks with an uncertain verdict reach the sandbox — because detonating everything would be prohibitively slow and resource-intensive. Think of it as a hiring funnel: most candidates are screened out at the CV stage; only the shortlisted few get the full interview.
+        </div>
+      </div>
+
+      <div class="callout callout-analogy">
+        <div class="callout-header">
+          <div class="callout-icon">⟳</div>
+          AUTHENTICATION LEVELS — AIRPORT SECURITY LANES
+        </div>
+        <div class="callout-body">
+          Level 1 is the standard queue (just show your boarding pass). Level 2 adds full security screening (MFA). Level 3 requires biometric passport check too (MFA + managed device). The application at the gate decides which lane you must use — not you.
+        </div>
+      </div>
+
+      <div class="callout callout-analogy">
+        <div class="callout-header">
+          <div class="callout-icon">⟳</div>
+          ONEAPI VS WORKFLOW AUTOMATION — FRONT DOOR VS ALARM SYSTEM
+        </div>
+        <div class="callout-body">
+          OneAPI is the front door: external tools knock, authenticate, and come inside to query or configure. Workflow Automation is the alarm system: when something happens inside Zscaler, it rings an external bell (ServiceNow, etc.) automatically — no one had to knock.
+        </div>
+      </div>
+
+      <div class="callout callout-analogy">
+        <div class="callout-header">
+          <div class="callout-icon">⟳</div>
+          INLINE CASB VS API CASB — CUSTOMS VS POST OFFICE INSPECTION
+        </div>
+        <div class="callout-body">
+          Inline CASB is customs at the border — it inspects everything passing through in real time. API CASB is the post office inspecting packages already in the warehouse — it reaches into the SaaS app directly, out-of-band, to check what's already sitting there.
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ EXAM TIPS ══ -->
+    <div class="section-block" id="section-exam">
+      <div class="section-label">EXAM TIPS</div>
+      <h2>What to watch for on exam day</h2>
+
+      <div class="callout callout-tip">
+        <div class="callout-header">
+          <div class="callout-icon">→</div>
+          EXAM TIP — TERMINOLOGY PRECISION
+        </div>
+        <div class="callout-body">
+          The exam loves testing node names: ZEN (ZIA) vs PSE (ZPA) vs PISE (ZIA private). These look similar and are easy to mix up. Memorise the product-to-name mapping cold.
+        </div>
+      </div>
+
+      <div class="callout callout-tip">
+        <div class="callout-header">
+          <div class="callout-icon">→</div>
+          EXAM TIP — DIRECTION OF INTEGRATION
+        </div>
+        <div class="callout-body">
+          Scenario questions about automation will describe a flow and ask which capability enables it. Always ask: who initiates? If Zscaler pushes outward (alert → ticket) → Workflow Automation. If an external system pulls or pushes inward → OneAPI.
+        </div>
+      </div>
+
+      <div class="callout callout-warn">
+        <div class="callout-header">
+          <div class="callout-icon">!</div>
+          WATCH OUT — ATP ≠ SANDBOX
+        </div>
+        <div class="callout-body">
+          A common distractor: questions that imply ATP "sends files to the sandbox." ATP is its own engine with its own detection layers. The sandbox is a separate, downstream service. Don't conflate them.
+        </div>
+      </div>
+
+      <div class="callout callout-warn">
+        <div class="callout-header">
+          <div class="callout-icon">!</div>
+          WATCH OUT — STEP-UP TRIGGER
+        </div>
+        <div class="callout-body">
+          Step-up is not triggered by a "failed login" or "suspicious behaviour." It is triggered by the application requiring a higher authentication level than the user's current session provides. The trigger is policy-driven, not anomaly-driven.
+        </div>
+      </div>
+
+      <ul class="content-list">
+        <li>Authentication Level 3 requires both MFA AND a managed/compliant device — not just MFA alone</li>
+        <li>Device Posture Profile is the feature name in ZPA — not "device compliance policy" or "endpoint check"</li>
+        <li>PISE is ZIA-specific — don't use PSE when asked about ZIA's private enforcement node</li>
+        <li>Risk360 has exactly four pillars — Attack Surface, Compromise Likelihood, Lateral Movement, Data Loss Exposure</li>
+        <li>Deep Trace is on-demand and per-user; Cloud Path is continuous and aggregated</li>
+      </ul>
+    </div>
+
+  </div><!-- end .main-content -->
+
+  <!-- ─── SIDEBAR ─── -->
+  <div class="sidebar">
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">GAPS — TICK WHEN RESOLVED</div>
+      <ul class="subtopic-list">
+        <li onclick="toggleDone(this)">
+          <div class="subtopic-check"></div>
+          <span>Auth Levels 1 / 2 / 3 detail</span>
+        </li>
+        <li onclick="toggleDone(this)">
+          <div class="subtopic-check"></div>
+          <span>ZEN vs PSE naming</span>
+        </li>
+        <li onclick="toggleDone(this)">
+          <div class="subtopic-check"></div>
+          <span>Device Posture Profile (ZPA)</span>
+        </li>
+        <li onclick="toggleDone(this)">
+          <div class="subtopic-check"></div>
+          <span>PISE naming (ZIA)</span>
+        </li>
+        <li onclick="toggleDone(this)">
+          <div class="subtopic-check"></div>
+          <span>OneAPI vs Workflow Automation direction</span>
+        </li>
+      </ul>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">QUICK REFERENCE</div>
+
+      <div class="quick-ref">
+        <div class="quick-ref-term">ZEN</div>
+        <div class="quick-ref-def">Zscaler Enforcement Node — ZIA's cloud enforcement point. Inspects internet-bound traffic.</div>
+      </div>
+
+      <div class="quick-ref">
+        <div class="quick-ref-term">PSE</div>
+        <div class="quick-ref-def">Public Service Edge — ZPA's enforcement node. Brokers user-to-app connections.</div>
+      </div>
+
+      <div class="quick-ref">
+        <div class="quick-ref-term">PISE</div>
+        <div class="quick-ref-def">Private Infrastructure Service Edge — ZIA node hosted within customer infrastructure for low-latency inspection.</div>
+      </div>
+
+      <div class="quick-ref">
+        <div class="quick-ref-term">DEVICE POSTURE PROFILE</div>
+        <div class="quick-ref-def">ZPA construct defining device compliance criteria. Referenced as a condition in Access Policy.</div>
+      </div>
+
+      <div class="quick-ref">
+        <div class="quick-ref-term">STEP-UP AUTH</div>
+        <div class="quick-ref-def">Triggered when an app requires a higher auth level than the user's current session. Policy-driven, not anomaly-driven.</div>
+      </div>
+
+      <div class="quick-ref">
+        <div class="quick-ref-term">WORKFLOW AUTOMATION</div>
+        <div class="quick-ref-def">Zscaler → External. ZDX alerts push tickets to ServiceNow etc. automatically.</div>
+      </div>
+
+      <div class="quick-ref">
+        <div class="quick-ref-term">ONEAPI</div>
+        <div class="quick-ref-def">External → Zscaler. External systems query or configure Zscaler via API. Requires client, permissions, token.</div>
+      </div>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">MY NOTES</div>
+      <div class="sidebar-note">
+        I know the concepts but I keep mixing up the node names. ZEN = ZIA, PSE = ZPA, PISE = ZIA private. Drill this cold before Day 9.
+      </div>
+      <div class="sidebar-note">
+        The OneAPI vs Workflow Automation direction confusion is a real trap. Think: who knocks on whose door?
+      </div>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">GAPS COVERED ON THESE DAYS</div>
+      <ul class="subtopic-list">
+        <li style="cursor:default;">
+          <div style="width:14px;height:14px;background:var(--orange-light);border:1px solid var(--orange-border);border-radius:3px;flex-shrink:0;"></div>
+          <span>Day 03 — Connectivity Services</span>
+        </li>
+        <li style="cursor:default;">
+          <div style="width:14px;height:14px;background:var(--orange-light);border:1px solid var(--orange-border);border-radius:3px;flex-shrink:0;"></div>
+          <span>Day 04 — Platform Services</span>
+        </li>
+        <li style="cursor:default;">
+          <div style="width:14px;height:14px;background:var(--orange-light);border:1px solid var(--orange-border);border-radius:3px;flex-shrink:0;"></div>
+          <span>Day 08 — ZDX Part 2 &amp; Automation</span>
+        </li>
+        <li style="cursor:default;">
+          <div style="width:14px;height:14px;background:var(--orange-light);border:1px solid var(--orange-border);border-radius:3px;flex-shrink:0;"></div>
+          <span>Day 09 — Deep Dive Review ZIA</span>
+        </li>
+        <li style="cursor:default;">
+          <div style="width:14px;height:14px;background:var(--orange-light);border:1px solid var(--orange-border);border-radius:3px;flex-shrink:0;"></div>
+          <span>Day 10 — Deep Dive Review ZPA &amp; ZDX</span>
+        </li>
+      </ul>
+    </div>
+
+  </div><!-- end .sidebar -->
+
+</main>
+
+<footer>
+  <div class="footer-left">ZDTE<span>.</span></div>
+  <div class="footer-right">Zscaler Digital Transformation Engineer · Study Guide · Day 02</div>
+</footer>
+
+<script>
+  function navTo(id, el) {
+    document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+    el.classList.add('active');
+    const target = document.getElementById(id);
+    if (target) {
+      const offset = document.querySelector('.section-nav').offsetHeight + 16;
+      window.scrollTo({ top: target.getBoundingClientRect().top + window.scrollY - offset, behavior: 'smooth' });
+    }
+  }
+
+  function toggleDone(li) {
+    li.classList.toggle('done');
+    updateProgress();
+  }
+
+  function updateProgress() {
+    const items = document.querySelectorAll('.subtopic-list li[onclick]');
+    const done  = document.querySelectorAll('.subtopic-list li[onclick].done');
+    const pct   = items.length ? Math.round((done.length / items.length) * 100) : 0;
+    const big   = document.querySelector('.progress-card .big');
+    if (big) big.innerHTML = pct + '<span style="font-size:18px;color:#7a6a55;">%</span>';
+  }
+</script>
+
+</body>
+</html>

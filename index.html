@@ -199,7 +199,6 @@
     font-size: 10px;
     letter-spacing: 0.15em;
     color: var(--ink-muted);
-    border-bottom: 2px solid var(--ink);
   }
 
   .day-row {
@@ -322,6 +321,42 @@
     transition: background 0.15s, transform 0.1s;
   }
   .guide-btn:hover { background: #e05520; transform: translateY(-1px); }
+
+  /* Mock exam row */
+  .mock-exam-row {
+    background: #f0ecff;
+    border-radius: 16px;
+    padding: 20px 24px;
+    margin: 4px 0 4px;
+    display: grid;
+    grid-template-columns: 36px 1fr;
+    gap: 16px;
+    align-items: start;
+    border: 1px solid #c8bbff;
+  }
+  .mock-exam-icon {
+    width: 36px; height: 36px;
+    background: #c8bbff;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px; flex-shrink: 0;
+  }
+  .mock-exam-label { font-size: 10px; letter-spacing: 0.15em; color: #5c35cc; margin-bottom: 4px; }
+  .mock-exam-title { font-size: 13px; font-weight: 500; color: #1a1209; margin-bottom: 8px; }
+  .mock-exam-desc {
+    font-size: 12px; color: #6b5a9e; line-height: 1.6;
+    background: rgba(92,53,204,0.06); border: 1px solid #c8bbff;
+    border-radius: 8px; padding: 10px 14px; margin-bottom: 10px;
+  }
+  .mock-exam-btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: #5c35cc; color: white; border: none;
+    padding: 7px 16px; border-radius: 20px;
+    font-size: 11px; font-weight: 600; letter-spacing: 0.06em;
+    cursor: pointer; font-family: 'Epilogue', sans-serif;
+    text-decoration: none; transition: background 0.15s;
+  }
+  .mock-exam-btn:hover { background: #3d1fa8; }
 
   /* Podcast row */
   .podcast-row {
@@ -550,15 +585,21 @@
       <div class="session-note"><span class="session-dot"></span> Socratic session</div>
     </div>
     <div class="topics-col">
-      <div class="topic-title">Zscaler Overview &amp; Architecture</div>
+      <div class="topic-title">Zscaler Overview, Architecture &amp; Identity Services</div>
       <ul class="topic-bullets">
         <li>Going beyond ZIA/ZPA Administrator — Engineer-level scope</li>
         <li>Multi-tenant cloud architecture and enforcement nodes</li>
         <li>Zero Trust Network Access (ZTNA) principles</li>
         <li>Additional Zscaler platform capabilities</li>
         <li>Zscaler API infrastructure and functionality overview</li>
+        <li>Zidentity architecture and tenant structure</li>
+        <li>SAML authentication workflow end-to-end</li>
+        <li>Step-up authentication and conditional triggers</li>
+        <li>Authentication levels, methods, and types</li>
+        <li>Configuring external identity providers (IdPs)</li>
+        <li>Admin sign-on and password policy configuration</li>
       </ul>
-      <div class="weight-badge">Blueprint weight: 6% + 10% = 16%</div>
+      <div class="weight-badge">Blueprint weight: 6% + 10% + 10% = 26%</div>
       <a href="day-01.html" class="guide-btn">→ Study Guide</a>
       <span style="display:inline-flex;align-items:center;gap:5px;margin-top:10px;margin-left:8px;background:var(--green-light);color:var(--green);border:1px solid var(--green-border);padding:7px 14px;border-radius:20px;font-size:11px;font-weight:600;letter-spacing:0.06em;">✓ COMPLETE</span>
     </div>
@@ -569,32 +610,40 @@
     </div>
   </div>
 
-  <!-- DAY 2 + PODCAST -->
-  <div class="day-row">
+  <!-- DAY 2 — STUDY + MOCK EXAM -->
+  <div class="day-row" style="background:#fffde6;border:1.5px solid #ffe033;border-radius:12px;">
     <div>
       <div class="day-num">02</div>
     </div>
     <div>
       <div class="day-weekday">Mon</div>
       <div class="day-date-main">20 Apr</div>
-      <div class="session-note"><span class="session-dot"></span> Socratic session</div>
+      <div class="session-note"><span class="session-dot" style="background:#e0a800;"></span> In Progress</div>
     </div>
     <div class="topics-col">
-      <div class="topic-title">Identity Services</div>
+      <div class="topic-title">Mock Exam #1 — All Domains</div>
       <ul class="topic-bullets">
-        <li>Zidentity architecture and tenant structure</li>
-        <li>SAML authentication workflow end-to-end</li>
-        <li>Step-up authentication and conditional triggers</li>
-        <li>Authentication levels, methods, and types</li>
-        <li>Configuring external identity providers (IdPs)</li>
-        <li>Admin sign-on and password policy configuration</li>
+        <li>Diagnostic exam spanning the full ZDTE blueprint</li>
+        <li>Identify weak points before focusing study effort</li>
       </ul>
-      <div class="weight-badge">Blueprint weight: 10%</div>
+      <div class="weight-badge">Full blueprint diagnostic</div>
+      <a href="day-02.html" class="guide-btn">→ Diagnostic Results</a>
     </div>
     <div class="tags-col">
+      <span class="tag tag-arch">Architecture</span>
       <span class="tag tag-zia">ZIA</span>
       <span class="tag tag-zpa">ZPA</span>
-      <span class="tag tag-pod">🎧 Podcast</span>
+    </div>
+  </div>
+
+  <div class="mock-exam-row">
+    <div class="mock-exam-icon">✎</div>
+    <div>
+      <div class="mock-exam-label">MOCK EXAM #1 — ALL DOMAINS</div>
+      <div class="mock-exam-title">Full Diagnostic — See Where Your Weak Points Are</div>
+      <div class="mock-exam-desc">
+        Questions spanning all ZDTE exam domains. Identify weak spots across the full blueprint before doubling down on specific study areas.
+      </div>
     </div>
   </div>
 
