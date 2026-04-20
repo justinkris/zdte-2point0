@@ -177,7 +177,8 @@
     margin-bottom: 0;
     display: grid;
     grid-template-columns: 56px 1fr;
-    gap: 18px;
+    column-gap: 18px;
+    row-gap: 0;
     box-shadow: 0 1px 0 rgba(0,0,0,0.02);
   }
   .stage-number {
@@ -188,14 +189,14 @@
   .stage-body h3 { margin-top: 0; margin-bottom: 6px; font-size: 19px; }
   .stage-label { font-size: 10px; letter-spacing: 0.15em; color: var(--ink-muted); margin-bottom: 10px; text-transform: uppercase; }
   .stage-story { background: var(--amber-light); border-left: 3px solid #ffd95c; padding: 10px 14px; border-radius: 6px; margin: 10px 0; font-size: 13px; color: #5a4715; line-height: 1.65; font-style: italic; }
-  .stage-story-below { width: 50%; margin: 0 auto 22px; border-radius: 0 0 8px 8px; border-left: none; border-top: 2px solid #ffd95c; grid-column: 1 / -1; }
+  .stage-story-below { width: 50%; margin: 0 auto 22px; border-radius: 0 0 8px 8px; border-left: none; border-top: none; grid-column: 1 / -1; }
   .stage-what { font-size: 13.5px; color: var(--ink-soft); line-height: 1.7; margin-bottom: 10px; }
   .image-slot {
     grid-column: 1 / -1;
     display: flex; justify-content: center;
-    padding-top: 14px;
+    padding-top: 18px;
   }
-  .image-slot img { width: 50%; height: 360px; display: block; border-radius: 8px 8px 0 0; object-fit: cover; object-position: center; }
+  .image-slot img { width: 50%; height: 460px; display: block; border-radius: 8px 8px 0 0; object-fit: cover; object-position: center; }
   .stage-wrapper { margin-bottom: 20px; }
 
   /* Stage carousel nav — lives inside the active stage-card after the image */
@@ -203,7 +204,7 @@
     display: flex; align-items: center; gap: 12px;
     padding: 10px 14px; background: var(--ink);
     border-radius: 0 0 8px 8px;
-    width: 50%; margin: 0 auto 22px;
+    width: 50%; margin: 0 auto 0;
     grid-column: 1 / -1;
   }
   .carousel-btn {
