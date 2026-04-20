@@ -173,8 +173,8 @@
     background: #fff;
     border: 1px solid var(--border);
     border-radius: 16px;
-    padding: 22px 24px;
-    margin-bottom: 20px;
+    padding: 22px 24px 0;
+    margin-bottom: 0;
     display: grid;
     grid-template-columns: 56px 1fr;
     gap: 18px;
@@ -189,20 +189,28 @@
   .stage-label { font-size: 10px; letter-spacing: 0.15em; color: var(--ink-muted); margin-bottom: 10px; text-transform: uppercase; }
   .stage-story { background: var(--amber-light); border-left: 3px solid #ffd95c; padding: 10px 14px; border-radius: 6px; margin: 10px 0; font-size: 13px; color: #5a4715; line-height: 1.65; font-style: italic; }
   .stage-what { font-size: 13.5px; color: var(--ink-soft); line-height: 1.7; margin-bottom: 10px; }
-  .image-slot { margin-top: 14px; display: flex; justify-content: center; }
-  .image-slot img { width: 50%; display: block; border-radius: 8px; }
-
-  /* Stage carousel nav */
-  .carousel-nav {
-    display: flex; align-items: center; gap: 16px;
-    padding: 16px 20px; background: var(--ink); border-radius: 14px;
-    margin-bottom: 24px;
+  .image-slot {
+    grid-column: 1 / -1;
+    display: flex; justify-content: center;
+    padding-top: 14px;
   }
+  .image-slot img { width: 50%; height: 360px; display: block; border-radius: 8px 8px 0 0; object-fit: cover; object-position: center; }
+  .stage-wrapper { margin-bottom: 20px; }
+
+  /* Stage carousel nav — lives inside the active stage-card after the image */
+  .carousel-nav {
+    display: flex; flex-direction: column; align-items: center; gap: 8px;
+    padding: 10px 14px 12px; background: var(--ink);
+    border-radius: 0 0 8px 8px;
+    width: 50%; margin: 0 auto 22px;
+    grid-column: 1 / -1;
+  }
+  .carousel-btn-row { display: flex; align-items: center; gap: 20px; }
   .carousel-btn {
-    width: 44px; height: 44px; border-radius: 50%;
+    width: 36px; height: 36px; border-radius: 50%;
     border: 1.5px solid rgba(255,255,255,0.2);
     background: rgba(255,255,255,0.08);
-    font-size: 20px; cursor: pointer; color: var(--cream);
+    font-size: 18px; cursor: pointer; color: var(--cream);
     display: flex; align-items: center; justify-content: center;
     transition: all 0.15s; flex-shrink: 0;
   }
@@ -210,10 +218,10 @@
   .carousel-btn:disabled { opacity: 0.25; cursor: default; }
   .carousel-center { flex: 1; text-align: center; }
   .carousel-counter {
-    font-family: 'Fraunces', serif; font-size: 22px; font-weight: 700;
-    color: var(--orange); line-height: 1; margin-bottom: 4px;
+    font-family: 'Fraunces', serif; font-size: 18px; font-weight: 700;
+    color: #ffe066; line-height: 1; margin-bottom: 2px;
   }
-  .carousel-stage-label { font-size: 11px; color: rgba(255,255,255,0.5); letter-spacing: 0.12em; }
+  .carousel-stage-label { font-size: 10px; color: #ffe066; letter-spacing: 0.12em; opacity: 0.75; }
 
   .compare-table { width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 13px; }
   .compare-table th { background: var(--cream-dark); padding: 10px 12px; text-align: left; font-weight: 600; color: var(--ink); border-bottom: 2px solid var(--border); }
@@ -286,78 +294,14 @@
 </header>
 
 <nav class="section-nav">
-  <button class="nav-tab active" onclick="navTo('section-overview', this)">OVERVIEW</button>
-  <button class="nav-tab" onclick="navTo('section-stages', this)">THE 13 STAGES</button>
+  <button class="nav-tab active" onclick="navTo('section-stages', this)">THE 13 STAGES</button>
+  <button class="nav-tab" onclick="navTo('section-overview', this)">OVERVIEW</button>
   <button class="nav-tab" onclick="navTo('section-principles', this)">ORDERING PRINCIPLES</button>
   <button class="nav-tab" onclick="navTo('section-tips', this)">EXAM TIPS</button>
 </nav>
 
 <main>
   <div class="main-content">
-
-    <!-- OVERVIEW (collapsible, collapsed by default) -->
-    <div class="section-block" id="section-overview">
-      <div class="section-label">
-        OVERVIEW
-        <button class="collapse-toggle" id="overview-toggle" onclick="toggleOverview()">SHOW ＋</button>
-      </div>
-      <div class="overview-body" id="overview-body" style="display:none;">
-        <h2>What happens when you send an HTTP GET through ZIA?</h2>
-        <p>
-          When a ZIA Public Service Edge receives outbound web traffic, it doesn't just
-          "inspect the packet" as one big action. It runs the traffic through a precise,
-          ordered pipeline of security engines. Each engine gets its turn — and if any of
-          them blocks the transaction, the rest never run.
-        </p>
-        <p>
-          Understanding this order matters because exam questions love to ask things like:
-          <em>"If the firewall allows Box.net but a web policy blocks it, what happens?"</em>
-          You can only answer that if you know which module runs first and why.
-        </p>
-
-        <div class="key-concept">
-          <strong>The big idea:</strong> ZIA has <strong>two modules</strong> — a Firewall Module
-          and a Web Module. Web traffic hits the firewall module first; if allowed, it's handed
-          to the web module where the full 13-stage pipeline runs. Non-web traffic only touches
-          the firewall module.
-        </div>
-
-        <h3>The two-module model</h3>
-        <p>
-          Every ZIA Public Service Edge runs Single-Scan Multi-Action (SSMA) inspection across
-          two modules. Think of them as two checkpoints:
-        </p>
-
-        <div class="definition">
-          <div class="definition-term">Firewall Module</div>
-          <div class="definition-body">
-            Handles Layer 3/4 controls, FQDN rules, DNS Control, and IPS for non-web traffic.
-            <strong>All traffic</strong> — web and non-web — hits this first.
-          </div>
-        </div>
-
-        <div class="definition">
-          <div class="definition-term">Web Module</div>
-          <div class="definition-body">
-            The proxy. Handles SSL inspection, threat scanning, URL filtering, Cloud App Control,
-            DLP, sandbox, and everything else web-specific. <strong>Only web traffic</strong>
-            reaches this module, and only if the firewall module allowed it through.
-          </div>
-        </div>
-
-        <div class="callout callout-warn">
-          <div class="callout-header">
-            <div class="callout-icon">!</div>
-            WATCH OUT
-          </div>
-          <div class="callout-body">
-            If the firewall module blocks traffic, the web module never sees it — even if
-            a web policy would have allowed it. <strong>The restrictive module always wins.</strong>
-            Example: firewall blocks Box.net → user is blocked, even if Cloud App Control allows Box.net.
-          </div>
-        </div>
-      </div>
-    </div>
 
     <!-- THE 13 STAGES -->
     <div class="section-block" id="section-stages">
@@ -636,12 +580,76 @@
       </div>
 
       <div class="carousel-nav">
-        <button class="carousel-btn" id="prev-btn" onclick="prevStage()" disabled>←</button>
-        <div class="carousel-center">
-          <div class="carousel-counter" id="stage-counter">01 / 13</div>
-          <div class="carousel-stage-label" id="stage-label-display">FIREWALL MODULE</div>
+        <div class="carousel-btn-row">
+          <button class="carousel-btn" id="prev-btn" onclick="prevStage()" disabled>←</button>
+          <button class="carousel-btn" id="next-btn" onclick="nextStage()">→</button>
         </div>
-        <button class="carousel-btn" id="next-btn" onclick="nextStage()">→</button>
+        <div class="carousel-counter" id="stage-counter">01 / 13</div>
+        <div class="carousel-stage-label" id="stage-label-display">FIREWALL MODULE</div>
+      </div>
+    </div>
+
+    <!-- OVERVIEW (collapsible) -->
+    <div class="section-block" id="section-overview">
+      <div class="section-label">
+        OVERVIEW
+        <button class="collapse-toggle" id="overview-toggle" onclick="toggleOverview()">SHOW ＋</button>
+      </div>
+      <div class="overview-body" id="overview-body" style="display:none;">
+        <h2>What happens when you send an HTTP GET through ZIA?</h2>
+        <p>
+          When a ZIA Public Service Edge receives outbound web traffic, it doesn't just
+          "inspect the packet" as one big action. It runs the traffic through a precise,
+          ordered pipeline of security engines. Each engine gets its turn — and if any of
+          them blocks the transaction, the rest never run.
+        </p>
+        <p>
+          Understanding this order matters because exam questions love to ask things like:
+          <em>"If the firewall allows Box.net but a web policy blocks it, what happens?"</em>
+          You can only answer that if you know which module runs first and why.
+        </p>
+
+        <div class="key-concept">
+          <strong>The big idea:</strong> ZIA has <strong>two modules</strong> — a Firewall Module
+          and a Web Module. Web traffic hits the firewall module first; if allowed, it's handed
+          to the web module where the full 13-stage pipeline runs. Non-web traffic only touches
+          the firewall module.
+        </div>
+
+        <h3>The two-module model</h3>
+        <p>
+          Every ZIA Public Service Edge runs Single-Scan Multi-Action (SSMA) inspection across
+          two modules. Think of them as two checkpoints:
+        </p>
+
+        <div class="definition">
+          <div class="definition-term">Firewall Module</div>
+          <div class="definition-body">
+            Handles Layer 3/4 controls, FQDN rules, DNS Control, and IPS for non-web traffic.
+            <strong>All traffic</strong> — web and non-web — hits this first.
+          </div>
+        </div>
+
+        <div class="definition">
+          <div class="definition-term">Web Module</div>
+          <div class="definition-body">
+            The proxy. Handles SSL inspection, threat scanning, URL filtering, Cloud App Control,
+            DLP, sandbox, and everything else web-specific. <strong>Only web traffic</strong>
+            reaches this module, and only if the firewall module allowed it through.
+          </div>
+        </div>
+
+        <div class="callout callout-warn">
+          <div class="callout-header">
+            <div class="callout-icon">!</div>
+            WATCH OUT
+          </div>
+          <div class="callout-body">
+            If the firewall module blocks traffic, the web module never sees it — even if
+            a web policy would have allowed it. <strong>The restrictive module always wins.</strong>
+            Example: firewall blocks Box.net → user is blocked, even if Cloud App Control allows Box.net.
+          </div>
+        </div>
       </div>
     </div>
 
@@ -892,10 +900,20 @@
 
   // Stage carousel
   const stages = Array.from(document.querySelectorAll('.stage-card'));
+  const carouselNav = document.querySelector('.carousel-nav');
   let currentStage = 0;
+
+  // Move each image-slot out of stage-body to be a direct stage-card child
+  stages.forEach(card => {
+    const imageSlot = card.querySelector('.stage-body .image-slot');
+    if (imageSlot) card.appendChild(imageSlot);
+  });
 
   function showStage(idx) {
     stages.forEach((s, i) => s.style.display = i === idx ? 'grid' : 'none');
+    // Move carousel nav directly after current card's image-slot
+    const imageSlot = stages[idx].querySelector('.image-slot');
+    if (imageSlot) imageSlot.insertAdjacentElement('afterend', carouselNav);
     const num = String(idx + 1).padStart(2, '0');
     document.getElementById('stage-counter').textContent = num + ' / 13';
     const label = stages[idx].querySelector('.stage-label').textContent.toUpperCase();
