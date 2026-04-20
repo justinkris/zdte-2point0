@@ -311,6 +311,19 @@
 
   .sidebar-note { background: #fff; border: 1px solid var(--border); border-radius: 8px; padding: 12px 14px; font-size: 12px; color: var(--ink-soft); line-height: 1.6; margin-bottom: 10px; }
 
+  .related-bite {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 12px; border-radius: 10px; margin-bottom: 6px;
+    text-decoration: none; color: inherit;
+    background: #fff; border: 1px solid var(--border);
+    transition: background 0.15s, border-color 0.15s;
+  }
+  .related-bite:hover { background: var(--orange-light); border-color: var(--orange-border); }
+  .related-bite.active { background: var(--orange-light); border-color: var(--orange-border); cursor: default; }
+  .related-bite-icon { font-size: 16px; flex-shrink: 0; }
+  .related-bite-title { font-size: 12px; font-weight: 600; color: var(--ink); line-height: 1.3; }
+  .related-bite-sub { font-size: 11px; color: var(--ink-muted); margin-top: 1px; }
+
   footer {
     padding: 24px 60px; border-top: 1px solid var(--border); background: var(--cream);
     display: flex; justify-content: space-between; align-items: center;
@@ -615,6 +628,31 @@
     <div class="sidebar-section">
       <div class="sidebar-note">
         This bite is an extension to the <strong>HTTP GET Memory Palace</strong>. The stages 1–13 carry over; 11A and 11B are inserted between Suspicious Content and P2P only when the request method is POST or PUT.
+      </div>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">RELATED BITES</div>
+      <a href="http-get-order-of-operations.html" class="related-bite">
+        <div class="related-bite-icon">🧠</div>
+        <div class="related-bite-body">
+          <div class="related-bite-title">Memory Palace</div>
+          <div class="related-bite-sub">HTTP GET · 13 Stages</div>
+        </div>
+      </a>
+      <a href="http-get-full-reference.html" class="related-bite">
+        <div class="related-bite-icon">📋</div>
+        <div class="related-bite-body">
+          <div class="related-bite-title">Full Reference</div>
+          <div class="related-bite-sub">HTTP GET · All 13 static</div>
+        </div>
+      </a>
+      <div class="related-bite active">
+        <div class="related-bite-icon">📤</div>
+        <div class="related-bite-body">
+          <div class="related-bite-title">POST — 11A &amp; 11B</div>
+          <div class="related-bite-sub">Malware + DLP · upload only</div>
+        </div>
       </div>
     </div>
   </div>
