@@ -188,6 +188,7 @@
   .stage-body h3 { margin-top: 0; margin-bottom: 6px; font-size: 19px; }
   .stage-label { font-size: 10px; letter-spacing: 0.15em; color: var(--ink-muted); margin-bottom: 10px; text-transform: uppercase; }
   .stage-story { background: var(--amber-light); border-left: 3px solid #ffd95c; padding: 10px 14px; border-radius: 6px; margin: 10px 0; font-size: 13px; color: #5a4715; line-height: 1.65; font-style: italic; }
+  .stage-story-below { width: 50%; margin: 0 auto 22px; border-radius: 0 0 8px 8px; border-left: none; border-top: 2px solid #ffd95c; grid-column: 1 / -1; }
   .stage-what { font-size: 13.5px; color: var(--ink-soft); line-height: 1.7; margin-bottom: 10px; }
   .image-slot {
     grid-column: 1 / -1;
@@ -199,13 +200,12 @@
 
   /* Stage carousel nav — lives inside the active stage-card after the image */
   .carousel-nav {
-    display: flex; flex-direction: column; align-items: center; gap: 8px;
-    padding: 10px 14px 12px; background: var(--ink);
+    display: flex; align-items: center; gap: 12px;
+    padding: 10px 14px; background: var(--ink);
     border-radius: 0 0 8px 8px;
     width: 50%; margin: 0 auto 22px;
     grid-column: 1 / -1;
   }
-  .carousel-btn-row { display: flex; align-items: center; gap: 20px; }
   .carousel-btn {
     width: 36px; height: 36px; border-radius: 50%;
     border: 1.5px solid rgba(255,255,255,0.2);
@@ -219,9 +219,9 @@
   .carousel-center { flex: 1; text-align: center; }
   .carousel-counter {
     font-family: 'Fraunces', serif; font-size: 18px; font-weight: 700;
-    color: #ffe066; line-height: 1; margin-bottom: 2px;
+    color: var(--orange); line-height: 1; margin-bottom: 2px;
   }
-  .carousel-stage-label { font-size: 10px; color: #ffe066; letter-spacing: 0.12em; opacity: 0.75; }
+  .carousel-stage-label { font-size: 10px; color: rgba(255,255,255,0.5); letter-spacing: 0.12em; }
 
   .compare-table { width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 13px; }
   .compare-table th { background: var(--cream-dark); padding: 10px 12px; text-align: left; font-weight: 600; color: var(--ink); border-bottom: 2px solid var(--border); }
@@ -580,12 +580,12 @@
       </div>
 
       <div class="carousel-nav">
-        <div class="carousel-btn-row">
-          <button class="carousel-btn" id="prev-btn" onclick="prevStage()" disabled>←</button>
-          <button class="carousel-btn" id="next-btn" onclick="nextStage()">→</button>
+        <button class="carousel-btn" id="prev-btn" onclick="prevStage()" disabled>←</button>
+        <div class="carousel-center">
+          <div class="carousel-counter" id="stage-counter">01 / 13</div>
+          <div class="carousel-stage-label" id="stage-label-display">FIREWALL MODULE</div>
         </div>
-        <div class="carousel-counter" id="stage-counter">01 / 13</div>
-        <div class="carousel-stage-label" id="stage-label-display">FIREWALL MODULE</div>
+        <button class="carousel-btn" id="next-btn" onclick="nextStage()">→</button>
       </div>
     </div>
 
@@ -914,6 +914,12 @@
     // Move carousel nav directly after current card's image-slot
     const imageSlot = stages[idx].querySelector('.image-slot');
     if (imageSlot) imageSlot.insertAdjacentElement('afterend', carouselNav);
+    // Move current stage's story after the carousel nav
+    const story = stages[idx].querySelector('.stage-story');
+    if (story) {
+      story.classList.add('stage-story-below');
+      carouselNav.insertAdjacentElement('afterend', story);
+    }
     const num = String(idx + 1).padStart(2, '0');
     document.getElementById('stage-counter').textContent = num + ' / 13';
     const label = stages[idx].querySelector('.stage-label').textContent.toUpperCase();
