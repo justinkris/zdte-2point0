@@ -1,0 +1,76 @@
+HTTP GET Order of Operations — Memory Palace
+Image Prompts (13 Stages)
+============================================================
+
+STAGE 01 — Firewall
+A person in a bright Fortinet-branded t-shirt wearing a Bowser-shell necklace,
+floating amongst fluffy clouds, approaching a massive wall of roaring fire with
+two doors — one heavily draped in spider webs, one plain. Cinematic, slightly
+cartoonish, dramatic lighting.
+
+STAGE 02 — Web Module Entry
+A person pushing through an ornate doorway completely covered in thick,
+dusty spider webs. Beyond the doorway, glowing server racks and proxy
+machinery can be glimpsed. Moody, slightly eerie atmosphere.
+
+STAGE 03 — SSL Inspection
+A large cartoon snake with a mischievous grin, slithering up to the protagonist
+and gesturing "hands up." The snake wears a tiny security guard hat. Glowing
+padlocks floating in the air are being unlocked and opening up. Playful,
+illustrative style.
+
+STAGE 04 — Security Exceptions
+A snake in a bouncer's outfit holding a velvet rope next to a neon "VIP" sign.
+He's waving the protagonist away with a dismissive gesture. A shorter but
+fancier-dressed crowd queues behind the velvet rope. Nightclub aesthetic, punchy colors.
+
+STAGE 05 — Malicious URLs
+Santa Claus at a checkpoint kiosk in a cloud kingdom, holding a massive scrolling
+parchment labeled "Naughty List." He's giving the protagonist a thumbs up and
+laughing warmly. Whimsical, festive style with floating cloud platforms.
+
+STAGE 06 — Cloud App Control
+A giant cumulus cloud with a friendly, slowly-forming face hovering over a
+sky platform, offering a cold can of pale ale to the protagonist. The cloud
+has kind, wise eyes and puffy cheeks. Dreamlike, soft golden-hour lighting.
+
+STAGE 07 — URL Filtering
+A smaller, younger cloud with a face next to the big cloud from the previous
+scene — wearing comically oversized nerd glasses and holding a clipboard with
+category labels. He's inspecting a URL floating in midair. Same dreamy sky
+aesthetic as before.
+
+STAGE 08 — Browser Control
+A Bowser-shell necklace hovering mid-air, mechanically unfolding and transforming
+like a Transformer, revealing a glowing signature panel with Mario's handwritten
+autograph. Scanning beams of light surrounding it. High-energy, dynamic angle.
+
+STAGE 09 — Country-Based Restrictions
+A tennis player being stopped by a reporter with a microphone at the edge of a
+grand tennis court. The player has his hands raised mid-joke, wearing a sheepish
+grin, with a pair of handcuffs comically dangling from one wrist. A globe-map
+backdrop with country flags floating around. Aussie Open atmosphere.
+
+STAGE 10 — IPS Signatures
+A tennis player at the Australian Open surrounded by a crowd of enthusiastic
+fans thrusting notebooks, tennis balls, and t-shirts forward for autographs.
+The player is signing rapidly with a Sharpie, overwhelmed but smiling.
+Stadium lights and blue courts in the background.
+
+STAGE 11 — Suspicious Content Protection
+A single ominous book glowing bright red amongst a stack of normal books being
+handed to a tennis player for autographs. The open page displays the word "RISK"
+in shimmering, ethereal light. The player is recoiling slightly. Mysterious,
+slightly supernatural vibe.
+
+STAGE 12 — P2P Control
+Security guards forming a barrier around a tennis player, with a glowing
+purple magical cage (Veigar-style Event Horizon) surrounding the pressing
+crowd. The cage has dark-sorcerer energy crackling around it. Fantasy-meets-reality
+overlay style.
+
+STAGE 13 — Bandwidth Control
+An exhausted tennis player slumped on a bench after a long day, a visible
+battery icon hovering above his head at 1% red. Scattered autograph books,
+a half-empty pale-ale can, and Sharpies litter the ground around him.
+End-of-day golden light, slightly melancholy tone.
