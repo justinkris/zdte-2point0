@@ -1,0 +1,1105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ZDTE Study Bite — HTTP GET Side-by-Side</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;0,700;1,400&family=Epilogue:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #fef9f0;
+    --cream-dark: #f5eddb;
+    --ink: #1a1209;
+    --ink-soft: #5a4a35;
+    --ink-muted: #8a7660;
+    --orange: #ff6b35;
+    --orange-light: #fff3ec;
+    --orange-border: #ffd5c0;
+    --amber-light: #fffbe6;
+    --green: #3a7d44;
+    --green-light: #edf7ee;
+    --green-border: #b2dfb4;
+    --purple: #5c35cc;
+    --purple-light: #ece8ff;
+    --purple-border: #c8bbff;
+    --blue-light: #e8f0fb;
+    --blue-border: #b3ccf0;
+    --blue: #1a6bcc;
+    --red-light: #fce8e8;
+    --red-border: #f7c1c1;
+    --red: #a32d2d;
+    --border: #ede5d8;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Epilogue', sans-serif;
+    background: var(--cream);
+    color: var(--ink);
+    min-height: 100vh;
+  }
+
+  header {
+    padding: 40px 60px 28px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 32px;
+    background: var(--cream);
+  }
+
+  .header-left { flex: 1; }
+
+  .breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+    color: var(--ink-muted);
+    letter-spacing: 0.08em;
+    margin-bottom: 12px;
+  }
+
+  .breadcrumb a { color: var(--orange); text-decoration: none; cursor: pointer; }
+  .breadcrumb-sep { color: var(--border); }
+
+  .day-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--ink);
+    color: var(--cream);
+    padding: 5px 14px;
+    border-radius: 20px;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    margin-bottom: 14px;
+  }
+
+  .day-badge-dot { width: 5px; height: 5px; background: var(--orange); border-radius: 50%; }
+
+  h1 {
+    font-family: 'Fraunces', serif;
+    font-size: 42px;
+    font-weight: 700;
+    line-height: 1.0;
+    color: var(--ink);
+    margin-bottom: 10px;
+  }
+
+  h1 em { font-style: italic; font-weight: 400; color: var(--orange); }
+
+  .header-meta-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+    margin-top: 14px;
+  }
+
+  .tag {
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 500;
+    border: 1px solid;
+    display: inline-block;
+  }
+
+  .tag-zia    { background: var(--blue-light);   color: var(--blue);   border-color: var(--blue-border); }
+  .tag-weight { background: var(--orange-light); color: #cc4a18;      border-color: var(--orange-border); }
+  .tag-bite   { background: var(--purple-light); color: var(--purple); border-color: var(--purple-border); }
+  .tag-arch   { background: var(--amber-light);  color: #a07c00;       border-color: #ffe680; }
+
+  .header-right {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: flex-end;
+    flex-shrink: 0;
+  }
+
+  .progress-card {
+    background: var(--ink);
+    color: var(--cream);
+    padding: 14px 20px;
+    border-radius: 14px;
+    text-align: center;
+    min-width: 110px;
+  }
+
+  .progress-card .big {
+    font-family: 'Fraunces', serif;
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--orange);
+    line-height: 1;
+  }
+
+  .progress-card .lbl {
+    font-size: 10px;
+    color: #7a6a55;
+    letter-spacing: 0.1em;
+    margin-top: 4px;
+  }
+
+  nav.section-nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: var(--cream-dark);
+    border-bottom: 1px solid var(--border);
+    padding: 0 60px;
+    display: flex;
+    gap: 0;
+    overflow-x: auto;
+  }
+
+  nav.section-nav button {
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    padding: 14px 18px;
+    font-family: 'Epilogue', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    color: var(--ink-muted);
+    cursor: pointer;
+    white-space: nowrap;
+    transition: color 0.15s, border-color 0.15s;
+  }
+
+  nav.section-nav button:hover { color: var(--ink); }
+  nav.section-nav button.active { color: var(--orange); border-bottom-color: var(--orange); }
+
+  main {
+    padding: 36px 48px 60px;
+    max-width: 1600px;
+    margin: 0 auto;
+  }
+
+  .section-block { margin-bottom: 40px; }
+
+  .section-label {
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    color: var(--ink-muted);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  h2 {
+    font-family: 'Fraunces', serif;
+    font-size: 24px;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 14px;
+    line-height: 1.2;
+  }
+
+  p {
+    font-size: 14px;
+    color: var(--ink-soft);
+    line-height: 1.8;
+    margin-bottom: 12px;
+  }
+
+  /* === THE SIDE-BY-SIDE GRID === */
+  .compare-wrap {
+    display: grid;
+    grid-template-columns: 80px 1fr 1fr;
+    gap: 10px;
+    align-items: stretch;
+    margin-top: 20px;
+  }
+
+  /* Scenario headers */
+  .compare-header {
+    grid-column: span 1;
+    padding: 16px 18px;
+    border-radius: 14px;
+    font-family: 'Fraunces', serif;
+    font-size: 17px;
+    font-weight: 600;
+    line-height: 1.3;
+    color: white;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .compare-header.side-a { background: linear-gradient(135deg, var(--green) 0%, #2a5e32 100%); }
+  .compare-header.side-b { background: linear-gradient(135deg, var(--orange) 0%, #d44a1a 100%); }
+
+  .compare-header .label {
+    display: block;
+    font-family: 'Epilogue', sans-serif;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    opacity: 0.85;
+    margin-bottom: 6px;
+  }
+
+  .compare-header .outcome {
+    display: inline-block;
+    margin-top: 8px;
+    background: rgba(255,255,255,0.2);
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 10px;
+    font-family: 'Epilogue', sans-serif;
+    letter-spacing: 0.1em;
+    font-weight: 500;
+  }
+
+  .compare-header-spacer {
+    /* empty, aligns with stage column */
+  }
+
+  /* Request boxes */
+  .req-box {
+    background: var(--ink);
+    color: var(--cream);
+    border-radius: 10px;
+    padding: 12px 14px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    line-height: 1.6;
+    overflow-x: auto;
+  }
+
+  .req-box .key { color: var(--orange); }
+  .req-box .val { color: #d9cfbf; }
+  .req-box .comment { color: #7a6a55; font-style: italic; }
+
+  /* Stage rows */
+  .stage-label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Fraunces', serif;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ink);
+    background: var(--cream-dark);
+    border-radius: 10px;
+    padding: 12px 8px;
+    text-align: center;
+    line-height: 1.2;
+    border: 1px solid var(--border);
+    position: relative;
+  }
+
+  .stage-label .stage-num {
+    position: absolute;
+    top: 6px;
+    left: 8px;
+    font-size: 9px;
+    color: var(--ink-muted);
+    letter-spacing: 0.1em;
+    font-family: 'Epilogue', sans-serif;
+  }
+
+  .stage-label .stage-text {
+    font-size: 12px;
+    padding-top: 4px;
+  }
+
+  /* Cell states */
+  .cell {
+    padding: 12px 14px;
+    border-radius: 10px;
+    font-size: 12px;
+    line-height: 1.55;
+    color: var(--ink-soft);
+    border: 1px solid;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-height: 60px;
+  }
+
+  .cell-engine {
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    font-weight: 600;
+    text-transform: uppercase;
+    margin-bottom: 2px;
+  }
+
+  .cell-body { font-size: 12px; color: var(--ink-soft); line-height: 1.55; }
+  .cell-body strong { color: var(--ink); }
+
+  .cell-pass {
+    background: var(--green-light);
+    border-color: var(--green-border);
+  }
+  .cell-pass .cell-engine { color: var(--green); }
+
+  .cell-pass-caution {
+    background: #fffae6;
+    border-color: #ffd880;
+  }
+  .cell-pass-caution .cell-engine { color: #8a6a00; }
+
+  .cell-escalate {
+    background: var(--orange-light);
+    border-color: var(--orange-border);
+  }
+  .cell-escalate .cell-engine { color: #cc4a18; }
+
+  .cell-block {
+    background: var(--red-light);
+    border-color: var(--red-border);
+  }
+  .cell-block .cell-engine { color: var(--red); }
+
+  .cell-setup {
+    background: white;
+    border-color: var(--border);
+  }
+  .cell-setup .cell-engine { color: var(--ink-muted); }
+
+  .cell-skip {
+    background: repeating-linear-gradient(
+      45deg,
+      var(--cream-dark),
+      var(--cream-dark) 8px,
+      #f0e6d0 8px,
+      #f0e6d0 16px
+    );
+    border-color: var(--border);
+    font-style: italic;
+    color: var(--ink-muted);
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    min-height: 60px;
+  }
+
+  .cell-na {
+    background: var(--cream-dark);
+    border-color: var(--border);
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: var(--ink-muted);
+    font-style: italic;
+    font-size: 11px;
+    min-height: 60px;
+  }
+
+  .cell-final-block {
+    background: var(--red);
+    border-color: var(--red);
+    color: white;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-weight: 600;
+  }
+  .cell-final-block .cell-engine { color: rgba(255,255,255,0.85); }
+  .cell-final-block .cell-body { color: white; }
+
+  .cell-final-allow {
+    background: var(--green);
+    border-color: var(--green);
+    color: white;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-weight: 600;
+  }
+  .cell-final-allow .cell-engine { color: rgba(255,255,255,0.85); }
+  .cell-final-allow .cell-body { color: white; }
+
+  /* Phase divider rows */
+  .phase-row {
+    grid-column: 1 / -1;
+    padding: 10px 16px;
+    background: var(--ink);
+    color: var(--cream);
+    border-radius: 10px;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    font-weight: 600;
+    margin-top: 8px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .phase-row::before {
+    content: '';
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--orange);
+    flex-shrink: 0;
+  }
+
+  /* Callout */
+  .callout {
+    border-radius: 14px;
+    padding: 18px 22px;
+    margin-top: 24px;
+    border: 1px solid;
+  }
+
+  .callout-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    margin-bottom: 8px;
+  }
+
+  .callout-icon {
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    font-weight: 700;
+    flex-shrink: 0;
+    color: white;
+  }
+
+  .callout-body { font-size: 13px; color: var(--ink-soft); line-height: 1.7; }
+
+  .callout-analogy { background: var(--purple-light); border-color: var(--purple-border); }
+  .callout-analogy .callout-header { color: var(--purple); }
+  .callout-analogy .callout-icon   { background: var(--purple); }
+
+  .callout-tip     { background: var(--green-light);  border-color: var(--green-border); }
+  .callout-tip     .callout-header { color: var(--green); }
+  .callout-tip     .callout-icon   { background: var(--green); }
+
+  .callout-note    { background: var(--blue-light);   border-color: var(--blue-border); }
+  .callout-note    .callout-header { color: var(--blue); }
+  .callout-note    .callout-icon   { background: var(--blue); }
+
+  /* Legend */
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 20px 0 12px;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    color: var(--ink-soft);
+    padding: 5px 10px;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    background: white;
+  }
+
+  .legend-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .legend-dot.pass      { background: var(--green); }
+  .legend-dot.caution   { background: #d4a500; }
+  .legend-dot.escalate  { background: var(--orange); }
+  .legend-dot.block     { background: var(--red); }
+  .legend-dot.skip      { background: var(--ink-muted); }
+
+  /* Takeaways */
+  .takeaway-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin-top: 16px;
+  }
+
+  .takeaway-card {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px 18px;
+  }
+
+  .takeaway-num {
+    font-family: 'Fraunces', serif;
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--orange);
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+
+  .takeaway-title {
+    font-family: 'Fraunces', serif;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 6px;
+  }
+
+  .takeaway-body {
+    font-size: 13px;
+    color: var(--ink-soft);
+    line-height: 1.7;
+  }
+
+  .takeaway-body strong { color: var(--ink); }
+
+  footer {
+    padding: 20px 60px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 11px;
+    color: var(--ink-muted);
+    background: var(--cream-dark);
+    letter-spacing: 0.06em;
+  }
+
+  footer .footer-left {
+    font-family: 'Fraunces', serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--ink);
+  }
+
+  footer .footer-left span { color: var(--orange); }
+
+  /* Subtopic checklist */
+  .subtopic-list {
+    list-style: none;
+    margin-top: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .subtopic-list li {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+    color: var(--ink-muted);
+    cursor: pointer;
+    padding: 4px 6px;
+    border-radius: 6px;
+    transition: background 0.1s;
+    user-select: none;
+  }
+
+  .subtopic-list li:hover { background: var(--orange-light); color: var(--ink); }
+
+  .subtopic-list li.done { color: var(--green); text-decoration: line-through; }
+
+  .subtopic-check {
+    width: 14px; height: 14px;
+    border-radius: 50%;
+    border: 1.5px solid var(--border);
+    flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 8px;
+    color: transparent;
+    transition: all 0.15s;
+  }
+
+  .subtopic-list li.done .subtopic-check {
+    background: var(--green);
+    border-color: var(--green);
+    color: white;
+  }
+
+  @media (max-width: 1000px) {
+    .compare-wrap {
+      grid-template-columns: 60px 1fr 1fr;
+      gap: 6px;
+    }
+    main { padding: 24px 20px 40px; }
+    .takeaway-grid { grid-template-columns: 1fr; }
+    header { padding: 24px 20px 20px; flex-direction: column; }
+    nav.section-nav { padding: 0 20px; }
+    footer { padding: 20px; flex-direction: column; gap: 8px; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-left">
+    <div class="breadcrumb">
+      <a href="../index.html">ZDTE</a>
+      <span class="breadcrumb-sep">›</span>
+      <a href="../study-bites.html">Study Bites</a>
+      <span class="breadcrumb-sep">›</span>
+      <span>HTTP GET Side-by-Side</span>
+    </div>
+    <div class="day-badge"><div class="day-badge-dot"></div>STUDY BITE</div>
+    <h1>HTTP GET:<br><em>clean vs zero-day</em></h1>
+    <div class="header-meta-row">
+      <span class="tag tag-zia">ZIA</span>
+      <span class="tag tag-arch">Side-by-Side</span>
+      <span class="tag tag-weight">12% Blueprint Weight</span>
+      <span class="tag tag-bite">Study Bite</span>
+    </div>
+
+    <ul class="subtopic-list" id="subtopic-list">
+      <li onclick="toggleDone(this)"><span class="subtopic-check">✓</span>Overview — same pipeline, two outcomes</li>
+      <li onclick="toggleDone(this)"><span class="subtopic-check">✓</span>Pre-transaction setup (Stages 0–3)</li>
+      <li onclick="toggleDone(this)"><span class="subtopic-check">✓</span>Request phase — Cloud App Control, URL Filtering, ATP Pillars 1–2</li>
+      <li onclick="toggleDone(this)"><span class="subtopic-check">✓</span>Early response — ATP Pillar 3 (magic bytes / content type)</li>
+      <li onclick="toggleDone(this)"><span class="subtopic-check">✓</span>Streaming response — ATP Pillar 4 (IPS payload)</li>
+      <li onclick="toggleDone(this)"><span class="subtopic-check">✓</span>Full content — Malware Protection, ML, Sandbox pre-filter</li>
+      <li onclick="toggleDone(this)"><span class="subtopic-check">✓</span>Sandbox detonation — escalation path</li>
+      <li onclick="toggleDone(this)"><span class="subtopic-check">✓</span>Cloud Effect — publishing verdicts globally</li>
+      <li onclick="toggleDone(this)"><span class="subtopic-check">✓</span>Exam tips and key takeaways</li>
+    </ul>
+  </div>
+  <div class="header-right">
+    <div class="progress-card">
+      <div class="big" id="prog-num">0<span style="font-size:18px;color:#7a6a55;">%</span></div>
+      <div class="lbl">REVIEWED</div>
+    </div>
+  </div>
+</header>
+
+<nav class="section-nav">
+  <button class="active" onclick="navTo('section-overview', this)">OVERVIEW</button>
+  <button onclick="navTo('section-compare', this)">SIDE-BY-SIDE</button>
+  <button onclick="navTo('section-takeaways', this)">TAKEAWAYS</button>
+</nav>
+
+<main>
+
+  <div class="section-block" id="section-overview">
+    <div class="section-label">OVERVIEW</div>
+    <h2>Two requests, two paths through the same pipeline</h2>
+    <p>
+      Both scenarios below are HTTP GET requests. Both go through the same ZIA pipeline under SSMA. The <strong>only</strong> differences between them are the destination, the file being downloaded, and what each engine concludes — which changes how far down the pipeline the transaction goes. Read left-to-right at each stage: Side A stays green the whole way, Side B escalates into sandbox detonation.
+    </p>
+
+    <div class="legend">
+      <div class="legend-item"><div class="legend-dot pass"></div>Engine verdict: pass</div>
+      <div class="legend-item"><div class="legend-dot caution"></div>Pass with risk signal</div>
+      <div class="legend-item"><div class="legend-dot escalate"></div>Escalate / suspicious</div>
+      <div class="legend-item"><div class="legend-dot block"></div>Block</div>
+      <div class="legend-item"><div class="legend-dot skip"></div>Skipped (N/A)</div>
+    </div>
+  </div>
+
+  <!-- ═══════════ SIDE-BY-SIDE GRID ═══════════ -->
+  <div class="section-block" id="section-compare">
+    <div class="section-label">SIDE-BY-SIDE PIPELINE</div>
+
+  <div class="compare-wrap">
+
+    <!-- Top header row -->
+    <div class="compare-header-spacer"></div>
+    <div class="compare-header side-a">
+      <span class="label">SCENARIO A</span>
+      User reads a news article
+      <span class="outcome">ALLOWED END-TO-END</span>
+    </div>
+    <div class="compare-header side-b">
+      <span class="label">SCENARIO B</span>
+      User downloads an unknown installer
+      <span class="outcome">CAUGHT AT SANDBOX</span>
+    </div>
+
+    <!-- Request preview -->
+    <div class="stage-label"><div class="stage-text">THE<br>REQUEST</div></div>
+    <div class="cell cell-setup">
+      <div class="req-box">
+<span class="comment"># Browser sends:</span>
+<span class="key">GET</span> <span class="val">/article/latest</span> HTTP/1.1
+<span class="key">Host:</span> <span class="val">news.example.com</span>
+
+<span class="comment"># Server responds:</span>
+<span class="key">Content-Type:</span> <span class="val">text/html</span>
+<span class="val">&lt;!DOCTYPE html&gt;</span>...
+      </div>
+    </div>
+    <div class="cell cell-setup">
+      <div class="req-box">
+<span class="comment"># Browser sends:</span>
+<span class="key">GET</span> <span class="val">/download/installer.msi</span> HTTP/1.1
+<span class="key">Host:</span> <span class="val">newtool-2026.io</span>
+<span class="comment"># domain registered 3 days ago</span>
+
+<span class="comment"># Server responds:</span>
+<span class="key">Content-Type:</span> <span class="val">application/x-msi</span>
+<span class="val">MZ</span>... <span class="comment"># Windows executable</span>
+      </div>
+    </div>
+
+    <!-- ═══ PHASE: SETUP ═══ -->
+    <div class="phase-row">PRE-TRANSACTION SETUP</div>
+
+    <div class="stage-label">
+      <span class="stage-num">0</span>
+      <div class="stage-text">Client Connector<br>→ Service Edge</div>
+    </div>
+    <div class="cell cell-setup">
+      <div class="cell-engine">IDENTITY ATTACHED</div>
+      <div class="cell-body">User + device + location context attached to the transaction.</div>
+    </div>
+    <div class="cell cell-setup">
+      <div class="cell-engine">IDENTITY ATTACHED</div>
+      <div class="cell-body">User + device + location context attached to the transaction.</div>
+    </div>
+
+    <div class="stage-label">
+      <span class="stage-num">1</span>
+      <div class="stage-text">DNS<br>Control</div>
+    </div>
+    <div class="cell cell-pass">
+      <div class="cell-engine">✓ DNS LOOKUP ALLOWED</div>
+      <div class="cell-body"><code>news.example.com</code> — known domain, clean reputation, no tunnelling indicators.</div>
+    </div>
+    <div class="cell cell-pass-caution">
+      <div class="cell-engine">⚠ DNS LOOKUP ALLOWED</div>
+      <div class="cell-body"><code>newtool-2026.io</code> — <strong>flagged as newly registered (3 days old)</strong>. Not blocked outright, but risk signal carried forward.</div>
+    </div>
+
+    <div class="stage-label">
+      <span class="stage-num">2</span>
+      <div class="stage-text">Cloud<br>Firewall</div>
+    </div>
+    <div class="cell cell-pass">
+      <div class="cell-engine">✓ WEB TRAFFIC</div>
+      <div class="cell-body">TCP 443 → classified as web → routed to proxy module.</div>
+    </div>
+    <div class="cell cell-pass">
+      <div class="cell-engine">✓ WEB TRAFFIC</div>
+      <div class="cell-body">TCP 443 → classified as web → routed to proxy module.</div>
+    </div>
+
+    <div class="stage-label">
+      <span class="stage-num">3</span>
+      <div class="stage-text">SSL Inspection<br>(SSMA activates)</div>
+    </div>
+    <div class="cell cell-pass">
+      <div class="cell-engine">✓ DECRYPTED</div>
+      <div class="cell-body">TLS MITM with Zscaler root CA. <strong>SSMA now active for entire transaction.</strong></div>
+    </div>
+    <div class="cell cell-pass">
+      <div class="cell-engine">✓ DECRYPTED</div>
+      <div class="cell-body">TLS MITM with Zscaler root CA. <strong>SSMA now active for entire transaction.</strong></div>
+    </div>
+
+    <!-- ═══ PHASE: REQUEST ═══ -->
+    <div class="phase-row">REQUEST PHASE — SSMA · engines fire when request data arrives</div>
+
+    <div class="stage-label">
+      <span class="stage-num">4a</span>
+      <div class="stage-text">Cloud App<br>Control</div>
+    </div>
+    <div class="cell cell-pass">
+      <div class="cell-engine">✓ NO SAAS MATCH</div>
+      <div class="cell-body">Not a sanctioned SaaS app — passes to URL Filtering.</div>
+    </div>
+    <div class="cell cell-pass">
+      <div class="cell-engine">✓ NO SAAS MATCH</div>
+      <div class="cell-body">Not a sanctioned SaaS app — passes to URL Filtering.</div>
+    </div>
+
+    <div class="stage-label">
+      <span class="stage-num">4b</span>
+      <div class="stage-text">URL<br>Filtering</div>
+    </div>
+    <div class="cell cell-pass">
+      <div class="cell-engine">✓ ALLOW RULE MATCH</div>
+      <div class="cell-body">Category: <em>News and Media</em> → matches Allow rule. First-match wins.</div>
+    </div>
+    <div class="cell cell-pass">
+      <div class="cell-engine">✓ ALLOW (NO BLOCK RULE)</div>
+      <div class="cell-body">Category: <em>Software/Technology</em> → no block rule configured → passes through.</div>
+    </div>
+
+    <div class="stage-label">
+      <span class="stage-num">4c</span>
+      <div class="stage-text">ATP Pillar 1<br>URL Categories</div>
+    </div>
+    <div class="cell cell-pass">
+      <div class="cell-engine">✓ NOT MALICIOUS</div>
+      <div class="cell-body">Not in any security category (Phishing, Malware, C2). Clean.</div>
+    </div>
+    <div class="cell cell-pass">
+      <div class="cell-engine">✓ NOT YET MALICIOUS</div>
+      <div class="cell-body">Domain too new to have been categorised as malicious. <strong>Passes — but the newness is noted.</strong></div>
+    </div>
+
+    <div class="stage-label">
+      <span class="stage-num">4d</span>
+      <div class="stage-text">ATP Pillar 2<br>Reputation</div>
+    </div>
+    <div class="cell cell-pass">
+      <div class="cell-engine">✓ CLEAN REPUTATION</div>
+      <div class="cell-body">Domain + IP + ASN all have strong reputation scores.</div>
+    </div>
+    <div class="cell cell-pass-caution">
+      <div class="cell-engine">⚠ LOW REPUTATION</div>
+      <div class="cell-body">Not explicitly bad, but <strong>NRD flag + unknown hosting ASN</strong> → risk weight raised. Continues.</div>
+    </div>
+
+    <div class="stage-label">
+      <span class="stage-num">4e</span>
+      <div class="stage-text">Request-side<br>IPS</div>
+    </div>
+    <div class="cell cell-pass">
+      <div class="cell-engine">✓ NO MATCH</div>
+      <div class="cell-body">No exploit patterns in URL, headers, or User-Agent.</div>
+    </div>
+    <div class="cell cell-pass">
+      <div class="cell-engine">✓ NO MATCH</div>
+      <div class="cell-body">No exploit patterns in URL, headers, or User-Agent.</div>
+    </div>
+
+    <!-- ═══ PHASE: EARLY RESPONSE ═══ -->
+    <div class="phase-row">EARLY RESPONSE — SSMA · response headers + first bytes arrive</div>
+
+    <div class="stage-label">
+      <span class="stage-num">5</span>
+      <div class="stage-text">ATP Pillar 3<br>Content Type</div>
+    </div>
+    <div class="cell cell-pass">
+      <div class="cell-engine">✓ TRUE TYPE: HTML</div>
+      <div class="cell-body">Magic bytes <code>&lt;!DOCTYPE html&gt;</code> match declared type. HTML is allowed.</div>
+    </div>
+    <div class="cell cell-pass-caution">
+      <div class="cell-engine">⚠ TRUE TYPE: EXECUTABLE</div>
+      <div class="cell-body">Magic bytes <code>MZ</code> confirm Windows executable. Policy allows MSI but <strong>flags for deeper inspection</strong>.</div>
+    </div>
+
+    <!-- ═══ PHASE: RESPONSE STREAMING ═══ -->
+    <div class="phase-row">RESPONSE STREAMING — SSMA · bytes flow through</div>
+
+    <div class="stage-label">
+      <span class="stage-num">6</span>
+      <div class="stage-text">ATP Pillar 4<br>IPS (payload)</div>
+    </div>
+    <div class="cell cell-pass">
+      <div class="cell-engine">✓ NO MATCH</div>
+      <div class="cell-body">Streaming pattern match — no exploit signatures in the HTML payload.</div>
+    </div>
+    <div class="cell cell-pass">
+      <div class="cell-engine">✓ NO MATCH</div>
+      <div class="cell-body">Streaming pattern match — no known exploit signatures in the MSI payload.</div>
+    </div>
+
+    <!-- ═══ PHASE: FULL CONTENT ═══ -->
+    <div class="phase-row">FULL CONTENT — SSMA · complete payload buffered</div>
+
+    <div class="stage-label">
+      <span class="stage-num">7a</span>
+      <div class="stage-text">Malware<br>Protection</div>
+    </div>
+    <div class="cell cell-pass">
+      <div class="cell-engine">✓ CLEAN</div>
+      <div class="cell-body">Hash lookup + AV scan → no malicious indicators.</div>
+    </div>
+    <div class="cell cell-pass-caution">
+      <div class="cell-engine">⚠ HASH UNKNOWN</div>
+      <div class="cell-body">Hash <strong>never seen before</strong> in Cloud Effect. AV signatures don't match. Unknown — neither cleared nor blocked.</div>
+    </div>
+
+    <div class="stage-label">
+      <span class="stage-num">7b</span>
+      <div class="stage-text">ATP Pillar 5<br>ML / Page Risk</div>
+    </div>
+    <div class="cell cell-pass">
+      <div class="cell-engine">✓ LOW RISK SCORE</div>
+      <div class="cell-body">ML analysis of full content — no phishing structure, no obfuscated JS. Low risk.</div>
+    </div>
+    <div class="cell cell-escalate">
+      <div class="cell-engine">⚠ SUSPICIOUS — ESCALATE</div>
+      <div class="cell-body">ML combines signals: <strong>NRD + low reputation + unknown executable + unfamiliar hosting</strong>. <strong>Triggers sandbox escalation.</strong></div>
+    </div>
+
+    <div class="stage-label">
+      <span class="stage-num">7c</span>
+      <div class="stage-text">DLP</div>
+    </div>
+    <div class="cell cell-na">
+      GET response — no outbound data. DLP effectively inactive.
+    </div>
+    <div class="cell cell-na">
+      GET response — no outbound data. DLP effectively inactive.
+    </div>
+
+    <div class="stage-label">
+      <span class="stage-num">7d</span>
+      <div class="stage-text">Sandbox<br>Pre-filter</div>
+    </div>
+    <div class="cell cell-skip">
+      No file download — sandbox not invoked.
+    </div>
+    <div class="cell cell-escalate">
+      <div class="cell-engine">⚠ INCONCLUSIVE</div>
+      <div class="cell-body">Hash unknown. Similarity analysis (PE structure, packer, entropy) <strong>inconclusive</strong>. ML pre-class says suspicious. <strong>Proceed to detonation.</strong></div>
+    </div>
+
+    <!-- ═══ PHASE: ESCALATION ═══ -->
+    <div class="phase-row">ESCALATION — only for genuine unknowns</div>
+
+    <div class="stage-label">
+      <span class="stage-num">8</span>
+      <div class="stage-text">Sandbox<br>Detonation</div>
+    </div>
+    <div class="cell cell-skip">
+      Not invoked — no suspicious file.
+    </div>
+    <div class="cell cell-block">
+      <div class="cell-engine">✕ VERDICT: MALICIOUS</div>
+      <div class="cell-body">File detonated in isolated VM. Observed: <strong>drops DLL, modifies registry for persistence, beacons to unknown IP</strong>. Confirmed malicious.</div>
+    </div>
+
+    <!-- ═══ PHASE: OUTCOME ═══ -->
+    <div class="phase-row">FINAL VERDICT + DELIVERY</div>
+
+    <div class="stage-label">
+      <span class="stage-num">9</span>
+      <div class="stage-text">Proxy<br>Decision</div>
+    </div>
+    <div class="cell cell-final-allow">
+      <div class="cell-engine">✓ DELIVERED</div>
+      <div class="cell-body">All engines green → HTML re-encrypted and delivered to the browser. User reads the article. Total latency: a few hundred ms.</div>
+    </div>
+    <div class="cell cell-final-block">
+      <div class="cell-engine">✕ BLOCKED</div>
+      <div class="cell-body">Sandbox returned malicious verdict → proxy returns a block page. User never receives the file.</div>
+    </div>
+
+    <div class="stage-label">
+      <span class="stage-num">10</span>
+      <div class="stage-text">Cloud<br>Effect</div>
+    </div>
+    <div class="cell cell-pass">
+      <div class="cell-engine">✓ LOGGED</div>
+      <div class="cell-body">Nanolog → Web Insights → ZDX, Risk360. Nothing new to publish globally — all engines agreed on clean.</div>
+    </div>
+    <div class="cell cell-escalate">
+      <div class="cell-engine">↻ PUBLISHED GLOBALLY</div>
+      <div class="cell-body"><strong>File hash → known-bad. Beacon IP → reputation blocklist. Domain → malicious category.</strong> Next customer encountering this file is blocked at Pillar 2 without sandbox ever running again.</div>
+    </div>
+
+  </div>
+  </div>
+
+  <!-- TAKEAWAYS -->
+  <div class="section-block" id="section-takeaways" style="margin-top: 40px;">
+    <div class="section-label">WHAT THIS COMPARISON PROVES</div>
+
+    <div class="takeaway-grid">
+
+      <div class="takeaway-card">
+        <div class="takeaway-num">1</div>
+        <div class="takeaway-title">Same pipeline, different stopping points</div>
+        <div class="takeaway-body">
+          Both transactions went through <strong>identical</strong> engines in the same order. The difference wasn't the pipeline — it was the <em>verdicts</em>. Side A got green at every step. Side B accumulated risk signals (NRD flag, low reputation, unknown hash, executable) that the ML layer recognised as collectively suspicious, triggering escalation.
+        </div>
+      </div>
+
+      <div class="takeaway-card">
+        <div class="takeaway-num">2</div>
+        <div class="takeaway-title">Risk signals compound</div>
+        <div class="takeaway-body">
+          No <strong>single</strong> signal on Side B was enough to block. Newly registered domain — not enough. Unknown hash — not enough. Executable file — not enough. But <strong>combined</strong>, ML flagged it as suspicious. This is exactly why Pillar 5 exists: to catch zero-days that no individual signature can catch.
+        </div>
+      </div>
+
+      <div class="takeaway-card">
+        <div class="takeaway-num">3</div>
+        <div class="takeaway-title">Sandbox is the last resort</div>
+        <div class="takeaway-body">
+          Side A never went near the sandbox — no suspicious file, no need. Side B only reached the sandbox after ML escalated and pre-filter couldn't verdict cheaply. This is the <strong>early-termination design principle</strong> in reverse: expensive engines only run when cheaper ones couldn't decide.
+        </div>
+      </div>
+
+      <div class="takeaway-card">
+        <div class="takeaway-num">4</div>
+        <div class="takeaway-title">Cloud Effect makes the network learn</div>
+        <div class="takeaway-body">
+          Side B's finding was published globally the moment the sandbox verdict landed. <strong>The next customer on Earth to encounter that file gets blocked at Pillar 2 — without the sandbox ever running again.</strong> Every detection makes the platform smarter for everyone.
+        </div>
+      </div>
+
+    </div>
+
+    <div class="callout callout-analogy">
+      <div class="callout-header"><div class="callout-icon">⟳</div>F1 PIT-LANE ANALOGY</div>
+      <div class="callout-body">
+        Both cars (Side A, Side B) drive through the same pit lane. Same crew, same inspection stations, same sequence. Side A's car looks fine to every crew member — lollipop stays up, car keeps moving, pits out in milliseconds. Side B's car raises small concerns at several stations — none fatal on their own — but the telemetry crew (ML) notices the pattern and radios the engineering bay (sandbox) to take the suspect component apart. The engineers find it's faulty, and the team broadcasts the finding to every other team in the sport (Cloud Effect). Next race, every car with that part gets flagged immediately — no engineering-bay time needed.
+      </div>
+    </div>
+
+    <div class="callout callout-tip">
+      <div class="callout-header"><div class="callout-icon">→</div>EXAM TIP</div>
+      <div class="callout-body">
+        If a scenario question gives you multiple risk signals (NRD + unknown hash + executable + low reputation) and asks which engine catches the threat — the answer is almost always <strong>ATP Pillar 5 (ML / Page Risk)</strong> triggering sandbox escalation. Individual signals pass earlier engines; ML is the one that combines them.
+      </div>
+    </div>
+
+    <div class="callout callout-note">
+      <div class="callout-header"><div class="callout-icon">★</div>MENTAL NOTE</div>
+      <div class="callout-body">
+        DLP is shown as "N/A" on both sides because both are GET requests — nothing meaningful is being uploaded. DLP's real action happens on <strong>POST, PUT, and file uploads</strong>. Don't expect DLP to catch a malicious download.
+      </div>
+    </div>
+
+  </div>
+
+</main>
+
+<footer>
+  <div class="footer-left">ZDTE<span>.</span></div>
+  <div class="footer-right">Zscaler Digital Transformation Engineer · Study Bite — HTTP GET Side-by-Side</div>
+</footer>
+
+<script>
+  function navTo(id, el) {
+    const target = document.getElementById(id);
+    if (!target) return;
+    const top = target.getBoundingClientRect().top + window.scrollY - 60;
+    window.scrollTo({ top, behavior: 'smooth' });
+    document.querySelectorAll('nav.section-nav button').forEach(b => b.classList.remove('active'));
+    if (el) el.classList.add('active');
+  }
+
+  function toggleDone(li) {
+    li.classList.toggle('done');
+    updateProgress();
+  }
+
+  function updateProgress() {
+    const items = document.querySelectorAll('#subtopic-list li');
+    const done = document.querySelectorAll('#subtopic-list li.done').length;
+    const pct = items.length ? Math.round((done / items.length) * 100) : 0;
+    const el = document.getElementById('prog-num');
+    if (el) el.innerHTML = pct + '<span style="font-size:18px;color:#7a6a55;">%</span>';
+  }
+</script>
+
+</body>
+</html>

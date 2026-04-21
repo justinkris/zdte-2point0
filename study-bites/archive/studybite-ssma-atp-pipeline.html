@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ZDTE Study Bite — SSMA & the ATP Pipeline</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;0,700;1,400&family=Epilogue:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #fef9f0;
+    --cream-dark: #f5eddb;
+    --ink: #1a1209;
+    --ink-soft: #5a4a35;
+    --ink-muted: #8a7660;
+    --orange: #ff6b35;
+    --orange-light: #fff3ec;
+    --orange-border: #ffd5c0;
+    --amber-light: #fffbe6;
+    --green: #3a7d44;
+    --green-light: #edf7ee;
+    --green-border: #b2dfb4;
+    --purple: #5c35cc;
+    --purple-light: #ece8ff;
+    --purple-border: #c8bbff;
+    --blue-light: #e8f0fb;
+    --blue-border: #b3ccf0;
+    --blue: #1a6bcc;
+    --red-light: #fce8e8;
+    --red-border: #f7c1c1;
+    --red: #a32d2d;
+    --border: #ede5d8;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Epilogue', sans-serif;
+    background: var(--cream);
+    color: var(--ink);
+    min-height: 100vh;
+  }
+
+  header {
+    padding: 40px 60px 28px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 32px;
+    background: var(--cream);
+  }
+
+  .header-left { flex: 1; }
+
+  .breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+    color: var(--ink-muted);
+    letter-spacing: 0.08em;
+    margin-bottom: 12px;
+  }
+  .breadcrumb a { color: var(--orange); text-decoration: none; cursor: pointer; }
+  .breadcrumb-sep { color: var(--border); }
+
+  .day-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--ink);
+    color: var(--cream);
+    padding: 5px 14px;
+    border-radius: 20px;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    margin-bottom: 14px;
+  }
+  .day-badge-dot { width: 5px; height: 5px; background: var(--orange); border-radius: 50%; }
+
+  h1 {
+    font-family: 'Fraunces', serif;
+    font-size: 44px;
+    font-weight: 700;
+    line-height: 1.0;
+    color: var(--ink);
+    margin-bottom: 10px;
+  }
+  h1 em { font-style: italic; font-weight: 400; color: var(--orange); }
+
+  .header-meta-row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-top: 14px; }
+
+  .tag { padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 500; border: 1px solid; display: inline-block; }
+  .tag-zia    { background: var(--blue-light);   color: var(--blue);   border-color: var(--blue-border); }
+  .tag-weight { background: var(--orange-light); color: #cc4a18;       border-color: var(--orange-border); }
+  .tag-bite   { background: var(--purple-light); color: var(--purple); border-color: var(--purple-border); }
+  .tag-arch   { background: var(--amber-light);  color: #a07c00;       border-color: #ffe680; }
+
+  .header-right { display: flex; flex-direction: column; gap: 10px; align-items: flex-end; flex-shrink: 0; }
+  .progress-card { background: var(--ink); color: var(--cream); padding: 14px 20px; border-radius: 14px; text-align: center; min-width: 110px; }
+  .progress-card .big { font-family: 'Fraunces', serif; font-size: 32px; font-weight: 700; color: var(--orange); line-height: 1; }
+  .progress-card .lbl { font-size: 10px; color: #7a6a55; letter-spacing: 0.1em; margin-top: 4px; }
+
+  nav.section-nav {
+    display: flex; gap: 0; padding: 0 60px;
+    border-bottom: 1px solid var(--border);
+    background: var(--cream-dark); overflow-x: auto;
+    position: sticky; top: 0; z-index: 100;
+  }
+  .nav-tab {
+    padding: 14px 20px; font-size: 12px; font-weight: 500; color: var(--ink-muted);
+    letter-spacing: 0.06em; cursor: pointer; border-bottom: 2px solid transparent;
+    white-space: nowrap; transition: color 0.15s, border-color 0.15s;
+    background: none; border-top: none; border-left: none; border-right: none;
+    font-family: 'Epilogue', sans-serif;
+  }
+  .nav-tab:hover { color: var(--ink); }
+  .nav-tab.active { color: var(--orange); border-bottom-color: var(--orange); }
+
+  main { display: grid; grid-template-columns: 1fr 320px; gap: 0; min-height: calc(100vh - 200px); }
+  .main-content { padding: 36px 48px 60px 60px; border-right: 1px solid var(--border); }
+  .sidebar { padding: 36px 28px 60px; background: var(--cream-dark); }
+
+  .section-block { margin-bottom: 40px; }
+  .section-label {
+    font-size: 10px; letter-spacing: 0.2em; color: var(--ink-muted);
+    margin-bottom: 10px; display: flex; align-items: center; gap: 8px;
+  }
+  .section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+  h2 { font-family: 'Fraunces', serif; font-size: 24px; font-weight: 600; color: var(--ink); margin-bottom: 14px; line-height: 1.2; }
+  h3 { font-family: 'Fraunces', serif; font-size: 18px; font-weight: 600; color: var(--ink); margin-bottom: 10px; margin-top: 24px; }
+  p { font-size: 14px; color: var(--ink-soft); line-height: 1.8; margin-bottom: 12px; }
+
+  ul.content-list { list-style: none; display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
+  ul.content-list li { font-size: 14px; color: var(--ink-soft); padding-left: 16px; position: relative; line-height: 1.6; }
+  ul.content-list li::before { content: '·'; position: absolute; left: 2px; color: var(--orange); font-weight: 700; font-size: 18px; line-height: 1.2; }
+
+  .key-concept {
+    background: var(--amber-light); border: 1px solid #ffe680; border-radius: 10px;
+    padding: 14px 18px; font-size: 13px; color: var(--ink-soft); line-height: 1.7; margin-top: 16px;
+  }
+  .key-concept strong { color: var(--ink); }
+
+  .callout { border-radius: 14px; padding: 18px 20px; margin-bottom: 16px; border: 1px solid; }
+  .callout-header { display: flex; align-items: center; gap: 8px; font-size: 10px; font-weight: 600; letter-spacing: 0.15em; margin-bottom: 8px; }
+  .callout-icon { width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; flex-shrink: 0; }
+  .callout-body { font-size: 13px; color: var(--ink-soft); line-height: 1.7; }
+
+  .callout-note    { background: var(--blue-light);   border-color: var(--blue-border); }
+  .callout-note    .callout-header { color: var(--blue); }
+  .callout-note    .callout-icon   { background: var(--blue); color: #fff; }
+
+  .callout-warn    { background: var(--red-light);    border-color: var(--red-border); }
+  .callout-warn    .callout-header { color: var(--red); }
+  .callout-warn    .callout-icon   { background: var(--red); color: #fff; }
+
+  .callout-tip     { background: var(--green-light);  border-color: var(--green-border); }
+  .callout-tip     .callout-header { color: var(--green); }
+  .callout-tip     .callout-icon   { background: var(--green); color: #fff; }
+
+  .callout-analogy { background: var(--purple-light); border-color: var(--purple-border); }
+  .callout-analogy .callout-header { color: var(--purple); }
+  .callout-analogy .callout-icon   { background: var(--purple); color: #fff; }
+
+  .definition {
+    border-left: 3px solid var(--orange); padding: 10px 16px;
+    background: var(--orange-light); border-radius: 0 8px 8px 0; margin-bottom: 14px;
+  }
+  .definition-term { font-size: 11px; font-weight: 600; letter-spacing: 0.1em; color: var(--orange); margin-bottom: 4px; }
+  .definition-body { font-size: 13px; color: var(--ink-soft); line-height: 1.7; }
+
+  /* Pipeline */
+  .pipeline { display: flex; flex-direction: column; gap: 10px; margin: 20px 0; }
+  .pipe-step { display: flex; align-items: stretch; gap: 14px; background: white; border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; }
+  .pipe-step.policy-gate { border-left: 4px solid var(--blue); }
+  .pipe-step.threat-zone { border-left: 4px solid var(--orange); }
+  .pipe-step.data-gate   { border-left: 4px solid var(--green); }
+  .pipe-step.entry       { border-left: 4px solid var(--ink); background: var(--cream-dark); }
+  .pipe-num { color: var(--ink-muted); font-family: 'Fraunces', serif; font-size: 22px; font-weight: 700; width: 28px; flex-shrink: 0; line-height: 1; padding-top: 2px; }
+  .pipe-content { flex: 1; }
+  .pipe-title { font-size: 14px; font-weight: 600; color: var(--ink); margin-bottom: 3px; }
+  .pipe-desc { font-size: 12px; color: var(--ink-muted); line-height: 1.5; }
+  .pipe-zone-label { display: inline-block; font-size: 9px; letter-spacing: 0.12em; font-weight: 600; padding: 2px 8px; border-radius: 10px; margin-top: 6px; }
+  .zone-policy { background: var(--blue-light); color: var(--blue); }
+  .zone-threat { background: var(--orange-light); color: #cc4a18; }
+  .zone-data   { background: var(--green-light); color: var(--green); }
+
+  /* Tables */
+  .pillar-timing, .tier-table {
+    width: 100%; border-collapse: collapse; font-size: 13px;
+    margin: 14px 0 20px; border-radius: 10px; overflow: hidden; border: 1px solid var(--border);
+  }
+  .pillar-timing thead th, .tier-table thead th {
+    background: var(--ink); color: var(--cream); padding: 10px 14px;
+    text-align: left; font-size: 11px; letter-spacing: 0.08em; font-weight: 500;
+  }
+  .pillar-timing tbody tr:nth-child(even), .tier-table tbody tr:nth-child(even) { background: var(--cream-dark); }
+  .pillar-timing tbody td, .tier-table tbody td {
+    padding: 10px 14px; border-top: 1px solid var(--border); color: var(--ink-soft); vertical-align: top;
+  }
+  .pillar-timing tbody td:first-child { font-weight: 600; color: var(--ink); width: 35%; }
+  .tier-table tbody td:first-child { font-weight: 600; color: var(--ink); }
+
+  .phase-pill { display: inline-block; font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 10px; letter-spacing: 0.06em; }
+  .phase-request  { background: var(--blue-light);   color: var(--blue); }
+  .phase-response { background: var(--purple-light); color: var(--purple); }
+  .phase-both     { background: var(--orange-light); color: #cc4a18; }
+
+  /* F1 card */
+  .f1-card {
+    background: linear-gradient(135deg, #1a1209 0%, #2a1a0f 100%);
+    border-radius: 14px; padding: 24px 26px; color: var(--cream);
+    margin: 18px 0; position: relative; overflow: hidden;
+  }
+  .f1-card::before {
+    content: 'F1'; position: absolute; top: -10px; right: 14px;
+    font-family: 'Fraunces', serif; font-size: 110px; font-style: italic;
+    color: var(--orange); opacity: 0.12; font-weight: 700; line-height: 1;
+  }
+  .f1-card-label { font-size: 10px; letter-spacing: 0.2em; color: var(--orange); margin-bottom: 8px; position: relative; }
+  .f1-card-title { font-family: 'Fraunces', serif; font-size: 20px; font-weight: 600; margin-bottom: 12px; position: relative; }
+  .f1-card-body { font-size: 13px; line-height: 1.8; color: #d9cfbf; position: relative; }
+  .f1-card-body em { color: var(--orange); font-style: normal; font-weight: 600; }
+
+  /* Escalation */
+  .escalation { background: white; border: 1px solid var(--border); border-radius: 10px; padding: 16px 18px; margin: 16px 0; }
+  .esc-step { display: flex; align-items: flex-start; gap: 12px; padding: 8px 0; border-bottom: 1px dashed var(--border); font-size: 13px; color: var(--ink-soft); line-height: 1.6; }
+  .esc-step:last-child { border-bottom: none; }
+  .esc-arrow { font-family: 'Fraunces', serif; color: var(--orange); font-weight: 700; flex-shrink: 0; }
+  .esc-step strong { color: var(--ink); }
+
+  /* Sidebar */
+  .sidebar-section { margin-bottom: 28px; }
+  .sidebar-label {
+    font-size: 10px; letter-spacing: 0.2em; color: var(--ink-muted);
+    margin-bottom: 12px; display: flex; align-items: center; gap: 8px;
+  }
+  .sidebar-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+  .subtopic-list { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+  .subtopic-list li {
+    display: flex; align-items: flex-start; gap: 10px; font-size: 13px;
+    color: var(--ink-soft); cursor: pointer; padding: 6px 8px; border-radius: 8px;
+    transition: background 0.15s; line-height: 1.4;
+  }
+  .subtopic-list li:hover { background: var(--border); }
+  .subtopic-list li.done { color: var(--ink-muted); text-decoration: line-through; }
+  .subtopic-check { width: 14px; height: 14px; border: 1.5px solid var(--orange-border); border-radius: 3px; flex-shrink: 0; margin-top: 1px; background: white; transition: background 0.15s; }
+  .subtopic-list li.done .subtopic-check { background: var(--orange); border-color: var(--orange); }
+
+  .quick-ref { border-radius: 8px; background: white; border: 1px solid var(--border); padding: 10px 14px; margin-bottom: 8px; }
+  .quick-ref-term { font-size: 11px; font-weight: 600; letter-spacing: 0.08em; color: var(--orange); margin-bottom: 3px; }
+  .quick-ref-def { font-size: 12px; color: var(--ink-soft); line-height: 1.5; }
+
+  .sidebar-note { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 10px 14px; font-size: 13px; color: var(--ink-soft); line-height: 1.6; margin-bottom: 8px; }
+
+  footer {
+    padding: 20px 60px; border-top: 1px solid var(--border);
+    display: flex; justify-content: space-between; align-items: center;
+    font-size: 11px; color: var(--ink-muted); background: var(--cream-dark); letter-spacing: 0.06em;
+  }
+  .footer-left { font-family: 'Fraunces', serif; font-size: 20px; font-weight: 700; color: var(--ink); }
+  .footer-left span { color: var(--orange); }
+
+  @media (max-width: 900px) {
+    header { padding: 24px 20px 20px; flex-direction: column; }
+    h1 { font-size: 32px; }
+    main { grid-template-columns: 1fr; }
+    .main-content { padding: 24px 20px 40px; border-right: none; }
+    .sidebar { padding: 24px 20px 40px; border-top: 1px solid var(--border); }
+    nav.section-nav { padding: 0 20px; }
+    footer { padding: 20px; flex-direction: column; gap: 8px; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-left">
+    <div class="breadcrumb">
+      <a href="../index.html">Study Plan</a>
+      <span class="breadcrumb-sep">›</span>
+      <a href="../study-bites.html">Study Bites</a>
+      <span class="breadcrumb-sep">›</span>
+      <span>SSMA &amp; the ATP Pipeline</span>
+    </div>
+    <div class="day-badge"><div class="day-badge-dot"></div>STUDY BITE</div>
+    <h1>SSMA &amp; the<br><em>ATP Pipeline</em></h1>
+    <div class="header-meta-row">
+      <span class="tag tag-zia">ZIA</span>
+      <span class="tag tag-arch">Architecture</span>
+      <span class="tag tag-weight">12% Blueprint Weight</span>
+      <span class="tag tag-bite">Study Bite</span>
+    </div>
+  </div>
+  <div class="header-right">
+    <div class="progress-card">
+      <div class="big" id="prog-num">0<span style="font-size:18px;color:#7a6a55;">%</span></div>
+      <div class="lbl">REVIEWED</div>
+    </div>
+  </div>
+</header>
+
+<nav class="section-nav">
+  <button class="nav-tab active" onclick="navTo('section-bigidea', this)">THE BIG IDEA</button>
+  <button class="nav-tab" onclick="navTo('section-pipeline', this)">PIPELINE ORDER</button>
+  <button class="nav-tab" onclick="navTo('section-pillars', this)">PILLAR TIMING</button>
+  <button class="nav-tab" onclick="navTo('section-escalation', this)">ESCALATION</button>
+  <button class="nav-tab" onclick="navTo('section-tips', this)">EXAM TIPS</button>
+</nav>
+
+<main>
+  <div class="main-content">
+
+    <!-- BIG IDEA -->
+    <div class="section-block" id="section-bigidea">
+      <div class="section-label">THE BIG IDEA</div>
+      <h2>Why it doesn't feel linear — because it isn't</h2>
+      <p>
+        The confusion around ATP, Malware, IPS, and Sandbox comes from assuming they run in a strict sequence. They don't. They run as a coordinated inspection orchestra, all drawing from the same decrypted traffic stream, all sharing the same cloud-wide threat intelligence. The conductor of that orchestra is <strong>SSMA — Single Scan, Multi-Action</strong>.
+      </p>
+
+      <div class="definition">
+        <div class="definition-term">SSMA — SINGLE SCAN, MULTI-ACTION</div>
+        <div class="definition-body">
+          Zscaler's inspection engine. Traffic is decrypted <em>once</em>, then multiple security engines (ATP, Malware, IPS, DLP, Sandbox triggers) inspect that same stream <em>concurrently</em>. Each engine buffers only what it needs, each can independently block, and the traffic only proceeds when every engine has given the all-clear.
+        </div>
+      </div>
+
+      <div class="f1-card">
+        <div class="f1-card-label">MENTAL MODEL</div>
+        <div class="f1-card-title">The F1 pit-lane inspection</div>
+        <div class="f1-card-body">
+          Imagine an F1 car driving <em>through</em> the pit lane at speed. As it passes, the tyre crew checks the tyres, the fuel crew checks fuel, the telemetry crew reads engine data — all <em>simultaneously</em>. Only if one of them spots a problem does the lollipop drop and the car stop. Otherwise it keeps moving, losing only milliseconds.
+          <br><br>
+          That's SSMA. Known-good traffic flies through. Suspicious traffic gets held. Malicious traffic gets blocked. <em>Every engine must give green for the car to pass.</em>
+        </div>
+      </div>
+
+      <div class="key-concept">
+        <strong>Key point:</strong> ATP, Malware, IPS, and Sandbox are not sequential stages — they are <em>peer engines</em>, orchestrated by SSMA, fed by the same cloud intelligence, inspecting the same traffic in parallel.
+      </div>
+    </div>
+
+    <!-- PIPELINE ORDER -->
+    <div class="section-block" id="section-pipeline">
+      <div class="section-label">PIPELINE ORDER</div>
+      <h2>The logical flow through ZIA</h2>
+      <p>
+        Even though threat engines run in parallel, there is still a logical ordering of <em>decisions</em> across the whole ZIA pipeline. Policy decisions gate what's even allowed, threat engines then inspect what's allowed, and data-protection engines check what's leaving.
+      </p>
+
+      <div class="pipeline">
+        <div class="pipe-step entry">
+          <div class="pipe-num">0</div>
+          <div class="pipe-content">
+            <div class="pipe-title">Cloud Firewall — traffic classification</div>
+            <div class="pipe-desc">Identifies web vs non-web traffic. Web → routed to proxy. Non-web → handled by firewall rules. Also enforces L3/L4 rules.</div>
+          </div>
+        </div>
+        <div class="pipe-step entry">
+          <div class="pipe-num">1</div>
+          <div class="pipe-content">
+            <div class="pipe-title">Proxy module + SSL Inspection</div>
+            <div class="pipe-desc">Decrypts HTTPS traffic so downstream engines can actually inspect it. Without this, nothing below can read the payload.</div>
+          </div>
+        </div>
+        <div class="pipe-step policy-gate">
+          <div class="pipe-num">2</div>
+          <div class="pipe-content">
+            <div class="pipe-title">URL Filtering &amp; Cloud App Control</div>
+            <div class="pipe-desc">"Is this user even <em>allowed</em> to visit this destination?" Productivity / policy decisions. Cheap, deterministic, blocks a huge share of unwanted traffic early.</div>
+            <span class="pipe-zone-label zone-policy">POLICY GATE</span>
+          </div>
+        </div>
+        <div class="pipe-step threat-zone">
+          <div class="pipe-num">3</div>
+          <div class="pipe-content">
+            <div class="pipe-title">Threat Inspection Zone — SSMA</div>
+            <div class="pipe-desc">All security engines run <em>concurrently</em> on the same decrypted stream: ATP (5 pillars), Malware Protection, IPS signatures, and Sandbox triggers. Orchestrated by SSMA.</div>
+            <span class="pipe-zone-label zone-threat">THREAT ZONE</span>
+          </div>
+        </div>
+        <div class="pipe-step data-gate">
+          <div class="pipe-num">4</div>
+          <div class="pipe-content">
+            <div class="pipe-title">Data Protection — DLP / CASB</div>
+            <div class="pipe-desc">"Is anything sensitive leaving that shouldn't?" Inspects outbound content for regulated data, PII, source code, credentials.</div>
+            <span class="pipe-zone-label zone-data">DATA GATE</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="callout callout-tip">
+        <div class="callout-header"><div class="callout-icon">→</div>DESIGN PRINCIPLE — EARLY TERMINATION</div>
+        <div class="callout-body">
+          Cheap, deterministic checks (URL cat, reputation) run first. Expensive checks (ML, Sandbox) run last. If a request is blocked at step 2, the origin server is never contacted — no bytes flow, no threat engines run, no sandbox spins up. Multiply this across billions of daily transactions and you see why the architecture scales.
+        </div>
+      </div>
+    </div>
+
+    <!-- PILLAR TIMING -->
+    <div class="section-block" id="section-pillars">
+      <div class="section-label">PILLAR TIMING</div>
+      <h2>When each ATP pillar fires in the transaction</h2>
+      <p>
+        Inside the threat zone, ATP's five pillars don't all fire at the same moment — each one needs different amounts of information. Some fire the instant the HTTP request hits the proxy; others wait until content starts flowing back.
+      </p>
+
+      <table class="pillar-timing">
+        <thead>
+          <tr>
+            <th>Pillar</th>
+            <th>Fires on</th>
+            <th>What it needs</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>1. URL Security Categories</td>
+            <td><span class="phase-pill phase-request">REQUEST</span></td>
+            <td>Host header + URL → category lookup in Zscaler cloud</td>
+          </tr>
+          <tr>
+            <td>2. Reputation-Based Blocking</td>
+            <td><span class="phase-pill phase-request">REQUEST</span></td>
+            <td>Domain / URL / IP → pre-computed reputation score</td>
+          </tr>
+          <tr>
+            <td>3. Block Content Types</td>
+            <td><span class="phase-pill phase-response">RESPONSE (early)</span></td>
+            <td>Server's Content-Type header + file magic bytes (true-type detection)</td>
+          </tr>
+          <tr>
+            <td>4. IPS Signatures</td>
+            <td><span class="phase-pill phase-both">BOTH</span></td>
+            <td>Patterns in request headers/URL AND response payload</td>
+          </tr>
+          <tr>
+            <td>5. ML / Page Risk Analysis</td>
+            <td><span class="phase-pill phase-response">RESPONSE (full)</span></td>
+            <td>Complete page content + behavioural signals + entropy patterns</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Magic bytes — the true-type detection trick</h3>
+      <p>
+        Every file format has a fixed byte signature at the very start of the file — its fingerprint. PDFs start with <code>%PDF</code>. PNGs start with <code>‰PNG</code>. Windows executables start with <code>MZ</code>. ZIPs start with <code>PK</code>.
+      </p>
+      <p>
+        Attackers routinely rename <code>malware.exe</code> to <code>invoice.pdf</code> and lie in the server's Content-Type header. But the first few bytes of the actual file can't be faked without breaking the file itself. Zscaler's Pillar 3 reads those magic bytes to know what the file <em>really</em> is — regardless of what the URL or server claims. This is called <strong>true file type detection</strong>.
+      </p>
+
+      <h3>Why ML (Pillar 5) if signatures (Pillar 4) exist?</h3>
+      <p>
+        Signatures are retrospective — they can only catch what someone has already analysed and written a signature for. ML catches threats by <em>characteristic</em>, not exact match. This is how zero-day and polymorphic threats get detected.
+      </p>
+
+      <table class="tier-table">
+        <thead>
+          <tr>
+            <th>Tier</th>
+            <th>What it knows</th>
+            <th>What it catches</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Reputation / URL cat</td>
+            <td>"This specific domain/IP is bad."</td>
+            <td>Known-bad destinations</td>
+          </tr>
+          <tr>
+            <td>Signatures (IPS, AV)</td>
+            <td>"This specific byte pattern is bad."</td>
+            <td>Known-bad content</td>
+          </tr>
+          <tr>
+            <td>ML / Behavioural</td>
+            <td>"Things that <em>look like</em> bad things are bad."</td>
+            <td>Zero-day, polymorphic, novel threats</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="callout callout-analogy">
+        <div class="callout-header"><div class="callout-icon">⟳</div>ANALOGY — THE BOUNCER</div>
+        <div class="callout-body">
+          <strong>Signatures</strong> are the bouncer with a photo list of banned patrons — can only stop people he has pictures of. <strong>ML</strong> is the bouncer who watches body language — doesn't know who you are, but can tell you're acting suspicious. Signatures catch the known crooks. ML catches the new ones who haven't made the photo list yet.
+        </div>
+      </div>
+    </div>
+
+    <!-- ESCALATION -->
+    <div class="section-block" id="section-escalation">
+      <div class="section-label">ESCALATION</div>
+      <h2>Cloud Effect &amp; the Sandbox escalation loop</h2>
+      <p>
+        Every engine in the threat zone draws from the same shared cloud intelligence — <strong>Cloud Effect</strong>. When any engine (or any customer's sandbox detonation) learns something new, the finding is instantly published to every other engine, for every customer, globally.
+      </p>
+
+      <div class="escalation">
+        <div class="esc-step">
+          <span class="esc-arrow">1</span>
+          <span><strong>Reputation / URL cat</strong> says "unknown" → pass to next check</span>
+        </div>
+        <div class="esc-step">
+          <span class="esc-arrow">2</span>
+          <span><strong>Signatures (IPS, AV)</strong> say "no match" → pass to next check</span>
+        </div>
+        <div class="esc-step">
+          <span class="esc-arrow">3</span>
+          <span><strong>ML / Page Risk</strong> says "smells suspicious" → <em>escalate to sandbox</em></span>
+        </div>
+        <div class="esc-step">
+          <span class="esc-arrow">4</span>
+          <span><strong>Sandbox</strong> detonates the file in a VM → watches actual behaviour → issues verdict</span>
+        </div>
+        <div class="esc-step">
+          <span class="esc-arrow">5</span>
+          <span><strong>Cloud Effect</strong> publishes the new intelligence → reputation, signatures, and ML models update globally in real time</span>
+        </div>
+      </div>
+
+      <div class="callout callout-note">
+        <div class="callout-header"><div class="callout-icon">★</div>MENTAL NOTE</div>
+        <div class="callout-body">
+          The sandbox is the <em>last resort</em>, not the first check. It's slow and expensive, so it only runs for files that are genuinely unknown <em>and</em> suspicious. Known-bad files are blocked by cheaper checks upstream. Known-good files are allowed. Only true unknowns pay the cost of detonation.
+        </div>
+      </div>
+
+      <div class="callout callout-analogy">
+        <div class="callout-header"><div class="callout-icon">⟳</div>F1 ANALOGY EXTENDED</div>
+        <div class="callout-body">
+          The <strong>pit-lane crew</strong> (SSMA) inspects on the fly. If telemetry spots something weird but not clearly broken — engine running hot, suspicious vibration — they radio the data to the <strong>engineering bay</strong> (the Sandbox) where engineers can take the part apart and examine it properly. That takes longer. Meanwhile the car waits. Once the verdict comes in, it's broadcast to every other team (Cloud Effect) so nobody else wastes time on the same problem.
+        </div>
+      </div>
+    </div>
+
+    <!-- EXAM TIPS -->
+    <div class="section-block" id="section-tips">
+      <div class="section-label">EXAM TIPS</div>
+      <h2>What the exam tests</h2>
+
+      <div class="callout callout-tip">
+        <div class="callout-header"><div class="callout-icon">→</div>EXAM TIP</div>
+        <div class="callout-body">
+          If a scenario question asks why Zscaler's platform can inspect traffic with millisecond latency — the answer is SSMA. One decryption, many concurrent engines. Not a chain of appliances.
+        </div>
+      </div>
+
+      <div class="callout callout-tip">
+        <div class="callout-header"><div class="callout-icon">→</div>EXAM TIP</div>
+        <div class="callout-body">
+          Distinguish <strong>URL Filtering policy</strong> (productivity/policy — "block Gambling for Finance") from <strong>ATP Pillar 1 / URL Security Categories</strong> (security — "block Phishing and Malware sites"). Same engine under the hood, different intent and configuration location.
+        </div>
+      </div>
+
+      <div class="callout callout-warn">
+        <div class="callout-header"><div class="callout-icon">!</div>WATCH OUT</div>
+        <div class="callout-body">
+          Don't assume Malware Protection and ATP run in sequence. They are peer services, orchestrated by SSMA, running concurrently on the same decrypted stream. Security Exceptions are configured <em>within</em> ATP policy — not as a separate pre-stage.
+        </div>
+      </div>
+
+      <div class="callout callout-warn">
+        <div class="callout-header"><div class="callout-icon">!</div>WATCH OUT</div>
+        <div class="callout-body">
+          Sandbox is not invoked for <em>every</em> file. It's invoked for files that pass all inline checks BUT are still unknown and suspicious. Known-good and known-bad files never reach the sandbox — they're handled cheaply upstream.
+        </div>
+      </div>
+
+      <ul class="content-list">
+        <li>SSMA = Single Scan, Multi-Action — one decryption, many engines, concurrent inspection</li>
+        <li>Pipeline order: Cloud Firewall → Proxy + SSL → URL Filtering / CAC → Threat Zone → DLP</li>
+        <li>ATP's 5 pillars fire at different points: pillars 1–2 on request, 3 on early response, 4 on both, 5 on full response</li>
+        <li>Magic bytes = true file-type detection; attackers can't fake them without breaking the file</li>
+        <li>Signatures are retrospective; ML catches zero-day and polymorphic threats</li>
+        <li>Cloud Effect = shared threat intelligence feeding every engine globally</li>
+        <li>Sandbox = last-resort detonation for genuine unknowns, feeds findings back via Cloud Effect</li>
+      </ul>
+    </div>
+
+  </div>
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">CONCEPTS — TICK WHEN UNDERSTOOD</div>
+      <ul class="subtopic-list" id="subtopic-list">
+        <li onclick="toggleDone(this)"><div class="subtopic-check"></div><span>SSMA — one scan, many actions</span></li>
+        <li onclick="toggleDone(this)"><div class="subtopic-check"></div><span>Why the pipeline isn't linear</span></li>
+        <li onclick="toggleDone(this)"><div class="subtopic-check"></div><span>ZIA pipeline order (FW → SSL → URL → Threat → DLP)</span></li>
+        <li onclick="toggleDone(this)"><div class="subtopic-check"></div><span>Early termination principle</span></li>
+        <li onclick="toggleDone(this)"><div class="subtopic-check"></div><span>Request-phase vs response-phase pillars</span></li>
+        <li onclick="toggleDone(this)"><div class="subtopic-check"></div><span>Magic bytes / true file type</span></li>
+        <li onclick="toggleDone(this)"><div class="subtopic-check"></div><span>Signatures vs ML — what each catches</span></li>
+        <li onclick="toggleDone(this)"><div class="subtopic-check"></div><span>Cloud Effect feedback loop</span></li>
+        <li onclick="toggleDone(this)"><div class="subtopic-check"></div><span>Sandbox as last-resort escalation</span></li>
+      </ul>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">QUICK REFERENCE</div>
+
+      <div class="quick-ref">
+        <div class="quick-ref-term">SSMA</div>
+        <div class="quick-ref-def">Single Scan, Multi-Action. Zscaler's inspection engine. Decrypt once, let every engine inspect concurrently.</div>
+      </div>
+      <div class="quick-ref">
+        <div class="quick-ref-term">MAGIC BYTES</div>
+        <div class="quick-ref-def">Fixed byte signature at the start of every file format. Used for true file-type detection regardless of filename or Content-Type.</div>
+      </div>
+      <div class="quick-ref">
+        <div class="quick-ref-term">CLOUD EFFECT</div>
+        <div class="quick-ref-def">Zscaler's shared threat intelligence mechanism. When one engine or customer discovers a threat, all engines globally update instantly.</div>
+      </div>
+      <div class="quick-ref">
+        <div class="quick-ref-term">EARLY TERMINATION</div>
+        <div class="quick-ref-def">Design principle where cheap, deterministic checks fire first so expensive engines only see traffic that survives the earlier filters.</div>
+      </div>
+      <div class="quick-ref">
+        <div class="quick-ref-term">POLYMORPHIC MALWARE</div>
+        <div class="quick-ref-def">Malware that mutates its code to produce a new hash/signature every deployment — why ML/behavioural detection is needed.</div>
+      </div>
+      <div class="quick-ref">
+        <div class="quick-ref-term">TRUE FILE TYPE</div>
+        <div class="quick-ref-def">The file's actual format, determined by magic bytes — as opposed to the claimed type from filename or Content-Type header.</div>
+      </div>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">MY NOTES</div>
+      <div class="sidebar-note">
+        The F1 pit-lane analogy: every crew member (engine) needs to give green before the car (traffic) can leave the pit. One missing green = car stops.
+      </div>
+      <div class="sidebar-note">
+        "Is this allowed?" comes before "is this safe?" — URL Filtering / CAC are policy gates. ATP, Malware, IPS, Sandbox are the security screening that only runs on traffic already allowed by policy.
+      </div>
+      <div class="sidebar-note">
+        Malware Protection and ATP are peers, not one before the other. They share Cloud Effect intel and run concurrently via SSMA.
+      </div>
+    </div>
+
+  </div>
+
+</main>
+
+<footer>
+  <div class="footer-left">ZDTE<span>.</span></div>
+  <div class="footer-right">Zscaler Digital Transformation Engineer · Study Bite — SSMA &amp; ATP Pipeline</div>
+</footer>
+
+<script>
+  function navTo(id, el) {
+    document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+    if (el) el.classList.add('active');
+    const section = document.getElementById(id);
+    if (section) {
+      const top = section.getBoundingClientRect().top + window.scrollY - 60;
+      window.scrollTo({ top, behavior: 'smooth' });
+    }
+  }
+
+  function toggleDone(li) {
+    li.classList.toggle('done');
+    updateProgress();
+  }
+
+  function updateProgress() {
+    const items = document.querySelectorAll('#subtopic-list li');
+    const done  = document.querySelectorAll('#subtopic-list li.done').length;
+    const pct   = items.length ? Math.round((done / items.length) * 100) : 0;
+    document.getElementById('prog-num').innerHTML = pct + '<span style="font-size:18px;color:#7a6a55;">%</span>';
+  }
+</script>
+
+</body>
+</html>
