@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ZDTE Study Bite — ZCC + GRE Coexistence</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;0,700;1,400&family=Epilogue:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #fef9f0;
+    --cream-dark: #f5eddb;
+    --ink: #1a1209;
+    --ink-soft: #5a4a35;
+    --ink-muted: #8a7660;
+    --orange: #ff6b35;
+    --orange-light: #fff3ec;
+    --orange-border: #ffd5c0;
+    --amber-light: #fffbe6;
+    --green: #3a7d44;
+    --green-light: #edf7ee;
+    --green-border: #b2dfb4;
+    --blue-light: #e8f0fb;
+    --blue-border: #b3ccf0;
+    --blue: #1a6bcc;
+    --red-light: #fce8e8;
+    --red-border: #f7c1c1;
+    --red: #a32d2d;
+    --border: #ede5d8;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Epilogue', sans-serif;
+    background: var(--cream);
+    color: var(--ink);
+    min-height: 100vh;
+  }
+
+  header {
+    padding: 40px 60px 28px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 32px;
+    background: var(--cream);
+  }
+
+  .header-left { flex: 1; }
+
+  .breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+    color: var(--ink-muted);
+    letter-spacing: 0.08em;
+    margin-bottom: 12px;
+  }
+
+  .breadcrumb a { color: var(--orange); text-decoration: none; }
+  .breadcrumb-sep { color: var(--border); }
+
+  .bite-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--orange);
+    color: white;
+    padding: 5px 14px;
+    border-radius: 20px;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    margin-bottom: 14px;
+  }
+
+  h1 {
+    font-family: 'Fraunces', serif;
+    font-size: 40px;
+    font-weight: 700;
+    line-height: 1.0;
+    color: var(--ink);
+    margin-bottom: 10px;
+  }
+
+  h1 em { font-style: italic; font-weight: 400; color: var(--orange); }
+
+  .header-meta-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+    margin-top: 14px;
+  }
+
+  .tag {
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 500;
+    border: 1px solid;
+    display: inline-block;
+  }
+
+  .tag-zia   { background: var(--blue-light);   color: var(--blue);   border-color: var(--blue-border); }
+  .tag-zpa   { background: var(--green-light);  color: var(--green);  border-color: var(--green-border); }
+
+  .header-right { display: flex; flex-direction: column; gap: 10px; align-items: flex-end; flex-shrink: 0; }
+  .progress-card { background: var(--ink); color: var(--cream); padding: 14px 20px; border-radius: 14px; text-align: center; min-width: 110px; }
+  .progress-card .big { font-family: 'Fraunces', serif; font-size: 32px; font-weight: 700; color: var(--orange); line-height: 1; }
+  .progress-card .lbl { font-size: 10px; color: #7a6a55; letter-spacing: 0.1em; margin-top: 4px; }
+
+  nav.section-nav {
+    display: flex; gap: 0; padding: 0 60px;
+    border-bottom: 1px solid var(--border);
+    background: var(--cream-dark); overflow-x: auto;
+    position: sticky; top: 0; z-index: 100;
+  }
+  .nav-tab {
+    padding: 14px 20px; font-size: 12px; font-weight: 500; color: var(--ink-muted);
+    letter-spacing: 0.06em; cursor: pointer; border-bottom: 2px solid transparent;
+    white-space: nowrap; background: none; border-top: none; border-left: none;
+    border-right: none; font-family: 'Epilogue', sans-serif;
+    transition: color 0.15s, border-color 0.15s;
+  }
+  .nav-tab:hover { color: var(--ink); }
+  .nav-tab.active { color: var(--orange); border-bottom-color: var(--orange); }
+
+  main {
+    display: grid;
+    grid-template-columns: 1fr 300px;
+    gap: 0;
+    min-height: calc(100vh - 180px);
+  }
+
+  .main-content {
+    padding: 36px 48px 60px 60px;
+    border-right: 1px solid var(--border);
+  }
+
+  .sidebar {
+    padding: 36px 28px 60px;
+    background: var(--cream-dark);
+  }
+
+  .section-block { margin-bottom: 40px; }
+
+  .section-label {
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    color: var(--ink-muted);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+  h2 {
+    font-family: 'Fraunces', serif;
+    font-size: 24px;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 14px;
+    line-height: 1.2;
+  }
+
+  h3 {
+    font-family: 'Fraunces', serif;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 10px;
+    margin-top: 24px;
+  }
+
+  p {
+    font-size: 14px;
+    color: var(--ink-soft);
+    line-height: 1.8;
+    margin-bottom: 12px;
+  }
+
+  ul.content-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+
+  ul.content-list li {
+    font-size: 14px;
+    color: var(--ink-soft);
+    padding-left: 16px;
+    position: relative;
+    line-height: 1.6;
+  }
+
+  ul.content-list li::before {
+    content: '·';
+    position: absolute;
+    left: 2px;
+    color: var(--orange);
+    font-weight: 700;
+    font-size: 18px;
+    line-height: 1.2;
+  }
+
+  .callout {
+    border-radius: 14px;
+    padding: 18px 20px;
+    margin-bottom: 16px;
+    border: 1px solid;
+  }
+
+  .callout-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    margin-bottom: 8px;
+  }
+
+  .callout-icon {
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    flex-shrink: 0;
+  }
+
+  .callout-body { font-size: 13px; line-height: 1.7; }
+
+  .callout-note { background: var(--amber-light); border-color: #ffe680; }
+  .callout-note .callout-header { color: #a07c00; }
+  .callout-note .callout-icon { background: #ffe680; color: #a07c00; }
+  .callout-note .callout-body { color: #7a5c00; }
+
+  .callout-analogy { background: var(--green-light); border-color: var(--green-border); }
+  .callout-analogy .callout-header { color: var(--green); }
+  .callout-analogy .callout-icon { background: var(--green-border); color: var(--green); }
+  .callout-analogy .callout-body { color: #2a5c32; }
+
+  .callout-tip { background: var(--blue-light); border-color: var(--blue-border); }
+  .callout-tip .callout-header { color: var(--blue); }
+  .callout-tip .callout-icon { background: var(--blue-border); color: var(--blue); }
+  .callout-tip .callout-body { color: #153d7a; }
+
+  .callout-warn { background: var(--red-light); border-color: var(--red-border); }
+  .callout-warn .callout-header { color: var(--red); }
+  .callout-warn .callout-icon { background: var(--red-border); color: var(--red); }
+  .callout-warn .callout-body { color: #7a1f1f; }
+
+  .definition {
+    background: var(--cream);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--orange);
+    border-radius: 0 10px 10px 0;
+    padding: 14px 18px;
+    margin-bottom: 16px;
+  }
+
+  .definition-term { font-size: 13px; font-weight: 600; color: var(--ink); margin-bottom: 4px; }
+  .definition-body { font-size: 13px; color: var(--ink-soft); line-height: 1.7; }
+
+  .key-concept {
+    background: var(--orange-light);
+    border: 1px solid var(--orange-border);
+    border-radius: 10px;
+    padding: 14px 18px;
+    margin-bottom: 16px;
+    font-size: 13px;
+    color: #7a3010;
+    line-height: 1.7;
+  }
+
+  .key-concept strong { color: var(--orange); font-weight: 600; }
+
+  /* Problem/Solution layout */
+  .problem-solution {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+
+  .ps-card {
+    border-radius: 12px;
+    padding: 16px 18px;
+    border: 1px solid;
+  }
+
+  .ps-card.problem {
+    background: var(--red-light);
+    border-color: var(--red-border);
+  }
+
+  .ps-card.solution {
+    background: var(--green-light);
+    border-color: var(--green-border);
+  }
+
+  .ps-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    margin-bottom: 8px;
+  }
+
+  .ps-card.problem .ps-label { color: var(--red); }
+  .ps-card.solution .ps-label { color: var(--green); }
+
+  .ps-card ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .ps-card ul li {
+    font-size: 12px;
+    line-height: 1.6;
+    padding-left: 14px;
+    position: relative;
+  }
+
+  .ps-card.problem ul li { color: #7a1f1f; }
+  .ps-card.solution ul li { color: #2a5c32; }
+
+  .ps-card ul li::before {
+    content: '·';
+    position: absolute;
+    left: 2px;
+    font-size: 16px;
+    line-height: 1.2;
+    font-weight: 700;
+  }
+
+  .ps-card.problem ul li::before { color: var(--red); }
+  .ps-card.solution ul li::before { color: var(--green); }
+
+  /* Architecture flow */
+  .arch-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 10px;
+    flex-wrap: wrap;
+  }
+
+  .arch-node {
+    background: var(--ink);
+    color: var(--cream);
+    padding: 8px 14px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+
+  .arch-node.highlight { background: var(--orange); color: white; }
+  .arch-node.zscaler { background: var(--blue); color: white; }
+
+  .arch-arrow {
+    color: var(--ink-muted);
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+
+  .arch-label {
+    font-size: 10px;
+    color: var(--ink-muted);
+    letter-spacing: 0.08em;
+    margin-left: 4px;
+  }
+
+  /* Sidebar */
+  .sidebar-section { margin-bottom: 28px; }
+
+  .sidebar-label {
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    color: var(--ink-muted);
+    margin-bottom: 10px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .quick-ref {
+    background: var(--ink);
+    border-radius: 12px;
+    padding: 14px 16px;
+    margin-bottom: 10px;
+  }
+
+  .quick-ref-term { font-size: 11px; font-weight: 600; color: var(--orange); letter-spacing: 0.06em; margin-bottom: 4px; }
+  .quick-ref-def { font-size: 12px; color: #9a8070; line-height: 1.6; }
+
+  .sidebar-note {
+    background: var(--amber-light);
+    border: 1px solid #ffe680;
+    border-radius: 10px;
+    padding: 12px 14px;
+    font-size: 12px;
+    color: #7a5c00;
+    line-height: 1.6;
+    margin-bottom: 10px;
+    font-style: italic;
+  }
+
+  footer {
+    padding: 20px 60px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--cream-dark);
+  }
+
+  .footer-left { font-family: 'Fraunces', serif; font-size: 16px; font-weight: 700; }
+  .footer-left span { color: var(--orange); }
+  .footer-right { font-size: 11px; color: var(--ink-muted); letter-spacing: 0.06em; }
+
+  @media (max-width: 900px) {
+    header { padding: 24px 20px 20px; flex-direction: column; }
+    main { grid-template-columns: 1fr; }
+    .main-content { padding: 24px 20px 40px; border-right: none; }
+    .sidebar { padding: 24px 20px 40px; border-top: 1px solid var(--border); }
+    .problem-solution { grid-template-columns: 1fr; }
+    footer { padding: 20px; flex-direction: column; gap: 8px; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-left">
+    <div class="breadcrumb">
+      <a href="../index.html">Study Plan</a>
+      <span class="breadcrumb-sep">›</span>
+      <a href="../study-bites.html">Study Bites</a>
+      <span class="breadcrumb-sep">›</span>
+      <span>ZCC + GRE Coexistence</span>
+    </div>
+    <div class="bite-badge">⚡ STUDY BITE</div>
+    <h1>ZCC + GRE<br><em>Coexistence on Trusted Networks</em></h1>
+    <div class="header-meta-row">
+      <span class="tag tag-zia">ZIA</span>
+      <span class="tag tag-zpa">ZPA</span>
+    </div>
+  </div>
+  <div class="header-right">
+    <div class="progress-card">
+      <div class="big" id="prog-num">0<span style="font-size:18px;color:#7a6a55;">%</span></div>
+      <div class="lbl">LOCKED IN</div>
+    </div>
+  </div>
+</header>
+
+<nav class="section-nav">
+  <button class="nav-tab active" onclick="navTo('section-scenario', this)">THE SCENARIO</button>
+  <button class="nav-tab" onclick="navTo('section-problems', this)">PROBLEMS</button>
+  <button class="nav-tab" onclick="navTo('section-solution', this)">SOLUTION</button>
+  <button class="nav-tab" onclick="navTo('section-notes', this)">MENTAL NOTES</button>
+</nav>
+
+<main>
+
+  <div class="main-content">
+
+    <!-- SCENARIO -->
+    <div class="section-block" id="section-scenario">
+      <div class="section-label">THE SCENARIO</div>
+      <h2>When Two On-Ramps Collide</h2>
+      <p>
+        A corporate branch has a <strong>GRE tunnel</strong> forwarding all internet-bound traffic to Zscaler for ZIA inspection. Endpoints on that same network also have <strong>ZCC installed in Tunnel 2.0 mode</strong>. Both mechanisms are trying to forward traffic to Zscaler — but they don't know about each other.
+      </p>
+
+      <h3>What Actually Happens</h3>
+
+      <p>ZCC Tunnel 2.0 uses <strong>DTLS over UDP 443</strong> to establish its tunnel to Zscaler. That DTLS traffic is internet-bound — which means the corporate network's default route catches it and sends it down the GRE tunnel first. You end up with <strong>DTLS encapsulated inside GRE</strong>.</p>
+
+      <div class="arch-row">
+        <div class="arch-node highlight">Endpoint + ZCC</div>
+        <div class="arch-arrow">→</div>
+        <div class="arch-node">Corporate Network</div>
+        <div class="arch-arrow">→</div>
+        <div class="arch-node">GRE Tunnel</div>
+        <div class="arch-arrow">→</div>
+        <div class="arch-node zscaler">Zscaler ZEN</div>
+        <div class="arch-label">GRE stripped → DTLS inside</div>
+      </div>
+
+      <p>Zscaler strips the GRE header and sees the DTLS packet — but at this point it has already been processed as ZIA traffic from the branch Location. The ZCC tunnel establishment is now competing with the GRE inspection path.</p>
+    </div>
+
+    <!-- PROBLEMS -->
+    <div class="section-block" id="section-problems">
+      <div class="section-label">THE PROBLEMS</div>
+      <h2>What Goes Wrong</h2>
+
+      <div class="problem-solution">
+        <div class="ps-card problem">
+          <div class="ps-label">TUNNEL 2.0 PROBLEMS</div>
+          <ul>
+            <li>DTLS (UDP 443) dropped by corporate firewall or GRE path</li>
+            <li>ZCC falls back to TLS over TCP 443 — loses UDP performance benefits</li>
+            <li>SSL inspection at GRE layer can break ZCC's own TLS tunnel establishment</li>
+            <li>Traffic inspected twice — double latency and policy conflict</li>
+          </ul>
+        </div>
+        <div class="ps-card problem">
+          <div class="ps-label">TUNNEL 1.0 PROBLEMS</div>
+          <ul>
+            <li>Uses HTTP CONNECT — avoids tunnel-in-tunnel breakage</li>
+            <li>But web traffic (80/443) is still forwarded by both ZCC and GRE</li>
+            <li>Double forwarding and double inspection still occur</li>
+            <li>Redundant overhead with no security benefit</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="callout callout-warn">
+        <div class="callout-header"><div class="callout-icon">!</div>KEY ISSUE — DOUBLE INSPECTION</div>
+        <div class="callout-body">When SSL inspection is enabled on the GRE path, Zscaler intercepts and re-signs TLS sessions at the branch location level. ZCC's own encrypted tunnel arrives already inspected and re-signed — which can break ZCC tunnel establishment entirely. The two mechanisms are not designed to stack.</div>
+      </div>
+    </div>
+
+    <!-- SOLUTION -->
+    <div class="section-block" id="section-solution">
+      <div class="section-label">THE SOLUTION</div>
+      <h2>Trusted Network Detection</h2>
+      <p>
+        The correct design is to let ZCC and GRE <strong>complement each other, not compete</strong>. When an endpoint is on the trusted corporate network, ZCC should detect this and disable its ZIA tunneling — leaving GRE to handle forwarding. ZCC stays active only for ZPA.
+      </p>
+
+      <div class="definition">
+        <div class="definition-term">Trusted Network Detection (TND)</div>
+        <div class="definition-body">A ZCC feature that detects when the endpoint is on a known corporate network (via DNS resolution checks, hostname, or other signals) and switches ZCC into No Tunnel mode for ZIA traffic. Eliminates the double-forwarding problem entirely.</div>
+      </div>
+
+      <h3>Clean Architecture — On Trusted Network</h3>
+
+      <div class="arch-row">
+        <div class="arch-node highlight">ZCC (No Tunnel / ZIA)</div>
+        <div class="arch-arrow">→</div>
+        <div class="arch-node">Steps aside for ZIA</div>
+      </div>
+      <div class="arch-row">
+        <div class="arch-node">GRE Tunnel</div>
+        <div class="arch-arrow">→</div>
+        <div class="arch-node zscaler">Zscaler ZEN</div>
+        <div class="arch-label">Handles all ZIA forwarding</div>
+      </div>
+      <div class="arch-row">
+        <div class="arch-node highlight">ZCC (ZPA tunnel)</div>
+        <div class="arch-arrow">→</div>
+        <div class="arch-node zscaler">Zscaler ZEN</div>
+        <div class="arch-label">ZPA tunnel stays up — always needed</div>
+      </div>
+
+      <div class="key-concept">
+        <strong>Critical rule:</strong> The ZPA tunnel from ZCC is always maintained — even in No Tunnel mode on a trusted network. ZPA access is identity-driven, not location-driven. Only the ZIA tunnel steps aside.
+      </div>
+
+      <h3>Off Trusted Network</h3>
+      <p>When TND detects an unknown network (home, café, airport), ZCC re-enables Tunnel 2.0 and handles both ZIA and ZPA forwarding directly. GRE is not in the picture.</p>
+
+      <div class="arch-row">
+        <div class="arch-node highlight">ZCC Tunnel 2.0</div>
+        <div class="arch-arrow">→</div>
+        <div class="arch-node zscaler">Nearest Zscaler ZEN</div>
+        <div class="arch-label">All traffic — ZIA + ZPA</div>
+      </div>
+    </div>
+
+    <!-- MENTAL NOTES -->
+    <div class="section-block" id="section-notes">
+      <div class="section-label">MENTAL NOTES</div>
+      <h2>Things to lock in</h2>
+
+      <div class="callout callout-note">
+        <div class="callout-header"><div class="callout-icon">★</div>MENTAL NOTE</div>
+        <div class="callout-body">DTLS = UDP 443. Most enterprise firewalls and GRE paths drop UDP. ZCC falls back to TLS/TCP automatically — but you lose the performance benefit of DTLS. This is a symptom of misconfigured coexistence, not a feature.</div>
+      </div>
+
+      <div class="callout callout-note">
+        <div class="callout-header"><div class="callout-icon">★</div>MENTAL NOTE</div>
+        <div class="callout-body">Tunnel 1.0 (HTTP CONNECT) avoids the tunnel-in-tunnel breakage problem but doesn't solve the double-forwarding problem. It's still redundant. TND + No Tunnel is the only clean answer.</div>
+      </div>
+
+      <div class="callout callout-analogy">
+        <div class="callout-header"><div class="callout-icon">⟳</div>ANALOGY</div>
+        <div class="callout-body">ZCC and GRE both trying to forward traffic is like two security guards both trying to escort the same person through the same checkpoint. It doesn't make you more secure — it just creates chaos at the gate. TND tells one guard to stand down when the other is already on duty.</div>
+      </div>
+    </div>
+
+  </div><!-- end .main-content -->
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">TOPICS — TICK WHEN LOCKED IN</div>
+      <ul class="subtopic-list" id="subtopic-list">
+        <li onclick="toggleDone(this)"><div class="subtopic-check"></div><span>Why ZCC + GRE conflict on trusted networks</span></li>
+        <li onclick="toggleDone(this)"><div class="subtopic-check"></div><span>DTLS (UDP 443) and the tunnel-in-tunnel problem</span></li>
+        <li onclick="toggleDone(this)"><div class="subtopic-check"></div><span>Double inspection and SSL inspection breakage</span></li>
+        <li onclick="toggleDone(this)"><div class="subtopic-check"></div><span>Trusted Network Detection (TND)</span></li>
+        <li onclick="toggleDone(this)"><div class="subtopic-check"></div><span>No Tunnel mode — ZIA steps aside, ZPA stays up</span></li>
+        <li onclick="toggleDone(this)"><div class="subtopic-check"></div><span>Off-network behaviour — ZCC Tunnel 2.0 takes over</span></li>
+      </ul>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">QUICK REFERENCE</div>
+
+      <div class="quick-ref">
+        <div class="quick-ref-term">DTLS</div>
+        <div class="quick-ref-def">Datagram TLS — ZCC Tunnel 2.0 protocol. Runs over UDP 443. Faster than TLS/TCP but commonly dropped by enterprise firewalls and GRE paths.</div>
+      </div>
+
+      <div class="quick-ref">
+        <div class="quick-ref-term">TLS FALLBACK</div>
+        <div class="quick-ref-def">When DTLS is blocked, ZCC automatically falls back to TLS over TCP 443. Works but loses UDP performance benefits.</div>
+      </div>
+
+      <div class="quick-ref">
+        <div class="quick-ref-term">TRUSTED NETWORK DETECTION</div>
+        <div class="quick-ref-def">ZCC feature that detects known corporate network and disables ZIA tunneling. GRE handles ZIA forwarding. ZPA tunnel stays up.</div>
+      </div>
+
+      <div class="quick-ref">
+        <div class="quick-ref-term">NO TUNNEL MODE</div>
+        <div class="quick-ref-def">ZCC state on trusted network. ZIA traffic forwarded by network (GRE/IPSec). ZCC only maintains ZPA tunnel.</div>
+      </div>
+
+      <div class="quick-ref">
+        <div class="quick-ref-term">DOUBLE INSPECTION</div>
+        <div class="quick-ref-def">Traffic hits ZIA policy twice — once at GRE layer, once via ZCC tunnel. Causes latency, policy conflicts, and can break SSL inspection.</div>
+      </div>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">PROBLEM SUMMARY</div>
+
+      <div class="callout callout-warn" style="margin-bottom:10px;">
+        <div class="callout-header"><div class="callout-icon">!</div>TUNNEL 2.0 + GRE</div>
+        <div class="callout-body">DTLS dropped → TLS fallback. SSL inspection breaks ZCC tunnel. Double inspection. Policy conflicts.</div>
+      </div>
+
+      <div class="callout callout-warn" style="margin-bottom:10px;">
+        <div class="callout-header"><div class="callout-icon">!</div>TUNNEL 1.0 + GRE</div>
+        <div class="callout-body">No tunnel breakage, but web traffic still double-forwarded. Redundant overhead. Still not the right design.</div>
+      </div>
+
+      <div class="callout callout-tip">
+        <div class="callout-header"><div class="callout-icon">→</div>CORRECT DESIGN</div>
+        <div class="callout-body">TND → No Tunnel on trusted network. GRE handles ZIA. ZCC handles ZPA only. Clean separation, no redundancy.</div>
+      </div>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">MY NOTES</div>
+      <div class="sidebar-note">ZPA tunnel ALWAYS stays up — even in No Tunnel mode. ZPA is identity-driven not location-driven. Never forget this.</div>
+      <div class="sidebar-note">If a question describes DTLS failures or double inspection on a corporate network — the answer is almost certainly misconfigured TND or missing No Tunnel policy.</div>
+    </div>
+
+  </div><!-- end .sidebar -->
+
+</main>
+
+<footer>
+  <div class="footer-left">ZDTE<span>.</span></div>
+  <div class="footer-right">Zscaler Digital Transformation Engineer · Study Bite · ZCC + GRE Coexistence</div>
+</footer>
+
+<script>
+  function navTo(id, el) {
+    document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+    if (el) el.classList.add('active');
+    const section = document.getElementById(id);
+    if (section) {
+      const top = section.getBoundingClientRect().top + window.scrollY - 60;
+      window.scrollTo({ top, behavior: 'smooth' });
+    }
+  }
+
+  function toggleDone(li) {
+    li.classList.toggle('done');
+    updateProgress();
+  }
+
+  function updateProgress() {
+    const items = document.querySelectorAll('#subtopic-list li');
+    const done  = document.querySelectorAll('#subtopic-list li.done').length;
+    const pct   = items.length ? Math.round((done / items.length) * 100) : 0;
+    document.getElementById('prog-num').innerHTML = pct + '<span style="font-size:18px;color:#7a6a55;">%</span>';
+  }
+</script>
+
+</body>
+</html>

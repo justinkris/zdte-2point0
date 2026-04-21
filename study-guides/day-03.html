@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ZDTE Study Guide — Connectivity Services</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;0,700;1,400&family=Epilogue:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #fef9f0;
+    --cream-dark: #f5eddb;
+    --ink: #1a1209;
+    --ink-soft: #5a4a35;
+    --ink-muted: #8a7660;
+    --orange: #ff6b35;
+    --orange-light: #fff3ec;
+    --orange-border: #ffd5c0;
+    --amber-light: #fffbe6;
+    --green: #3a7d44;
+    --green-light: #edf7ee;
+    --green-border: #b2dfb4;
+    --purple: #5c35cc;
+    --purple-light: #ece8ff;
+    --purple-border: #c8bbff;
+    --blue-light: #e8f0fb;
+    --blue-border: #b3ccf0;
+    --blue: #1a6bcc;
+    --red-light: #fce8e8;
+    --red-border: #f7c1c1;
+    --red: #a32d2d;
+    --border: #ede5d8;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Epilogue', sans-serif;
+    background: var(--cream);
+    color: var(--ink);
+    min-height: 100vh;
+  }
+
+  header {
+    padding: 40px 60px 28px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 32px;
+    background: var(--cream);
+  }
+
+  .header-left { flex: 1; }
+
+  .breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+    color: var(--ink-muted);
+    letter-spacing: 0.08em;
+    margin-bottom: 12px;
+  }
+  .breadcrumb a { color: var(--orange); text-decoration: none; cursor: pointer; }
+  .breadcrumb-sep { color: var(--border); }
+
+  .day-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--ink);
+    color: var(--cream);
+    padding: 5px 14px;
+    border-radius: 20px;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    margin-bottom: 14px;
+  }
+  .day-badge-dot { width: 5px; height: 5px; background: var(--orange); border-radius: 50%; }
+
+  h1 {
+    font-family: 'Fraunces', serif;
+    font-size: 44px;
+    font-weight: 700;
+    line-height: 1.0;
+    color: var(--ink);
+    margin-bottom: 10px;
+  }
+  h1 em { font-style: italic; font-weight: 400; color: var(--orange); }
+
+  .header-meta-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+    margin-top: 14px;
+  }
+
+  .tag { padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 500; border: 1px solid; display: inline-block; }
+  .tag-zia    { background: var(--blue-light);   color: var(--blue);   border-color: var(--blue-border); }
+  .tag-zpa    { background: var(--green-light);  color: var(--green);  border-color: var(--green-border); }
+  .tag-weight { background: var(--orange-light); color: #cc4a18;       border-color: var(--orange-border); }
+
+  .header-right {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: flex-end;
+    flex-shrink: 0;
+  }
+
+  .progress-card {
+    background: var(--ink);
+    color: var(--cream);
+    padding: 14px 20px;
+    border-radius: 14px;
+    text-align: center;
+    min-width: 110px;
+  }
+  .progress-card .big { font-family: 'Fraunces', serif; font-size: 32px; font-weight: 700; color: var(--orange); line-height: 1; }
+  .progress-card .lbl { font-size: 10px; color: #7a6a55; letter-spacing: 0.1em; margin-top: 4px; }
+
+  nav.section-nav {
+    display: flex;
+    gap: 0;
+    padding: 0 60px;
+    border-bottom: 1px solid var(--border);
+    background: var(--cream-dark);
+    overflow-x: auto;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .nav-tab {
+    padding: 14px 20px;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--ink-muted);
+    letter-spacing: 0.06em;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    white-space: nowrap;
+    transition: color 0.15s, border-color 0.15s;
+    background: none;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    font-family: 'Epilogue', sans-serif;
+  }
+  .nav-tab:hover { color: var(--ink); }
+  .nav-tab.active { color: var(--orange); border-bottom-color: var(--orange); }
+
+  main {
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    gap: 0;
+    min-height: calc(100vh - 200px);
+  }
+
+  .main-content { padding: 36px 48px 60px 60px; border-right: 1px solid var(--border); }
+  .sidebar { padding: 36px 28px 60px; background: var(--cream-dark); }
+
+  .section-block { margin-bottom: 40px; }
+
+  .section-label {
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    color: var(--ink-muted);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+  h2 { font-family: 'Fraunces', serif; font-size: 24px; font-weight: 600; color: var(--ink); margin-bottom: 14px; line-height: 1.2; }
+  h3 { font-family: 'Fraunces', serif; font-size: 18px; font-weight: 600; color: var(--ink); margin-bottom: 10px; margin-top: 24px; }
+  p { font-size: 14px; color: var(--ink-soft); line-height: 1.8; margin-bottom: 12px; }
+
+  ul.content-list { list-style: none; display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
+  ul.content-list li { font-size: 14px; color: var(--ink-soft); padding-left: 16px; position: relative; line-height: 1.6; }
+  ul.content-list li::before { content: '·'; position: absolute; left: 2px; color: var(--orange); font-weight: 700; font-size: 18px; line-height: 1.2; }
+
+  .callout { border-radius: 14px; padding: 18px 20px; margin-bottom: 16px; border: 1px solid; }
+  .callout-header { display: flex; align-items: center; gap: 8px; font-size: 11px; font-weight: 600; letter-spacing: 0.1em; margin-bottom: 8px; }
+  .callout-icon { width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; flex-shrink: 0; }
+  .callout-body { font-size: 13px; line-height: 1.7; }
+
+  .callout-note { background: var(--amber-light); border-color: #ffe680; }
+  .callout-note .callout-header { color: #a07c00; }
+  .callout-note .callout-icon { background: #ffe680; color: #a07c00; }
+  .callout-note .callout-body { color: #7a5c00; }
+
+  .callout-analogy { background: var(--green-light); border-color: var(--green-border); }
+  .callout-analogy .callout-header { color: var(--green); }
+  .callout-analogy .callout-icon { background: var(--green-border); color: var(--green); }
+  .callout-analogy .callout-body { color: #2a5c32; }
+
+  .callout-tip { background: var(--blue-light); border-color: var(--blue-border); }
+  .callout-tip .callout-header { color: var(--blue); }
+  .callout-tip .callout-icon { background: var(--blue-border); color: var(--blue); }
+  .callout-tip .callout-body { color: #153d7a; }
+
+  .callout-warn { background: var(--red-light); border-color: var(--red-border); }
+  .callout-warn .callout-header { color: var(--red); }
+  .callout-warn .callout-icon { background: var(--red-border); color: var(--red); }
+  .callout-warn .callout-body { color: #7a1f1f; }
+
+  .definition {
+    background: var(--cream);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--orange);
+    border-radius: 0 10px 10px 0;
+    padding: 14px 18px;
+    margin-bottom: 16px;
+  }
+  .definition-term { font-size: 13px; font-weight: 600; color: var(--ink); margin-bottom: 4px; }
+  .definition-body { font-size: 13px; color: var(--ink-soft); line-height: 1.7; }
+
+  .key-concept {
+    background: var(--orange-light);
+    border: 1px solid var(--orange-border);
+    border-radius: 10px;
+    padding: 14px 18px;
+    margin-bottom: 16px;
+    font-size: 13px;
+    color: #7a3010;
+    line-height: 1.7;
+  }
+  .key-concept strong { color: var(--orange); font-weight: 600; }
+
+  .compare-table { width: 100%; border-collapse: collapse; font-size: 13px; margin-bottom: 20px; }
+  .compare-table th { background: var(--ink); color: var(--cream); padding: 10px 14px; text-align: left; font-weight: 500; font-size: 11px; letter-spacing: 0.08em; }
+  .compare-table th:first-child { border-radius: 10px 0 0 0; }
+  .compare-table th:last-child  { border-radius: 0 10px 0 0; }
+  .compare-table td { padding: 10px 14px; border-bottom: 1px solid var(--border); color: var(--ink-soft); vertical-align: top; line-height: 1.6; }
+  .compare-table tr:nth-child(even) td { background: var(--cream-dark); }
+  .compare-table tr:last-child td:first-child { border-radius: 0 0 0 10px; }
+  .compare-table tr:last-child td:last-child  { border-radius: 0 0 10px 0; }
+
+  .flow-steps { display: flex; flex-direction: column; gap: 0; margin-bottom: 20px; }
+  .flow-step { display: flex; gap: 16px; align-items: flex-start; padding: 12px 0; border-bottom: 1px solid var(--border); }
+  .flow-step:last-child { border-bottom: none; }
+  .flow-num { width: 28px; height: 28px; background: var(--ink); color: var(--orange); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: 'Fraunces', serif; font-size: 13px; font-weight: 700; flex-shrink: 0; margin-top: 1px; }
+  .flow-text { font-size: 13px; color: var(--ink-soft); line-height: 1.7; padding-top: 4px; }
+  .flow-text strong { color: var(--ink); font-weight: 600; }
+
+  .sidebar-section { margin-bottom: 28px; }
+  .sidebar-label { font-size: 10px; letter-spacing: 0.18em; color: var(--ink-muted); margin-bottom: 10px; padding-bottom: 6px; border-bottom: 1px solid var(--border); }
+
+  .subtopic-list { list-style: none; display: flex; flex-direction: column; gap: 4px; }
+  .subtopic-list li { display: flex; align-items: flex-start; gap: 8px; font-size: 12px; color: var(--ink-soft); padding: 6px 0; border-bottom: 1px solid var(--border); line-height: 1.5; cursor: pointer; }
+  .subtopic-list li:last-child { border-bottom: none; }
+  .subtopic-check { width: 14px; height: 14px; border: 1px solid var(--border); border-radius: 3px; flex-shrink: 0; margin-top: 1px; transition: background 0.15s, border-color 0.15s; }
+  .subtopic-list li.done .subtopic-check { background: var(--green); border-color: var(--green); }
+  .subtopic-list li.done span { text-decoration: line-through; color: var(--ink-muted); }
+
+  .quick-ref { background: var(--ink); border-radius: 12px; padding: 14px 16px; margin-bottom: 10px; }
+  .quick-ref-term { font-size: 11px; font-weight: 600; color: var(--orange); letter-spacing: 0.06em; margin-bottom: 4px; }
+  .quick-ref-def { font-size: 12px; color: #9a8070; line-height: 1.6; }
+
+  .sidebar-note { background: var(--amber-light); border: 1px solid #ffe680; border-radius: 10px; padding: 12px 14px; font-size: 12px; color: #7a5c00; line-height: 1.6; margin-bottom: 10px; font-style: italic; }
+
+  footer {
+    padding: 20px 60px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--cream-dark);
+  }
+  .footer-left { font-family: 'Fraunces', serif; font-size: 16px; font-weight: 700; }
+  .footer-left span { color: var(--orange); }
+  .footer-right { font-size: 11px; color: var(--ink-muted); letter-spacing: 0.06em; }
+
+  @media (max-width: 900px) {
+    header { padding: 24px 20px 20px; flex-direction: column; }
+    .header-right { align-items: flex-start; flex-direction: row; }
+    main { grid-template-columns: 1fr; }
+    .main-content { padding: 24px 20px 40px; border-right: none; }
+    .sidebar { padding: 24px 20px 40px; border-top: 1px solid var(--border); }
+    nav.section-nav { padding: 0 20px; }
+    footer { padding: 20px; flex-direction: column; gap: 8px; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-left">
+    <div class="breadcrumb">
+      <a href="../index.html">Study Plan</a>
+      <span class="breadcrumb-sep">›</span>
+      <a href="../study-guides.html">Study Guides</a>
+      <span class="breadcrumb-sep">›</span>
+      <span>Connectivity Services</span>
+    </div>
+    <div class="day-badge">
+      <span class="day-badge-dot"></span>
+      DAY 03 — TUESDAY, 21 APRIL 2026
+    </div>
+    <h1>Connectivity<br><em>Services</em></h1>
+    <div class="header-meta-row">
+      <span class="tag tag-zia">ZIA</span>
+      <span class="tag tag-zpa">ZPA</span>
+      <span class="tag tag-weight">Blueprint: 10%</span>
+    </div>
+  </div>
+  <div class="header-right">
+    <div class="progress-card">
+      <div class="big" id="prog-num">0<span style="font-size:18px;color:#7a6a55;">%</span></div>
+      <div class="lbl">COMPLETE</div>
+    </div>
+  </div>
+</header>
+
+<nav class="section-nav">
+  <button class="nav-tab active" onclick="navTo('section-overview', this)">OVERVIEW</button>
+  <button class="nav-tab" onclick="navTo('section-zcc', this)">ZCC</button>
+  <button class="nav-tab" onclick="navTo('section-branch', this)">BRANCH CONNECTOR</button>
+  <button class="nav-tab" onclick="navTo('section-browser', this)">BROWSER ACCESS</button>
+  <button class="nav-tab" onclick="navTo('section-sdwan', this)">SD-WAN</button>
+  <button class="nav-tab" onclick="navTo('section-cloud-connector', this)">CLOUD CONNECTOR</button>
+  <button class="nav-tab" onclick="navTo('section-tips', this)">EXAM TIPS</button>
+</nav>
+
+<main>
+
+  <div class="main-content">
+
+    <!-- OVERVIEW -->
+    <div class="section-block" id="section-overview">
+      <div class="section-label">OVERVIEW</div>
+      <h2>The On-Ramp Problem</h2>
+      <p>
+        Zscaler's security and access controls only work if traffic actually reaches Zscaler first. Connectivity Services is the collection of mechanisms — agents, virtual appliances, network tunnels — that get traffic from wherever it originates to the Zscaler cloud enforcement layer.
+      </p>
+      <p>
+        There is no single solution that fits every scenario. The right on-ramp depends on where the user is, what device they're on, and what type of access they need. This domain tests your ability to match the right mechanism to the right scenario.
+      </p>
+      <div class="key-concept">
+        <strong>Core principle:</strong> Traffic must reach a Zscaler enforcement node before it can be secured, inspected, or policy-controlled. Connectivity Services is how you make that happen — regardless of device type, location, or network environment.
+      </div>
+    </div>
+
+    <!-- ZCC -->
+    <div class="section-block" id="section-zcc">
+      <div class="section-label">ZSCALER CLIENT CONNECTOR</div>
+      <h2>ZCC — The Endpoint Agent</h2>
+      <p>
+        Zscaler Client Connector (ZCC) is a lightweight agent installed on managed endpoints. It operates at the network layer, intercepting all traffic from the device and forwarding it to the appropriate Zscaler service — ZIA for internet traffic, ZPA for private application access.
+      </p>
+
+      <h3>Tunnel Modes</h3>
+
+      <div class="definition">
+        <div class="definition-term">Tunnel 1.0</div>
+        <div class="definition-body">Forwards web traffic only (ports 80/443). Lighter and older mode — does not cover non-web application traffic.</div>
+      </div>
+
+      <div class="definition">
+        <div class="definition-term">Tunnel 2.0</div>
+        <div class="definition-body">Forwards all traffic at the network layer, regardless of port or protocol. Required for full ZIA coverage including non-web apps like SSH, custom protocols, and UDP traffic.</div>
+      </div>
+
+      <div class="definition">
+        <div class="definition-term">No Tunnel / Direct</div>
+        <div class="definition-body">Used when a trusted network is detected and ZIA is handled by another mechanism (e.g. GRE/IPSec from the network). ZCC steps aside for ZIA but still maintains a ZPA tunnel for private app access.</div>
+      </div>
+
+      <h3>Trusted Network Detection</h3>
+      <p>
+        ZCC is context-aware. When it detects it is on a known corporate network, it can change its tunneling behaviour. This avoids unnecessarily forwarding traffic through Zscaler when the network itself already provides a forwarding path. Off-network (home, café, airport), ZCC tunnels all traffic to the nearest Zscaler enforcement node.
+      </p>
+
+      <h3>Split Tunneling</h3>
+      <p>
+        Certain destinations — most notably Microsoft 365 — can be excluded from the ZCC tunnel and allowed to go direct to the internet. This improves performance for latency-sensitive applications like Teams, following Microsoft's own recommendation to avoid backhauling real-time traffic through a proxy.
+      </p>
+
+      <div class="callout callout-warn">
+        <div class="callout-header"><div class="callout-icon">!</div>WATCH OUT</div>
+        <div class="callout-body">Split tunnel improves performance but reduces visibility. Excluded traffic bypasses ZIA inspection entirely. The tradeoff is intentional — but understand that security is the cost of the performance gain.</div>
+      </div>
+
+      <h3>Device Posture</h3>
+      <p>
+        ZCC continuously collects signals about the endpoint — OS patch level, antivirus status, disk encryption, device enrolment. These signals feed into policy decisions. Split tunnel exclusions and ZPA access can be conditioned on device posture — the device must prove it is healthy before earning the right to go direct or access private apps.
+      </p>
+
+      <div class="key-concept">
+        <strong>Remember:</strong> ZCC's role is traffic interception, tunnel management, and device posture reporting. Authentication itself is handled by the identity provider — ZCC presents the user to Zscaler, it does not authenticate them.
+      </div>
+    </div>
+
+    <!-- BRANCH CONNECTOR -->
+    <div class="section-block" id="section-branch">
+      <div class="section-label">BRANCH CONNECTOR</div>
+      <h2>Branch Connector — ZCC for the Network</h2>
+      <p>
+        Branch Connector solves the problem ZCC cannot: devices that cannot run an agent. Printers, IoT devices, conference room systems, and unmanaged infrastructure cannot install ZCC. Branch Connector is a lightweight VM that acts as the network-level on-ramp to Zscaler, forwarding all branch traffic on behalf of every device connected to it.
+      </p>
+
+      <h3>Branch Connector vs GRE/IPSec</h3>
+      <table class="compare-table">
+        <thead>
+          <tr>
+            <th>Feature</th>
+            <th>GRE / IPSec</th>
+            <th>Branch Connector</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Setup</td>
+            <td>Manual router/firewall config</td>
+            <td>Zscaler-native VM deployment</td>
+          </tr>
+          <tr>
+            <td>User identity context</td>
+            <td>None — source IP only</td>
+            <td>Carries user and device context</td>
+          </tr>
+          <tr>
+            <td>ZPA support</td>
+            <td>No</td>
+            <td>Yes — acts as ZPA on-ramp</td>
+          </tr>
+          <tr>
+            <td>Policy granularity</td>
+            <td>Location-based only</td>
+            <td>Identity-aware policies</td>
+          </tr>
+          <tr>
+            <td>Deployment flexibility</td>
+            <td>On-prem only</td>
+            <td>On-prem, public cloud, data centre</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Deployment Environments</h3>
+      <ul class="content-list">
+        <li><strong>Physical branch offices</strong> — replaces manual GRE/IPSec router configuration</li>
+        <li><strong>Public cloud (AWS, Azure, GCP)</strong> — forwards cloud workload traffic through ZIA without ZCC</li>
+        <li><strong>Data centres</strong> — covers servers and infrastructure that cannot run agents</li>
+      </ul>
+
+      <div class="key-concept">
+        <strong>Key insight:</strong> Branch Connector is not just for branch offices. Despite the name, it is an agentless network on-ramp for any environment where traffic exists but ZCC cannot be deployed.
+      </div>
+    </div>
+
+    <!-- BROWSER ACCESS -->
+    <div class="section-block" id="section-browser">
+      <div class="section-label">BROWSER ACCESS</div>
+      <h2>Browser Access — Agentless ZPA</h2>
+      <p>
+        Browser Access enables users to reach internal web applications through their local browser — no ZCC agent required. Zscaler acts as a secure reverse proxy in the cloud: the user's request is authenticated and policy-checked before being proxied through an App Connector to the internal application. The user never touches the internal network directly.
+      </p>
+
+      <h3>Browser Access Flow</h3>
+      <div class="flow-steps">
+        <div class="flow-step">
+          <div class="flow-num">1</div>
+          <div class="flow-text">User types <strong>hr.company.com</strong> into their browser</div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-num">2</div>
+          <div class="flow-text"><strong>CNAME</strong> record redirects DNS resolution to Zscaler's infrastructure (configured in the public DNS zone)</div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-num">3</div>
+          <div class="flow-text">A record resolves to a <strong>ZPA Public Service Edge</strong> — not the internal IP</div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-num">4</div>
+          <div class="flow-text">Browser connects to Zscaler — <strong>no certificate error</strong> because a trusted cert is installed for the domain</div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-num">5</div>
+          <div class="flow-text">Unauthenticated user is <strong>redirected to the IdP</strong> for authentication</div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-num">6</div>
+          <div class="flow-text">User authenticates — IdP returns a <strong>SAML assertion</strong></div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-num">7</div>
+          <div class="flow-text">ZPA evaluates the <strong>Access Policy</strong> — is this user authorised for this app?</div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-num">8</div>
+          <div class="flow-text">ZPA proxies the request through an <strong>App Connector</strong> to the internal application</div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-num">9</div>
+          <div class="flow-text">User sees the internal app rendered in their <strong>local browser</strong></div>
+        </div>
+      </div>
+
+      <div class="callout callout-warn">
+        <div class="callout-header"><div class="callout-icon">!</div>WATCH OUT</div>
+        <div class="callout-body">Browser Access is HTTP/S only. It cannot handle RDP, SSH, thick-client apps, or custom TCP protocols. For those scenarios, ZCC + ZPA or Privileged Remote Access is required. This is a common exam distractor — don't confuse Browser Access with full ZPA agent access.</div>
+      </div>
+
+      <div class="callout callout-warn">
+        <div class="callout-header"><div class="callout-icon">!</div>WATCH OUT</div>
+        <div class="callout-body">Browser Access ≠ Cloud Browser Isolation. Browser Access renders the app in the user's local browser. Cloud Browser Isolation is a separate feature that runs the browser session remotely. They can be combined, but they are not the same thing.</div>
+      </div>
+    </div>
+
+    <!-- SD-WAN -->
+    <div class="section-block" id="section-sdwan">
+      <div class="section-label">SD-WAN INTEGRATION</div>
+      <h2>SD-WAN — Network-Level Steering to Zscaler</h2>
+      <p>
+        SD-WAN devices are already steering and managing traffic across the WAN. Integrating with Zscaler means pointing that internet-bound traffic to Zscaler for inspection rather than directly to the internet. The result is <strong>local internet breakout with cloud-delivered security</strong> at every branch.
+      </p>
+
+      <h3>Why SD-WAN Alone Is Not Enough</h3>
+      <p>
+        SD-WAN excels at traffic steering, path selection, and bandwidth optimisation — but it has no concept of user identity, device posture, or content inspection. It cannot detect malware, enforce DLP, or apply identity-aware policy. Zscaler provides the security enforcement layer that SD-WAN lacks.
+      </p>
+
+      <h3>Integration Methods</h3>
+      <div class="definition">
+        <div class="definition-term">GRE / IPSec Tunnels</div>
+        <div class="definition-body">The SD-WAN device forwards internet-bound traffic to Zscaler via a GRE or IPSec tunnel. A Location is configured in ZIA tied to the tunnel source IP. Simple and widely supported, but limited to location-based policy — no user identity context.</div>
+      </div>
+      <div class="definition">
+        <div class="definition-term">Native SD-WAN Integrations</div>
+        <div class="definition-body">Many SD-WAN vendors (Cisco Viptela, VMware SD-WAN, Versa, Palo Alto Prisma) have built native Zscaler integrations. These automatically establish tunnels, load balance across ZENs, health-check connections, and select the geographically nearest enforcement node — removing manual configuration overhead.</div>
+      </div>
+
+      <h3>Local Internet Breakout</h3>
+      <p>
+        The old hub-and-spoke model backhauled all branch internet traffic to headquarters, through a central firewall, and back out again. With SD-WAN + Zscaler, each branch breaks out to the internet locally — traffic goes from the branch to the nearest Zscaler enforcement node, gets inspected, and continues to its destination. No hairpin, no HQ bottleneck.
+      </p>
+
+      <div class="key-concept">
+        <strong>Mental model:</strong> Think of Zscaler as replacing the central perimeter firewall — but instead of one firewall at HQ, every branch gets the same security policy enforced at the nearest cloud node. The perimeter moves from a physical location to the cloud.
+      </div>
+    </div>
+
+    <!-- CLOUD CONNECTOR -->
+    <div class="section-block" id="section-cloud-connector">
+      <div class="section-label">CLOUD CONNECTOR</div>
+      <h2>Cloud Connector — Zero Trust for Workloads</h2>
+      <p>
+        Traditional cloud networking connects VPCs and VNets via VPN meshes, transit gateways, and peering connections — all workloads end up on shared routable network space. If one workload is compromised, the entire mesh is reachable. Cloud Connector solves this by routing all workload traffic through the Zscaler Zero Trust Exchange instead.
+      </p>
+
+      <div class="key-concept">
+        <strong>Core idea:</strong> Cloud Connector is the agentless on-ramp for cloud workloads — the same role ZCC plays for managed endpoints, but for VMs, containers, and microservices inside VPCs and VNets.
+      </div>
+
+      <h3>What Cloud Connector Does</h3>
+      <p>
+        Cloud Connector is a virtual appliance that sits inside a VPC/VNet and intercepts all outbound workload traffic — both workload-to-internet and workload-to-workload traffic across VPCs. All traffic is routed through Zscaler for inspection and policy enforcement. No direct VPC peering, no transit gateway meshes, no flat routable networks between workloads.
+      </p>
+
+      <h3>Where It Deploys</h3>
+      <ul class="content-list">
+        <li><strong>AWS, Azure, Google Cloud</strong> — public cloud VPCs and VNets</li>
+        <li><strong>Multi-cloud</strong> — connecting AWS and Azure workloads without direct peering</li>
+        <li><strong>Hybrid cloud</strong> — on-prem data centre to cloud migration paths</li>
+        <li>Can replace ExpressRoute in Azure migration scenarios</li>
+      </ul>
+
+      <h3>Cloud Connector vs Branch Connector</h3>
+      <p>Both are VM-based agentless on-ramps — the distinction is what they serve:</p>
+      <table class="compare-table">
+        <thead>
+          <tr>
+            <th>Connector</th>
+            <th>Serves</th>
+            <th>Typical environment</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Branch Connector</strong></td>
+            <td>Agentless devices and users (IoT, printers, unmanaged endpoints)</td>
+            <td>Branch offices, physical network segments</td>
+          </tr>
+          <tr>
+            <td><strong>Cloud Connector</strong></td>
+            <td>Cloud workloads (VMs, containers, microservices)</td>
+            <td>VPCs, VNets — AWS / Azure / GCP</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="callout callout-analogy">
+        <div class="callout-header"><div class="callout-icon">⟳</div>ZERO TRUST PRINCIPLE APPLIED</div>
+        <div class="callout-body">Network adjacency inside a VPC does not imply trust. Cloud Connector enforces the same Zero Trust segmentation for workload traffic that ZPA enforces for user traffic — workloads only reach what they are explicitly authorised to access.</div>
+      </div>
+    </div>
+
+    <!-- EXAM TIPS -->
+    <div class="section-block" id="section-tips">
+      <div class="section-label">EXAM TIPS</div>
+      <h2>Things to remember</h2>
+
+      <div class="callout callout-note">
+        <div class="callout-header"><div class="callout-icon">★</div>MENTAL NOTE</div>
+        <div class="callout-body">ZCC does not authenticate the user — the IdP does. ZCC's job is to intercept traffic, tunnel it to Zscaler, and report device posture. This distinction trips people up.</div>
+      </div>
+
+      <div class="callout callout-note">
+        <div class="callout-header"><div class="callout-icon">★</div>MENTAL NOTE</div>
+        <div class="callout-body">ZPA always needs a tunnel from ZCC — even on a trusted network. ZIA might step aside when on trusted network, but ZPA access is identity-driven, not location-driven. The ZPA tunnel stays up regardless.</div>
+      </div>
+
+      <div class="callout callout-note">
+        <div class="callout-header"><div class="callout-icon">★</div>MENTAL NOTE</div>
+        <div class="callout-body">Split tunnel = performance gain, but security tradeoff. Traffic that bypasses the tunnel bypasses ZIA inspection. Device posture is what earns the right to go direct — it's a privilege, not a default.</div>
+      </div>
+
+      <div class="callout callout-note">
+        <div class="callout-header"><div class="callout-icon">★</div>MENTAL NOTE</div>
+        <div class="callout-body">Branch Connector works with ZPA, not just ZIA. This is the key differentiator over GRE/IPSec — it can serve as the ZPA on-ramp for agentless devices in the branch.</div>
+      </div>
+
+      <div class="callout callout-analogy">
+        <div class="callout-header"><div class="callout-icon">⟳</div>ANALOGY — ZCC</div>
+        <div class="callout-body">ZCC is like a smart traffic controller on your laptop. Depending on where you are, it decides which lanes to open — the ZIA inspection lane, the ZPA private app lane, or both. It knows the roads and routes accordingly.</div>
+      </div>
+
+      <div class="callout callout-analogy">
+        <div class="callout-header"><div class="callout-icon">⟳</div>ANALOGY — Browser Access</div>
+        <div class="callout-body">Browser Access is like ordering room service instead of going to a restaurant. You never enter the kitchen (internal network) — someone fetches the food (Zscaler via App Connector) and brings it to you. You get access to what you need without ever being "inside."</div>
+      </div>
+
+      <div class="callout callout-analogy">
+        <div class="callout-header"><div class="callout-icon">⟳</div>ANALOGY — SD-WAN + Zscaler</div>
+        <div class="callout-body">SD-WAN is like a smart highway system that routes trucks efficiently. But it has no customs checkpoint. Zscaler is the customs checkpoint — inserted at every exit ramp so every truck gets inspected, regardless of which road it took to get there.</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">SUBTOPICS — TICK WHEN DONE</div>
+      <ul class="subtopic-list" id="subtopic-list">
+        <li onclick="toggleDone(this)">
+          <div class="subtopic-check"></div>
+          <span>ZCC — deployment, modes, tunnel types</span>
+        </li>
+        <li onclick="toggleDone(this)">
+          <div class="subtopic-check"></div>
+          <span>ZCC — trusted network &amp; split tunnel</span>
+        </li>
+        <li onclick="toggleDone(this)">
+          <div class="subtopic-check"></div>
+          <span>ZCC — device posture</span>
+        </li>
+        <li onclick="toggleDone(this)">
+          <div class="subtopic-check"></div>
+          <span>Branch Connector vs GRE/IPSec</span>
+        </li>
+        <li onclick="toggleDone(this)">
+          <div class="subtopic-check"></div>
+          <span>Browser Access flow end-to-end</span>
+        </li>
+        <li onclick="toggleDone(this)">
+          <div class="subtopic-check"></div>
+          <span>Browser Access limitations</span>
+        </li>
+        <li onclick="toggleDone(this)">
+          <div class="subtopic-check"></div>
+          <span>SD-WAN integration &amp; local breakout</span>
+        </li>
+        <li onclick="toggleDone(this)">
+          <div class="subtopic-check"></div>
+          <span>Cloud Connector — purpose &amp; deployment</span>
+        </li>
+        <li onclick="toggleDone(this)">
+          <div class="subtopic-check"></div>
+          <span>Cloud Connector vs Branch Connector</span>
+        </li>
+      </ul>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">QUICK REFERENCE</div>
+
+      <div class="quick-ref">
+        <div class="quick-ref-term">ZCC</div>
+        <div class="quick-ref-def">Endpoint agent. Intercepts traffic, tunnels to ZIA/ZPA, reports device posture. Does NOT authenticate — that's the IdP's job.</div>
+      </div>
+
+      <div class="quick-ref">
+        <div class="quick-ref-term">TUNNEL 2.0</div>
+        <div class="quick-ref-def">ZCC mode that forwards ALL traffic (all ports/protocols), not just web. Required for full ZIA coverage.</div>
+      </div>
+
+      <div class="quick-ref">
+        <div class="quick-ref-term">BRANCH CONNECTOR</div>
+        <div class="quick-ref-def">VM-based on-ramp for agentless environments. Carries user identity unlike GRE/IPSec. Works with both ZIA and ZPA.</div>
+      </div>
+
+      <div class="quick-ref">
+        <div class="quick-ref-term">BROWSER ACCESS</div>
+        <div class="quick-ref-def">Agentless ZPA access via browser. HTTP/S only. Zscaler acts as reverse proxy — user never touches the internal network.</div>
+      </div>
+
+      <div class="quick-ref">
+        <div class="quick-ref-term">SPLIT TUNNEL</div>
+        <div class="quick-ref-def">Excludes specific destinations (e.g. M365) from ZCC tunnel — goes direct. Performance benefit, but bypasses ZIA inspection.</div>
+      </div>
+
+      <div class="quick-ref">
+        <div class="quick-ref-term">ZEN</div>
+        <div class="quick-ref-def">Zscaler Enforcement Node. The cloud enforcement point traffic is forwarded to. SD-WAN and ZCC both route to the nearest ZEN.</div>
+      </div>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">EXAM TRAPS</div>
+
+      <div class="callout callout-tip" style="margin-bottom:10px;">
+        <div class="callout-header"><div class="callout-icon">→</div>EXAM TIP</div>
+        <div class="callout-body">Scenario: "unmanaged device, contractor, internal web app" → answer is Browser Access. "Unmanaged device, non-web app (RDP/SSH)" → Browser Access won't work, need ZCC or Privileged Remote Access.</div>
+      </div>
+
+      <div class="callout callout-tip" style="margin-bottom:10px;">
+        <div class="callout-header"><div class="callout-icon">→</div>EXAM TIP</div>
+        <div class="callout-body">If a question mentions IoT, printers, or "devices that can't run ZCC" in a branch — the answer is Branch Connector, not GRE/IPSec (which has no identity context).</div>
+      </div>
+
+      <div class="callout callout-tip" style="margin-bottom:10px;">
+        <div class="callout-header"><div class="callout-icon">→</div>EXAM TIP</div>
+        <div class="callout-body">Know the Browser Access prerequisites: CNAME in public DNS, trusted SSL certificate, ZPA App Segment configured for Browser Access, Access Policy allowing the user.</div>
+      </div>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">MY NOTES</div>
+      <div class="sidebar-note">Browser Access ≠ Cloud Browser Isolation — don't confuse them. BA renders in local browser. CBI runs the session remotely.</div>
+      <div class="sidebar-note">ZPA tunnel from ZCC stays up even on trusted network. Only ZIA steps aside. Remember this for scenario questions about on-prem users accessing private apps.</div>
+    </div>
+
+  </div>
+
+</main>
+
+<footer>
+  <div class="footer-left">ZDTE<span>.</span></div>
+  <div class="footer-right">Zscaler Digital Transformation Engineer · Study Guide · Day 03</div>
+</footer>
+
+<script>
+  function navTo(id, el) {
+    document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+    if (el) el.classList.add('active');
+    const section = document.getElementById(id);
+    if (section) {
+      const top = section.getBoundingClientRect().top + window.scrollY - 60;
+      window.scrollTo({ top, behavior: 'smooth' });
+    }
+  }
+
+  function toggleDone(li) {
+    li.classList.toggle('done');
+    updateProgress();
+  }
+
+  function updateProgress() {
+    const items = document.querySelectorAll('#subtopic-list li');
+    const done  = document.querySelectorAll('#subtopic-list li.done').length;
+    const pct   = items.length ? Math.round((done / items.length) * 100) : 0;
+    document.getElementById('prog-num').innerHTML = pct + '<span style="font-size:18px;color:#7a6a55;">%</span>';
+  }
+</script>
+
+</body>
+</html>
