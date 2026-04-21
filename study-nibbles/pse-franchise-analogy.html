@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ZDTE Study Nibble — PSE Franchise Analogy</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;0,700;1,400&family=Epilogue:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #fef9f0;
+    --cream-dark: #f5eddb;
+    --ink: #1a1209;
+    --ink-soft: #5a4a35;
+    --ink-muted: #8a7660;
+    --orange: #ff6b35;
+    --orange-light: #fff3ec;
+    --orange-border: #ffd5c0;
+    --amber-light: #fffbe6;
+    --green: #3a7d44;
+    --green-light: #edf7ee;
+    --green-border: #b2dfb4;
+    --blue-light: #e8f0fb;
+    --blue-border: #b3ccf0;
+    --blue: #1a6bcc;
+    --border: #ede5d8;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Epilogue', sans-serif;
+    background: var(--cream);
+    color: var(--ink);
+    min-height: 100vh;
+  }
+
+  header {
+    padding: 40px 60px 28px;
+    border-bottom: 1px solid var(--border);
+    background: var(--cream);
+  }
+
+  .breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+    color: var(--ink-muted);
+    letter-spacing: 0.08em;
+    margin-bottom: 12px;
+  }
+
+  .breadcrumb a { color: var(--orange); text-decoration: none; }
+  .breadcrumb-sep { color: var(--border); }
+
+  .nibble-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--orange);
+    color: var(--cream);
+    padding: 5px 14px;
+    border-radius: 20px;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    margin-bottom: 14px;
+    font-weight: 500;
+  }
+
+  .nibble-badge-dot {
+    width: 5px; height: 5px;
+    background: var(--cream);
+    border-radius: 50%;
+  }
+
+  h1 {
+    font-family: 'Fraunces', serif;
+    font-size: 40px;
+    font-weight: 700;
+    line-height: 1.05;
+    color: var(--ink);
+    margin-bottom: 10px;
+  }
+
+  h1 em {
+    font-style: italic;
+    font-weight: 400;
+    color: var(--orange);
+  }
+
+  .header-meta-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+    margin-top: 14px;
+  }
+
+  .tag {
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 500;
+    border: 1px solid;
+  }
+
+  .tag-zia  { background: var(--blue-light);  color: var(--blue);  border-color: var(--blue-border); }
+  .tag-zpa  { background: var(--green-light); color: var(--green); border-color: var(--green-border); }
+  .tag-arch { background: var(--amber-light); color: #a07c00;      border-color: #ffe680; }
+
+  main {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 40px 60px 60px;
+  }
+
+  .section-block { margin-bottom: 36px; }
+
+  .section-label {
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    color: var(--ink-muted);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  h2 {
+    font-family: 'Fraunces', serif;
+    font-size: 24px;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 14px;
+    line-height: 1.2;
+  }
+
+  p {
+    font-size: 14px;
+    color: var(--ink-soft);
+    line-height: 1.8;
+    margin-bottom: 12px;
+  }
+
+  .analogy-hero {
+    background: linear-gradient(135deg, var(--green-light), var(--cream));
+    border: 1px solid var(--green-border);
+    border-radius: 18px;
+    padding: 28px 32px;
+    margin-bottom: 28px;
+    position: relative;
+  }
+
+  .analogy-hero-title {
+    font-family: 'Fraunces', serif;
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--green);
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .analogy-hero-icon { font-size: 26px; }
+
+  .analogy-hero-body {
+    font-size: 15px;
+    line-height: 1.8;
+    color: #2a5c32;
+  }
+
+  .mapping-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+    margin-bottom: 20px;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(26,18,9,0.04);
+  }
+
+  .mapping-table th {
+    background: var(--ink);
+    color: var(--cream);
+    padding: 12px 16px;
+    text-align: left;
+    font-weight: 500;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+  }
+
+  .mapping-table td {
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--border);
+    color: var(--ink-soft);
+    vertical-align: top;
+    line-height: 1.6;
+  }
+
+  .mapping-table tr:nth-child(even) td { background: var(--cream-dark); }
+  .mapping-table tr:last-child td { border-bottom: none; }
+
+  .mapping-table .franchise-col { font-weight: 500; color: var(--ink); }
+  .mapping-table .zscaler-col   { font-weight: 500; color: var(--orange); }
+
+  .callout {
+    border-radius: 14px;
+    padding: 18px 22px;
+    margin-bottom: 16px;
+    border: 1px solid;
+  }
+
+  .callout-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    margin-bottom: 8px;
+  }
+
+  .callout-icon {
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    flex-shrink: 0;
+  }
+
+  .callout-body { font-size: 13px; line-height: 1.7; }
+
+  .callout-note { background: var(--amber-light); border-color: #ffe680; }
+  .callout-note .callout-header { color: #a07c00; }
+  .callout-note .callout-icon   { background: #ffe680; color: #a07c00; }
+  .callout-note .callout-body   { color: #7a5c00; }
+
+  .callout-tip { background: var(--blue-light); border-color: var(--blue-border); }
+  .callout-tip .callout-header { color: var(--blue); }
+  .callout-tip .callout-icon   { background: var(--blue-border); color: var(--blue); }
+  .callout-tip .callout-body   { color: #153d7a; }
+
+  .key-concept {
+    background: var(--orange-light);
+    border: 1px solid var(--orange-border);
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-bottom: 16px;
+    font-size: 14px;
+    color: #7a3010;
+    line-height: 1.7;
+  }
+
+  .key-concept strong { color: var(--orange); font-weight: 600; }
+
+  footer {
+    padding: 20px 60px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--cream-dark);
+  }
+
+  .footer-left { font-family: 'Fraunces', serif; font-size: 16px; font-weight: 700; }
+  .footer-left span { color: var(--orange); }
+  .footer-right { font-size: 11px; color: var(--ink-muted); letter-spacing: 0.06em; }
+
+  @media (max-width: 900px) {
+    header, main, footer { padding-left: 20px; padding-right: 20px; }
+    h1 { font-size: 32px; }
+    footer { flex-direction: column; gap: 8px; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="breadcrumb">
+    <a href="../index.html">Study Plan</a>
+    <span class="breadcrumb-sep">›</span>
+    <a href="../study-nibbles.html">Study Nibbles</a>
+    <span class="breadcrumb-sep">›</span>
+    <span>PSE Franchise Analogy</span>
+  </div>
+
+  <div class="nibble-badge">
+    <span class="nibble-badge-dot"></span>
+    STUDY NIBBLE
+  </div>
+
+  <h1>The PSE<br><em>Franchise Restaurant Analogy</em></h1>
+
+  <div class="header-meta-row">
+    <span class="tag tag-zia">ZIA</span>
+    <span class="tag tag-zpa">ZPA</span>
+    <span class="tag tag-arch">Architecture</span>
+  </div>
+</header>
+
+<main>
+
+  <!-- THE ANALOGY -->
+  <div class="section-block">
+    <div class="section-label">THE ANALOGY</div>
+    <h2>Think of Zscaler as a franchise restaurant chain</h2>
+
+    <div class="analogy-hero">
+      <div class="analogy-hero-title">
+        <span class="analogy-hero-icon">🍔</span>
+        Zscaler = Franchise Chain
+      </div>
+      <div class="analogy-hero-body">
+        <strong>Corporate HQ</strong> (the Zscaler cloud) sets the menu, recipes, policies, and branding.
+        <strong>Company-owned stores</strong> (Public Service Edges) operate in Zscaler's own real estate
+        around the world. <strong>Franchise locations</strong> (Private Service Edges) operate on
+        <em>your</em> real estate — inside your data centre — but still follow HQ's recipes, receive HQ's
+        menu updates, and report sales back to HQ every night.
+      </div>
+    </div>
+
+    <p>
+      A franchise location isn't an independent restaurant. It's an <strong>extension</strong> of the chain.
+      Cut its link to HQ and it becomes stale — no new menu items, no policy updates, no central reporting.
+      This is exactly how a Private Service Edge works inside the Zero Trust Exchange.
+    </p>
+  </div>
+
+  <!-- THE MAPPING -->
+  <div class="section-block">
+    <div class="section-label">THE MAPPING</div>
+    <h2>Franchise → Zscaler component</h2>
+
+    <table class="mapping-table">
+      <thead>
+        <tr>
+          <th>Franchise World</th>
+          <th>Zscaler World</th>
+          <th>What it does</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="franchise-col">Corporate HQ</td>
+          <td class="zscaler-col">Zscaler cloud (Central Authority, Nanolog, cloud routers)</td>
+          <td>Sets policy, authenticates users, stores logs, pushes updates</td>
+        </tr>
+        <tr>
+          <td class="franchise-col">Company-owned store</td>
+          <td class="zscaler-col">Public Service Edge</td>
+          <td>Runs on Zscaler's hardware in Zscaler data centres globally</td>
+        </tr>
+        <tr>
+          <td class="franchise-col">Franchise location</td>
+          <td class="zscaler-col">Private Service Edge</td>
+          <td>Runs on <em>your</em> hardware in <em>your</em> data centre, but managed by Zscaler</td>
+        </tr>
+        <tr>
+          <td class="franchise-col">Franchise agreement</td>
+          <td class="zscaler-col">Provisioning key + enrollment certificate</td>
+          <td>Proves the location is authentic and belongs to your tenant</td>
+        </tr>
+        <tr>
+          <td class="franchise-col">Daily sales report to HQ</td>
+          <td class="zscaler-col">Logs sent to Nanolog clusters</td>
+          <td>PSE forwards transaction logs back to the Zscaler cloud</td>
+        </tr>
+        <tr>
+          <td class="franchise-col">Menu update from HQ</td>
+          <td class="zscaler-col">Policy updates from Central Authority</td>
+          <td>PSE pulls the latest policy config from the cloud</td>
+        </tr>
+        <tr>
+          <td class="franchise-col">Head office audit team</td>
+          <td class="zscaler-col">Zscaler Cloud Operations</td>
+          <td>Remotely monitors, patches and maintains the PSE — near-zero touch from you</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- WHY IT WORKS -->
+  <div class="section-block">
+    <div class="section-label">WHY THIS ANALOGY IS USEFUL</div>
+    <h2>It explains the weird hybrid nature of PSE</h2>
+
+    <div class="key-concept">
+      <strong>Key takeaway:</strong> A PSE isn't your box and it isn't Zscaler's box — it's <em>both</em>.
+      You provide the physical/virtual real estate and network. Zscaler provides the software, policies,
+      and operational management. Like a franchise, neither party operates it alone.
+    </div>
+
+    <div class="callout callout-note">
+      <div class="callout-header">
+        <div class="callout-icon">★</div>
+        MENTAL NOTE
+      </div>
+      <div class="callout-body">
+        If a question asks "who manages a Private Service Edge?" — the answer is
+        <strong>Zscaler Cloud Operations</strong>, even though it sits in your DC. You provide the
+        hardware and network path; Zscaler does the software, patching, and monitoring.
+      </div>
+    </div>
+
+    <div class="callout callout-tip">
+      <div class="callout-header">
+        <div class="callout-icon">→</div>
+        EXAM TIP
+      </div>
+      <div class="callout-body">
+        If connectivity between the PSE and the Zscaler cloud breaks, the PSE can't get policy updates
+        or send logs. It's a franchise cut off from HQ — still open, but the recipes start getting stale.
+        This is why firewall rules allowing egress to Zscaler IPs
+        (<code>config.zscaler.com/&lt;cloud&gt;/zia-sedge</code>) are mandatory, not optional.
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  <div class="footer-left">ZDTE<span>.</span></div>
+  <div class="footer-right">Zscaler Digital Transformation Engineer · Study Nibble</div>
+</footer>
+
+</body>
+</html>
