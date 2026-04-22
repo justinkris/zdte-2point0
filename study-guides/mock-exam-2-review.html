@@ -1,0 +1,1075 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ZDTE Study Guide — Mock Exam #2 Review</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;0,700;1,400&family=Epilogue:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #fef9f0;
+    --cream-dark: #f5eddb;
+    --ink: #1a1209;
+    --ink-soft: #5a4a35;
+    --ink-muted: #8a7660;
+    --orange: #ff6b35;
+    --orange-light: #fff3ec;
+    --orange-border: #ffd5c0;
+    --amber-light: #fffbe6;
+    --green: #3a7d44;
+    --green-light: #edf7ee;
+    --green-border: #b2dfb4;
+    --purple: #5c35cc;
+    --purple-light: #ece8ff;
+    --purple-border: #c8bbff;
+    --blue-light: #e8f0fb;
+    --blue-border: #b3ccf0;
+    --blue: #1a6bcc;
+    --red-light: #fce8e8;
+    --red-border: #f7c1c1;
+    --red: #a32d2d;
+    --border: #ede5d8;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Epilogue', sans-serif;
+    background: var(--cream);
+    color: var(--ink);
+    min-height: 100vh;
+  }
+
+  /* ── HEADER ── */
+  header {
+    padding: 40px 60px 28px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 32px;
+    background: var(--cream);
+  }
+
+  .header-left { flex: 1; }
+
+  .breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+    color: var(--ink-muted);
+    letter-spacing: 0.08em;
+    margin-bottom: 12px;
+  }
+
+  .breadcrumb a { color: var(--orange); text-decoration: none; cursor: pointer; }
+  .breadcrumb-sep { color: var(--border); }
+
+  .day-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--ink);
+    color: var(--cream);
+    padding: 5px 14px;
+    border-radius: 20px;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    margin-bottom: 14px;
+  }
+
+  .day-badge-dot { width: 5px; height: 5px; background: var(--orange); border-radius: 50%; }
+
+  h1 {
+    font-family: 'Fraunces', serif;
+    font-size: 44px;
+    font-weight: 700;
+    line-height: 1.0;
+    color: var(--ink);
+    margin-bottom: 10px;
+  }
+
+  h1 em { font-style: italic; font-weight: 400; color: var(--orange); }
+
+  .header-meta-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+    margin-top: 14px;
+  }
+
+  .tag {
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 500;
+    border: 1px solid;
+    display: inline-block;
+  }
+
+  .tag-zia    { background: var(--blue-light);   color: var(--blue);   border-color: var(--blue-border); }
+  .tag-zpa    { background: var(--green-light);  color: var(--green);  border-color: var(--green-border); }
+  .tag-zdx    { background: var(--purple-light); color: var(--purple); border-color: var(--purple-border); }
+  .tag-arch   { background: var(--amber-light);  color: #a07c00;       border-color: #ffe680; }
+  .tag-weight { background: var(--orange-light); color: #cc4a18;       border-color: var(--orange-border); }
+
+  .header-right {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: flex-end;
+    flex-shrink: 0;
+  }
+
+  .progress-card {
+    background: var(--ink);
+    color: var(--cream);
+    padding: 14px 20px;
+    border-radius: 14px;
+    text-align: center;
+    min-width: 110px;
+  }
+
+  .progress-card .big {
+    font-family: 'Fraunces', serif;
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--orange);
+    line-height: 1;
+  }
+
+  .progress-card .lbl {
+    font-size: 10px;
+    color: #7a6a55;
+    letter-spacing: 0.1em;
+    margin-top: 4px;
+  }
+
+  /* ── NAV TABS ── */
+  nav.section-nav {
+    display: flex;
+    gap: 0;
+    padding: 0 60px;
+    border-bottom: 1px solid var(--border);
+    background: var(--cream-dark);
+    overflow-x: auto;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .nav-tab {
+    padding: 14px 20px;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--ink-muted);
+    letter-spacing: 0.06em;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    white-space: nowrap;
+    transition: color 0.15s, border-color 0.15s;
+    background: none;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    font-family: 'Epilogue', sans-serif;
+  }
+
+  .nav-tab:hover { color: var(--ink); }
+  .nav-tab.active { color: var(--orange); border-bottom-color: var(--orange); }
+
+  /* ── MAIN LAYOUT ── */
+  main {
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    gap: 0;
+    min-height: calc(100vh - 200px);
+  }
+
+  .main-content {
+    padding: 36px 48px 60px 60px;
+    border-right: 1px solid var(--border);
+  }
+
+  .sidebar {
+    padding: 36px 28px 60px;
+    background: var(--cream-dark);
+  }
+
+  /* ── SECTION BLOCKS ── */
+  .section-block { margin-bottom: 40px; }
+  .anchor { scroll-margin-top: 80px; }
+
+  .section-label {
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    color: var(--ink-muted);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  h2 {
+    font-family: 'Fraunces', serif;
+    font-size: 24px;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 14px;
+    line-height: 1.2;
+  }
+
+  h3 {
+    font-family: 'Fraunces', serif;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 10px;
+    margin-top: 24px;
+  }
+
+  p {
+    font-size: 14px;
+    color: var(--ink-soft);
+    line-height: 1.8;
+    margin-bottom: 12px;
+  }
+
+  p code { background: var(--cream-dark); padding: 1px 6px; border-radius: 4px; font-size: 12px; }
+
+  ul.content-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+
+  ul.content-list li {
+    font-size: 14px;
+    color: var(--ink-soft);
+    padding-left: 16px;
+    position: relative;
+    line-height: 1.6;
+  }
+
+  ul.content-list li::before {
+    content: '·';
+    position: absolute;
+    left: 2px;
+    color: var(--orange);
+    font-weight: 700;
+    font-size: 18px;
+    line-height: 1.2;
+  }
+
+  /* ── CALLOUT CARDS ── */
+  .callout {
+    border-radius: 14px;
+    padding: 18px 20px;
+    margin-bottom: 16px;
+    border: 1px solid;
+  }
+
+  .callout-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+
+  .callout-icon {
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  .callout-body { font-size: 14px; line-height: 1.7; color: var(--ink-soft); }
+
+  .callout-note    { background: var(--orange-light); border-color: var(--orange-border); }
+  .callout-note .callout-header { color: #cc4a18; }
+  .callout-note .callout-icon   { background: var(--orange); color: var(--cream); }
+
+  .callout-warn    { background: var(--red-light); border-color: var(--red-border); }
+  .callout-warn .callout-header { color: var(--red); }
+  .callout-warn .callout-icon   { background: var(--red); color: var(--cream); }
+
+  .callout-tip     { background: var(--green-light); border-color: var(--green-border); }
+  .callout-tip .callout-header  { color: var(--green); }
+  .callout-tip .callout-icon    { background: var(--green); color: var(--cream); }
+
+  .callout-analogy { background: var(--purple-light); border-color: var(--purple-border); }
+  .callout-analogy .callout-header { color: var(--purple); }
+  .callout-analogy .callout-icon   { background: var(--purple); color: var(--cream); }
+
+  /* ── KEY CONCEPT ── */
+  .key-concept {
+    background: var(--ink);
+    color: var(--cream);
+    padding: 18px 22px;
+    border-radius: 12px;
+    font-size: 14px;
+    line-height: 1.7;
+    margin-bottom: 16px;
+  }
+
+  .key-concept strong { color: var(--orange); font-weight: 600; }
+
+  /* ── QUESTION CARD ── */
+  .question-card {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px 22px;
+    margin-bottom: 16px;
+  }
+
+  .question-card.correct  { border-left: 4px solid var(--green); }
+  .question-card.incorrect { border-left: 4px solid var(--red); }
+
+  .q-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 10px;
+  }
+
+  .q-number {
+    font-family: 'Fraunces', serif;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ink-muted);
+    letter-spacing: 0.08em;
+  }
+
+  .q-badge {
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    font-weight: 600;
+  }
+
+  .q-badge-correct { background: var(--green-light); color: var(--green); border: 1px solid var(--green-border); }
+  .q-badge-partial { background: var(--amber-light); color: #a07c00; border: 1px solid #ffe680; }
+
+  .q-text {
+    font-size: 14px;
+    color: var(--ink);
+    line-height: 1.6;
+    margin-bottom: 10px;
+    font-weight: 500;
+  }
+
+  .q-answer {
+    font-size: 13px;
+    color: var(--ink-soft);
+    line-height: 1.6;
+    padding: 10px 12px;
+    background: var(--cream);
+    border-radius: 6px;
+    margin-bottom: 8px;
+  }
+
+  .q-answer strong { color: var(--green); }
+
+  .q-why {
+    font-size: 13px;
+    color: var(--ink-soft);
+    line-height: 1.7;
+    padding-left: 12px;
+    border-left: 2px solid var(--orange-border);
+    margin-top: 6px;
+  }
+
+  .q-why strong { color: var(--ink); }
+
+  /* ── SCORE BANNER ── */
+  .score-banner {
+    background: linear-gradient(135deg, var(--ink) 0%, #2a1c0f 100%);
+    color: var(--cream);
+    border-radius: 16px;
+    padding: 24px 28px;
+    margin-bottom: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+  }
+
+  .score-banner-left .label { font-size: 11px; letter-spacing: 0.12em; color: #a09080; margin-bottom: 6px; }
+  .score-banner-left .value { font-family: 'Fraunces', serif; font-size: 36px; font-weight: 700; color: var(--orange); line-height: 1; }
+  .score-banner-right { font-size: 13px; color: #d4c5ae; line-height: 1.6; max-width: 320px; text-align: right; }
+
+  /* ── COMPARE TABLE ── */
+  .compare-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 14px 0 20px;
+    font-size: 13px;
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+  }
+
+  .compare-table th {
+    background: var(--cream-dark);
+    padding: 10px 14px;
+    text-align: left;
+    font-weight: 600;
+    color: var(--ink);
+    font-size: 12px;
+    letter-spacing: 0.04em;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .compare-table td {
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+    color: var(--ink-soft);
+    vertical-align: top;
+  }
+
+  .compare-table tr:last-child td { border-bottom: none; }
+
+  /* ── SIDEBAR ── */
+  .sidebar-section { margin-bottom: 32px; }
+
+  .sidebar-label {
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    color: var(--ink-muted);
+    margin-bottom: 12px;
+    font-weight: 600;
+  }
+
+  .subtopic-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .subtopic-list li {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+    color: var(--ink-soft);
+    padding: 6px 4px;
+    cursor: pointer;
+    border-radius: 4px;
+  }
+
+  .subtopic-list li:hover { background: rgba(255,107,53,0.06); }
+
+  .subtopic-check {
+    width: 14px; height: 14px;
+    border: 1.5px solid var(--ink-muted);
+    border-radius: 3px;
+    flex-shrink: 0;
+    transition: all 0.15s;
+  }
+
+  .subtopic-list li.done .subtopic-check { background: var(--green); border-color: var(--green); }
+  .subtopic-list li.done span { text-decoration: line-through; color: var(--ink-muted); }
+
+  .quick-ref {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px 14px;
+    margin-bottom: 10px;
+  }
+
+  .quick-ref-term {
+    font-family: 'Fraunces', serif;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--orange);
+    margin-bottom: 4px;
+    letter-spacing: 0.02em;
+  }
+
+  .quick-ref-def { font-size: 12px; color: var(--ink-soft); line-height: 1.5; }
+
+  .sidebar-note {
+    background: var(--amber-light);
+    border: 1px solid #ffe680;
+    border-radius: 8px;
+    padding: 12px 14px;
+    font-size: 12px;
+    color: #7a5e00;
+    line-height: 1.6;
+    margin-bottom: 10px;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    padding: 20px 60px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--cream-dark);
+    font-size: 11px;
+    color: var(--ink-muted);
+    letter-spacing: 0.08em;
+  }
+
+  .footer-left { font-family: 'Fraunces', serif; font-size: 14px; font-weight: 600; color: var(--ink); }
+  .footer-left span { color: var(--orange); }
+
+  @media (max-width: 900px) {
+    header { padding: 24px 20px 20px; flex-direction: column; }
+    .header-right { display: none; }
+    main { grid-template-columns: 1fr; }
+    .main-content { padding: 24px 20px 40px; border-right: none; }
+    .sidebar { padding: 24px 20px 40px; border-top: 1px solid var(--border); }
+    nav.section-nav { padding: 0 20px; }
+    footer { padding: 20px; flex-direction: column; gap: 8px; text-align: center; }
+    h1 { font-size: 32px; }
+    .score-banner { flex-direction: column; gap: 12px; }
+    .score-banner-right { text-align: left; }
+    .compare-table th, .compare-table td { padding: 8px 10px; font-size: 12px; }
+  }
+
+  @media (max-width: 480px) {
+    header { padding: 16px; }
+    h1 { font-size: 24px; }
+    h2 { font-size: 20px; }
+    h3 { font-size: 16px; }
+    .main-content { padding: 20px 16px 40px; }
+    .sidebar { padding: 20px 16px 40px; }
+    .score-banner { padding: 16px 18px; }
+    .score-banner-left .value { font-size: 28px; }
+    .question-card { padding: 14px 16px; }
+    .q-text { font-size: 13px; }
+    .callout { padding: 14px 16px; }
+    .callout-body { font-size: 13px; }
+    nav.section-nav button { font-size: 10px; padding: 10px 12px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-left">
+
+    <div class="breadcrumb">
+      <a href="../index.html">Study Plan</a>
+      <span class="breadcrumb-sep">›</span>
+      <a href="../study-guides.html">Study Guides</a>
+      <span class="breadcrumb-sep">›</span>
+      <span>Mock Exam #2 Review</span>
+    </div>
+
+    <div class="day-badge">
+      <span class="day-badge-dot"></span>
+      BONUS SESSION — WED, 22 APRIL 2026
+    </div>
+
+    <h1>Mock Exam <em>#2 Review</em></h1>
+
+    <div class="header-meta-row">
+      <span class="tag tag-arch">Architecture</span>
+      <span class="tag tag-zia">ZIA</span>
+      <span class="tag tag-zpa">ZPA</span>
+      <span class="tag tag-zdx">ZDX</span>
+      <span class="tag tag-weight">Mixed · All Domains</span>
+    </div>
+
+  </div>
+
+  <div class="header-right">
+    <div class="progress-card">
+      <div class="big">15<span style="font-size:18px;color:#7a6a55;">/15</span></div>
+      <div class="lbl">SCORE</div>
+    </div>
+  </div>
+</header>
+
+<nav class="section-nav">
+  <button class="nav-tab active" onclick="navTo('section-summary', this)">Summary</button>
+  <button class="nav-tab" onclick="navTo('section-questions', this)">Questions &amp; Rationale</button>
+  <button class="nav-tab" onclick="navTo('section-insights', this)">Key Insights</button>
+  <button class="nav-tab" onclick="navTo('section-traps', this)">Exam Traps</button>
+</nav>
+
+<main>
+
+  <div class="main-content">
+
+    <!-- ══ SUMMARY ══ -->
+    <div class="section-block anchor" id="section-summary">
+      <div class="section-label">SUMMARY</div>
+      <h2>Mixed-Domain Diagnostic, Second Pass</h2>
+
+      <div class="score-banner">
+        <div class="score-banner-left">
+          <div class="label">FINAL SCORE</div>
+          <div class="value">15 / 15</div>
+        </div>
+        <div class="score-banner-right">
+          Clean sweep across Architecture, Identity, Connectivity, Platform, Access Control, Cyberthreat, Data Protection, ZDX, Risk360, and OneAPI.
+        </div>
+      </div>
+
+      <p>
+        This was a fresh 15-question mixed mock covering all 11 ZDTE domains proportional to the
+        blueprint. Unlike Mock Exam #1 (Day 02), this one deliberately tested the areas we covered
+        in Days 01–04 plus forward-looking domains (Cyberthreat, Data Protection, ZDX, Risk360,
+        OneAPI) that we haven't formally studied yet — making this a genuine diagnostic of overall
+        readiness.
+      </p>
+
+      <div class="key-concept">
+        <strong>Headline:</strong> Strong command across all major domains. The only question worth
+        revisiting was Q15 on SSL Inspection order of execution — and the instinct to include
+        Tenant Restrictions turned out to be correct because header injection requires decryption.
+      </div>
+    </div>
+
+    <!-- ══ QUESTIONS & RATIONALE ══ -->
+    <div class="section-block anchor" id="section-questions">
+      <div class="section-label">QUESTIONS &amp; RATIONALE</div>
+      <h2>All 15 Questions, Answers &amp; Why</h2>
+
+      <div class="question-card correct">
+        <div class="q-header">
+          <div class="q-number">Q1 · ARCHITECTURE</div>
+          <div class="q-badge q-badge-correct">CORRECT</div>
+        </div>
+        <div class="q-text">A global organisation wants EU users to egress through EU data centres and US users through US Public Service Edges, for compliance. Which Zscaler capability addresses this?</div>
+        <div class="q-answer"><strong>Answer: B — Subclouds</strong></div>
+        <div class="q-why"><strong>Why:</strong> Subclouds let you define which enforcement nodes a tenant is allowed to land on, giving regional data-residency and policy control. SIPA is about source IP identity, Tenant Restrictions is about SaaS tenant scoping, and China Premium Access is a separate regional offering.</div>
+      </div>
+
+      <div class="question-card correct">
+        <div class="q-header">
+          <div class="q-number">Q2 · IDENTITY</div>
+          <div class="q-badge q-badge-correct">CORRECT</div>
+        </div>
+        <div class="q-text">In a SAML authentication flow with ZIA, which component acts as the Service Provider (SP)?</div>
+        <div class="q-answer"><strong>Answer: C — The Zscaler Service Edge</strong></div>
+        <div class="q-why"><strong>Why:</strong> The SP is the application that wants to authenticate the user — in this case Zscaler itself. The IdP (Okta, Entra ID, etc.) is the authority that issues the assertion. Browser is just the courier. Remember: <em>SP needs something, IdP provides it</em>.</div>
+      </div>
+
+      <div class="question-card correct">
+        <div class="q-header">
+          <div class="q-number">Q3 · CONNECTIVITY / TROUBLESHOOTING</div>
+          <div class="q-badge q-badge-correct">CORRECT</div>
+        </div>
+        <div class="q-text">A user can reach an App Segment from home but not from the office. Same Client Connector version. Most likely cause?</div>
+        <div class="q-answer"><strong>Answer: B — The office network matches a Forwarding Profile that bypasses ZPA for that destination</strong></div>
+        <div class="q-why"><strong>Why:</strong> Forwarding Profiles are network-aware. On trusted/office networks, ZPA can be set to bypass for internal destinations. The giveaway was "same CC version at both locations" — which eliminates agent issues and points at network posture.</div>
+      </div>
+
+      <div class="question-card correct">
+        <div class="q-header">
+          <div class="q-number">Q4 · CONNECTIVITY</div>
+          <div class="q-badge q-badge-correct">CORRECT</div>
+        </div>
+        <div class="q-text">Which statement is TRUE about Zscaler Branch Connector?</div>
+        <div class="q-answer"><strong>Answer: C — It forwards traffic from branch locations and server workloads to the ZTE without requiring a Client Connector</strong></div>
+        <div class="q-why"><strong>Why:</strong> Branch Connector is an appliance/VM that sits at a branch or in a workload environment and forwards traffic to the Zero Trust Exchange. It does NOT replace App Connectors (those are for ZPA private-app brokering), and is not installed on end-user devices.</div>
+      </div>
+
+      <div class="question-card correct">
+        <div class="q-header">
+          <div class="q-number">Q5 · ACCESS CONTROL / SSL</div>
+          <div class="q-badge q-badge-correct">CORRECT</div>
+        </div>
+        <div class="q-text">Where are "Do Not Inspect" exceptions for SSL traffic to financial sites typically configured?</div>
+        <div class="q-answer"><strong>Answer: B — SSL Inspection policy with a "Do Not Inspect" rule</strong></div>
+        <div class="q-why"><strong>Why:</strong> SSL Inspection policy has explicit allow/inspect/bypass logic, including categories like Finance or Healthcare where privacy law may forbid decryption. URL Filtering and DNS Control operate at different layers and can't control decryption behaviour.</div>
+      </div>
+
+      <div class="question-card correct">
+        <div class="q-header">
+          <div class="q-number">Q6 · CYBERTHREAT / SANDBOX</div>
+          <div class="q-badge q-badge-correct">CORRECT</div>
+        </div>
+        <div class="q-text">Which layer of Zscaler's Cloud Sandbox analysis runs the file in an isolated environment to observe runtime behaviour?</div>
+        <div class="q-answer"><strong>Answer: D — Dynamic Analysis</strong></div>
+        <div class="q-why"><strong>Why:</strong> Static analysis reads the file without running it. Dynamic analysis actually detonates the file in a sandbox VM and watches what it does (process creation, C2, file ops). The full pipeline is: Inline AV/YARA → ML → Static → <strong>Dynamic</strong> → Secondary Static.</div>
+      </div>
+
+      <div class="question-card correct">
+        <div class="q-header">
+          <div class="q-number">Q7 · CYBERTHREAT / QUARANTINE</div>
+          <div class="q-badge q-badge-correct">CORRECT</div>
+        </div>
+        <div class="q-text">With AI-driven quarantine enabled, what happens to an unknown executable from a newly observed domain?</div>
+        <div class="q-answer"><strong>Answer: C — File is held at the proxy until analysis completes, then delivered or blocked based on verdict</strong></div>
+        <div class="q-why"><strong>Why:</strong> This is the core of Zscaler's "patient zero" prevention story. Because Zscaler is inline and proxy-based, it can hold a file mid-stream while the sandbox pipeline runs — something out-of-band solutions cannot do.</div>
+      </div>
+
+      <div class="question-card correct">
+        <div class="q-header">
+          <div class="q-number">Q8 · CYBERTHREAT / ITDR</div>
+          <div class="q-badge q-badge-correct">CORRECT</div>
+        </div>
+        <div class="q-text">Which Zscaler capability detects attacks against Active Directory (Kerberoasting, DCSync, credential misuse)?</div>
+        <div class="q-answer"><strong>Answer: B — ITDR</strong></div>
+        <div class="q-why"><strong>Why:</strong> ITDR (Identity Threat Detection and Response) is specifically about identity-layer attacks — AD-centric. Deception lures attackers to fake assets. App Protection defends exposed web apps. ATP is broader URL/threat reputation. Watch for this: ITDR ≠ Deception on the exam.</div>
+      </div>
+
+      <div class="question-card correct">
+        <div class="q-header">
+          <div class="q-number">Q9 · DATA PROTECTION</div>
+          <div class="q-badge q-badge-correct">CORRECT</div>
+        </div>
+        <div class="q-text">Prevent code uploads to personal GitHub while allowing corporate GitHub. Best enforcement?</div>
+        <div class="q-answer"><strong>Answer: B — Tenant Restrictions + Inline DLP</strong></div>
+        <div class="q-why"><strong>Why:</strong> Tenant Restrictions scopes <em>which</em> GitHub instance a user can reach (personal vs corporate). DLP then inspects what's being uploaded to make sure it isn't source code or secrets. It's the canonical "tenant scope + content inspection" pattern.</div>
+      </div>
+
+      <div class="question-card correct">
+        <div class="q-header">
+          <div class="q-number">Q10 · ZDX</div>
+          <div class="q-badge q-badge-correct">CORRECT</div>
+        </div>
+        <div class="q-text">ZDX Score: Device 95 / Network 45 / App 90. Where do you investigate?</div>
+        <div class="q-answer"><strong>Answer: B — The network path (latency, loss, ISP, Wi-Fi)</strong></div>
+        <div class="q-why"><strong>Why:</strong> ZDX decomposes experience into three pillars so you can triangulate. 95 and 90 mean the endpoint and the app are fine; 45 on Network is the smoking gun. This is exactly the scenario-style question you'll see on the exam.</div>
+      </div>
+
+      <div class="question-card correct">
+        <div class="q-header">
+          <div class="q-number">Q11 · ZPA</div>
+          <div class="q-badge q-badge-correct">CORRECT</div>
+        </div>
+        <div class="q-text">Which is correct about ZPA App Connectors?</div>
+        <div class="q-answer"><strong>Answer: A — They initiate outbound connections to the ZTE and never require inbound firewall rules</strong></div>
+        <div class="q-why"><strong>Why:</strong> This is the core Zero Trust principle for ZPA: apps are never exposed to the internet because the Connector dials out to the broker. No inbound holes, no DMZ, no VPN. This question is almost guaranteed to appear in some form on the real exam.</div>
+      </div>
+
+      <div class="question-card correct">
+        <div class="q-header">
+          <div class="q-number">Q12 · PLATFORM / SIPA</div>
+          <div class="q-badge q-badge-correct">CORRECT</div>
+        </div>
+        <div class="q-text">A SaaS vendor needs to see traffic from a known corporate IP, even though users egress through Zscaler globally. Which feature?</div>
+        <div class="q-answer"><strong>Answer: B — Source IP Anchoring (SIPA)</strong></div>
+        <div class="q-why"><strong>Why:</strong> SIPA re-routes specific traffic so it egresses via a defined corporate IP. Preserves SaaS IP allowlists while still letting traffic benefit from Zscaler inspection upstream.</div>
+      </div>
+
+      <div class="question-card correct">
+        <div class="q-header">
+          <div class="q-number">Q13 · RISK MANAGEMENT</div>
+          <div class="q-badge q-badge-correct">CORRECT</div>
+        </div>
+        <div class="q-text">Which is NOT a component of the Risk360 framework?</div>
+        <div class="q-answer"><strong>Answer: D — Incident Response SLA</strong></div>
+        <div class="q-why"><strong>Why:</strong> Risk360 aggregates risk across four breach stages: External Attack Surface → Compromise → Lateral Propagation → Data Loss. "Incident Response SLA" is an ops metric, not a Risk360 stage.</div>
+      </div>
+
+      <div class="question-card correct">
+        <div class="q-header">
+          <div class="q-number">Q14 · AUTOMATION / ONEAPI</div>
+          <div class="q-badge q-badge-correct">CORRECT</div>
+        </div>
+        <div class="q-text">To integrate Zscaler with a SOAR for automated quarantine, which capability?</div>
+        <div class="q-answer"><strong>Answer: B — OneAPI</strong></div>
+        <div class="q-why"><strong>Why:</strong> OneAPI is the unified API fabric across ZIA, ZPA, ZDX, and Zidentity — consistent auth, consistent access model. LSS is for log streaming, not action; Nanolog is an internal log tier; Browser Access is agentless ZPA. For any "SOAR / workflow / automation" question, think OneAPI.</div>
+      </div>
+
+      <div class="question-card correct">
+        <div class="q-header">
+          <div class="q-number">Q15 · ORDER OF EXECUTION</div>
+          <div class="q-badge q-badge-correct">CORRECT — C &amp; D</div>
+        </div>
+        <div class="q-text">SSL Inspection occurs BEFORE which of the following policies so decrypted content can be evaluated?</div>
+        <div class="q-answer"><strong>Answer: C (URL Filtering &amp; DLP) AND D (Tenant Restrictions)</strong></div>
+        <div class="q-why"><strong>Why:</strong> URL Filtering needs the full path and DLP needs the request body — both require decryption. Tenant Restrictions also requires SSL inspection because it injects the <code>Restrict-Access-To-Tenants</code> header into the HTTPS request, which is only possible once the session is decrypted.</div>
+      </div>
+    </div>
+
+    <!-- ══ KEY INSIGHTS ══ -->
+    <div class="section-block anchor" id="section-insights">
+      <div class="section-label">KEY INSIGHTS</div>
+      <h2>Big takeaways from this mock</h2>
+
+      <h3>1. Inline proxy architecture is the "why" behind most answers</h3>
+      <p>
+        Notice how many correct answers (Q6, Q7, Q11, Q15) trace back to the same architectural
+        fact: <em>Zscaler sits inline as a proxy</em>. That's why it can quarantine files
+        mid-transfer, inject headers, broker without opening firewalls, and inspect decrypted
+        traffic. When a question feels ambiguous, default to reasoning from the inline-proxy model.
+      </p>
+
+      <div class="callout callout-note">
+        <div class="callout-header">
+          <div class="callout-icon">★</div>
+          CORE PATTERN
+        </div>
+        <div class="callout-body">
+          "Zscaler is inline and proxy-based" → can hold, modify, inject, decrypt, log.
+          Out-of-band tools can't. Many ZDTE questions are just this idea in disguise.
+        </div>
+      </div>
+
+      <h3>2. Tenant Restrictions requires SSL inspection</h3>
+      <p>
+        The mechanism isn't SNI-based tenant detection — it's <strong>header injection</strong>.
+        Zscaler inserts <code>Restrict-Access-To-Tenants</code> into the HTTPS request so
+        Microsoft evaluates which tenant the user is allowed to sign into. Header injection is
+        impossible without decryption.
+      </p>
+
+      <div class="callout callout-warn">
+        <div class="callout-header">
+          <div class="callout-icon">!</div>
+          CLARIFIED FROM SESSION
+        </div>
+        <div class="callout-body">
+          Earlier I suggested Tenant Restrictions could work off SNI alone — that was wrong.
+          The documentation is explicit: Tenant Restrictions requires SSL inspection to inject
+          the tenant-scope header. If the session isn't decrypted, Tenant Restrictions can't function.
+        </div>
+      </div>
+
+      <h3>3. ZDX's three-pillar score is a triage tool, not a single number</h3>
+      <p>
+        Q10 is the template ZDX scenario question: the <em>gap</em> between the three scores
+        tells you where to look. Always read Device / Network / App as independent signals.
+      </p>
+
+      <table class="compare-table">
+        <thead>
+          <tr>
+            <th>ZDX Pillar</th>
+            <th>What It Measures</th>
+            <th>If Low, Investigate…</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Device</strong></td>
+            <td>CPU, memory, battery, Wi-Fi strength</td>
+            <td>The endpoint itself</td>
+          </tr>
+          <tr>
+            <td><strong>Network</strong></td>
+            <td>Latency, packet loss, jitter on the path</td>
+            <td>LAN, ISP, VPN, hop-by-hop</td>
+          </tr>
+          <tr>
+            <td><strong>Application</strong></td>
+            <td>App response time, HTTP errors</td>
+            <td>SaaS / app back-end</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ══ EXAM TRAPS ══ -->
+    <div class="section-block anchor" id="section-traps">
+      <div class="section-label">EXAM TRAPS</div>
+      <h2>Distractor patterns to watch</h2>
+
+      <div class="callout callout-tip">
+        <div class="callout-header">
+          <div class="callout-icon">→</div>
+          TRAP — ITDR vs DECEPTION
+        </div>
+        <div class="callout-body">
+          Both are under Cyberthreat. <strong>ITDR = identity attacks (AD, Kerberoasting, DCSync).</strong>
+          <strong>Deception = fake lures (honeypots, fake creds, fake servers).</strong>
+          They sound similar; the exam will place them as distractors for each other.
+        </div>
+      </div>
+
+      <div class="callout callout-tip">
+        <div class="callout-header">
+          <div class="callout-icon">→</div>
+          TRAP — BRANCH vs CLIENT vs APP CONNECTOR
+        </div>
+        <div class="callout-body">
+          <strong>Client Connector</strong> — endpoint agent on user devices.<br>
+          <strong>Branch Connector</strong> — appliance/VM at a branch or for server workloads; no CC needed.<br>
+          <strong>App Connector</strong> — ZPA-only, brokers private-app access, outbound-only.<br>
+          Never let the exam confuse these.
+        </div>
+      </div>
+
+      <div class="callout callout-tip">
+        <div class="callout-header">
+          <div class="callout-icon">→</div>
+          TRAP — SAML ROLES
+        </div>
+        <div class="callout-body">
+          In a ZIA/ZPA SAML flow, <strong>Zscaler = Service Provider (SP)</strong>,
+          <strong>IdP = Okta / Entra / Ping</strong>. The browser is just the messenger,
+          not a role. Many candidates pick "the IdP" as SP because it's the most prominent name.
+        </div>
+      </div>
+
+      <div class="callout callout-tip">
+        <div class="callout-header">
+          <div class="callout-icon">→</div>
+          TRAP — SUBCLOUDS vs SIPA
+        </div>
+        <div class="callout-body">
+          <strong>Subclouds</strong> — which nodes a tenant lands on (regional/residency control).<br>
+          <strong>SIPA</strong> — the source IP a SaaS sees (identity preservation for allowlists).<br>
+          Different layers, often confused on exam questions about "control where traffic goes."
+        </div>
+      </div>
+
+      <div class="callout callout-analogy">
+        <div class="callout-header">
+          <div class="callout-icon">⟳</div>
+          ANALOGY — TENANT RESTRICTIONS
+        </div>
+        <div class="callout-body">
+          Think of Tenant Restrictions like a bouncer slipping a note into your application
+          form: "this person may only enter the <em>Corporate</em> ballroom, not the Personal one."
+          To slip that note in, the bouncer has to open the envelope first (decrypt SSL).
+          No decryption, no note, no restriction.
+        </div>
+      </div>
+    </div>
+
+  </div><!-- end .main-content -->
+
+  <!-- ─── SIDEBAR ─── -->
+  <aside class="sidebar">
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">DOMAIN COVERAGE</div>
+      <ul class="subtopic-list" id="subtopic-list">
+        <li onclick="toggleDone(this)" class="done"><div class="subtopic-check"></div><span>Architecture (Q1)</span></li>
+        <li onclick="toggleDone(this)" class="done"><div class="subtopic-check"></div><span>Identity (Q2)</span></li>
+        <li onclick="toggleDone(this)" class="done"><div class="subtopic-check"></div><span>Connectivity (Q3, Q4)</span></li>
+        <li onclick="toggleDone(this)" class="done"><div class="subtopic-check"></div><span>Access Control (Q5, Q15)</span></li>
+        <li onclick="toggleDone(this)" class="done"><div class="subtopic-check"></div><span>Cyberthreat (Q6, Q7, Q8)</span></li>
+        <li onclick="toggleDone(this)" class="done"><div class="subtopic-check"></div><span>Data Protection (Q9)</span></li>
+        <li onclick="toggleDone(this)" class="done"><div class="subtopic-check"></div><span>ZDX (Q10)</span></li>
+        <li onclick="toggleDone(this)" class="done"><div class="subtopic-check"></div><span>ZPA (Q11)</span></li>
+        <li onclick="toggleDone(this)" class="done"><div class="subtopic-check"></div><span>Platform / SIPA (Q12)</span></li>
+        <li onclick="toggleDone(this)" class="done"><div class="subtopic-check"></div><span>Risk360 (Q13)</span></li>
+        <li onclick="toggleDone(this)" class="done"><div class="subtopic-check"></div><span>OneAPI / Automation (Q14)</span></li>
+      </ul>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">QUICK REFERENCE</div>
+
+      <div class="quick-ref">
+        <div class="quick-ref-term">SUBCLOUDS</div>
+        <div class="quick-ref-def">Regional control over which enforcement nodes a tenant lands on — for data residency.</div>
+      </div>
+
+      <div class="quick-ref">
+        <div class="quick-ref-term">SIPA</div>
+        <div class="quick-ref-def">Source IP Anchoring — makes SaaS see traffic from a known corporate IP.</div>
+      </div>
+
+      <div class="quick-ref">
+        <div class="quick-ref-term">ITDR</div>
+        <div class="quick-ref-def">Identity Threat Detection &amp; Response — catches AD attacks (Kerberoasting, DCSync).</div>
+      </div>
+
+      <div class="quick-ref">
+        <div class="quick-ref-term">DECEPTION</div>
+        <div class="quick-ref-def">Fake assets and credentials that lure attackers and trigger high-fidelity alerts.</div>
+      </div>
+
+      <div class="quick-ref">
+        <div class="quick-ref-term">ONEAPI</div>
+        <div class="quick-ref-def">Unified API fabric across ZIA, ZPA, ZDX, Zidentity — consistent auth &amp; access.</div>
+      </div>
+
+      <div class="quick-ref">
+        <div class="quick-ref-term">RISK360 STAGES</div>
+        <div class="quick-ref-def">Attack Surface → Compromise → Lateral Propagation → Data Loss.</div>
+      </div>
+
+      <div class="quick-ref">
+        <div class="quick-ref-term">SANDBOX PIPELINE</div>
+        <div class="quick-ref-def">Inline AV/YARA → ML → Static → Dynamic → Secondary Static.</div>
+      </div>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">MY NOTES</div>
+      <div class="sidebar-note">
+        SSL Inspection requirement for Tenant Restrictions confirmed — it's about <strong>header injection</strong>, not SNI. Don't let anyone (even me) argue otherwise.
+      </div>
+      <div class="sidebar-note">
+        Pattern that works: when stuck, reason from "Zscaler is inline proxy" — it unlocks most ambiguous questions.
+      </div>
+      <div class="sidebar-note">
+        Keep an eye on distractor pairs: ITDR/Deception, Subclouds/SIPA, Branch/Client/App Connector.
+      </div>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">RELATED DAYS</div>
+      <ul class="subtopic-list">
+        <li style="cursor:default;">
+          <div style="width:14px;height:14px;background:var(--orange-light);border:1px solid var(--orange-border);border-radius:3px;flex-shrink:0;"></div>
+          <span>Day 01 — Architecture &amp; Identity</span>
+        </li>
+        <li style="cursor:default;">
+          <div style="width:14px;height:14px;background:var(--orange-light);border:1px solid var(--orange-border);border-radius:3px;flex-shrink:0;"></div>
+          <span>Day 03 — Connectivity</span>
+        </li>
+        <li style="cursor:default;">
+          <div style="width:14px;height:14px;background:var(--orange-light);border:1px solid var(--orange-border);border-radius:3px;flex-shrink:0;"></div>
+          <span>Day 04 — Platform &amp; Access Control</span>
+        </li>
+        <li style="cursor:default;">
+          <div style="width:14px;height:14px;background:var(--orange-light);border:1px solid var(--orange-border);border-radius:3px;flex-shrink:0;"></div>
+          <span>Day 05 — Cyberthreat Protection (next)</span>
+        </li>
+      </ul>
+    </div>
+
+  </aside>
+
+</main>
+
+<footer>
+  <div class="footer-left">ZDTE<span>.</span></div>
+  <div class="footer-right">Mock Exam #2 Review · 22 April 2026</div>
+</footer>
+
+<script>
+  function navTo(id, el) {
+    const target = document.getElementById(id);
+    if (target) {
+      window.scrollTo({ top: target.getBoundingClientRect().top + window.scrollY - 60, behavior: 'smooth' });
+    }
+    document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+    if (el) el.classList.add('active');
+  }
+
+  function toggleDone(li) {
+    li.classList.toggle('done');
+  }
+</script>
+
+</body>
+</html>
