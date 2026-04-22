@@ -672,10 +672,25 @@
   @media (max-width: 1100px) {
     .order-grid { grid-template-columns: 1fr; }
     .ssma-split { grid-template-columns: 1fr; }
-    main { padding: 20px; }
-    header { padding: 24px 20px; flex-direction: column; }
-    nav.section-nav { padding: 0 20px; }
-    footer { padding: 18px 20px; flex-direction: column; gap: 8px; text-align: center; }
+  }
+
+  @media (max-width: 900px) {
+    main { padding: 20px 16px 40px; }
+    header { padding: 20px 16px; flex-direction: column; gap: 16px; }
+    nav.section-nav { padding: 0 16px; }
+    footer { padding: 16px; flex-direction: column; gap: 8px; text-align: center; }
+    .facts-table { font-size: 11px; }
+  }
+
+  @media (max-width: 600px) {
+    h1 { font-size: 26px; }
+    .order-list li { font-size: 11px; padding: 6px 8px; }
+    .ssl-section { padding: 14px; }
+  }
+
+  @media (max-width: 480px) {
+    h1 { font-size: 22px; }
+    nav.section-nav button { padding: 12px 10px; font-size: 10px; }
   }
 </style>
 </head>

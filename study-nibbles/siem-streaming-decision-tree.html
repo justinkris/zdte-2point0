@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ZDTE Study Nibble — SIEM Streaming Decision Tree</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;0,700;1,400&family=Epilogue:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #fef9f0;
+    --cream-dark: #f5eddb;
+    --ink: #1a1209;
+    --ink-soft: #5a4a35;
+    --ink-muted: #8a7660;
+    --orange: #ff6b35;
+    --orange-light: #fff3ec;
+    --orange-border: #ffd5c0;
+    --amber-light: #fffbe6;
+    --green: #3a7d44;
+    --green-light: #edf7ee;
+    --green-border: #b2dfb4;
+    --blue-light: #e8f0fb;
+    --blue-border: #b3ccf0;
+    --blue: #1a6bcc;
+    --purple: #5c35cc;
+    --purple-light: #ece8ff;
+    --purple-border: #c8bbff;
+    --border: #ede5d8;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Epilogue', sans-serif;
+    background: var(--cream);
+    color: var(--ink);
+    min-height: 100vh;
+  }
+
+  header {
+    padding: 40px 60px 28px;
+    border-bottom: 1px solid var(--border);
+    background: var(--cream);
+  }
+
+  .breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+    color: var(--ink-muted);
+    letter-spacing: 0.08em;
+    margin-bottom: 12px;
+  }
+
+  .breadcrumb a { color: var(--orange); text-decoration: none; }
+  .breadcrumb-sep { color: var(--border); }
+
+  .nibble-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--orange);
+    color: var(--cream);
+    padding: 5px 14px;
+    border-radius: 20px;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    margin-bottom: 14px;
+    font-weight: 500;
+  }
+
+  .nibble-badge-dot {
+    width: 5px; height: 5px;
+    background: var(--cream);
+    border-radius: 50%;
+  }
+
+  h1 {
+    font-family: 'Fraunces', serif;
+    font-size: 40px;
+    font-weight: 700;
+    line-height: 1.05;
+    color: var(--ink);
+    margin-bottom: 10px;
+  }
+
+  h1 em {
+    font-style: italic;
+    font-weight: 400;
+    color: var(--orange);
+  }
+
+  .header-meta-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+    margin-top: 14px;
+  }
+
+  .tag {
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 500;
+    border: 1px solid;
+  }
+
+  .tag-zia  { background: var(--blue-light);  color: var(--blue);  border-color: var(--blue-border); }
+  .tag-zpa  { background: var(--green-light); color: var(--green); border-color: var(--green-border); }
+  .tag-arch { background: var(--amber-light); color: #a07c00;      border-color: #ffe680; }
+
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 40px 60px 60px;
+  }
+
+  .section-block { margin-bottom: 36px; }
+
+  .section-label {
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    color: var(--ink-muted);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  h2 {
+    font-family: 'Fraunces', serif;
+    font-size: 24px;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 14px;
+    line-height: 1.2;
+  }
+
+  p {
+    font-size: 14px;
+    color: var(--ink-soft);
+    line-height: 1.8;
+    margin-bottom: 12px;
+  }
+
+  /* The hero mnemonic card */
+  .mnemonic-hero {
+    background: linear-gradient(135deg, var(--orange-light), var(--cream));
+    border: 1px solid var(--orange-border);
+    border-radius: 18px;
+    padding: 28px 32px;
+    margin-bottom: 28px;
+    text-align: center;
+  }
+
+  .mnemonic-hero-label {
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    color: var(--orange);
+    margin-bottom: 10px;
+    font-weight: 600;
+  }
+
+  .mnemonic-hero-text {
+    font-family: 'Fraunces', serif;
+    font-size: 32px;
+    font-weight: 600;
+    color: var(--ink);
+    font-style: italic;
+    line-height: 1.2;
+  }
+
+  .mnemonic-hero-text em {
+    color: var(--orange);
+    font-style: italic;
+  }
+
+  /* Decision tree */
+  .tree {
+    background: var(--cream);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 28px 24px;
+    margin-bottom: 24px;
+  }
+
+  .tree-root {
+    font-weight: 600;
+    font-size: 14px;
+    padding: 12px 20px;
+    background: var(--ink);
+    color: var(--cream);
+    border-radius: 10px;
+    display: inline-block;
+    margin-bottom: 8px;
+  }
+
+  .tree-branches {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-top: 28px;
+    position: relative;
+  }
+
+  .tree-branches::before {
+    content: '';
+    position: absolute;
+    top: -20px;
+    left: 25%;
+    right: 25%;
+    height: 1px;
+    border-top: 2px dashed var(--orange-border);
+  }
+
+  .tree-branch {
+    background: var(--cream-dark);
+    border-radius: 12px;
+    padding: 20px;
+    border: 1px solid var(--border);
+    position: relative;
+  }
+
+  .tree-branch::before {
+    content: '';
+    position: absolute;
+    top: -20px;
+    left: 50%;
+    width: 2px;
+    height: 20px;
+    background: var(--orange-border);
+  }
+
+  .tree-branch-q {
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    color: var(--ink-muted);
+    margin-bottom: 6px;
+    font-weight: 600;
+  }
+
+  .tree-branch-h {
+    font-family: 'Fraunces', serif;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 14px;
+  }
+
+  .leaf {
+    background: var(--cream);
+    border-radius: 10px;
+    padding: 12px 14px;
+    margin-bottom: 10px;
+    border-left: 3px solid var(--orange);
+  }
+
+  .leaf:last-child { margin-bottom: 0; }
+
+  .leaf-product {
+    display: inline-block;
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    font-weight: 600;
+    padding: 2px 10px;
+    border-radius: 20px;
+    margin-bottom: 6px;
+  }
+
+  .leaf-product.zia {
+    background: var(--blue-light);
+    color: var(--blue);
+    border: 1px solid var(--blue-border);
+  }
+
+  .leaf-product.zpa {
+    background: var(--green-light);
+    color: var(--green);
+    border: 1px solid var(--green-border);
+  }
+
+  .leaf-product.both {
+    background: var(--purple-light);
+    color: var(--purple);
+    border: 1px solid var(--purple-border);
+  }
+
+  .leaf-answer {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 2px;
+  }
+
+  .leaf-detail {
+    font-size: 12px;
+    color: var(--ink-soft);
+    line-height: 1.5;
+  }
+
+  /* Summary table */
+  .summary-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+    margin-bottom: 20px;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(26,18,9,0.04);
+  }
+
+  .summary-table th {
+    background: var(--ink);
+    color: var(--cream);
+    padding: 12px 16px;
+    text-align: left;
+    font-weight: 500;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+  }
+
+  .summary-table td {
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--border);
+    color: var(--ink-soft);
+    vertical-align: top;
+    line-height: 1.6;
+  }
+
+  .summary-table tr:nth-child(even) td { background: var(--cream-dark); }
+  .summary-table tr:last-child td { border-bottom: none; }
+
+  .summary-table td strong { color: var(--ink); }
+  .summary-table .orange { color: var(--orange); font-weight: 600; }
+
+  /* Callouts */
+  .callout {
+    border-radius: 14px;
+    padding: 18px 22px;
+    margin-bottom: 16px;
+    border: 1px solid;
+  }
+
+  .callout-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    margin-bottom: 8px;
+  }
+
+  .callout-icon {
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    flex-shrink: 0;
+  }
+
+  .callout-body { font-size: 13px; line-height: 1.7; }
+
+  .callout-note {
+    background: var(--amber-light);
+    border-color: #ffe680;
+  }
+  .callout-note .callout-header { color: #a07c00; }
+  .callout-note .callout-icon { background: #ffe680; color: #a07c00; }
+  .callout-note .callout-body { color: #7a5c00; }
+
+  .callout-tip {
+    background: var(--blue-light);
+    border-color: var(--blue-border);
+  }
+  .callout-tip .callout-header { color: var(--blue); }
+  .callout-tip .callout-icon { background: var(--blue-border); color: var(--blue); }
+  .callout-tip .callout-body { color: #153d7a; }
+
+  footer {
+    padding: 20px 60px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--cream-dark);
+  }
+
+  .footer-left {
+    font-family: 'Fraunces', serif;
+    font-size: 16px;
+    font-weight: 700;
+  }
+
+  .footer-left span { color: var(--orange); }
+  .footer-right { font-size: 11px; color: var(--ink-muted); letter-spacing: 0.06em; }
+
+  @media (max-width: 900px) {
+    header, main, footer { padding-left: 20px; padding-right: 20px; }
+    h1 { font-size: 32px; }
+    .tree-branches { grid-template-columns: 1fr; }
+    .tree-branches::before { display: none; }
+    .tree-branch::before { display: none; }
+    footer { flex-direction: column; gap: 8px; text-align: center; }
+    .mnemonic-hero-text { font-size: 24px; }
+    .summary-table th, .summary-table td { padding: 10px 12px; font-size: 13px; }
+  }
+
+  @media (max-width: 480px) {
+    header { padding-top: 20px; padding-bottom: 16px; }
+    h1 { font-size: 24px; }
+    main { padding-top: 24px; padding-bottom: 40px; }
+    .mnemonic-hero { padding: 20px; }
+    .mnemonic-hero-text { font-size: 20px; }
+    .tree { padding: 18px 16px; }
+    .tree-branch { padding: 14px; }
+    .tree-branch-h { font-size: 16px; }
+    .summary-table th, .summary-table td { padding: 8px 10px; font-size: 12px; }
+    .callout { padding: 14px 16px; }
+    .callout-body { font-size: 12px; }
+    .nibble-badge { font-size: 10px; padding: 4px 10px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="breadcrumb">
+    <a href="../index.html">Study Plan</a>
+    <span class="breadcrumb-sep">›</span>
+    <a href="../study-nibbles.html">Study Nibbles</a>
+    <span class="breadcrumb-sep">›</span>
+    <span>SIEM Streaming Decision Tree</span>
+  </div>
+
+  <div class="nibble-badge">
+    <span class="nibble-badge-dot"></span>
+    STUDY NIBBLE
+  </div>
+
+  <h1>SIEM Streaming<br><em>Decision Tree</em></h1>
+
+  <div class="header-meta-row">
+    <span class="tag tag-zia">ZIA</span>
+    <span class="tag tag-zpa">ZPA</span>
+    <span class="tag tag-arch">Analytics &amp; Reporting</span>
+  </div>
+</header>
+
+<main>
+
+  <!-- ══ THE MNEMONIC ══ -->
+  <div class="section-block">
+    <div class="section-label">THE MNEMONIC</div>
+
+    <div class="mnemonic-hero">
+      <div class="mnemonic-hero-label">REMEMBER THIS</div>
+      <div class="mnemonic-hero-text">
+        Follow <em>the destination</em>.
+      </div>
+    </div>
+
+    <p>
+      When picking a log streaming method, don't start by asking <em>"what am I streaming?"</em>
+      — start by asking <em>"where does the SIEM live?"</em> The destination dictates the method.
+    </p>
+  </div>
+
+  <!-- ══ THE DECISION TREE ══ -->
+  <div class="section-block">
+    <div class="section-label">THE DECISION TREE</div>
+    <h2>Where does your SIEM live?</h2>
+
+    <div class="tree">
+      <div style="text-align:center;">
+        <div class="tree-root">Where is the SIEM?</div>
+      </div>
+
+      <div class="tree-branches">
+
+        <!-- LEFT BRANCH: ON-PREM -->
+        <div class="tree-branch">
+          <div class="tree-branch-q">IF ON-PREM</div>
+          <div class="tree-branch-h">Bridge into the customer network</div>
+
+          <div class="leaf">
+            <span class="leaf-product zia">ZIA LOGS</span>
+            <div class="leaf-answer">NSS</div>
+            <div class="leaf-detail">
+              Nanolog Streaming Service — customer-deployed VM makes outbound TLS to
+              the Nanolog cluster, forwards to the local SIEM.
+            </div>
+          </div>
+
+          <div class="leaf">
+            <span class="leaf-product zpa">ZPA LOGS</span>
+            <div class="leaf-answer">LSS</div>
+            <div class="leaf-detail">
+              Log Streaming Service — piggybacks on the existing App Connector
+              infrastructure to reach the on-prem SIEM.
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT BRANCH: CLOUD -->
+        <div class="tree-branch">
+          <div class="tree-branch-q">IF CLOUD</div>
+          <div class="tree-branch-h">Wire the two clouds together</div>
+
+          <div class="leaf">
+            <span class="leaf-product both">ZIA OR ZPA</span>
+            <div class="leaf-answer">Cloud-to-Cloud Log Streaming</div>
+            <div class="leaf-detail">
+              Direct HTTPS from the Zscaler cloud to the SIEM cloud — no customer VM,
+              no App Connector. Works with Splunk Cloud, Sumo Logic, Devo, and any
+              SIEM that accepts a customisable HTTPS outbound connector.
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ SUMMARY TABLE ══ -->
+  <div class="section-block">
+    <div class="section-label">QUICK SUMMARY</div>
+    <h2>Match the scenario</h2>
+
+    <table class="summary-table">
+      <thead>
+        <tr>
+          <th>SIEM Location</th>
+          <th>Product</th>
+          <th>Streaming Method</th>
+          <th>Transport</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>On-prem</strong></td>
+          <td>ZIA</td>
+          <td class="orange">NSS</td>
+          <td>Customer-deployed VM in the DC</td>
+        </tr>
+        <tr>
+          <td><strong>On-prem</strong></td>
+          <td>ZPA</td>
+          <td class="orange">LSS</td>
+          <td>Via existing App Connectors</td>
+        </tr>
+        <tr>
+          <td><strong>Cloud</strong></td>
+          <td>ZIA or ZPA</td>
+          <td class="orange">Cloud-to-Cloud</td>
+          <td>Direct HTTPS — no infra needed</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ══ MENTAL NOTES ══ -->
+  <div class="section-block">
+    <div class="section-label">WORTH REMEMBERING</div>
+
+    <div class="callout callout-note">
+      <div class="callout-header">
+        <div class="callout-icon">★</div>
+        MENTAL NOTE
+      </div>
+      <div class="callout-body">
+        <strong>NSS is customer-managed.</strong> Zscaler provides the VM image, but the
+        customer owns patching, monitoring, and lifecycle. It's a normal Linux VM with
+        a Zscaler agent — not a fully managed appliance like a PSE.
+      </div>
+    </div>
+
+    <div class="callout callout-note">
+      <div class="callout-header">
+        <div class="callout-icon">★</div>
+        MENTAL NOTE
+      </div>
+      <div class="callout-body">
+        <strong>Both NSS and LSS use outbound-only connections.</strong> No inbound
+        firewall rules needed on the customer side — same design principle as App
+        Connectors. This is Zscaler's signature architectural pattern.
+      </div>
+    </div>
+
+    <div class="callout callout-tip">
+      <div class="callout-header">
+        <div class="callout-icon">→</div>
+        EXAM TIP
+      </div>
+      <div class="callout-body">
+        Watch for distractors that swap NSS ↔ LSS. The exam frequently tests
+        "<em>which service streams ZPA logs to the customer's on-prem Splunk?</em>"
+        — the answer is <strong>LSS</strong>, not NSS.
+      </div>
+    </div>
+
+    <div class="callout callout-tip">
+      <div class="callout-header">
+        <div class="callout-icon">→</div>
+        EXAM TIP
+      </div>
+      <div class="callout-body">
+        Cloud-to-Cloud is <strong>not limited to Splunk Cloud, Sumo, and Devo</strong>
+        — it supports any SIEM reachable via a customisable HTTPS outbound connector.
+        Don't fall for the "only three vendors" distractor.
+      </div>
+    </div>
+
+    <div class="callout callout-note">
+      <div class="callout-header">
+        <div class="callout-icon">★</div>
+        MENTAL NOTE
+      </div>
+      <div class="callout-body">
+        NSS can <strong>buffer up to 1 hour of logs</strong> during connectivity
+        issues with the Nanolog cluster — useful for scenario questions about
+        temporary network outages.
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  <div class="footer-left">ZDTE<span>.</span></div>
+  <div class="footer-right">Zscaler Digital Transformation Engineer · Study Nibble</div>
+</footer>
+
+</body>
+</html>

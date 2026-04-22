@@ -666,10 +666,25 @@
 
   @media (max-width: 900px) {
     .scene-content { grid-template-columns: 1fr; }
-    main { padding: 20px; }
-    header { padding: 24px 20px; flex-direction: column; }
-    nav.section-nav { padding: 0 20px; }
-    footer { padding: 18px 20px; flex-direction: column; gap: 8px; text-align: center; }
+    main { padding: 20px 16px 40px; }
+    header { padding: 20px 16px; flex-direction: column; gap: 16px; }
+    nav.section-nav { padding: 0 16px; }
+    footer { padding: 16px; flex-direction: column; gap: 8px; text-align: center; }
+  }
+
+  @media (max-width: 600px) {
+    h1 { font-size: 28px; }
+    .scene { grid-template-columns: 1fr; }
+    .scene-num { display: none; }
+    .scene-room-name { font-size: 16px; }
+    .scene-image-slot { min-height: 220px; }
+    .summary-table { font-size: 11px; }
+  }
+
+  @media (max-width: 480px) {
+    h1 { font-size: 24px; }
+    .scene-body { padding: 12px 10px; }
+    nav.section-nav button { padding: 12px 12px; font-size: 10px; }
   }
 </style>
 </head>

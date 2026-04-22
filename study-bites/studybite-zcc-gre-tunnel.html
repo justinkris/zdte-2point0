@@ -435,6 +435,18 @@
     .sidebar { padding: 24px 20px 40px; border-top: 1px solid var(--border); }
     .problem-solution { grid-template-columns: 1fr; }
     footer { padding: 20px; flex-direction: column; gap: 8px; text-align: center; }
+    h1 { font-size: 28px; }
+    .header-right { display: none; }
+  }
+
+  @media (max-width: 480px) {
+    h1 { font-size: 22px; }
+    header { padding: 16px; }
+    .main-content { padding: 16px 16px 32px; }
+    .sidebar { padding: 16px; }
+    .bite-badge { font-size: 10px; padding: 3px 10px; }
+    .fact-card { padding: 12px 14px; }
+    .fact-card .fact-label { font-size: 9px; }
   }
 </style>
 </head>

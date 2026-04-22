@@ -236,11 +236,20 @@
   .footer-right { font-size: 11px; color: var(--ink-muted); letter-spacing: 0.06em; }
 
   @media (max-width: 700px) {
-    header { padding: 24px 20px 20px; flex-direction: column; }
-    .main { padding: 32px 20px 60px; }
-    .bite-card { flex-wrap: wrap; }
+    header { padding: 20px 16px 16px; flex-direction: column; gap: 16px; }
+    .main { padding: 24px 16px 48px; }
+    h1 { font-size: 32px; }
+    .header-sub { font-size: 12px; }
+    .bite-card { flex-wrap: wrap; gap: 12px; padding: 14px 16px; }
     .bite-tags { justify-content: flex-start; }
-    footer { padding: 20px; flex-direction: column; gap: 8px; text-align: center; }
+    .bite-title { font-size: 14px; }
+    footer { padding: 16px; flex-direction: column; gap: 8px; text-align: center; }
+  }
+
+  @media (max-width: 480px) {
+    h1 { font-size: 26px; }
+    .bite-icon { width: 36px; height: 36px; font-size: 15px; }
+    .category-label { font-size: 9px; }
   }
 </style>
 </head>

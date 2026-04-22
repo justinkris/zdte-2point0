@@ -235,11 +235,20 @@
   .footer-right { font-size: 11px; color: var(--ink-muted); letter-spacing: 0.06em; }
 
   @media (max-width: 700px) {
-    header { padding: 24px 20px 20px; flex-direction: column; }
-    .main { padding: 32px 20px 60px; }
-    .nibble-card { flex-wrap: wrap; }
+    header { padding: 20px 16px 16px; flex-direction: column; gap: 16px; }
+    .main { padding: 24px 16px 48px; }
+    h1 { font-size: 32px; }
+    .header-sub { font-size: 12px; }
+    .nibble-card { flex-wrap: wrap; gap: 12px; padding: 14px 16px; }
     .nibble-tags { justify-content: flex-start; }
-    footer { padding: 20px; flex-direction: column; gap: 8px; text-align: center; }
+    .nibble-title { font-size: 14px; }
+    footer { padding: 16px; flex-direction: column; gap: 8px; text-align: center; }
+  }
+
+  @media (max-width: 480px) {
+    h1 { font-size: 26px; }
+    .nibble-icon { width: 36px; height: 36px; font-size: 17px; }
+    .category-label { font-size: 9px; }
   }
 </style>
 </head>
@@ -261,7 +270,7 @@
   </div>
   <div class="header-right">
     <div class="count-card">
-      <div class="big">1</div>
+      <div class="big">2</div>
       <div class="lbl">NIBBLES</div>
     </div>
   </div>
@@ -271,6 +280,20 @@
 
   <div class="category-label">ZIA / ZPA — ARCHITECTURE</div>
   <div class="nibbles-grid">
+
+    <a href="study-nibbles/siem-streaming-decision-tree.html" class="nibble-card">
+      <div class="nibble-icon">📡</div>
+      <div class="nibble-body">
+        <div class="nibble-title">SIEM Streaming Decision Tree</div>
+        <div class="nibble-desc">Follow the destination · NSS vs LSS vs Cloud-to-Cloud · On-prem vs cloud SIEM · Exam trap: NSS ↔ LSS swap</div>
+      </div>
+      <div class="nibble-tags">
+        <span class="tag tag-zia">ZIA</span>
+        <span class="tag tag-zpa">ZPA</span>
+        <span class="tag tag-arch">Analytics</span>
+      </div>
+      <div class="nibble-arrow">→</div>
+    </a>
 
     <a href="study-nibbles/pse-franchise-analogy.html" class="nibble-card">
       <div class="nibble-icon">🍔</div>
