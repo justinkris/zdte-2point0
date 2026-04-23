@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ZDTE Study Nibble — Firewall Module vs Proxy Module</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;0,700;1,400&family=Epilogue:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../nibble.css">
+</head>
+<body>
+
+<header>
+  <div class="breadcrumb">
+    <a href="../index.html">Study Plan</a>
+    <span class="breadcrumb-sep">›</span>
+    <a href="../study-nibbles.html">Study Nibbles</a>
+    <span class="breadcrumb-sep">›</span>
+    <span>Firewall vs Proxy Module</span>
+  </div>
+
+  <div class="nibble-badge">
+    <span class="nibble-badge-dot"></span>
+    STUDY NIBBLE
+  </div>
+
+  <h1>Firewall Module vs Proxy Module<br><em>Inside the ZIA Public Service Edge</em></h1>
+
+  <div class="header-meta-row">
+    <span class="tag tag-zia">ZIA</span>
+    <span class="tag tag-arch">Architecture</span>
+    <span class="tag tag-weight">Access Control · 10%</span>
+  </div>
+</header>
+
+<main>
+
+  <!-- ══ OVERVIEW ══ -->
+  <div class="section-block">
+    <div class="section-label">THE CORE IDEA</div>
+    <h2>Two modules, one enforcement node</h2>
+    <p>
+      Every ZIA Public Service Edge (formerly Zscaler Enforcement Node) logically splits traffic
+      processing into <strong>two modules</strong>: the <strong>Firewall Module</strong> and the
+      <strong>Proxy Module</strong>. The split exists so the right depth of inspection is applied
+      to the right traffic — without sending every packet through the full security stack.
+    </p>
+
+    <div class="key-concept">
+      <strong>Key point:</strong> Proxy Module = web traffic (HTTP, HTTPS, FTP) with full deep
+      inspection. Firewall Module = everything else (all ports, all protocols) with L3/L4 control
+      plus DPI, DNS, and IPS engines.
+    </div>
+  </div>
+
+  <!-- ══ COMPARISON TABLE ══ -->
+  <div class="section-block">
+    <div class="section-label">SIDE BY SIDE</div>
+    <h2>Firewall Module vs Proxy Module</h2>
+
+    <table class="compare-table">
+      <thead>
+        <tr>
+          <th style="width: 22%;">Dimension</th>
+          <th>Firewall Module</th>
+          <th>Proxy Module</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Traffic scope</td>
+          <td>All ports, all protocols (TCP, UDP, ICMP, non-web)</td>
+          <td>HTTP, HTTPS, and some ALGs (e.g. FTP)</td>
+        </tr>
+        <tr>
+          <td>Inspection depth</td>
+          <td>L3 / L4 flow control with per-packet L7 identification</td>
+          <td>Full content inspection — headers, payload, HTML, files</td>
+        </tr>
+        <tr>
+          <td>SSL inspection</td>
+          <td>Not performed here — this module doesn't decrypt TLS</td>
+          <td>Yes — decrypt, inspect, re-encrypt</td>
+        </tr>
+        <tr>
+          <td>Core engines</td>
+          <td>DPI · DNS · IPS · Policy</td>
+          <td>URL Filter · Cloud App Control · ATP · Malware · DLP · File Type · Bandwidth · Browser Control</td>
+        </tr>
+        <tr>
+          <td>Analogy</td>
+          <td>Triage nurse — checks everyone at the door, fast</td>
+          <td>Specialist doctor — full examination of specific patients</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ══ FIREWALL ENGINES ══ -->
+  <div class="section-block">
+    <div class="section-label">FIREWALL MODULE — 4 ENGINES</div>
+    <h2>What lives inside the Firewall Module</h2>
+
+    <div class="engine-grid">
+      <div class="engine-chip">
+        <div class="engine-chip-name">DPI Engine</div>
+        <div class="engine-chip-body">
+          Identifies the application from the first 1–5 packets. Catches apps hiding on
+          non-standard ports (e.g. something sneaking on :443 that isn't HTTPS).
+        </div>
+      </div>
+      <div class="engine-chip">
+        <div class="engine-chip-name">DNS Engine</div>
+        <div class="engine-chip-body">
+          Header-based restrictions and domain-level access control for plain DNS
+          (UDP/TCP 53).
+        </div>
+      </div>
+      <div class="engine-chip">
+        <div class="engine-chip-name">IPS Engine</div>
+        <div class="engine-chip-body">
+          Per-packet threat detection via signatures — alerts and blocks intrusion
+          attempts across non-web flows.
+        </div>
+      </div>
+      <div class="engine-chip">
+        <div class="engine-chip-name">Policy Engine</div>
+        <div class="engine-chip-body">
+          Evaluates firewall rules top-down, first-match. Controls what the other three
+          engines do and when.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ ANALOGY ══ -->
+  <div class="section-block">
+    <div class="section-label">MENTAL MODEL</div>
+    <h2>The hospital analogy</h2>
+
+    <div class="callout callout-analogy">
+      <div class="callout-header">
+        <div class="callout-icon">⟳</div>
+        ANALOGY
+      </div>
+      <div class="callout-body">
+        <strong>Firewall Module = triage nurse at the hospital entrance.</strong>
+        Fast, broad, sees everyone. Asks "who are you, where are you going, are you allowed in
+        this wing?" — identifies the protocol, checks the rule, lets it through or blocks it.
+        <br><br>
+        <strong>Proxy Module = specialist doctor.</strong>
+        Only sees specific patients (web traffic), but performs a full examination:
+        bloodwork, imaging, diagnostics (SSL decrypt, content inspection, DLP, malware analysis).
+        <br><br>
+        You wouldn't want the specialist examining every passerby — too slow, overkill.
+        You wouldn't want the triage nurse performing surgery — wrong tools.
+        That's why the modules are separate: <em>right depth of inspection, right traffic,
+        right performance cost.</em>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ WATCH OUT ══ -->
+  <div class="section-block">
+    <div class="section-label">GOTCHAS</div>
+    <h2>Traps to watch for</h2>
+
+    <div class="callout callout-warn">
+      <div class="callout-header">
+        <div class="callout-icon">!</div>
+        WATCH OUT — DNS vs DoH
+      </div>
+      <div class="callout-body">
+        <strong>Plain DNS (UDP 53)</strong> → Firewall Module → DNS Engine. No SSL inspection
+        possible because it's unencrypted — nothing to decrypt.
+        <br><br>
+        <strong>DNS over HTTPS (DoH)</strong> → rides on HTTPS :443 → <em>Proxy Module</em>.
+        SSL inspection <em>can</em> apply here. This is why DoH is a visibility concern — it
+        hides DNS lookups inside encrypted web traffic, bypassing the DNS Engine unless you
+        inspect it.
+      </div>
+    </div>
+
+    <div class="callout callout-warn">
+      <div class="callout-header">
+        <div class="callout-icon">!</div>
+        WATCH OUT — Non-standard ports
+      </div>
+      <div class="callout-body">
+        If HTTPS runs on a non-standard port (e.g. 8443), the DPI Engine inside the Firewall
+        Module identifies it as web traffic within the first few packets and hands it off to
+        the Proxy Module. Zscaler caches that mapping so future sessions don't need re-discovery.
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ EXAM TIP ══ -->
+  <div class="section-block">
+    <div class="section-label">EXAM ANGLE</div>
+    <h2>How this shows up on the exam</h2>
+
+    <div class="callout callout-tip">
+      <div class="callout-header">
+        <div class="callout-icon">→</div>
+        EXAM TIP
+      </div>
+      <div class="callout-body">
+        Expect a scenario question giving you a protocol and port (e.g. "user sends SSH on
+        TCP 22" or "DNS on UDP 53") and asking which module processes it or whether SSL
+        inspection applies. Default test: <strong>is it HTTP/HTTPS/FTP? → Proxy. Anything
+        else? → Firewall.</strong> SSL inspection only applies where there's a TLS session
+        to decrypt.
+      </div>
+    </div>
+
+    <div class="callout callout-tip">
+      <div class="callout-header">
+        <div class="callout-icon">→</div>
+        EXAM TIP
+      </div>
+      <div class="callout-body">
+        Know the four Firewall Module engines by name: <strong>DPI, DNS, IPS, Policy</strong>.
+        Know that the Proxy Module is where the "full security stack" runs — URL filtering,
+        Cloud App Control, ATP, malware, DLP, sandbox. If the question names one of those
+        capabilities, the traffic is in the Proxy Module.
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  <div class="footer-left">ZDTE<span>.</span></div>
+  <div class="footer-right">Study Nibble · Firewall Module vs Proxy Module</div>
+</footer>
+
+</body>
+</html>

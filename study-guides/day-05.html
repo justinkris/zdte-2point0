@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ZDTE Study Guide — Day 05: Cyberthreat Protection</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;0,700;1,400&family=Epilogue:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../study-guide.css">
+<style>
+  /* page-specific: h3 separator and pipeline steps not in study-guide.css base */
+  h3 { padding-top: 20px; border-top: 1px solid var(--border); margin-top: 28px; }
+  h3:first-of-type { border-top: none; padding-top: 0; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-left">
+    <div class="breadcrumb">
+      <a href="../index.html">Study Plan</a>
+      <span class="breadcrumb-sep">›</span>
+      <a href="../study-guides.html">Study Guides</a>
+      <span class="breadcrumb-sep">›</span>
+      <span>Cyberthreat Protection</span>
+    </div>
+    <div class="day-badge">
+      <span class="day-badge-dot"></span>
+      DAY 05 — THURSDAY, 23 APRIL 2026
+    </div>
+    <h1>Cyberthreat<br><em>Protection Services</em></h1>
+    <div class="header-meta-row">
+      <span class="tag tag-zia">ZIA</span>
+      <span class="tag tag-zpa">ZPA</span>
+      <span class="tag tag-weight">Blueprint: 12%</span>
+    </div>
+  </div>
+  <div class="header-right">
+    <div class="progress-card">
+      <div class="big">0<span style="font-size:18px;color:#7a6a55;">%</span></div>
+      <div class="lbl">COMPLETE</div>
+    </div>
+  </div>
+</header>
+
+<nav class="section-nav">
+  <button class="nav-tab active" onclick="setTab(this)">ATP & Sandbox</button>
+  <button class="nav-tab" onclick="setTab(this)">IPS</button>
+  <button class="nav-tab" onclick="setTab(this)">Browser Isolation</button>
+  <button class="nav-tab" onclick="setTab(this)">Deception</button>
+  <button class="nav-tab" onclick="setTab(this)">ITDR</button>
+  <button class="nav-tab" onclick="setTab(this)">AppProtection</button>
+</nav>
+
+<main>
+  <div class="main-content">
+
+    <!-- ══ FOUNDATION ══ -->
+    <div class="section-block">
+      <div class="section-label">FOUNDATION</div>
+      <h2>The prerequisite for everything</h2>
+      <p>Nearly every Cyberthreat Protection capability in ZIA depends on one thing being enabled first. Without it, Zscaler can only see the outer envelope of encrypted traffic — source, destination, and TLS handshake details — but nothing inside.</p>
+      <div class="key-concept">
+        <strong>SSL Inspection is the prerequisite</strong> for ATP, IPS, Cloud Sandbox, and DLP to function. Without it, all inspection engines are blind to content inside HTTPS traffic. It is not optional — it is the foundation.
+      </div>
+    </div>
+
+    <!-- ══ ATP ══ -->
+    <div class="section-block">
+      <div class="section-label">ADVANCED THREAT PROTECTION</div>
+      <h2>ATP — The inspection pipeline</h2>
+      <p>ATP is Zscaler's layered engine for detecting and blocking malicious files, URLs, and destinations. It operates as a tiered pipeline — cheapest and fastest checks first, most expensive last — to balance security with scale.</p>
+
+      <div class="pipeline">
+        <div class="pipeline-step">
+          <div class="pipeline-num">1</div>
+          <div class="pipeline-body">
+            <strong>Threat Intelligence — Known Bad</strong>
+            <span>Destination checked against Zscaler's global database of known malicious URLs, domains, and IPs. Instant block — no content inspection needed.</span>
+          </div>
+        </div>
+        <div class="pipeline-step">
+          <div class="pipeline-num">2</div>
+          <div class="pipeline-body">
+            <strong>Heuristics & ML — Unknown but Suspicious</strong>
+            <span>Domains not in the database are analysed for suspicious signals: high entropy names (DGA), newly registered age, dormant-then-suddenly-active behaviour. AI/ML scoring flags risk.</span>
+          </div>
+        </div>
+        <div class="pipeline-step">
+          <div class="pipeline-num">3</div>
+          <div class="pipeline-body">
+            <strong>Content Inspection — Response Analysis</strong>
+            <span>SSL-decrypted response content inspected. Hash/signature matching first — has Zscaler seen this file before? Then heuristic analysis for file type mismatches and structural anomalies.</span>
+          </div>
+        </div>
+        <div class="pipeline-step">
+          <div class="pipeline-num">4</div>
+          <div class="pipeline-body">
+            <strong>Cloud Sandbox — Detonation</strong>
+            <span>Truly unknown files are executed in an isolated environment. Behaviour is observed — registry modifications, C2 callouts, OS changes. File bytes withheld from user until verdict.</span>
+          </div>
+        </div>
+      </div>
+
+      <h3>Cloud Sandbox — Key Details</h3>
+
+      <div class="definition">
+        <div class="definition-term">Patient Zero Protection</div>
+        <div class="definition-body">The connection is held open but file bytes are withheld while sandbox analysis runs. Nothing touches the endpoint until a clean verdict is returned. If malicious — connection dropped.</div>
+      </div>
+
+      <div class="definition">
+        <div class="definition-term">Sandbox Evasion Resistance</div>
+        <div class="definition-body">Sophisticated malware detects sandbox environments and goes dormant. Zscaler mimics realistic endpoint environments — hardware fingerprints, user activity patterns, installed software — to fool evasion techniques.</div>
+      </div>
+
+      <table class="compare-table">
+        <thead>
+          <tr><th>Mode</th><th>Behaviour</th><th>Use Case</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Block Mode</td>
+            <td>File withheld until sandbox verdict. Maximum protection.</td>
+            <td>High-security environments — patient zero protection priority</td>
+          </tr>
+          <tr>
+            <td>Monitor Mode</td>
+            <td>File released immediately. Analysis runs in parallel. Alert if malicious.</td>
+            <td>Productivity-sensitive environments — latency cannot be tolerated</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ══ IPS ══ -->
+    <div class="section-block">
+      <div class="section-label">INTRUSION PREVENTION SYSTEM</div>
+      <h2>IPS — Behavioural traffic inspection</h2>
+
+      <p>IPS uses deep packet inspection against a signature database to detect attack patterns in the traffic stream — specifically in <strong>inbound response traffic</strong> coming back to users from the internet.</p>
+
+      <div class="key-concept">
+        <strong>ATP asks:</strong> "Is this file or destination malicious?"<br>
+        <strong>IPS asks:</strong> "Is this conversation <em>behaving</em> like an attack?"
+      </div>
+
+      <p>IPS catches what ATP misses. A URL and file can both appear clean, but as more packets arrive, the <em>pattern</em> of the conversation can betray an attack — timing anomalies, payload structures matching exploit kits, unexpected callbacks.</p>
+
+      <h3>What IPS detects</h3>
+
+      <div class="definition">
+        <div class="definition-term">Cross-Site Scripting (XSS)</div>
+        <div class="definition-body">Malicious scripts injected into legitimate page responses. Executes in the user's browser without any user interaction.</div>
+      </div>
+
+      <div class="definition">
+        <div class="definition-term">Exploit Kits</div>
+        <div class="definition-body">Malicious code served in a webpage that probes for browser/plugin vulnerabilities and automatically delivers a payload if one is found.</div>
+      </div>
+
+      <div class="definition">
+        <div class="definition-term">C2 Communication Patterns</div>
+        <div class="definition-body">Traffic matching known command-and-control communication signatures — timing, frequency, and payload structure of beacon callbacks.</div>
+      </div>
+
+      <div class="callout callout-analogy">
+        <div class="callout-header"><div class="callout-icon">⟳</div> ANALOGY</div>
+        <div class="callout-body">
+          <strong>ATP</strong> is the border officer checking your <strong>luggage</strong> for contraband. <strong>IPS</strong> is the officer watching <strong>how you're behaving</strong> — suspicious patterns, criminal body language. Clean luggage doesn't mean innocent behaviour. Both are needed.
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ BROWSER ISOLATION ══ -->
+    <div class="section-block">
+      <div class="section-label">BROWSER ISOLATION</div>
+      <h2>Remote Browser Isolation (RBI)</h2>
+
+      <p>The problem with a normal browser is that it executes everything it receives — JavaScript, HTML, CSS — directly on the endpoint. Browser Isolation air-gaps the user's device from web content entirely by moving execution to the cloud.</p>
+
+      <div class="key-concept">
+        <strong>Core principle:</strong> The browser executes in Zscaler's cloud. The user's device receives only a safe visual stream. No executable content ever touches the endpoint.
+      </div>
+
+      <table class="compare-table">
+        <thead>
+          <tr><th>Mode</th><th>How it works</th><th>Tradeoff</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Streaming Isolation</td>
+            <td>Live interactive video feed of cloud browser — like a remote screen share. Full interactivity.</td>
+            <td>Higher bandwidth. Full user experience.</td>
+          </tr>
+          <tr>
+            <td>Pixel / DOM Isolation</td>
+            <td>Page rendered to a flat visual stream — no HTML or JS sent. Drawing instructions only.</td>
+            <td>Lower bandwidth. Limited interactivity.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <table class="compare-table">
+        <thead>
+          <tr><th>Deployment</th><th>Where browser runs</th><th>When to choose</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Cloud Browser Isolation</td>
+            <td>Zscaler's cloud infrastructure</td>
+            <td>General internet browsing — easy deployment, no on-prem needed</td>
+          </tr>
+          <tr>
+            <td>Local Browser Isolation</td>
+            <td>Organisation's own infrastructure</td>
+            <td>Data sovereignty, strict compliance — traffic cannot leave org environment</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ══ DECEPTION ══ -->
+    <div class="section-block">
+      <div class="section-label">DECEPTION</div>
+      <h2>Deception technology — Post-breach detection</h2>
+
+      <p>Deception is designed for attackers who have already gotten past perimeter controls and are moving laterally. Unlike ATP or IPS, it does not need to judge whether something is malicious — interaction with a decoy is proof by definition.</p>
+
+      <div class="key-concept">
+        <strong>Zero false positives:</strong> No legitimate user or system ever touches a decoy. Any interaction is definitionally a confirmed threat.
+      </div>
+
+      <h3>How it works — The trap</h3>
+      <p>Zscaler plants <strong>lures</strong> (fake credentials, saved passwords) on real endpoints. Those lures point to <strong>decoys</strong> (fake servers) in Zscaler's deception cloud. DNS records for fake hostnames route attacker traffic to the deception cloud. The moment an attacker interacts — the compromised endpoint, user, technique, and timing are all immediately known.</p>
+
+      <h3>Asset taxonomy</h3>
+      <table class="compare-table">
+        <thead>
+          <tr><th>Type</th><th>What it is</th><th>Where it lives</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Lures</td><td>Fake credentials/shortcuts planted on real endpoints — the breadcrumbs</td><td>Real user machines</td></tr>
+          <tr><td>Decoys</td><td>Fake servers and resources that lures point to</td><td>Zscaler deception cloud</td></tr>
+          <tr><td>AD Decoys</td><td>Fake Active Directory objects — users, service accounts, groups</td><td>Customer's Active Directory</td></tr>
+          <tr><td>Honey Tokens</td><td>Fake files with embedded beacons that phone home when opened</td><td>File shares, endpoints</td></tr>
+        </tbody>
+      </table>
+
+      <h3>AD-specific attacks Deception & ITDR detect</h3>
+
+      <div class="definition">
+        <div class="definition-term">DCSync</div>
+        <div class="definition-body">Attacker mimics a domain controller using MS-DRSR protocol to replicate credential hashes including krbtgt. Signal: a non-DC machine making AD replication requests.</div>
+      </div>
+
+      <div class="definition">
+        <div class="definition-term">Kerberoasting</div>
+        <div class="definition-body">Attacker requests Kerberos service tickets for service accounts, then cracks them offline. Signal: unusually high volume of service ticket requests from a single user.</div>
+      </div>
+
+      <div class="definition">
+        <div class="definition-term">Golden Ticket</div>
+        <div class="definition-body">Attacker uses stolen krbtgt hash to forge Kerberos tickets entirely. Signal: tickets used from unexpected locations or with abnormal lifetimes.</div>
+      </div>
+
+      <div class="callout callout-warn">
+        <div class="callout-header"><div class="callout-icon">!</div> WATCH OUT</div>
+        <div class="callout-body">Deception is a <strong>post-breach detection</strong> control — not prevention. It catches attackers already inside moving laterally. Do not confuse it with perimeter controls like ATP or IPS.</div>
+      </div>
+    </div>
+
+    <!-- ══ ITDR ══ -->
+    <div class="section-block">
+      <div class="section-label">IDENTITY THREAT DETECTION & RESPONSE</div>
+      <h2>ITDR — Identity is the new perimeter</h2>
+
+      <p>In a Zero Trust architecture, identity is the primary access control mechanism. A stolen credential is a stolen perimeter. ITDR detects when identities — human or non-human — are being abused, even when authentication technically succeeds.</p>
+
+      <div class="key-concept">
+        <strong>ITDR watches behaviour, not just authentication.</strong> A valid login from an impossible location at an unusual time accessing resources never touched before — is not a valid session.
+      </div>
+
+      <h3>Behavioural signals ITDR monitors</h3>
+
+      <div class="definition">
+        <div class="definition-term">Location anomaly</div>
+        <div class="definition-body">Login from a country or region the user has never accessed from before.</div>
+      </div>
+
+      <div class="definition">
+        <div class="definition-term">Impossible travel</div>
+        <div class="definition-body">Two logins from geographically distant locations within a timeframe that makes physical travel impossible.</div>
+      </div>
+
+      <div class="definition">
+        <div class="definition-term">Time anomaly</div>
+        <div class="definition-body">Access outside the user's established working hours pattern.</div>
+      </div>
+
+      <div class="definition">
+        <div class="definition-term">Resource anomaly</div>
+        <div class="definition-body">Accessing sensitive systems or data the user has never touched before.</div>
+      </div>
+
+      <h3>Automated response spectrum</h3>
+      <table class="compare-table">
+        <thead>
+          <tr><th>Severity</th><th>Response</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Low</td><td>Allow but monitor — increase logging and visibility</td></tr>
+          <tr><td>Medium</td><td>Step-up authentication — challenge with MFA before continuing</td></tr>
+          <tr><td>High</td><td>Restrict access — limit to low-sensitivity resources only</td></tr>
+          <tr><td>Critical</td><td>Session termination or full account block</td></tr>
+        </tbody>
+      </table>
+
+      <p>Severity thresholds and automated responses are defined by <strong>administrator policy</strong>. ITDR uses telemetry that flows naturally through Zscaler — no separate agents or SIEM required.</p>
+
+      <h3>Non-human identities</h3>
+      <p>ITDR also monitors service accounts, API keys, and application tokens. These are particularly dangerous when compromised — they often have broad permissions, never expire, and generate no human behavioural baseline.</p>
+    </div>
+
+    <!-- ══ APPPROTECTION ══ -->
+    <div class="section-block">
+      <div class="section-label">PRIVATE ACCESS APPPROTECTION</div>
+      <h2>AppProtection — WAF inside ZPA</h2>
+
+      <p>ZPA controls <em>who</em> gets access to private applications. But once a legitimate authenticated user is connected, ZPA has no visibility into whether the requests they send are malicious. AppProtection fills this gap.</p>
+
+      <div class="key-concept">
+        <strong>AppProtection is a WAF built natively into the ZPA traffic flow.</strong> It inspects HTTP requests to private applications inline — in the ZPA cloud — protecting against OWASP Top 10 attacks from authenticated users.
+      </div>
+
+      <h3>Architecture</h3>
+      <p>Inspection happens in the <strong>ZPA cloud</strong> — not at the App Connector. Zscaler manages the inspection engine, signature updates, and rule sets centrally. The customer configures policy from the admin portal.</p>
+
+      <p>Traffic flow: <strong>User → ZPA Cloud (AppProtection inspects here) → App Connector → Private App</strong></p>
+
+      <h3>What it protects against</h3>
+      <div class="definition">
+        <div class="definition-term">OWASP Core Rule Set</div>
+        <div class="definition-body">AppProtection rules align to the OWASP Core Rule Set — covering injection attacks (SQL, command), XSS, directory traversal, broken access control, and other OWASP Top 10 categories.</div>
+      </div>
+
+      <div class="callout callout-tip">
+        <div class="callout-header"><div class="callout-icon">→</div> EXAM TIP</div>
+        <div class="callout-body">ZPA = access control (who gets in). AppProtection = request inspection (what they do once inside). These are complementary — not overlapping. Exam questions may ask which control applies to post-authentication threats against private apps. The answer is AppProtection.</div>
+      </div>
+    </div>
+
+    <!-- ══ EXAM TIPS ══ -->
+    <div class="section-block">
+      <div class="section-label">EXAM TIPS</div>
+      <h2>What the exam tests</h2>
+
+      <div class="callout callout-tip">
+        <div class="callout-header"><div class="callout-icon">→</div> EXAM TIP</div>
+        <div class="callout-body">SSL Inspection questions: if a scenario describes ATP, IPS, or Sandbox not catching something — the likely answer is SSL inspection is disabled. It is the prerequisite for all inline content inspection.</div>
+      </div>
+
+      <div class="callout callout-tip">
+        <div class="callout-header"><div class="callout-icon">→</div> EXAM TIP</div>
+        <div class="callout-body">ATP vs IPS: file/URL/destination = ATP. Traffic behaviour/XSS/exploit kit = IPS. Both require SSL inspection.</div>
+      </div>
+
+      <div class="callout callout-tip">
+        <div class="callout-header"><div class="callout-icon">→</div> EXAM TIP</div>
+        <div class="callout-body">Deception scenario clues: "attacker already inside", "lateral movement", "zero false positives" → Deception. ITDR scenario clues: "stolen credentials", "impossible travel", "anomalous access", "step-up auth" → ITDR.</div>
+      </div>
+
+      <div class="callout callout-tip">
+        <div class="callout-header"><div class="callout-icon">→</div> EXAM TIP</div>
+        <div class="callout-body">Cloud Sandbox modes: Block mode = patient zero protection, file withheld. Monitor mode = file released, analysis parallel, alert retroactively. Know the tradeoff.</div>
+      </div>
+    </div>
+
+  </div><!-- end .main-content -->
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">SUBTOPICS — TICK WHEN DONE</div>
+      <ul class="subtopic-list">
+        <li onclick="toggleDone(this)"><div class="subtopic-check"></div><span>Advanced Threat Protection (ATP)</span></li>
+        <li onclick="toggleDone(this)"><div class="subtopic-check"></div><span>Cloud Sandbox</span></li>
+        <li onclick="toggleDone(this)"><div class="subtopic-check"></div><span>Intrusion Prevention System (IPS)</span></li>
+        <li onclick="toggleDone(this)"><div class="subtopic-check"></div><span>Browser Isolation (RBI)</span></li>
+        <li onclick="toggleDone(this)"><div class="subtopic-check"></div><span>Deception Technology</span></li>
+        <li onclick="toggleDone(this)"><div class="subtopic-check"></div><span>ITDR</span></li>
+        <li onclick="toggleDone(this)"><div class="subtopic-check"></div><span>Private Access AppProtection</span></li>
+      </ul>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">QUICK REFERENCE</div>
+
+      <div class="quick-ref">
+        <div class="quick-ref-term">SSL INSPECTION</div>
+        <div class="quick-ref-def">Prerequisite for ATP, IPS, Sandbox, and DLP. Without it all content inspection is blind.</div>
+      </div>
+
+      <div class="quick-ref">
+        <div class="quick-ref-term">PATIENT ZERO PROTECTION</div>
+        <div class="quick-ref-def">Sandbox holds connection open, withholds file bytes until verdict. First user is protected.</div>
+      </div>
+
+      <div class="quick-ref">
+        <div class="quick-ref-term">RBI</div>
+        <div class="quick-ref-def">Remote Browser Isolation. Browser executes in Zscaler's cloud. User receives visual stream only.</div>
+      </div>
+
+      <div class="quick-ref">
+        <div class="quick-ref-term">LURE vs DECOY</div>
+        <div class="quick-ref-def">Lures are planted on real endpoints. Decoys are fake destinations in Zscaler's cloud. DNS connects them.</div>
+      </div>
+
+      <div class="quick-ref">
+        <div class="quick-ref-term">ITDR</div>
+        <div class="quick-ref-def">Detects compromised identities via behavioural anomalies. Responds automatically across a severity spectrum.</div>
+      </div>
+
+      <div class="quick-ref">
+        <div class="quick-ref-term">APPPROTECTION</div>
+        <div class="quick-ref-def">WAF inside ZPA. Inspects requests from authenticated users to private apps. OWASP Core Rule Set.</div>
+      </div>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">MY NOTES</div>
+      <div class="sidebar-note">SSL Inspection = the unlock. Everything depends on it.</div>
+      <div class="sidebar-note">Deception = post-breach. Catches lateral movers. Zero false positives because nothing legit touches a decoy.</div>
+      <div class="sidebar-note">ITDR watches behaviour not just auth — valid credentials ≠ valid session if behaviour is wrong.</div>
+      <div class="sidebar-note">AppProtection = ZPA's WAF. ZPA controls who gets in. AppProtection controls what they can do.</div>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">RELATED DAYS</div>
+      <ul class="subtopic-list">
+        <li style="cursor:default;">
+          <div style="width:14px;height:14px;background:var(--orange-light);border:1px solid var(--orange-border);border-radius:3px;flex-shrink:0;"></div>
+          <span>Day 06 — Data Protection (DLP, CASB)</span>
+        </li>
+        <li style="cursor:default;">
+          <div style="width:14px;height:14px;background:var(--orange-light);border:1px solid var(--orange-border);border-radius:3px;flex-shrink:0;"></div>
+          <span>Day 07 — Risk360 & ITDR Posture</span>
+        </li>
+        <li style="cursor:default;">
+          <div style="width:14px;height:14px;background:var(--orange-light);border:1px solid var(--orange-border);border-radius:3px;flex-shrink:0;"></div>
+          <span>Day 09 — ZIA Deep Dive Review</span>
+        </li>
+      </ul>
+    </div>
+
+  </div><!-- end .sidebar -->
+
+</main>
+
+<footer>
+  <div class="footer-left">ZDTE<span>.</span></div>
+  <div class="footer-right">Day 05 — Cyberthreat Protection Services · 12%</div>
+</footer>
+
+<script>
+  function setTab(el) {
+    document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+    el.classList.add('active');
+  }
+
+  function toggleDone(li) {
+    li.classList.toggle('done');
+    updateProgress();
+  }
+
+  function updateProgress() {
+    const items = document.querySelectorAll('.subtopic-list li[onclick]');
+    const done  = document.querySelectorAll('.subtopic-list li[onclick].done');
+    const pct   = items.length ? Math.round((done.length / items.length) * 100) : 0;
+    const big   = document.querySelector('.progress-card .big');
+    if (big) big.innerHTML = pct + '<span style="font-size:18px;color:#7a6a55;">%</span>';
+  }
+</script>
+
+</body>
+</html>

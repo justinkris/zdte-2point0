@@ -205,6 +205,16 @@ p code, li code { background: var(--cream-dark); padding: 1px 6px; border-radius
 .leaf-answer { font-size: 14px; font-weight: 600; color: var(--ink); margin-bottom: 2px; }
 .leaf-detail { font-size: 12px; color: var(--ink-soft); line-height: 1.5; }
 
+/* ── KEY CONCEPT (orange left-border variant) ── */
+.key-concept { background: var(--orange-light); border-left: 3px solid var(--orange); padding: 14px 18px; border-radius: 0 8px 8px 0; margin: 16px 0; font-size: 14px; color: var(--ink); line-height: 1.7; }
+.key-concept strong { color: var(--orange); font-weight: 600; }
+
+/* ── ENGINE GRID (Firewall/Proxy nibble) ── */
+.engine-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin: 16px 0; }
+.engine-chip { background: var(--cream-dark); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; }
+.engine-chip-name { font-weight: 600; color: var(--ink); font-size: 13px; margin-bottom: 4px; letter-spacing: 0.02em; }
+.engine-chip-body { font-size: 13px; color: var(--ink-soft); line-height: 1.55; }
+
 /* ── FOOTER ── */
 footer { padding: 20px 60px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; background: var(--cream-dark); }
 .footer-left { font-family: 'Fraunces', serif; font-size: 16px; font-weight: 700; }
