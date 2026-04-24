@@ -27,16 +27,16 @@
       <span class="tag tag-bite">Study Bite</span>
     </div>
     <ul class="subtopic-list" id="subtopic-list">
-      <li onclick="toggleDone(this)"><span class="subtopic-check">✓</span>Scene 1: Security Exceptions — younger VIP snake guard (echo)</li>
-      <li onclick="toggleDone(this)"><span class="subtopic-check">✓</span>Scene 2: IPS Signature Detection — young tennis prodigy (echo)</li>
-      <li onclick="toggleDone(this)"><span class="subtopic-check">✓</span>Scene 3: Suspicious Content Protection — glowing SCP book again (echo)</li>
-      <li onclick="toggleDone(this)"><span class="subtopic-check">✓</span>Scene 4: Sandbox known files — boy playing in sandbox</li>
-      <li onclick="toggleDone(this)"><span class="subtopic-check">✓</span>Scene 5: Malware Protection — younger Pat McAfee's contract</li>
-      <li onclick="toggleDone(this)"><span class="subtopic-check">✓</span>Scene 6: File Type Control — the contract = the file</li>
-      <li onclick="toggleDone(this)"><span class="subtopic-check">✓</span>Scene 7: Sandbox unknown files — confused boy with unknown contract</li>
-      <li onclick="toggleDone(this)"><span class="subtopic-check">✓</span>Scene 8: AI/ML Content Categorization — Allen Iverson</li>
-      <li onclick="toggleDone(this)"><span class="subtopic-check">✓</span>Scene 9: Bandwidth Control — sleepy boy with bottle of milk (echo)</li>
-      <li onclick="toggleDone(this)"><span class="subtopic-check">✓</span>Quick reference — all 9 scenes mapped to policy</li>
+      <li onclick="toggleDone(this)"><div class="subtopic-check"></div>Scene 1: Security Exceptions — younger VIP snake guard (echo)</li>
+      <li onclick="toggleDone(this)"><div class="subtopic-check"></div>Scene 2: IPS Signature Detection — young tennis prodigy (echo)</li>
+      <li onclick="toggleDone(this)"><div class="subtopic-check"></div>Scene 3: Suspicious Content Protection — glowing SCP book again (echo)</li>
+      <li onclick="toggleDone(this)"><div class="subtopic-check"></div>Scene 4: Sandbox known files — boy playing in sandbox</li>
+      <li onclick="toggleDone(this)"><div class="subtopic-check"></div>Scene 5: Malware Protection — younger Pat McAfee's contract</li>
+      <li onclick="toggleDone(this)"><div class="subtopic-check"></div>Scene 6: File Type Control — the contract = the file</li>
+      <li onclick="toggleDone(this)"><div class="subtopic-check"></div>Scene 7: Sandbox unknown files — confused boy with unknown contract</li>
+      <li onclick="toggleDone(this)"><div class="subtopic-check"></div>Scene 8: AI/ML Content Categorization — Allen Iverson</li>
+      <li onclick="toggleDone(this)"><div class="subtopic-check"></div>Scene 9: Bandwidth Control — sleepy boy with bottle of milk (echo)</li>
+      <li onclick="toggleDone(this)"><div class="subtopic-check"></div>Quick reference — all 9 scenes mapped to policy</li>
     </ul>
   </div>
   <div class="header-right">
@@ -48,12 +48,12 @@
 </header>
 
 <nav class="section-nav">
-  <button class="active" onclick="navTo('section-intro', this)">HOW TO USE</button>
-  <button onclick="navTo('section-scenes', this)">THE 9 SCENES</button>
-  <button onclick="navTo('section-summary', this)">QUICK REFERENCE</button>
+  <button class="nav-tab active" onclick="navTo('section-intro', this)">HOW TO USE</button>
+  <button class="nav-tab" onclick="navTo('section-scenes', this)">THE 9 SCENES</button>
+  <button class="nav-tab" onclick="navTo('section-summary', this)">QUICK REFERENCE</button>
 </nav>
 
-<main>
+<main class="full-width">
 
   <!-- INTRO -->
   <div class="section-block" id="section-intro">

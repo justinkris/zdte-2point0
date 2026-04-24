@@ -28,16 +28,16 @@
     </div>
 
     <ul class="subtopic-list" id="subtopic-list">
-      <li onclick="toggleDone(this)"><span class="subtopic-check">✓</span>Two-phase model: SSMA inspection vs ordered enforcement</li>
-      <li onclick="toggleDone(this)"><span class="subtopic-check">✓</span>GET request — 10-step enforcement order</li>
-      <li onclick="toggleDone(this)"><span class="subtopic-check">✓</span>POST request — 14-step enforcement order (4 POST-only extras)</li>
-      <li onclick="toggleDone(this)"><span class="subtopic-check">✓</span>GET response — 9-step enforcement order</li>
-      <li onclick="toggleDone(this)"><span class="subtopic-check">✓</span>SSL/CONNECT — pre-decryption policy subset</li>
-      <li onclick="toggleDone(this)"><span class="subtopic-check">✓</span>CAC fires before URL Filtering; Security Exceptions placement</li>
-      <li onclick="toggleDone(this)"><span class="subtopic-check">✓</span>ATP is distributed — not a single step</li>
-      <li onclick="toggleDone(this)"><span class="subtopic-check">✓</span>Sandbox and AI/ML Categorization are response-only</li>
-      <li onclick="toggleDone(this)"><span class="subtopic-check">✓</span>Non-web traffic → Firewall module only</li>
-      <li onclick="toggleDone(this)"><span class="subtopic-check">✓</span>Exam tips and scenario reading</li>
+      <li onclick="toggleDone(this)"><div class="subtopic-check"></div>Two-phase model: SSMA inspection vs ordered enforcement</li>
+      <li onclick="toggleDone(this)"><div class="subtopic-check"></div>GET request — 10-step enforcement order</li>
+      <li onclick="toggleDone(this)"><div class="subtopic-check"></div>POST request — 14-step enforcement order (4 POST-only extras)</li>
+      <li onclick="toggleDone(this)"><div class="subtopic-check"></div>GET response — 9-step enforcement order</li>
+      <li onclick="toggleDone(this)"><div class="subtopic-check"></div>SSL/CONNECT — pre-decryption policy subset</li>
+      <li onclick="toggleDone(this)"><div class="subtopic-check"></div>CAC fires before URL Filtering; Security Exceptions placement</li>
+      <li onclick="toggleDone(this)"><div class="subtopic-check"></div>ATP is distributed — not a single step</li>
+      <li onclick="toggleDone(this)"><div class="subtopic-check"></div>Sandbox and AI/ML Categorization are response-only</li>
+      <li onclick="toggleDone(this)"><div class="subtopic-check"></div>Non-web traffic → Firewall module only</li>
+      <li onclick="toggleDone(this)"><div class="subtopic-check"></div>Exam tips and scenario reading</li>
     </ul>
   </div>
   <div class="header-right">
@@ -49,14 +49,14 @@
 </header>
 
 <nav class="section-nav">
-  <button class="active" onclick="navTo('section-overview', this)">OVERVIEW</button>
-  <button onclick="navTo('section-orders', this)">ENFORCEMENT ORDERS</button>
-  <button onclick="navTo('section-ssl', this)">SSL / CONNECT</button>
-  <button onclick="navTo('section-facts', this)">KEY FACTS</button>
-  <button onclick="navTo('section-tips', this)">EXAM TIPS</button>
+  <button class="nav-tab active" onclick="navTo('section-overview', this)">OVERVIEW</button>
+  <button class="nav-tab" onclick="navTo('section-orders', this)">ENFORCEMENT ORDERS</button>
+  <button class="nav-tab" onclick="navTo('section-ssl', this)">SSL / CONNECT</button>
+  <button class="nav-tab" onclick="navTo('section-facts', this)">KEY FACTS</button>
+  <button class="nav-tab" onclick="navTo('section-tips', this)">EXAM TIPS</button>
 </nav>
 
-<main>
+<main class="full-width">
 
   <!-- INTRO -->
   <div class="section-block" id="section-overview">

@@ -76,6 +76,7 @@ h1 em { font-style: italic; font-weight: 400; color: var(--orange); }
 .tag-compare   { background: var(--orange-light); color: #cc4a18;       border-color: var(--orange-border); }
 .tag-reference { background: var(--green-light);  color: var(--green);  border-color: var(--green-border); }
 .tag-palace    { background: var(--purple-light); color: var(--purple); border-color: var(--purple-border); }
+.tag-response  { background: var(--orange-light); color: #cc4a18;       border-color: var(--orange-border); }
 
 /* ── PROGRESS CARD ── */
 .header-right { display: flex; flex-direction: column; gap: 10px; align-items: flex-end; flex-shrink: 0; }
