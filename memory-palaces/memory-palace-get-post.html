@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ZDTE Memory Palace — HTTP GET + POST</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;0,700;1,400&family=Epilogue:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="palace.css">
+</head>
+<body>
+
+<header>
+  <div class="header-left">
+    <div class="breadcrumb">
+      <a href="../index.html">ZDTE</a>
+      <span class="breadcrumb-sep">›</span>
+      <a href="../memory-palaces.html">Memory Palaces</a>
+      <span class="breadcrumb-sep">›</span>
+      <span>GET + POST Palace</span>
+    </div>
+    <div class="day-badge"><div class="day-badge-dot"></div>MEMORY PALACE</div>
+    <h1>The Boy's<br><em>14-stage journey</em></h1>
+    <div class="header-meta-row">
+      <span class="tag tag-zia">ZIA</span>
+      <span class="tag tag-palace">Memory Palace</span>
+      <span class="tag tag-weight">12% Blueprint Weight</span>
+      <span class="tag tag-bite">Study Bite</span>
+    </div>
+
+    <ul class="subtopic-list" id="subtopic-list">
+      <li onclick="toggleDone(this)"><div class="subtopic-check"></div>How the palace works — narrative + dark scenes explained</li>
+      <li onclick="toggleDone(this)"><div class="subtopic-check"></div>Scene 1: Custom Malicious URLs — Red Santa's naughty list</li>
+      <li onclick="toggleDone(this)"><div class="subtopic-check"></div>Scenes 2–3: Cloud App Control + URL Filtering (big/little cloud)</li>
+      <li onclick="toggleDone(this)"><div class="subtopic-check"></div>Scene 4: Security Exceptions — bouncer snake VIP list</li>
+      <li onclick="toggleDone(this)"><div class="subtopic-check"></div>Scene 5: Browser Control — Bowser shell + Mario signature</li>
+      <li onclick="toggleDone(this)"><div class="subtopic-check"></div>Scene 6: Country-Based Blocking — "Are you Russian?"</li>
+      <li onclick="toggleDone(this)"><div class="subtopic-check"></div>Scene 7 🌑: Malicious URL Block — Mal Meninga's black eyes (POST)</li>
+      <li onclick="toggleDone(this)"><div class="subtopic-check"></div>Scenes 8–9: IPS Signature Detection + Page Risk (SCP)</li>
+      <li onclick="toggleDone(this)"><div class="subtopic-check"></div>Scenes 10–12 🌑: Malware Protection + File Type Control + DLP (POST)</li>
+      <li onclick="toggleDone(this)"><div class="subtopic-check"></div>Scene 13: P2P Control — Veigar the crowd-control mage</li>
+      <li onclick="toggleDone(this)"><div class="subtopic-check"></div>Scene 14: Bandwidth Control — the exhausted boy</li>
+      <li onclick="toggleDone(this)"><div class="subtopic-check"></div>Quick reference — all 14 scenes mapped to policy</li>
+    </ul>
+  </div>
+  <div class="header-right">
+    <div class="progress-card">
+      <div class="big" id="prog-num">0<span style="font-size:18px;color:#7a6a55;">%</span></div>
+      <div class="lbl">REVIEWED</div>
+    </div>
+  </div>
+</header>
+
+<nav class="section-nav">
+  <button class="nav-tab active" onclick="navTo('section-intro', this)">HOW TO USE</button>
+  <button class="nav-tab" onclick="navTo('section-scenes-1', this)">SCENES 1–6</button>
+  <button class="nav-tab" onclick="navTo('section-scenes-7', this)">SCENES 7–14</button>
+  <button class="nav-tab" onclick="navTo('section-summary', this)">QUICK REFERENCE</button>
+</nav>
+
+<main class="full-width">
+
+  <!-- INTRO -->
+  <div class="section-block" id="section-intro">
+    <div class="section-label">HOW THIS PALACE WORKS</div>
+    <div class="intro-card">
+      <h3>The narrative</h3>
+      <p>A boy in a Fortinet.net shirt with a Bowser-shell backpack goes on a 14-stage journey through security checkpoints, culminating at the Australian Open tennis tournament. Each scene maps to one ZIA policy-enforcement step. <strong>Scenes 7, 10, 11, and 12 go DARK</strong> — these are the POST-only steps that don't fire on plain GET requests.</p>
+      <h3 style="margin-top:14px;">How to use each scene card</h3>
+      <p>Each scene has an image slot (upload your generated image), the narrative, a memory hook reminding you what it maps to, and a <strong>copyable image-generation prompt</strong> at the bottom. Click the prompt to copy, paste into your favourite image generator.</p>
+      <div class="legend">
+        <div class="legend-item"><div class="legend-dot colour-red"></div>ATP</div>
+        <div class="legend-item"><div class="legend-dot colour-blue"></div>Access Policy</div>
+        <div class="legend-item"><div class="legend-dot colour-orange"></div>Allowlist</div>
+        <div class="legend-item"><div class="legend-dot colour-green"></div>Browser Control</div>
+        <div class="legend-item"><div class="legend-dot colour-purple"></div>Data / File</div>
+        <div class="legend-item"><div class="legend-dot colour-grey"></div>Bandwidth</div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--dark-bg);border-radius:3px;"></div>Dark = POST-only</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCENES 1–6 -->
+  <div class="section-block" id="section-scenes-1">
+    <div class="section-label">SCENES 1–6 — GET + POST</div>
+
+    <!-- SCENE 1 -->
+    <div class="scene">
+      <div class="scene-num">
+        <div class="scene-num-big">1</div>
+        <div class="scene-colour-bar colour-red"></div>
+      </div>
+      <div class="scene-body">
+        <div class="scene-header-row">
+          <div class="scene-titles">
+            <div class="scene-room-name">Red Santa &amp; the Naughty List</div>
+            <div class="scene-policy-name">Policy → <strong>Custom Malicious URLs</strong> (ATP)</div>
+          </div>
+          <div class="scene-tags">
+            <span class="scene-tag get">GET</span>
+            <span class="scene-tag post">POST</span>
+          </div>
+        </div>
+        <div class="scene-content">
+          <div class="scene-image-slot" id="slot-1">
+            <img src="../study-bite-images/1-custom-malicious-url.png" alt="Scene 1">
+          </div>
+          <div class="scene-text-block">
+            <div class="scene-narrative">
+              A boy in a <strong>Fortinet.net shirt</strong> and a <strong>Bowser-shell backpack</strong> visits Santa. Santa flips through a handwritten ledger and says <em>"I don't see you on the naughty list"</em> — waves the boy through.
+            </div>
+            <div class="hook-box">
+              <div class="hook-label">HOOK</div>
+              Santa's naughty list = admin-defined <strong>custom denylist of URLs</strong>. If you're on the list, you're blocked immediately. First gate in the pipeline.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCENE 2 -->
+    <div class="scene">
+      <div class="scene-num">
+        <div class="scene-num-big">2</div>
+        <div class="scene-colour-bar colour-blue"></div>
+      </div>
+      <div class="scene-body">
+        <div class="scene-header-row">
+          <div class="scene-titles">
+            <div class="scene-room-name">Big Cloud &amp; the Cascade Pale Ale</div>
+            <div class="scene-policy-name">Policy → <strong>Cloud App Control</strong></div>
+          </div>
+          <div class="scene-tags">
+            <span class="scene-tag get">GET</span>
+            <span class="scene-tag post">POST</span>
+          </div>
+        </div>
+        <div class="scene-content">
+          <div class="scene-image-slot" id="slot-2">
+            <img src="../study-bite-images/2-cloud-app-control.png" alt="Scene 2">
+          </div>
+          <div class="scene-text-block">
+            <div class="scene-narrative">
+              The boy takes Santa's sleigh to a big friendly cloud. The cloud booms <em>"Ahh the Fortinet Application — that's fine. Would you like a <strong>Cascade Pale Ale</strong>?"</em> Boy says yes. The cloud says <em>"Okay, you have to talk to my lil bro."</em>
+            </div>
+            <div class="hook-box">
+              <div class="hook-label">HOOK</div>
+              Big cloud = <strong>Cloud App Control</strong> checks the SaaS app. <strong>Cascade Pale Ale</strong> = the "<em>Cascading to URL Filtering</em>" setting. By default CAC allows and URL Filtering is skipped — hence being passed to "lil bro" URL Filtering.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCENE 3 -->
+    <div class="scene">
+      <div class="scene-num">
+        <div class="scene-num-big">3</div>
+        <div class="scene-colour-bar colour-blue"></div>
+      </div>
+      <div class="scene-body">
+        <div class="scene-header-row">
+          <div class="scene-titles">
+            <div class="scene-room-name">Little Cloud &amp; the Cloud Cat</div>
+            <div class="scene-policy-name">Policy → <strong>URL Filtering</strong></div>
+          </div>
+          <div class="scene-tags">
+            <span class="scene-tag get">GET</span>
+            <span class="scene-tag post">POST</span>
+          </div>
+        </div>
+        <div class="scene-content">
+          <div class="scene-image-slot" id="slot-3">
+            <img src="../study-bite-images/3-url-filtering.png" alt="Scene 3">
+          </div>
+          <div class="scene-text-block">
+            <div class="scene-narrative">
+              A little cloud wearing sunglasses holds a fluffy <strong>cloud-cat</strong>. The little cloud checks a clipboard and says <em>"IT Services category — allowed. Go through."</em>
+            </div>
+            <div class="hook-box">
+              <div class="hook-label">HOOK</div>
+              Little cloud = <strong>URL Filtering</strong>. Cloud-<strong>cat</strong> = URL <strong>category</strong>. Checks which category the URL belongs to and applies the admin's URL Filtering rule for that category.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCENE 4 -->
+    <div class="scene">
+      <div class="scene-num">
+        <div class="scene-num-big">4</div>
+        <div class="scene-colour-bar colour-orange"></div>
+      </div>
+      <div class="scene-body">
+        <div class="scene-header-row">
+          <div class="scene-titles">
+            <div class="scene-room-name">The VIP Club Bouncer Snake</div>
+            <div class="scene-policy-name">Policy → <strong>Security Exceptions</strong> (allowlist)</div>
+          </div>
+          <div class="scene-tags">
+            <span class="scene-tag get">GET</span>
+            <span class="scene-tag post">POST</span>
+          </div>
+        </div>
+        <div class="scene-content">
+          <div class="scene-image-slot" id="slot-4">
+            <img src="../study-bite-images/4-sec-exceptions.png" alt="Scene 4">
+          </div>
+          <div class="scene-text-block">
+            <div class="scene-narrative">
+              The boy arrives at an exclusive VIP club. A muscular <strong>bouncer snake in an orange hi-vis vest and sunglasses</strong> checks a velvet-rope list and says <em>"Not on the list, sorry — you don't get to skip the checks."</em>
+            </div>
+            <div class="hook-box">
+              <div class="hook-label">HOOK</div>
+              VIP list = <strong>Security Exceptions allowlist</strong>. If you're on it, you skip downstream Malware, ATP, and Sandbox. The boy isn't on it, so he has to go through all the threat engines ahead.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCENE 5 -->
+    <div class="scene">
+      <div class="scene-num">
+        <div class="scene-num-big">5</div>
+        <div class="scene-colour-bar colour-green"></div>
+      </div>
+      <div class="scene-body">
+        <div class="scene-header-row">
+          <div class="scene-titles">
+            <div class="scene-room-name">The Bowser Shell &amp; the Mario Signature</div>
+            <div class="scene-policy-name">Policy → <strong>Browser Control</strong></div>
+          </div>
+          <div class="scene-tags">
+            <span class="scene-tag get">GET</span>
+            <span class="scene-tag post">POST</span>
+          </div>
+        </div>
+        <div class="scene-content">
+          <div class="scene-image-slot" id="slot-5">
+            <img src="../study-bite-images/5-browser-control.png" alt="Scene 5">
+          </div>
+          <div class="scene-text-block">
+            <div class="scene-narrative">
+              A guard at the ATP (Association of Tennis Professionals) gate demands <em>"Show me your Bowser Shell is legit."</em> The boy chucks the shell — it transforms like a Transformer, unfolding to reveal a glowing <strong>Mario signature</strong> stamped inside.
+            </div>
+            <div class="hook-box">
+              <div class="hook-label">HOOK</div>
+              <strong>Bowser shell = Browser</strong>. The shell opening to reveal Mario's signature = <strong>Browser Control</strong> verifying the browser is legitimate (signed, current version, no malicious plugins).
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCENE 6 -->
+    <div class="scene">
+      <div class="scene-num">
+        <div class="scene-num-big">6</div>
+        <div class="scene-colour-bar colour-red"></div>
+      </div>
+      <div class="scene-body">
+        <div class="scene-header-row">
+          <div class="scene-titles">
+            <div class="scene-room-name">"Are You Russian?" at the Aus Open</div>
+            <div class="scene-policy-name">Policy → <strong>Country-Based Blocking</strong> (ATP)</div>
+          </div>
+          <div class="scene-tags">
+            <span class="scene-tag get">GET</span>
+            <span class="scene-tag post">POST</span>
+          </div>
+        </div>
+        <div class="scene-content">
+          <div class="scene-image-slot" id="slot-6">
+            <img src="../study-bite-images/6-country-based-block.png" alt="Scene 6">
+          </div>
+          <div class="scene-text-block">
+            <div class="scene-narrative">
+              At the Australian Open, a reporter with a red microphone shoves it in the boy's face: <em>"Are you Russian?"</em> Boy says <em>"Yeah I'm rushin' haha."</em> Gets arrested instantly. Boy shouts <em>"It's a pun m8! I'm rushin' to the court!"</em>
+            </div>
+            <div class="hook-box">
+              <div class="hook-label">HOOK</div>
+              Russian / rushin' = <strong>Country-Based Blocking</strong>. ATP blocks requests to servers in suspicious countries.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- SCENES 7–14 -->
+  <div class="section-block" id="section-scenes-7">
+    <div class="section-label">SCENES 7–14 — DARK SCENES AHEAD (POST-ONLY: 7, 10, 11, 12)</div>
+
+    <!-- SCENE 7 — DARK -->
+    <div class="scene dark">
+      <div class="scene-num">
+        <div class="scene-num-big">7</div>
+        <div class="scene-colour-bar colour-red"></div>
+      </div>
+      <div class="scene-body">
+        <div class="scene-header-row">
+          <div class="scene-titles">
+            <div class="scene-room-name">Mal Meninga's Black Eyes</div>
+            <div class="scene-policy-name">Policy → <strong>Malicious URL Block</strong> (ATP) · POST only</div>
+          </div>
+          <div class="scene-tags">
+            <span class="scene-tag dark-only">🌑 POST-ONLY</span>
+          </div>
+        </div>
+        <div class="scene-content">
+          <div class="scene-image-slot" id="slot-7">
+            <img src="../study-bite-images/7-malware-url.png" alt="Scene 7">
+          </div>
+          <div class="scene-text-block">
+            <div class="scene-narrative">
+              The scene plunges into a <strong>purple dark</strong>. Former rugby league coach <strong>Mal Meninga</strong> appears as a reporter. His eyes flash pitch black. He leans in and asks, deadly serious: <em>"Is your Fortinet.net shirt on the global naughty list?"</em>
+            </div>
+            <div class="hook-box">
+              <div class="hook-label">HOOK — ONLY ON POST</div>
+              <strong>Mal</strong>icious URL Block checks the URL against Zscaler's <strong>global</strong> threat intel database (different from Santa's <strong>custom</strong> list in scene 1). Only fires on POSTs.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCENE 8 -->
+    <div class="scene">
+      <div class="scene-num">
+        <div class="scene-num-big">8</div>
+        <div class="scene-colour-bar colour-red"></div>
+      </div>
+      <div class="scene-body">
+        <div class="scene-header-row">
+          <div class="scene-titles">
+            <div class="scene-room-name">Fans Swarm for Signatures</div>
+            <div class="scene-policy-name">Policy → <strong>IPS Signature Detection</strong> (ATP)</div>
+          </div>
+          <div class="scene-tags">
+            <span class="scene-tag get">GET</span>
+            <span class="scene-tag post">POST</span>
+          </div>
+        </div>
+        <div class="scene-content">
+          <div class="scene-image-slot" id="slot-8">
+            <img src="../study-bite-images/8-IPS-Signatures.png" alt="Scene 8">
+          </div>
+          <div class="scene-text-block">
+            <div class="scene-narrative">
+              Scene floods back to light. The boy is suddenly swarmed by cheering fans holding out paper and <strong>red sharpies</strong>, demanding his signature on page after page after page.
+            </div>
+            <div class="hook-box">
+              <div class="hook-label">HOOK</div>
+              Fans wanting <strong>signatures</strong> = <strong>IPS Signature Detection</strong>. Pattern-matching traffic against known-bad signatures (botnets, XSS, phishing, malicious active content).
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCENE 9 -->
+    <div class="scene">
+      <div class="scene-num">
+        <div class="scene-num-big">9</div>
+        <div class="scene-colour-bar colour-red"></div>
+      </div>
+      <div class="scene-body">
+        <div class="scene-header-row">
+          <div class="scene-titles">
+            <div class="scene-room-name">The Glowing Red Book "SCP"</div>
+            <div class="scene-policy-name">Policy → <strong>Suspicious Content Protection / Page Risk</strong> (ATP)</div>
+          </div>
+          <div class="scene-tags">
+            <span class="scene-tag get">GET</span>
+            <span class="scene-tag post">POST</span>
+          </div>
+        </div>
+        <div class="scene-content">
+          <div class="scene-image-slot" id="slot-9">
+            <img src="../study-bite-images/9-sus-content-protection.png" alt="Scene 9">
+          </div>
+          <div class="scene-text-block">
+            <div class="scene-narrative">
+              One fan steps forward offering a <strong>bright glowing red book</strong> with the numbers <strong>"22 SCP"</strong> emblazoned on the cover. The book pulses with an ominous red light.
+            </div>
+            <div class="hook-box">
+              <div class="hook-label">HOOK</div>
+              <strong>SCP = Suspicious Content Protection</strong>. The book's brightness = the <strong>Page Risk score</strong>. ML-driven — catches zero-day and novel threats.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCENE 10 — DARK -->
+    <div class="scene dark">
+      <div class="scene-num">
+        <div class="scene-num-big">10</div>
+        <div class="scene-colour-bar colour-purple"></div>
+      </div>
+      <div class="scene-body">
+        <div class="scene-header-row">
+          <div class="scene-titles">
+            <div class="scene-room-name">Pat McAfee &amp; the Envelope Chase</div>
+            <div class="scene-policy-name">Policy → <strong>Malware Protection</strong> · POST only</div>
+          </div>
+          <div class="scene-tags">
+            <span class="scene-tag dark-only">🌑 POST-ONLY</span>
+          </div>
+        </div>
+        <div class="scene-content">
+          <div class="scene-image-slot" id="slot-10">
+            <img src="../study-bite-images/10-malware protection.png" alt="Scene 10">
+          </div>
+          <div class="scene-text-block">
+            <div class="scene-narrative">
+              Scene goes dark again. A sinister <strong>envelope</strong> pops out of the glowing red book and starts chasing the boy. <strong>Pat McAfee</strong> appears out of nowhere, clutching a big file labelled "<em>CONTRACT</em>" ready to intercept.
+            </div>
+            <div class="hook-box">
+              <div class="hook-label">HOOK — ONLY ON POST</div>
+              Pat <strong>McAfee</strong> (the AV icon) = <strong>Malware Protection</strong>. AV + anti-spyware signature scanning on files being uploaded.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCENE 11 — DARK -->
+    <div class="scene dark">
+      <div class="scene-num">
+        <div class="scene-num-big">11</div>
+        <div class="scene-colour-bar colour-purple"></div>
+      </div>
+      <div class="scene-body">
+        <div class="scene-header-row">
+          <div class="scene-titles">
+            <div class="scene-room-name">The Boy Signs the File</div>
+            <div class="scene-policy-name">Policy → <strong>File Type Control</strong> · POST only</div>
+          </div>
+          <div class="scene-tags">
+            <span class="scene-tag dark-only">🌑 POST-ONLY</span>
+          </div>
+        </div>
+        <div class="scene-content">
+          <div class="scene-image-slot" id="slot-11">
+            <img src="../study-bite-images/11-file-type-control.png" alt="Scene 11">
+          </div>
+          <div class="scene-text-block">
+            <div class="scene-narrative">
+              Scene stays dark. The boy grabs a pen and <strong>signs the contract file</strong> Pat holds out — checking its type, verifying its magic bytes, confirming it's the right kind of file.
+            </div>
+            <div class="hook-box">
+              <div class="hook-label">HOOK — ONLY ON POST</div>
+              Signing = validating. <strong>File Type Control</strong> uses magic bytes to confirm the true file type. Only fires on POST (where uploads happen).
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCENE 12 — DARK -->
+    <div class="scene dark">
+      <div class="scene-num">
+        <div class="scene-num-big">12</div>
+        <div class="scene-colour-bar colour-purple"></div>
+      </div>
+      <div class="scene-body">
+        <div class="scene-header-row">
+          <div class="scene-titles">
+            <div class="scene-room-name">The Data Shield Punt</div>
+            <div class="scene-policy-name">Policy → <strong>DLP (Data Loss Prevention)</strong> · POST only</div>
+          </div>
+          <div class="scene-tags">
+            <span class="scene-tag dark-only">🌑 POST-ONLY</span>
+          </div>
+        </div>
+        <div class="scene-content">
+          <div class="scene-image-slot" id="slot-12">
+            <img src="../study-bite-images/12-DLP.png" alt="Scene 12">
+          </div>
+          <div class="scene-text-block">
+            <div class="scene-narrative">
+              Pat McAfee produces a massive shield emblazoned with the word <strong>"DATA"</strong>. He rears back and <strong>punts the sinister envelope</strong> sky-high — it bursts the dark clouds apart. Sunshine floods back.
+            </div>
+            <div class="hook-box">
+              <div class="hook-label">HOOK — ONLY ON POST</div>
+              Shield labelled DATA = <strong>DLP (Data Loss Prevention)</strong>. Inspects POST bodies for sensitive data. Punting = blocking the outbound data leak.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCENE 13 -->
+    <div class="scene">
+      <div class="scene-num">
+        <div class="scene-num-big">13</div>
+        <div class="scene-colour-bar colour-red"></div>
+      </div>
+      <div class="scene-body">
+        <div class="scene-header-row">
+          <div class="scene-titles">
+            <div class="scene-room-name">Veigar the Crowd-Control Mage</div>
+            <div class="scene-policy-name">Policy → <strong>P2P Control</strong> (ATP)</div>
+          </div>
+          <div class="scene-tags">
+            <span class="scene-tag get">GET</span>
+            <span class="scene-tag post">POST</span>
+          </div>
+        </div>
+        <div class="scene-content">
+          <div class="scene-image-slot" id="slot-13">
+            <img src="../study-bite-images/13-p2p-control.png" alt="Scene 13">
+          </div>
+          <div class="scene-text-block">
+            <div class="scene-narrative">
+              With the scene bright again, fans suddenly swarm the boy in chaos. <strong>Veigar</strong> appears, magical staff raised, casting crowd-control spells to contain the peer-to-peer mob.
+            </div>
+            <div class="hook-box">
+              <div class="hook-label">HOOK</div>
+              Peer-to-peer crowd = <strong>P2P Control</strong>. Blocks P2P file sharing, anonymizers (Tor, proxy bypass), and P2P VoIP apps.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCENE 14 -->
+    <div class="scene">
+      <div class="scene-num">
+        <div class="scene-num-big">14</div>
+        <div class="scene-colour-bar colour-grey"></div>
+      </div>
+      <div class="scene-body">
+        <div class="scene-header-row">
+          <div class="scene-titles">
+            <div class="scene-room-name">The Exhausted Boy</div>
+            <div class="scene-policy-name">Policy → <strong>Bandwidth Control</strong></div>
+          </div>
+          <div class="scene-tags">
+            <span class="scene-tag get">GET</span>
+            <span class="scene-tag post">POST</span>
+          </div>
+        </div>
+        <div class="scene-content">
+          <div class="scene-image-slot" id="slot-14">
+            <img src="../study-bite-images/14-bandwidth-control.png" alt="Scene 14">
+          </div>
+          <div class="scene-text-block">
+            <div class="scene-narrative">
+              After the long, eventful day, the boy is utterly drained. His <strong>bandwidth is spent</strong>. He slumps into a chair, Bowser shell beside him, completely exhausted as the sun sets.
+            </div>
+            <div class="hook-box">
+              <div class="hook-label">HOOK</div>
+              Boy's energy spent = <strong>Bandwidth Control</strong>. The final gate — allocates how much throughput the transaction gets. Always the last step.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- QUICK REFERENCE -->
+  <div class="section-block" id="section-summary">
+    <div class="section-label">QUICK REFERENCE</div>
+    <h2>All 14 scenes mapped</h2>
+
+    <table class="summary-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Scene</th>
+          <th>Policy</th>
+          <th>GET</th>
+          <th>POST</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>1</td><td class="scene-col">Red Santa's Naughty List</td><td>Custom Malicious URLs (ATP)</td><td>✓</td><td>✓</td></tr>
+        <tr><td>2</td><td class="scene-col">Big Cloud &amp; Cascade Pale Ale</td><td>Cloud App Control</td><td>✓</td><td>✓</td></tr>
+        <tr><td>3</td><td class="scene-col">Little Cloud &amp; Cloud Cat</td><td>URL Filtering</td><td>✓</td><td>✓</td></tr>
+        <tr><td>4</td><td class="scene-col">VIP Club Bouncer Snake</td><td>Security Exceptions (allowlist)</td><td>✓</td><td>✓</td></tr>
+        <tr><td>5</td><td class="scene-col">Bowser Shell &amp; Mario Signature</td><td>Browser Control</td><td>✓</td><td>✓</td></tr>
+        <tr><td>6</td><td class="scene-col">"Are You Russian?"</td><td>Country-Based Blocking (ATP)</td><td>✓</td><td>✓</td></tr>
+        <tr class="dark-row"><td>7</td><td class="scene-col">Mal Meninga's Black Eyes 🌑</td><td>Malicious URL Block (ATP)</td><td>—</td><td>✓</td></tr>
+        <tr><td>8</td><td class="scene-col">Fans Swarm for Signatures</td><td>IPS Signature Detection (ATP)</td><td>✓</td><td>✓</td></tr>
+        <tr><td>9</td><td class="scene-col">Glowing Red Book "SCP"</td><td>Suspicious Content Protection / Page Risk (ATP)</td><td>✓</td><td>✓</td></tr>
+        <tr class="dark-row"><td>10</td><td class="scene-col">Pat McAfee &amp; Envelope Chase 🌑</td><td>Malware Protection</td><td>—</td><td>✓</td></tr>
+        <tr class="dark-row"><td>11</td><td class="scene-col">The Boy Signs the File 🌑</td><td>File Type Control</td><td>—</td><td>✓</td></tr>
+        <tr class="dark-row"><td>12</td><td class="scene-col">The Data Shield Punt 🌑</td><td>DLP (Data Loss Prevention)</td><td>—</td><td>✓</td></tr>
+        <tr><td>13</td><td class="scene-col">Veigar the Crowd-Control Mage</td><td>P2P Control (ATP)</td><td>✓</td><td>✓</td></tr>
+        <tr><td>14</td><td class="scene-col">The Exhausted Boy</td><td>Bandwidth Control</td><td>✓</td><td>✓</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+</main>
+
+<footer>
+  <div class="footer-left">ZDTE<span>.</span></div>
+  <div class="footer-right">Zscaler Digital Transformation Engineer · Memory Palace — GET + POST Policy Flow</div>
+</footer>
+
+<script>
+  function navTo(id, el) {
+    const target = document.getElementById(id);
+    if (!target) return;
+    const top = target.getBoundingClientRect().top + window.scrollY - 60;
+    window.scrollTo({ top, behavior: 'smooth' });
+    document.querySelectorAll('nav.section-nav button').forEach(b => b.classList.remove('active'));
+    if (el) el.classList.add('active');
+  }
+
+  function toggleDone(li) {
+    li.classList.toggle('done');
+    updateProgress();
+  }
+
+  function updateProgress() {
+    const items = document.querySelectorAll('#subtopic-list li');
+    const done = document.querySelectorAll('#subtopic-list li.done').length;
+    const pct = items.length ? Math.round((done / items.length) * 100) : 0;
+    const el = document.getElementById('prog-num');
+    if (el) el.innerHTML = pct + '<span style="font-size:18px;color:#7a6a55;">%</span>';
+  }
+
+  function loadImg(input, num) {
+    if (!input.files || !input.files[0]) return;
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      const slot = document.getElementById('slot-' + num);
+      slot.innerHTML = '<img src="' + e.target.result + '" alt="Scene ' + num + '">';
+    };
+    reader.readAsDataURL(input.files[0]);
+  }
+</script>
+
+</body>
+</html>

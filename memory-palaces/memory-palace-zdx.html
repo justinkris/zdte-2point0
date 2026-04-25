@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ZDTE Memory Palace — The ZDX Hospital</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;0,700;1,400&family=Epilogue:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #fef9f0;
+    --cream-dark: #f5eddb;
+    --ink: #1a1209;
+    --ink-soft: #5a4a35;
+    --ink-muted: #8a7660;
+    --orange: #ff6b35;
+    --orange-light: #fff3ec;
+    --orange-border: #ffd5c0;
+    --amber-light: #fffbe6;
+    --green: #3a7d44;
+    --green-light: #edf7ee;
+    --green-border: #b2dfb4;
+    --purple: #5c35cc;
+    --purple-light: #ece8ff;
+    --purple-border: #c8bbff;
+    --blue-light: #e8f0fb;
+    --blue-border: #b3ccf0;
+    --blue: #1a6bcc;
+    --red-light: #fce8e8;
+    --red-border: #f7c1c1;
+    --red: #a32d2d;
+    --border: #ede5d8;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body { font-family: 'Epilogue', sans-serif; background: var(--cream); color: var(--ink); min-height: 100vh; }
+
+  header { padding: 40px 60px 28px; border-bottom: 1px solid var(--border); background: var(--cream); }
+
+  .breadcrumb { display: flex; align-items: center; gap: 8px; font-size: 11px; color: var(--ink-muted); letter-spacing: 0.08em; margin-bottom: 12px; }
+  .breadcrumb a { color: var(--orange); text-decoration: none; }
+  .breadcrumb-sep { color: var(--border); }
+
+  .bite-badge { display: inline-flex; align-items: center; gap: 6px; background: var(--purple); color: var(--cream); padding: 5px 14px; border-radius: 100px; font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 18px; }
+  .bite-badge-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--cream); }
+
+  h1 { font-family: 'Fraunces', serif; font-size: 44px; font-weight: 700; line-height: 1.05; letter-spacing: -0.02em; color: var(--ink); margin-bottom: 14px; }
+  h1 em { font-style: italic; color: var(--orange); font-weight: 600; }
+
+  .header-meta-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+
+  .tag { display: inline-block; padding: 4px 11px; border-radius: 100px; font-size: 11px; font-weight: 500; letter-spacing: 0.04em; }
+  .tag-zdx { background: var(--purple-light); color: var(--purple); border: 1px solid var(--purple-border); }
+  .tag-weight { background: var(--cream-dark); color: var(--ink-soft); border: 1px solid var(--border); }
+
+  main { max-width: 1100px; margin: 0 auto; padding: 40px 60px 60px; }
+
+  .intro-card { background: var(--orange-light); border: 1px solid var(--orange-border); border-left: 4px solid var(--orange); border-radius: 10px; padding: 22px 26px; margin-bottom: 40px; }
+  .intro-card h2 { font-family: 'Fraunces', serif; font-size: 22px; color: var(--ink); margin-bottom: 10px; }
+  .intro-card p { font-size: 15px; line-height: 1.65; color: var(--ink-soft); }
+  .intro-card p + p { margin-top: 10px; }
+
+  .room { margin-bottom: 36px; padding-bottom: 32px; border-bottom: 1px dashed var(--border); }
+  .room:last-child { border-bottom: none; }
+
+  .room-header { display: flex; align-items: center; gap: 14px; margin-bottom: 16px; }
+
+  .room-num { width: 38px; height: 38px; border-radius: 50%; background: var(--ink); color: var(--cream); display: flex; align-items: center; justify-content: center; font-family: 'Fraunces', serif; font-size: 18px; font-weight: 700; flex-shrink: 0; }
+
+  .room-title-block { flex: 1; }
+  .room-icon { font-size: 22px; margin-right: 6px; }
+
+  .room h2 { font-family: 'Fraunces', serif; font-size: 26px; font-weight: 700; color: var(--ink); line-height: 1.15; margin-bottom: 2px; }
+  .room h2 em { color: var(--orange); font-style: italic; font-weight: 600; font-size: 18px; }
+
+  .room-subtitle { font-size: 12px; color: var(--ink-muted); letter-spacing: 0.06em; text-transform: uppercase; }
+
+  .image-block { margin-bottom: 16px; }
+
+  .image-placeholder { background: var(--cream-dark); border: 2px dashed var(--orange-border); border-radius: 10px; aspect-ratio: 16 / 9; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; color: var(--ink-muted); text-align: center; padding: 20px; overflow: hidden; position: relative; }
+  .image-placeholder img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; border-radius: 8px; }
+  .image-placeholder-icon { font-size: 36px; opacity: 0.5; line-height: 1; }
+  .image-placeholder-text { font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 600; }
+  .image-placeholder-hint { font-size: 11px; color: var(--ink-muted); font-style: italic; max-width: 320px; line-height: 1.4; }
+
+  /* Collapsible prompt using native <details> */
+  .image-prompt { background: var(--ink); color: var(--cream); border-radius: 0 0 10px 10px; margin-top: -2px; overflow: hidden; }
+  .image-prompt[open] { padding-bottom: 14px; }
+  .image-prompt summary { display: flex; align-items: center; justify-content: space-between; padding: 12px 18px; cursor: pointer; list-style: none; user-select: none; transition: background 0.15s ease; }
+  .image-prompt summary::-webkit-details-marker { display: none; }
+  .image-prompt summary:hover { background: rgba(255,255,255,0.04); }
+  .image-prompt-label { font-family: 'Epilogue', sans-serif; font-size: 10px; font-weight: 600; letter-spacing: 0.12em; color: var(--orange); text-transform: uppercase; }
+  .image-prompt-chevron { color: var(--cream-dark); font-size: 11px; font-family: 'Epilogue', sans-serif; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; display: flex; align-items: center; gap: 6px; opacity: 0.7; }
+  .image-prompt-chevron::after { content: '▸'; display: inline-block; transition: transform 0.2s ease; font-size: 10px; }
+  .image-prompt[open] .image-prompt-chevron::after { transform: rotate(90deg); }
+  .image-prompt[open] .image-prompt-chevron .label-closed { display: none; }
+  .image-prompt:not([open]) .image-prompt-chevron .label-open { display: none; }
+  .image-prompt-text { display: block; color: var(--cream-dark); white-space: pre-wrap; font-family: 'SF Mono', 'Monaco', 'Consolas', monospace; font-size: 12px; line-height: 1.55; padding: 14px 18px 0; border-top: 1px dashed rgba(255,255,255,0.08); }
+
+  .scene { background: var(--purple-light); border: 1px solid var(--purple-border); border-radius: 10px; padding: 18px 22px; margin-bottom: 16px; font-size: 15px; line-height: 1.6; color: var(--ink-soft); }
+  .scene strong { color: var(--purple); font-weight: 600; }
+  .scene-label { display: inline-block; font-size: 10px; font-weight: 600; letter-spacing: 0.12em; color: var(--purple); text-transform: uppercase; margin-bottom: 8px; }
+
+  .anchor { background: var(--cream); border: 1px solid var(--border); border-radius: 10px; padding: 16px 20px; }
+  .anchor-label { display: inline-block; font-size: 10px; font-weight: 600; letter-spacing: 0.12em; color: var(--ink-muted); text-transform: uppercase; margin-bottom: 10px; }
+  .anchor-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px 24px; font-size: 14px; line-height: 1.55; }
+  .anchor-item { color: var(--ink-soft); }
+  .anchor-item strong { display: block; color: var(--ink); font-weight: 600; margin-bottom: 2px; }
+
+  .key-concept { background: var(--amber-light); border-left: 3px solid var(--orange); padding: 14px 18px; border-radius: 0 8px 8px 0; margin-top: 14px; font-size: 14px; line-height: 1.6; color: var(--ink-soft); }
+  .key-concept strong { color: var(--ink); }
+
+  .walkthrough { background: var(--green-light); border: 1px solid var(--green-border); border-radius: 10px; padding: 24px 28px; margin-top: 40px; }
+  .walkthrough h3 { font-family: 'Fraunces', serif; font-size: 22px; color: var(--green); margin-bottom: 14px; }
+  .walkthrough ol { list-style: none; counter-reset: step; padding: 0; }
+  .walkthrough ol li { counter-increment: step; padding: 10px 0 10px 36px; position: relative; font-size: 14px; line-height: 1.6; color: var(--ink-soft); border-bottom: 1px dotted var(--green-border); }
+  .walkthrough ol li:last-child { border-bottom: none; }
+  .walkthrough ol li::before { content: counter(step); position: absolute; left: 0; top: 11px; width: 24px; height: 24px; border-radius: 50%; background: var(--green); color: var(--cream); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; font-family: 'Epilogue', sans-serif; }
+  .walkthrough ol li strong { color: var(--ink); }
+
+  footer { border-top: 1px solid var(--border); padding: 20px 60px; display: flex; justify-content: space-between; align-items: center; background: var(--cream-dark); }
+  .footer-left { font-family: 'Fraunces', serif; font-size: 16px; font-weight: 700; }
+  .footer-left span { color: var(--orange); }
+  .footer-right { font-size: 11px; color: var(--ink-muted); letter-spacing: 0.06em; }
+
+  @media (max-width: 720px) {
+    header { padding: 28px 22px 20px; }
+    main { padding: 28px 22px 40px; }
+    h1 { font-size: 32px; }
+    .room h2 { font-size: 21px; }
+    .anchor-grid { grid-template-columns: 1fr; gap: 12px; }
+    footer { padding: 20px 22px; flex-direction: column; gap: 8px; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="breadcrumb">
+    <a href="../index.html">Study Plan</a>
+    <span class="breadcrumb-sep">›</span>
+    <a href="../memory-palaces.html">Memory Palaces</a>
+    <span class="breadcrumb-sep">›</span>
+    <span>ZDX Hospital</span>
+  </div>
+
+  <div class="bite-badge">
+    <span class="bite-badge-dot"></span>
+    MEMORY PALACE — ZDX
+  </div>
+
+  <h1>The ZDX Hospital<br><em>A Socratic-built memory palace for ZDX</em></h1>
+
+  <div class="header-meta-row">
+    <span class="tag tag-zdx">ZDX</span>
+    <span class="tag tag-weight">Blueprint: 8%</span>
+  </div>
+</header>
+
+<main>
+
+  <div class="intro-card">
+    <h2>How this palace was built</h2>
+    <p>
+      This palace was constructed scene-by-scene through guided questioning — not handed to you ready-made. Every
+      animal, prop, and label was either invented by you or refined together. Because <em>your</em> brain made
+      the connections, the imagery is far stickier than anything generic.
+    </p>
+    <p>
+      Walk the building once before bed and once on waking. After two or three full walk-throughs, the rooms recall
+      themselves whenever a ZDX exam question appears.
+    </p>
+    <p style="font-size:13px;color:var(--ink-muted);font-style:italic;margin-top:14px;padding-top:14px;border-top:1px dashed var(--orange-border);">
+      <strong style="color:var(--ink);font-style:normal;">Using the image prompts:</strong>
+      Click any prompt header to expand it. Copy the prompt into your image generator. Drop the result
+      into the placeholder by clicking it and uploading.
+    </p>
+  </div>
+
+  <!-- ROOM 1 -->
+  <div class="room">
+    <div class="room-header">
+      <div class="room-num">1</div>
+      <div class="room-title-block">
+        <h2><span class="room-icon">🐕</span>Reception &mdash; Zscaler the Dog <em>the ZDX Score</em></h2>
+        <div class="room-subtitle">PFT · AVAILABILITY · BASELINING · SMOOTH SCORE</div>
+      </div>
+    </div>
+
+    <div class="image-block">
+      <div class="image-placeholder">
+        <img src="images/1-Dogs.png" alt="Reception — Zscaler the Dog">
+      </div>
+      <details class="image-prompt">
+        <summary>
+          <span class="image-prompt-label">Image generation prompt</span>
+          <span class="image-prompt-chevron"><span class="label-closed">Show</span><span class="label-open">Hide</span></span>
+        </summary>
+        <span class="image-prompt-text">Three-panel comic book illustration, modern flat cartoon style with bold black outlines, cel-shaded colouring, clean speech bubbles. Warm cream and gold palette with teal accents. Hospital reception setting throughout. Aspect ratio 16:9 wide, panels arranged left to right with thin black gutters.
+
+PANEL 1 (left): A friendly cartoon dog wearing a name tag clearly labelled "ZSCALER" stands in a hospital reception lobby. The dog is mid-sprint, mouth open happily, carrying a bone clearly labelled "PAGE" back toward a smiling receptionist. A stopwatch hangs around the dog's neck displaying "PFT". A second small icon on the dog's collar shows a battery labelled "AVAILABILITY". Caption box at the top: "PFT = how fast. Availability = is it working at all."
+
+PANEL 2 (middle): Same hospital reception. A large wall chart is the focus, clearly titled "7-DAY BASELINE — MON TO SUN" with seven day columns visible. Multiple cartoon dogs of different sizes (chihuahua, beagle, greyhound, bulldog) sit in a row in front of the chart, each with their own dotted baseline line at a different height. Caption box: "Every dog has its own normal. Baselines learn — thresholds don't."
+
+PANEL 3 (right): Close-up on the receptionist at her desk wearing oversized glasses. A chunky toggle switch is mounted on the frame of her glasses, clearly labelled "SMOOTH". On her monitor: two side-by-side line graphs — left labelled "OFF" showing a jagged spiky line, right labelled "ON" showing a calm smooth line. Caption box: "Smooth toggle: calmer chart, but you might miss short outages."
+
+Style notes: simple shapes, bold cartoon outlines, expressive friendly faces, clear readable text labels on every prop, no painterly textures, no realistic shading. Limited palette: cream backgrounds, warm gold lighting, teal/orange accents, bright red only on chart lines. Sunday newspaper comic strip aesthetic.</span>
+      </details>
+    </div>
+
+    <div class="scene">
+      <span class="scene-label">The scene you built</span>
+      A cartoon dog named <strong>Zscaler</strong> sprints back to the receptionist with a bone labelled "PAGE" in
+      his mouth. A <strong>stopwatch</strong> on his collar reads PFT (how fast he fetches). A <strong>green
+      battery</strong> shows Availability (is he tired or not). On the wall: a Mon–Sun chart with different
+      baseline lines for different dog breeds — every app has its own normal. The receptionist wears glasses with
+      a <strong>SMOOTH toggle</strong> on the frame; flipping it on calms a jagged chart into a smooth one.
+    </div>
+
+    <div class="anchor">
+      <span class="anchor-label">What this anchors</span>
+      <div class="anchor-grid">
+        <div class="anchor-item"><strong>Two components</strong>PFT (how fast when it works) + Availability (is it working at all). Combined → ZDX Score.</div>
+        <div class="anchor-item"><strong>Why both?</strong>PFT goes null when the app is down. Availability catches that. Two failure modes, two metrics.</div>
+        <div class="anchor-item"><strong>Adaptive baselining</strong>Each app gets its own normal, learned over a rolling 7-day window. Chihuahuas vs greyhounds.</div>
+        <div class="anchor-item"><strong>Smooth toggle trade-off</strong>ON = calmer chart, less alert fatigue. OFF = catches short, sharp incidents.</div>
+      </div>
+      <div class="key-concept"><strong>Anchor phrase:</strong> "<em>Stopwatch + battery + Mon-Sun chart + glasses with toggle.</em>"</div>
+    </div>
+  </div>
+
+  <!-- ROOM 2 -->
+  <div class="room">
+    <div class="room-header">
+      <div class="room-num">2</div>
+      <div class="room-title-block">
+        <h2><span class="room-icon">📋</span>Triage Board &mdash; Sarah's Boards <em>the score hierarchy</em></h2>
+        <div class="room-subtitle">USER = WORST APP · DEVICE = AVERAGE · APP TILE · APP OVER TIME</div>
+      </div>
+    </div>
+
+    <div class="image-block">
+      <div class="image-placeholder">
+        <img src="images/2-Dr.png" alt="Triage Board — Score Hierarchy">
+      </div>
+      <details class="image-prompt">
+        <summary>
+          <span class="image-prompt-label">Image generation prompt</span>
+          <span class="image-prompt-chevron"><span class="label-closed">Show</span><span class="label-open">Hide</span></span>
+        </summary>
+        <span class="image-prompt-text">Two-panel comic book illustration, modern flat cartoon style with bold black outlines, cel-shaded colouring, clean caption boxes. Hospital triage area setting. Warm cream and gold palette with teal accents and red highlights. Aspect ratio 16:9 wide.
+
+PANEL 1 (left) — "USER VIEW": A friendly cartoon doctor in a white coat with a stethoscope stands beside a large whiteboard. Header reads "USER VIEW — SARAH". Top section labelled "APPS" shows a vertical column of 5 app icons each with a score: Zoom (90), Outlook (95), Salesforce (92), OneDrive (88), Slack (15). The Slack row is circled in thick red marker with an arrow labelled "USER SCORE = WORST APP". Bottom section labelled "DEVICES" shows a small shelf with a laptop, phone, and tablet icon. Below the shelf: "DEVICE SCORE = AVERAGE OF THESE" with a "÷3" symbol. Caption box: "User Score = the worst app. Pain dominates."
+
+PANEL 2 (right) — "APP VIEW": Same triage area, different whiteboard. Header reads "APP VIEW — MS TEAMS". Left half labelled "APPLICATION TILE SCORE": a single big tile showing "87" with subtitle "AVG OVER SELECTED PERIOD". Right half labelled "APP SCORE OVER TIME": a wide line graph fluctuating across a horizontal time axis, subtitle "AVG ACROSS ALL USERS". Caption box: "App View = how is this app doing across everyone, now and over time."
+
+Style notes: simple shapes, bold cartoon outlines, expressive friendly faces, clear readable text labels. Bright red only used for the circled "worst app" highlight.</span>
+      </details>
+    </div>
+
+    <div class="scene">
+      <span class="scene-label">The scene you built</span>
+      A doctor stands between two whiteboards. The left board, <strong>"USER VIEW — SARAH"</strong>, lists her apps
+      with scores; <strong>Slack at 15 is circled in red</strong> and labelled "USER SCORE = WORST APP". Below it:
+      a shelf with her laptop, phone, and tablet, and the math "÷3" — Device Score is the <em>average</em> of her
+      devices. The right board, <strong>"APP VIEW — MS TEAMS"</strong>, shows two charts: a single tile
+      "Application Tile Score = 87" and a trend graph "App Score Over Time".
+    </div>
+
+    <div class="anchor">
+      <span class="anchor-label">What this anchors</span>
+      <div class="anchor-grid">
+        <div class="anchor-item"><strong>User Score = WORST app</strong>Pessimistic on purpose. One broken app ruins your day.</div>
+        <div class="anchor-item"><strong>Device Score = AVERAGE of devices</strong>You use one device at a time, in series. Average reflects fleet health.</div>
+        <div class="anchor-item"><strong>Application Tile Score</strong>Average score for one app over the selected period (snapshot).</div>
+        <div class="anchor-item"><strong>App Score Over Time</strong>Average across all users, plotted over time (trend line).</div>
+      </div>
+      <div class="key-concept"><strong>The trap:</strong> User Score uses <em>minimum</em> (worst app), Device Score uses <em>average</em>. The tempting wrong answer is "average of apps" — it's not.</div>
+    </div>
+  </div>
+
+  <!-- ROOM 3 -->
+  <div class="room">
+    <div class="room-header">
+      <div class="room-num">3</div>
+      <div class="room-title-block">
+        <h2><span class="room-icon">🔬</span>The Probe Lab &mdash; Three Animals <em>how data is collected</em></h2>
+        <div class="room-subtitle">WEB PROBE · CLOUD PATH · AUTOSENSE · THREE PATHS</div>
+      </div>
+    </div>
+
+    <div class="image-block">
+      <div class="image-placeholder">
+        <img src="images/3-Dog-Kanga.png" alt="The Probe Lab — Dog, Kangaroo, Bloodhound">
+      </div>
+      <details class="image-prompt">
+        <summary>
+          <span class="image-prompt-label">Image generation prompt</span>
+          <span class="image-prompt-chevron"><span class="label-closed">Show</span><span class="label-open">Hide</span></span>
+        </summary>
+        <span class="image-prompt-text">Three-panel comic book illustration, modern flat cartoon style with bold black outlines, cel-shaded colouring, clean caption boxes. Bright hospital laboratory setting throughout. Warm cream and gold palette. Aspect ratio 16:9 wide. A sign visible in all three panels reads "ZDX PROBE LAB".
+
+PANEL 1 (left) — WEB PROBE: A friendly cartoon scientist in a white lab coat watches a happy golden retriever named "ZSCALER" mid-fetch, carrying a bone labelled "PAGE". The dog wears a coat with four large letters "P-D-S-A" — PAGE FETCH / DNS / SERVER RESP / AVAILABILITY. A small sign reads "NO CACHE — EVERY FETCH IS REAL". Caption: "Web Probe = is the APP fast?"
+
+PANEL 2 (middle) — CLOUD PATH PROBE: A second scientist watches a cartoon kangaroo hopping along three colour-coded trails: GREEN "DIRECT", ORANGE "VIA ZIA", PURPLE "VIA ZPA". Each trail has numbered checkpoint flags. The kangaroo wears a pouch with letters "H-L-P" — HOPS / LATENCY / PACKET LOSS. Caption: "Cloud Path Probe = is the JOURNEY fast? Three paths to triangulate."
+
+PANEL 3 (right) — AUTOSENSE CLOUD PATH PROBE: A third scientist holds the leash of a bloodhound sniffing after floating UCaaS app icons (Zoom, Teams, Webex) that drift in different directions. The dog's vest reads "AUTOSENSE — DYNAMIC DESTINATION". A sign reads "FOR UCAAS: IP/PORT CHANGES PER CALL". Caption: "Autosense = Cloud Path for moving targets (UCaaS)."
+
+Style notes: simple shapes, bold cartoon outlines, expressive animal faces, clear readable labels.</span>
+      </details>
+    </div>
+
+    <div class="scene">
+      <span class="scene-label">The scene you built</span>
+      Three lab stations under one "ZDX PROBE LAB" sign. <strong>Zscaler the dog</strong> fetches the bone — his
+      coat reads <strong>P-D-S-A</strong> for the four Web Probe metrics, with a "NO CACHE — EVERY FETCH IS REAL"
+      sign. A <strong>kangaroo</strong> hops along three colour-coded trails (green Direct, orange via ZIA, purple
+      via ZPA), pouch labelled <strong>H-L-P</strong>, dropping envelopes (some with red X's = packet loss). A
+      <strong>bloodhound</strong> sniffs after drifting Zoom/Teams/Webex icons — Autosense follows the moving
+      target.
+    </div>
+
+    <div class="anchor">
+      <span class="anchor-label">What this anchors</span>
+      <div class="anchor-grid">
+        <div class="anchor-item"><strong>Web Probe (PDSA)</strong>Page Fetch · DNS · Server Response · Availability. No caching — every fetch is real.</div>
+        <div class="anchor-item"><strong>Cloud Path Probe (HLP)</strong>Hop Count · Latency · Packet Loss. Traceroute to a known destination.</div>
+        <div class="anchor-item"><strong>Autosense Cloud Path</strong>Dynamically detects IP and port — for UCaaS where the destination changes per call.</div>
+        <div class="anchor-item"><strong>Three paths (fault isolation)</strong>Direct / via ZIA / via ZPA. Comparison reveals where the slowness lives.</div>
+      </div>
+      <div class="key-concept"><strong>Mental split:</strong> Web Probe asks "is the <em>app</em> fast?" Cloud Path asks "is the <em>journey</em> fast?" Autosense is Cloud Path for moving targets.</div>
+    </div>
+  </div>
+
+  <!-- ROOM 4 -->
+  <div class="room">
+    <div class="room-header">
+      <div class="room-num">4</div>
+      <div class="room-title-block">
+        <h2><span class="room-icon">🩻</span>Imaging Suite &mdash; The MRI Machine <em>Deep Tracing</em></h2>
+        <div class="room-subtitle">ONE USER · ONE DEVICE · ONE APP · 5–60 MIN · PCAP · PDF</div>
+      </div>
+    </div>
+
+    <div class="image-block">
+      <div class="image-placeholder">
+        <img src="images/4-MRI.png" alt="Imaging Suite — Deep Tracing">
+      </div>
+      <details class="image-prompt">
+        <summary>
+          <span class="image-prompt-label">Image generation prompt</span>
+          <span class="image-prompt-chevron"><span class="label-closed">Show</span><span class="label-open">Hide</span></span>
+        </summary>
+        <span class="image-prompt-text">Single-panel comic book illustration, modern flat cartoon style with bold black outlines, cel-shaded colouring. Hospital imaging suite setting. Aspect ratio 16:9 wide.
+
+A large cartoon MRI-style scanner labelled "DEEP TRACING — IMAGING SUITE". One single patient lies on the MRI bed mid-scan. Hanging from the bed: a clipboard with three lines — "PATIENT: SARAH / DEVICE: LAPTOP / APP: SALESFORCE". Overhead sign: "ONE USER · ONE DEVICE · ONE APP".
+
+On the scanner: a large round control dial from "5" to "60" labelled "MIN", set to 30.
+
+Three indicator screens mounted on the scanner:
+— Screen 1: magnifying glass over a list of running processes — "PROCESS-LEVEL DATA"
+— Screen 2: stack of envelope icons captured into a folder — "PCAP (PACKET CAPTURE)"
+— Screen 3: a dumbbell with "↑ UP" and "↓ DOWN" — "BANDWIDTH TEST"
+
+A radiologist in scrubs stands beside the scanner with a remote. Behind her, a printer slides out a paper document with the PDF icon and label "EXPORT TO PDF — FOR L2/L3 SUPPORT".
+
+Caption: "Deep Tracing = forensic MRI for one user, one device, one app — 5 to 60 minutes."</span>
+      </details>
+    </div>
+
+    <div class="scene">
+      <span class="scene-label">The scene you built</span>
+      A single patient lies on an MRI machine labelled "DEEP TRACING". The clipboard reads <strong>"Sarah / Laptop
+      / Salesforce"</strong> — one user, one device, one app. The dial sets a session length between
+      <strong>5 and 60 minutes</strong>. Three indicator screens show: <strong>process-level data</strong>,
+      <strong>PCAP</strong> (packet capture), and a <strong>dumbbell</strong> for the bandwidth test (↑ UP / ↓
+      DOWN). When the timer ends, a printer slides out a <strong>PDF report</strong> for L2/L3 support.
+    </div>
+
+    <div class="anchor">
+      <span class="anchor-label">What this anchors</span>
+      <div class="anchor-grid">
+        <div class="anchor-item"><strong>Scope</strong>One user + one device + one app. Surgical, not fleet-wide.</div>
+        <div class="anchor-item"><strong>Duration</strong>5 to 60 minutes per session. Time-bounded by design.</div>
+        <div class="anchor-item"><strong>What it captures</strong>Process-level data · PCAP · Bandwidth Test (upload + download).</div>
+        <div class="anchor-item"><strong>Output</strong>PDF export, intended for L2/L3 support and ticket attachments.</div>
+      </div>
+      <div class="key-concept"><strong>One-liner:</strong> "<em>A probe takes everyone's temperature continuously; Deep Tracing books a 30-minute MRI for one specific patient.</em>"</div>
+    </div>
+  </div>
+
+  <!-- ROOM 5 -->
+  <div class="room">
+    <div class="room-header">
+      <div class="room-num">5</div>
+      <div class="room-title-block">
+        <h2><span class="room-icon">🚨</span>Alarm Tower &mdash; Three Sirens <em>Alerts</em></h2>
+        <div class="room-subtitle">APPLICATION · DEVICE · NETWORK · MUTED · EMAIL · WEBHOOK</div>
+      </div>
+    </div>
+
+    <div class="image-block">
+      <div class="image-placeholder">
+        <img src="images/5-Alarms.png" alt="Alarm Tower — Three Sirens">
+      </div>
+      <details class="image-prompt">
+        <summary>
+          <span class="image-prompt-label">Image generation prompt</span>
+          <span class="image-prompt-chevron"><span class="label-closed">Show</span><span class="label-open">Hide</span></span>
+        </summary>
+        <span class="image-prompt-text">Single-panel comic book illustration, modern flat cartoon style. Hospital courtyard at dusk with warm sunset lighting. Aspect ratio 16:9 wide.
+
+A tall stone alarm tower labelled "ZDX ALERT TOWER". Three large sirens stacked vertically, colour-coded:
+— Top siren BLUE labelled "APPLICATION" (subtitle: "DNS · PFT · SERVER RESP · WEB AVAILABILITY")
+— Middle siren GREEN labelled "DEVICE" (subtitle: "CPU · MEMORY · BATTERY · DISK · WI-FI")
+— Bottom siren RED labelled "NETWORK" (subtitle: "LATENCY · PACKET LOSS · HOPS")
+
+A security guard at the base. A chalkboard mounted on the tower shows wavy lines at different heights, each labelled with a different cartoon dog face — adaptive baselines per app. Chalkboard header: "ADAPTIVE BASELINES — EVERY DOG, ITS OWN NORMAL".
+
+Foreground: three large coffee filters labelled "SYDNEY OFFICE", "SALES TEAM", "DEVICE: LAPTOP". Sign above: "ALERT FILTERS — SCOPE THE NOISE".
+
+Right side: a cartoon postal worker delivering alerts via three routes:
+— MUTED: glass display case labelled "PORTAL ONLY" — "MUTED = OBSERVABILITY WITHOUT URGENCY"
+— EMAIL: large envelope mid-flight with "@" symbol
+— WEBHOOK: a conveyor belt with a package on a literal hook, splitting into three branches: "SERVICENOW", "SLACK", "PAGERDUTY"
+
+Caption: "Three sirens. Adaptive baselines. Coffee-filter scope. Three delivery routes."</span>
+      </details>
+    </div>
+
+    <div class="scene">
+      <span class="scene-label">The scene you built</span>
+      A stone alarm tower with three colour-coded sirens (<strong>blue Application, green Device, red
+      Network</strong>). A chalkboard shows wavy adaptive baseline lines for different dogs (continuity from Room
+      1). Three <strong>coffee filters</strong> in the foreground are labelled "Sydney Office," "Sales Team,"
+      "Device: Laptop." A postal worker delivers alerts via three routes: a <strong>portal display case</strong>
+      (Muted), an <strong>envelope</strong> (Email), and a conveyor belt with a literal <strong>web-hook</strong>
+      splitting into three trucks: <strong>ServiceNow, Slack, PagerDuty</strong>.
+    </div>
+
+    <div class="anchor">
+      <span class="anchor-label">What this anchors</span>
+      <div class="anchor-grid">
+        <div class="anchor-item"><strong>Three event types</strong>Application (the destination app) · Device (the user's hardware) · Network (the journey between).</div>
+        <div class="anchor-item"><strong>Organising principle</strong>Ask "where does this problem physically live?" — that places any metric correctly.</div>
+        <div class="anchor-item"><strong>Filters</strong>Locations · User Groups · Devices. Scope alerts to subsets to avoid alert fatigue.</div>
+        <div class="anchor-item"><strong>Three actions</strong>Muted (portal-only) · Email · Webhook (ServiceNow / Slack / PagerDuty).</div>
+      </div>
+      <div class="key-concept"><strong>Muted = observability without urgency.</strong> The alert still logs and shows in the portal — it just doesn't page anyone.</div>
+    </div>
+  </div>
+
+  <!-- ROOM 6 -->
+  <div class="room">
+    <div class="room-header">
+      <div class="room-num">6</div>
+      <div class="room-title-block">
+        <h2><span class="room-icon">📦</span>Records Room &mdash; Three Cabinets <em>Inventory</em></h2>
+        <div class="room-subtitle">DEVICE · SOFTWARE (INSTALLED) · PROCESS (RUNNING)</div>
+      </div>
+    </div>
+
+    <div class="image-block">
+      <div class="image-placeholder">
+        <img src="images/6-Inventory.png" alt="Records Room — Inventory Cabinets">
+      </div>
+      <details class="image-prompt">
+        <summary>
+          <span class="image-prompt-label">Image generation prompt</span>
+          <span class="image-prompt-chevron"><span class="label-closed">Show</span><span class="label-open">Hide</span></span>
+        </summary>
+        <span class="image-prompt-text">Single-panel comic book illustration, modern flat cartoon style. Quiet hospital records room with soft warm lamp lighting. Aspect ratio 16:9 wide.
+
+Three tall wooden filing cabinets with brass nameplates. Wall sign: "ZDX INVENTORY — RECORDS ROOM".
+
+CABINET 1 (left) — "DEVICE INVENTORY": Drawer open with files showing cartoon icons of laptops, phones, tablets tagged with owner names. Sign: "PREREQUISITES: ZCC VERSION · SUBSCRIPTION · PERMISSIONS". A records clerk in scrubs stands beside it.
+
+CABINET 2 (middle) — "SOFTWARE INVENTORY — INSTALLED": Deep file folders with multiple stacked version tabs visible ("v2022", "v2023", "v2024") stacked behind each application. Bold sign: "CURRENT + HISTORICAL VERSIONS".
+
+CABINET 3 (right) — "PROCESS INVENTORY — RUNNING": Drawer wide open with files flying out. Two clerks working it:
+— Clerk A with a stopwatch dial reading "1 MIN", stamping fresh numbers ("CPU: 47%", "MEM: 32%") onto files. Label: "METRICS REFRESH"
+— Clerk B with a stopwatch dial reading "5 MIN", reshuffling files into a stack labelled "TOP 5". Label: "TOP PROCESS RE-RANK"
+
+Caption: "Three cabinets: Hardware. Installed (with history). Running (1-min metrics, 5-min top list)."</span>
+      </details>
+    </div>
+
+    <div class="scene">
+      <span class="scene-label">The scene you built</span>
+      Three filing cabinets in a quiet records room. <strong>Cabinet 1 (Device)</strong> holds laptops, phones,
+      tablets tagged with owner names, plus prerequisites listed. <strong>Cabinet 2 (Software — Installed)</strong>
+      holds deep folders with historical version tabs (v2022, v2023, v2024) behind each current file.
+      <strong>Cabinet 3 (Process — Running)</strong> has two clerks: one with a <strong>1-minute
+      stopwatch</strong> stamping fresh CPU/memory numbers, another with a <strong>5-minute stopwatch</strong>
+      re-ranking the Top 5 list.
+    </div>
+
+    <div class="anchor">
+      <span class="anchor-label">What this anchors</span>
+      <div class="anchor-grid">
+        <div class="anchor-item"><strong>Software vs Process</strong>Software = what's <em>installed</em> (static, on disk). Process = what's <em>running</em> (dynamic, runtime).</div>
+        <div class="anchor-item"><strong>Process Inventory timing</strong>Metrics refresh every 1 min · Top processes re-rank every 5 min.</div>
+        <div class="anchor-item"><strong>Software keeps history</strong>Current + historical versions. Forensic value: prove software existed even if uninstalled.</div>
+        <div class="anchor-item"><strong>Device prerequisites</strong>Min ZCC version · ZDX subscription tier · data collection enabled · permissions.</div>
+      </div>
+      <div class="key-concept"><strong>Forensic use case:</strong> a user installed unauthorised software then uninstalled it — <em>Software Inventory's historical record</em> proves it existed.</div>
+    </div>
+  </div>
+
+  <!-- ROOM 7 -->
+  <div class="room">
+    <div class="room-header">
+      <div class="room-num">7</div>
+      <div class="room-title-block">
+        <h2><span class="room-icon">🔑</span>Security Office &mdash; The Keycard Printer <em>RBAC</em></h2>
+        <div class="room-subtitle">FULL · VIEW ONLY · CUSTOM · NONE — APPLIED PER SECTION</div>
+      </div>
+    </div>
+
+    <div class="image-block">
+      <div class="image-placeholder">
+        <img src="images/7-RBAC.png" alt="Security Office — RBAC Keycards">
+      </div>
+      <details class="image-prompt">
+        <summary>
+          <span class="image-prompt-label">Image generation prompt</span>
+          <span class="image-prompt-chevron"><span class="label-closed">Show</span><span class="label-open">Hide</span></span>
+        </summary>
+        <span class="image-prompt-text">Single-panel comic book illustration, modern flat cartoon style. Hospital security office with clean clinical lighting. Aspect ratio 16:9 wide.
+
+A friendly cartoon security guard at a desk operating a keycard printer. Desk sign: "ZDX RBAC — ROLE-BASED ACCESS CONTROL".
+
+Four freshly printed keycards fanned out on the desk:
+— GREEN card "FULL" (subtitle: "READ + WRITE")
+— BLUE card "VIEW ONLY" (subtitle: "READ ONLY")
+— PURPLE card "CUSTOM" (subtitle: "TAILORED")
+— RED card "NONE" (subtitle: "NO ACCESS")
+
+On the wall behind: a large grid chart titled "RBAC GRID — PER SECTION, INDEPENDENTLY".
+
+The grid lists seven sections down the left:
+DASHBOARD / UCAAS MONITORING / CONFIGURATION / USER MANAGEMENT / DEEP TRACING / ALERTS / WEBHOOKS
+
+Next to each section: a coloured circle showing that role's access level for that section.
+
+A highlighted callout box points at "DEEP TRACING" and "WEBHOOKS" rows: "SEPARATE RBAC: PRIVACY (PCAP) + EXTERNAL SYSTEMS".
+
+Caption: "One role, seven decisions. Each section gets its own access level — independently."</span>
+      </details>
+    </div>
+
+    <div class="scene">
+      <span class="scene-label">The scene you built</span>
+      A security guard prints four colour-coded keycards: <strong>green Full</strong>, <strong>blue View
+      Only</strong>, <strong>purple Custom</strong>, <strong>red None</strong>. Behind him, a large
+      <strong>RBAC grid chart</strong> shows seven ZDX sections — each section gets its own coloured circle
+      independently. A callout highlights that <strong>Deep Tracing and Webhooks</strong> get their own RBAC
+      sections because of PCAP privacy and external systems exposure.
+    </div>
+
+    <div class="anchor">
+      <span class="anchor-label">What this anchors</span>
+      <div class="anchor-grid">
+        <div class="anchor-item"><strong>Four access levels</strong>Full · View Only · Custom · None. ("Read Only" is a distractor — use these exact labels.)</div>
+        <div class="anchor-item"><strong>Per-section, independently</strong>One role can have Full on Dashboard, View Only on Alerts, Custom on Config — all at once.</div>
+        <div class="anchor-item"><strong>Seven sections</strong>Dashboard · UCaaS Monitoring · Configuration · User Management · Deep Tracing · Alerts · Webhooks.</div>
+        <div class="anchor-item"><strong>Why DT and Webhooks are separate</strong>Deep Tracing captures PCAP (privacy). Webhooks push data to external systems.</div>
+      </div>
+      <div class="key-concept"><strong>Exam-tight phrase:</strong> "<em>RBAC is applied per section, independently — a single role can have different access levels for each ZDX section.</em>"</div>
+    </div>
+  </div>
+
+  <!-- ROOM 8 -->
+  <div class="room">
+    <div class="room-header">
+      <div class="room-num">8</div>
+      <div class="room-title-block">
+        <h2><span class="room-icon">🤖</span>The AI Wing &mdash; Five Stations <em>AI &amp; Automation</em></h2>
+        <div class="room-subtitle">Y ENGINE · COPILOT · API · WEBHOOKS · INTUNE</div>
+      </div>
+    </div>
+
+    <div class="image-block">
+      <div class="image-placeholder">
+        <img src="images/8-AI.png" alt="The AI Wing — Five Stations">
+      </div>
+      <details class="image-prompt">
+        <summary>
+          <span class="image-prompt-label">Image generation prompt</span>
+          <span class="image-prompt-chevron"><span class="label-closed">Show</span><span class="label-open">Hide</span></span>
+        </summary>
+        <span class="image-prompt-text">Single-panel comic book illustration, modern flat cartoon style. Bright glass-walled hospital wing with futuristic but warm lighting. Aspect ratio 16:9 wide. Large sign at the top: "ZDX AI WING".
+
+Five clearly distinct stations across the panel:
+
+STATION 1 (far left) — Y ENGINE: A cartoon AI robot doctor with a stethoscope holds a magnifying glass over patient charts. Top chart has a circled red callout: "ROOT CAUSE FOUND: ZIA LATENCY". Name badge "Y ENGINE" with subtitle "AUTOMATED ROOT-CAUSE ANALYSIS".
+
+STATION 2 (left of centre) — ZDX COPILOT: A chatbot character (round face, headset, holding a tablet) at a small desk. Large speech bubble: "Sarah's score dropped because ZIA latency spiked at 2pm." Name badge "ZDX COPILOT" — "NATURAL-LANGUAGE ASSISTANT". Arrow connecting to Y Engine: "surfaces what Y Engine reasons".
+
+STATION 3 (centre) — ZDX API: A brass pneumatic tube system on the back wall with three labelled slots:
+— "REPORTS" (subtitle: "USERS · APPS · DEVICES")
+— "TROUBLESHOOTING" (subtitle: "START/STOP DEEP TRACE")
+— "SERVICENOW INTEGRATION" (subtitle: "ON-DEMAND LIVE TRACE")
+Capsules flying TOWARD ZDX. Large arrow: "API = PULL (OUTSIDE → IN)".
+
+STATION 4 (right of centre) — WEBHOOKS: Three cartoon delivery trucks parked outside a window — "SERVICENOW" truck, "SLACK" truck, "PAGERDUTY" truck — driving AWAY from the building. Large arrow: "WEBHOOKS = PUSH (INSIDE → OUT)".
+
+STATION 5 (far right) — INTUNE INTEGRATION: A side door labelled "MICROSOFT INTUNE". Through the open door: a chart showing "BOOT TIMES · STARTUP · SOFTWARE RELIABILITY" with subtitle "ENDPOINT ANALYTICS".
+
+A bold banner across the top: "API PULLS · WEBHOOKS PUSH".
+
+Caption: "Five stations: Y Engine thinks. Copilot talks. API pulls. Webhooks push. Intune adds endpoint health."</span>
+      </details>
+    </div>
+
+    <div class="scene">
+      <span class="scene-label">The scene you built</span>
+      Five stations in a glass-walled annex. <strong>Y Engine</strong>: AI doctor robot with magnifying glass over
+      patient charts — automated root-cause analysis. <strong>Copilot</strong>: chatbot answering admin questions
+      in natural language, surfacing what Y Engine reasons. <strong>ZDX API</strong>: pneumatic tube system with
+      three slots (Reports, Troubleshooting, ServiceNow Integration), capsules flying <em>inward</em> —
+      <strong>API pulls</strong>. <strong>Webhooks</strong>: three trucks (ServiceNow, Slack, PagerDuty) driving
+      <em>outward</em> — <strong>Webhooks push</strong>. <strong>Intune</strong>: a side door opening into
+      endpoint analytics: boot times, startup performance, software reliability.
+    </div>
+
+    <div class="anchor">
+      <span class="anchor-label">What this anchors</span>
+      <div class="anchor-grid">
+        <div class="anchor-item"><strong>Y Engine</strong>AI-driven automated root-cause analysis — surfaces the "why" without manual digging.</div>
+        <div class="anchor-item"><strong>ZDX Copilot</strong>Natural-language AI assistant for IT teams. Talks; Y Engine thinks.</div>
+        <div class="anchor-item"><strong>ZDX API (PULL)</strong>Reports · Troubleshooting (start/stop Deep Trace sessions) · ServiceNow on-demand. Outside systems ask ZDX.</div>
+        <div class="anchor-item"><strong>Webhooks (PUSH)</strong>ServiceNow · Slack · PagerDuty. ZDX tells external systems when something happens.</div>
+        <div class="anchor-item"><strong>Intune integration</strong>Endpoint analytics: boot times, startup performance, software reliability. Extends ZDX into device health.</div>
+        <div class="anchor-item"><strong>API vs Webhook direction</strong>API = outside pulls data in. Webhook = ZDX pushes events out. Opposite directions, opposite initiation.</div>
+      </div>
+      <div class="key-concept"><strong>The critical distinction:</strong> "<em>API is a tap you open — you pull. A webhook is a pipe that sprays when triggered — it pushes.</em>"</div>
+    </div>
+  </div>
+
+  <!-- WALKTHROUGH -->
+  <div class="walkthrough">
+    <h3>The 60-second walk-through</h3>
+    <p style="font-size:14px;color:var(--ink-soft);margin-bottom:14px;line-height:1.6;">
+      Run this in your head before any ZDX question on the exam. Name the animal, name the prop, name the concept.
+    </p>
+    <ol>
+      <li><strong>Reception — Zscaler the Dog:</strong> Stopwatch (PFT) + battery (Availability) → ZDX Score. Wall chart with 7-day baselines per breed. Glasses with SMOOTH toggle on/off trade-off.</li>
+      <li><strong>Triage Board — Sarah's Whiteboards:</strong> User Score = <em>worst</em> app (Slack at 15 circled in red). Device Score = <em>average</em> of devices (÷3). App Tile Score = avg over period. App Score Over Time = trend across all users.</li>
+      <li><strong>Probe Lab — Three Animals:</strong> Dog (Web Probe — P-D-S-A, no cache). Kangaroo (Cloud Path — H-L-P, 3 colour-coded trails). Bloodhound (Autosense — dynamic UCaaS destination).</li>
+      <li><strong>Imaging Suite — The MRI:</strong> Deep Tracing. One user + device + app on the bed. Dial set 5–60 min. Three screens: process data, PCAP, bandwidth dumbbell. Printer outputs PDF for L2/L3.</li>
+      <li><strong>Alarm Tower — Three Sirens:</strong> Blue Application · Green Device · Red Network. Coffee-filter scope (location, group, device). Three delivery routes: Muted (portal only) · Email · Webhook (ServiceNow/Slack/PagerDuty).</li>
+      <li><strong>Records Room — Three Cabinets:</strong> Device inventory. Software installed (current + historical versions). Process running (1 min metrics, 5 min top-5 re-rank).</li>
+      <li><strong>Security Office — Keycard Printer:</strong> Full · View Only · Custom · None. Seven sections, each independently. Deep Tracing and Webhooks get their own because PCAP + external systems.</li>
+      <li><strong>AI Wing — Five Stations:</strong> Y Engine thinks (root cause). Copilot talks (natural language). API pulls (Reports/Troubleshooting/ServiceNow tap). Webhooks push (ServiceNow/Slack/PagerDuty trucks). Intune side door (endpoint analytics).</li>
+    </ol>
+  </div>
+
+</main>
+
+<footer>
+  <div class="footer-left">ZDTE <span>Memory Palaces</span></div>
+  <div class="footer-right">Zscaler Digital Transformation Engineer · ZDX Hospital · Blueprint 8%</div>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ZDTE Memory Palace — DLP Data Mansion</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;0,700;1,400&family=Epilogue:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="palace.css">
+</head>
+<body>
+
+<header>
+  <div class="header-left">
+    <div class="breadcrumb">
+      <a href="../index.html">Study Plan</a>
+      <span class="breadcrumb-sep">›</span>
+      <a href="../memory-palaces.html">Memory Palaces</a>
+      <span class="breadcrumb-sep">›</span>
+      <span>DLP Memory Palace</span>
+    </div>
+
+    <div class="day-badge">
+      <span class="day-badge-dot"></span>
+      MEMORY PALACE
+    </div>
+
+    <h1>The DLP <em>Memory Palace</em></h1>
+
+    <div class="header-meta-row">
+      <span class="tag tag-zia">ZIA</span>
+      <span class="tag tag-weight">Blueprint: 11%</span>
+      <span class="tag tag-arch">Data Protection</span>
+    </div>
+  </div>
+
+  <div class="header-right">
+    <div class="progress-card">
+      <div class="big">5</div>
+      <div class="lbl">ROOMS</div>
+    </div>
+  </div>
+</header>
+
+<main>
+  <div class="main-content">
+
+    <!-- THE MANSION -->
+    <div class="section-block">
+      <div class="section-label">THE MEMORY PALACE</div>
+      <h2>The Data Mansion</h2>
+      <p>
+        Each DLP method lives in a different room of a mansion. The room tells you <em>where</em> the data lives, the furniture tells you <em>how</em> it's protected. Walk through the rooms and the distinctions become second nature.
+      </p>
+
+      <div class="palace-grid">
+
+        <div class="palace-room">
+          <div class="room-icon door">🚪</div>
+          <div class="room-content">
+            <div class="room-title">Room 1 — The Front Door</div>
+            <div class="room-subtitle">DLP INLINE</div>
+            <div class="room-desc">Every visitor (data packet) must pass through the guard at the door. The guard can <strong>block, allow, or quarantine in real time</strong>. Watches all web traffic flowing through Zscaler — any destination.</div>
+            <div class="room-tags">
+              <span class="room-tag rt-motion">Data in Motion</span>
+              <span class="room-tag rt-realtime">Real-Time Enforcement</span>
+            </div>
+            <div class="img-slot" id="slot-room1">
+              <img src="../images/memory-palace-DLP/1-DLP_DLP-Inline.png" style="cursor:pointer;" onclick="document.getElementById('file-room1').click()">
+              <input type="file" id="file-room1" accept="image/*" onchange="loadImage(this,'slot-room1')">
+            </div>
+            <div class="img-prompt-block collapsed">
+              <div class="img-prompt-header" onclick="togglePrompt(this)">
+                <span style="display:flex;align-items:center;"><span class="prompt-chevron">▶</span><span class="img-prompt-label">🎨 IMAGE PROMPT</span></span>
+                <button class="copy-btn" onclick="event.stopPropagation();copyPrompt(this,'prompt-room1')">COPY</button>
+              </div>
+              <div class="img-prompt-text" id="prompt-room1">A vigilant security guard in a suit standing at the grand front door of a mansion, arms crossed, blocking a stream of glowing data packets trying to enter. Some packets are stopped mid-air, others are waved through. The door has a Zscaler logo etched into it. Clean flat illustration style, warm amber and navy palette, minimal detail.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="palace-room">
+          <div class="room-icon office">🏢</div>
+          <div class="room-content">
+            <div class="room-title">Room 2A — Office Floor (Guard Post)</div>
+            <div class="room-subtitle">CASB INLINE</div>
+            <div class="room-desc">A specialist guard stationed specifically at the cloud app entrance. Like DLP inline but with extra context — knows <strong>which tenant</strong> you're talking to (e.g. corporate OneDrive vs personal OneDrive) and what you're doing inside it.</div>
+            <div class="room-tags">
+              <span class="room-tag rt-motion">Data in Motion</span>
+              <span class="room-tag rt-realtime">Real-Time Enforcement</span>
+            </div>
+            <div class="img-slot" id="slot-room2a">
+              <img src="../images/memory-palace-DLP/2A-DLP_CASB-Inline.png" style="cursor:pointer;" onclick="document.getElementById('file-room2a').click()">
+              <input type="file" id="file-room2a" accept="image/*" onchange="loadImage(this,'slot-room2a')">
+            </div>
+            <div class="img-prompt-block collapsed">
+              <div class="img-prompt-header" onclick="togglePrompt(this)">
+                <span style="display:flex;align-items:center;"><span class="prompt-chevron">▶</span><span class="img-prompt-label">🎨 IMAGE PROMPT</span></span>
+                <button class="copy-btn" onclick="event.stopPropagation();copyPrompt(this,'prompt-room2a')">COPY</button>
+              </div>
+              <div class="img-prompt-text" id="prompt-room2a">A specialist cloud security guard standing at a glowing doorway labelled "Cloud Apps", holding a clipboard showing corporate vs personal tenant labels. A stream of data packets flows toward the door — the guard inspects each one and checks a tenant ID badge before letting them through. Flat illustration, blue and white palette, clean and modern.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="palace-room">
+          <div class="room-icon office">🗂️</div>
+          <div class="room-content">
+            <div class="room-title">Room 2B — Office Floor (Auditor's Desk)</div>
+            <div class="room-subtitle">CASB API / OUT-OF-BAND CASB</div>
+            <div class="room-desc">An auditor with a keycard who walks directly into OneDrive, SharePoint, Salesforce, Dropbox, etc. via API — scanning files already stored there. Doesn't care how the file arrived. <strong>Cannot block an upload mid-flight.</strong> Supports Retro Scan (historical) and Iterative Scan (new/modified files via webhooks).</div>
+            <div class="room-tags">
+              <span class="room-tag rt-rest">Data at Rest</span>
+              <span class="room-tag rt-after">After the Fact</span>
+            </div>
+            <div class="img-slot" id="slot-room2b">
+              <img src="../images/memory-palace-DLP/2B-DLP_CASB-API.png" style="cursor:pointer;" onclick="document.getElementById('file-room2b').click()">
+              <input type="file" id="file-room2b" accept="image/*" onchange="loadImage(this,'slot-room2b')">
+            </div>
+            <div class="img-prompt-block collapsed">
+              <div class="img-prompt-header" onclick="togglePrompt(this)">
+                <span style="display:flex;align-items:center;"><span class="prompt-chevron">▶</span><span class="img-prompt-label">🎨 IMAGE PROMPT</span></span>
+                <button class="copy-btn" onclick="event.stopPropagation();copyPrompt(this,'prompt-room2b')">COPY</button>
+              </div>
+              <div class="img-prompt-text" id="prompt-room2b">An auditor in a suit holding a large keycard, walking into a filing room filled with cloud storage boxes labelled OneDrive, Dropbox, Salesforce. The auditor scans through already-filed documents with a magnifying glass. No stream of incoming data — the room is still and the files are settled. Flat illustration, cool blue and grey palette.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="palace-room">
+          <div class="room-icon vault">☁️</div>
+          <div class="room-content">
+            <div class="room-title">Room 3 — The Cloud Vault</div>
+            <div class="room-subtitle">DSPM — DATA SECURITY POSTURE MANAGEMENT</div>
+            <div class="room-desc">Not catching individual events — conducting a full building inspection of your cloud environment. Asks: <em>"Where is all our sensitive data, who can access it, and are we configured securely?"</em> Operates in three steps: <strong>Discover → Map &amp; Track Risk → Remediate</strong>.</div>
+            <div class="room-tags">
+              <span class="room-tag rt-rest">Data at Rest</span>
+              <span class="room-tag rt-posture">Posture / Proactive</span>
+            </div>
+            <div class="img-slot" id="slot-room3">
+              <img src="../images/memory-palace-DLP/3-DLP_DSPM.png" style="cursor:pointer;" onclick="document.getElementById('file-room3').click()">
+              <input type="file" id="file-room3" accept="image/*" onchange="loadImage(this,'slot-room3')">
+            </div>
+            <div class="img-prompt-block collapsed">
+              <div class="img-prompt-header" onclick="togglePrompt(this)">
+                <span style="display:flex;align-items:center;"><span class="prompt-chevron">▶</span><span class="img-prompt-label">🎨 IMAGE PROMPT</span></span>
+                <button class="copy-btn" onclick="event.stopPropagation();copyPrompt(this,'prompt-room3')">COPY</button>
+              </div>
+              <div class="img-prompt-text" id="prompt-room3">A building inspector in a hard hat and hi-vis vest, clipboard in hand, examining the structure of a large cloud-shaped vault. The inspector is marking off a checklist — some items ticked green, others flagged red for risk. Flat illustration, purple and cream palette.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="palace-room">
+          <div class="room-icon desk">💻</div>
+          <div class="room-content">
+            <div class="room-title">Room 4 — The Employee's Desk</div>
+            <div class="room-subtitle">ENDPOINT DLP</div>
+            <div class="room-desc">Protects data on the device itself — catching actions that <strong>never touch the network</strong>. USB transfers, Bluetooth, printing, clipboard copy-paste. All the things DLP inline is completely blind to.</div>
+            <div class="room-tags">
+              <span class="room-tag rt-device">On Device</span>
+              <span class="room-tag rt-realtime">Local Enforcement</span>
+            </div>
+            <div class="img-slot" id="slot-room4">
+              <img src="../images/memory-palace-DLP/4-DLP_EndpointDLP.png" style="cursor:pointer;" onclick="document.getElementById('file-room4').click()">
+              <input type="file" id="file-room4" accept="image/*" onchange="loadImage(this,'slot-room4')">
+            </div>
+            <div class="img-prompt-block collapsed">
+              <div class="img-prompt-header" onclick="togglePrompt(this)">
+                <span style="display:flex;align-items:center;"><span class="prompt-chevron">▶</span><span class="img-prompt-label">🎨 IMAGE PROMPT</span></span>
+                <button class="copy-btn" onclick="event.stopPropagation();copyPrompt(this,'prompt-room4')">COPY</button>
+              </div>
+              <div class="img-prompt-text" id="prompt-room4">A laptop on a desk with a small shield icon glowing on the screen. A USB drive being plugged in is met with a red warning glow. A printer nearby shows a blocked print warning. No network cables or internet — all action is local. Flat illustration, green and cream palette, cozy desk scene.</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- FULL SCENE ILLUSTRATION -->
+    <div class="section-block">
+      <div class="section-label">FULL PALACE ILLUSTRATION</div>
+      <h2>The Complete Mansion</h2>
+      <p>Use the prompt below to generate a single illustration showing all five rooms of the DLP mansion at once — a great revision poster.</p>
+
+      <div class="img-slot img-slot-full" id="slot-full">
+        <img src="../images/memory-palace-DLP/ALL-DLP_1-4.png" style="cursor:pointer;" onclick="document.getElementById('file-full').click()">
+        <input type="file" id="file-full" accept="image/*" onchange="loadImage(this,'slot-full')">
+      </div>
+      <div class="img-prompt-block" style="margin-top:12px;">
+        <div class="img-prompt-header" onclick="togglePrompt(this)">
+          <span style="display:flex;align-items:center;"><span class="prompt-chevron">▶</span><span class="img-prompt-label">🎨 FULL SCENE IMAGE PROMPT</span></span>
+          <button class="copy-btn" onclick="event.stopPropagation();copyPrompt(this,'prompt-full')">COPY</button>
+        </div>
+        <div class="img-prompt-text" id="prompt-full">A cross-section illustration of a grand mansion with five distinct rooms, each labelled. Room 1 (Front Door): a security guard blocking glowing data packets at the entrance — labelled "DLP Inline". Room 2A (Office Floor Guard): a specialist guard at a cloud app doorway checking tenant badges — labelled "CASB Inline". Room 2B (Auditor's Desk): an auditor with a keycard scanning filing cabinets labelled OneDrive, Dropbox — labelled "CASB API / OOB". Room 3 (Cloud Vault): a building inspector with a clipboard examining a cracked cloud-shaped vault — labelled "DSPM". Room 4 (Employee's Desk): a laptop with a glowing shield, a blocked USB and printer — labelled "Endpoint DLP". Flat illustration style, warm editorial palette of amber, navy, cream and orange.</div>
+      </div>
+    </div>
+
+    <!-- COMPARISON TABLE -->
+    <div class="section-block">
+      <div class="section-label">AT A GLANCE</div>
+      <h2>The Five Methods Compared</h2>
+
+      <table class="compare-table">
+        <thead>
+          <tr>
+            <th>Method</th>
+            <th>Data State</th>
+            <th>Enforcement</th>
+            <th>Bypasses Zscaler?</th>
+            <th>Catches USB/Print?</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>DLP Inline</td><td>In motion</td><td>Real-time block</td><td>❌ Blind if bypassed</td><td>❌ No</td></tr>
+          <tr><td>CASB Inline</td><td>In motion</td><td>Real-time block</td><td>❌ Blind if bypassed</td><td>❌ No</td></tr>
+          <tr><td>CASB API / OOB</td><td>At rest</td><td>After the fact</td><td>✅ Still catches it</td><td>❌ No</td></tr>
+          <tr><td>DSPM</td><td>At rest</td><td>Posture / proactive</td><td>✅ Still catches it</td><td>❌ No</td></tr>
+          <tr><td>Endpoint DLP</td><td>On device</td><td>Local enforcement</td><td>✅ Doesn't need network</td><td>✅ Yes</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ANALOGIES -->
+    <div class="section-block">
+      <div class="section-label">ANALOGIES</div>
+      <h2>The mental models that stick</h2>
+
+      <div class="callout callout-analogy">
+        <div class="callout-header"><div class="callout-icon">⟳</div> SMOKE ALARM vs BUILDING INSPECTION</div>
+        <div class="callout-body">
+          <strong>DLP Inline = smoke alarm</strong> — triggers the moment something bad happens, in real time.<br>
+          <strong>DSPM = building inspection</strong> — proactively finds structural risks before something bad ever happens.
+        </div>
+      </div>
+
+      <div class="callout callout-analogy">
+        <div class="callout-header"><div class="callout-icon">⟳</div> SECURITY GUARD vs SECURITY CAMERA</div>
+        <div class="callout-body">
+          <strong>Inline (DLP / CASB)</strong> = the guard at the door — can physically stop something.<br>
+          <strong>OOB CASB</strong> = the camera in the corner — sees everything, but can only act after the fact.
+        </div>
+      </div>
+
+      <div class="callout callout-analogy">
+        <div class="callout-header"><div class="callout-icon">⟳</div> CASB INLINE vs DLP INLINE</div>
+        <div class="callout-body">
+          DLP inline is the <strong>front door guard</strong> — checks everyone going anywhere.<br>
+          CASB inline is a <strong>specialist</strong> at the cloud app entrance — with extra intelligence about which cloud tenant you're talking to.
+        </div>
+      </div>
+    </div>
+
+    <!-- EXAM SCENARIOS -->
+    <div class="section-block">
+      <div class="section-label">EXAM SCENARIOS</div>
+      <h2>Test yourself</h2>
+
+      <div class="scenario">
+        <div class="scenario-label">SCENARIO 1</div>
+        <div class="scenario-q">An employee uploads a sensitive file to the organisation's OneDrive tenant from a device that bypasses Zscaler entirely. Which DLP method still catches it?</div>
+        <div class="scenario-a"><strong>CASB API / OOB</strong> — it has a direct API keycard to the org's OneDrive tenant and scans what's stored there, regardless of how the file arrived. DLP Inline and CASB Inline are blind because traffic bypassed Zscaler.</div>
+      </div>
+
+      <div class="scenario">
+        <div class="scenario-label">SCENARIO 2</div>
+        <div class="scenario-q">An employee copies PII from a Word doc and pastes it onto a USB drive. Which method catches this?</div>
+        <div class="scenario-a"><strong>Endpoint DLP</strong> — USB transfers never generate network traffic. All inline methods are blind. Only the agent sitting on the device itself can see this action.</div>
+      </div>
+
+      <div class="scenario">
+        <div class="scenario-label">SCENARIO 3</div>
+        <div class="scenario-q">Security team discovers an S3 bucket has been publicly exposed for 3 months with PII inside. What should have caught this?</div>
+        <div class="scenario-a"><strong>DSPM</strong> — this is a posture/misconfiguration problem, not a data-in-motion event. DSPM's building inspection would flag the misconfigured bucket and provide remediation steps.</div>
+      </div>
+
+      <div class="scenario">
+        <div class="scenario-label">SCENARIO 4</div>
+        <div class="scenario-q">An employee on an unmanaged personal device uploads sensitive company data to their personal OneDrive account, bypassing Zscaler entirely. Which DLP method catches it?</div>
+        <div class="scenario-a"><strong>None.</strong> This is a genuine blind spot. CASB API/OOB only has API access to the org's sanctioned tenants — not personal accounts. DLP Inline and CASB Inline require traffic through Zscaler. Endpoint DLP requires an agent on the device. DSPM only scans org-owned cloud environments. The mitigation is <strong>Tenant Restriction policies</strong> — blocking access to non-corporate cloud tenants entirely.</div>
+      </div>
+
+    </div>
+
+  </div><!-- end .main-content -->
+
+  <div class="sidebar">
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">QUICK REFERENCE</div>
+      <div class="quick-ref">
+        <div class="quick-ref-term">DLP INLINE</div>
+        <div class="quick-ref-def">Data in motion. Real-time block. Sits in path of all web traffic through Zscaler.</div>
+      </div>
+      <div class="quick-ref">
+        <div class="quick-ref-term">CASB INLINE</div>
+        <div class="quick-ref-def">Data in motion. Real-time block. Cloud-app specialist — knows tenant context.</div>
+      </div>
+      <div class="quick-ref">
+        <div class="quick-ref-term">CASB API / OOB</div>
+        <div class="quick-ref-def">Data at rest. After the fact. Direct API to SaaS apps. Catches files even if Zscaler was bypassed.</div>
+      </div>
+      <div class="quick-ref">
+        <div class="quick-ref-term">DSPM</div>
+        <div class="quick-ref-def">Data Security Posture Management. Discover → Map Risk → Remediate. Cloud misconfiguration, not real-time events.</div>
+      </div>
+      <div class="quick-ref">
+        <div class="quick-ref-term">ENDPOINT DLP</div>
+        <div class="quick-ref-def">On-device agent. Catches USB, Bluetooth, print, clipboard — actions that never touch the network.</div>
+      </div>
+      <div class="quick-ref">
+        <div class="quick-ref-term">RETRO SCAN</div>
+        <div class="quick-ref-def">CASB API scans all historical files when a new app is onboarded.</div>
+      </div>
+      <div class="quick-ref">
+        <div class="quick-ref-term">ITERATIVE SCAN</div>
+        <div class="quick-ref-def">CASB API monitors newly uploaded or modified files in real time via webhook notifications.</div>
+      </div>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">WATCH OUT</div>
+      <div class="callout callout-warn">
+        <div class="callout-header"><div class="callout-icon">!</div> EXAM TRAP</div>
+        <div class="callout-body">
+          If a user <strong>bypasses Zscaler</strong>, both DLP Inline and CASB Inline are blind. Only CASB API/OOB or DSPM can catch data already at rest. Endpoint DLP catches local device actions regardless.
+        </div>
+      </div>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">MY NOTES</div>
+      <div class="sidebar-note">"Inline" = in the path = can block in real time. "OOB" = out of band = sees it after, can remediate but can't stop the upload.</div>
+      <div class="sidebar-note">CASB inline ≠ DLP inline. CASB inline knows <em>which tenant</em> of a cloud app you're talking to. DLP inline just sees all traffic.</div>
+      <div class="sidebar-note">DSPM = posture, not events. Think: building inspector, not smoke alarm.</div>
+    </div>
+
+  </div><!-- end .sidebar -->
+
+</main>
+
+<footer>
+  <div class="footer-left">ZDTE<span>.</span></div>
+  <div class="footer-right">Zscaler Digital Transformation Engineer · Memory Palace — DLP Data Mansion</div>
+</footer>
+
+<script>
+  function togglePrompt(header) {
+    header.closest('.img-prompt-block').classList.toggle('collapsed');
+  }
+
+  function loadImage(input, slotId) {
+    const file = input.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      const slot = document.getElementById(slotId);
+      const empty = slot.querySelector('.img-slot-empty');
+      if (empty) empty.style.display = 'none';
+      let img = slot.querySelector('img');
+      if (!img) {
+        img = document.createElement('img');
+        slot.insertBefore(img, slot.querySelector('input'));
+      }
+      img.src = e.target.result;
+      img.style.cursor = 'pointer';
+      img.onclick = () => input.click();
+    };
+    reader.readAsDataURL(file);
+  }
+
+  function copyPrompt(btn, promptId) {
+    const text = document.getElementById(promptId).innerText;
+    navigator.clipboard.writeText(text).then(() => {
+      btn.textContent = 'COPIED ✓';
+      btn.classList.add('copied');
+      setTimeout(() => { btn.textContent = 'COPY'; btn.classList.remove('copied'); }, 2000);
+    });
+  }
+</script>
+
+</body>
+</html>

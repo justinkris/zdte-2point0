@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ZDTE Memory Palace — Response Flow</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;0,700;1,400&family=Epilogue:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="palace.css">
+</head>
+<body>
+
+<header>
+  <div class="header-left">
+    <div class="breadcrumb">
+      <a href="../index.html">Study Plan</a>
+      <span class="breadcrumb-sep">›</span>
+      <a href="../memory-palaces.html">Memory Palaces</a>
+      <span class="breadcrumb-sep">›</span>
+      <span>Response Flow Palace</span>
+    </div>
+    <div class="day-badge"><div class="day-badge-dot"></div>MEMORY PALACE</div>
+    <h1>The Younger Boy's<br><em>9-stage homecoming</em></h1>
+    <div class="header-meta-row">
+      <span class="tag tag-zia">ZIA</span>
+      <span class="tag tag-response">Response Flow</span>
+      <span class="tag tag-palace">Memory Palace</span>
+      <span class="tag tag-bite">Study Bite</span>
+    </div>
+    <ul class="subtopic-list" id="subtopic-list">
+      <li onclick="toggleDone(this)"><div class="subtopic-check"></div>Scene 1: Security Exceptions — younger VIP snake guard (echo)</li>
+      <li onclick="toggleDone(this)"><div class="subtopic-check"></div>Scene 2: IPS Signature Detection — young tennis prodigy (echo)</li>
+      <li onclick="toggleDone(this)"><div class="subtopic-check"></div>Scene 3: Suspicious Content Protection — glowing SCP book again (echo)</li>
+      <li onclick="toggleDone(this)"><div class="subtopic-check"></div>Scene 4: Sandbox known files — boy playing in sandbox</li>
+      <li onclick="toggleDone(this)"><div class="subtopic-check"></div>Scene 5: Malware Protection — younger Pat McAfee's contract</li>
+      <li onclick="toggleDone(this)"><div class="subtopic-check"></div>Scene 6: File Type Control — the contract = the file</li>
+      <li onclick="toggleDone(this)"><div class="subtopic-check"></div>Scene 7: Sandbox unknown files — confused boy with unknown contract</li>
+      <li onclick="toggleDone(this)"><div class="subtopic-check"></div>Scene 8: AI/ML Content Categorization — Allen Iverson</li>
+      <li onclick="toggleDone(this)"><div class="subtopic-check"></div>Scene 9: Bandwidth Control — sleepy boy with bottle of milk (echo)</li>
+      <li onclick="toggleDone(this)"><div class="subtopic-check"></div>Quick reference — all 9 scenes mapped to policy</li>
+    </ul>
+  </div>
+  <div class="header-right">
+    <div class="progress-card">
+      <div class="big" id="prog-num">0<span style="font-size:18px;color:#7a6a55;">%</span></div>
+      <div class="lbl">REVIEWED</div>
+    </div>
+  </div>
+</header>
+
+<nav class="section-nav">
+  <button class="nav-tab active" onclick="navTo('section-intro', this)">HOW TO USE</button>
+  <button class="nav-tab" onclick="navTo('section-scenes', this)">THE 9 SCENES</button>
+  <button class="nav-tab" onclick="navTo('section-summary', this)">QUICK REFERENCE</button>
+</nav>
+
+<main class="full-width">
+
+  <!-- INTRO -->
+  <div class="section-block" id="section-intro">
+    <div class="section-label">HOW THIS PALACE WORKS</div>
+    <div class="intro-card">
+      <h3>The narrative</h3>
+      <p>Same boy as the GET + POST palace — but as a <strong>younger version</strong>. This palace maps the <strong>HTTP GET or POST Response flow</strong> — what happens when data comes back from the server. The 9 scenes cover every policy check Zscaler runs on response content before it reaches the browser.</p>
+      <h3 style="margin-top:14px;">Echoes from the GET + POST palace</h3>
+      <p>Four scenes deliberately echo imagery from the GET + POST palace: the VIP snake, fans wanting signatures, the glowing SCP book, and the exhausted boy. These policies are checked on <strong>both directions</strong> of a transaction. The <strong>new scenes</strong> (4–8) are file/content engines that only make sense on the response side.</p>
+      <div class="legend">
+        <div class="legend-item"><div class="legend-dot" style="background:var(--red);"></div>ATP</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#ff9a3c;"></div>Allowlist / Sandbox</div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--purple);"></div>Data / File / ML</div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--ink-muted);"></div>Bandwidth</div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--blue);"></div>Echoes GET palace</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCENES -->
+  <div class="section-block" id="section-scenes">
+    <div class="section-label">THE 9 SCENES</div>
+
+    <!-- SCENE 1 -->
+    <div class="scene">
+      <div class="scene-num">
+        <div class="scene-num-big">1</div>
+        <div class="scene-colour-bar colour-allow"></div>
+      </div>
+      <div class="scene-body">
+        <div class="scene-header-row">
+          <div class="scene-titles">
+            <div class="scene-room-name">The Younger VIP Snake Guard</div>
+            <div class="scene-policy-name">Policy → <strong>Security Exceptions</strong> (allowlist)</div>
+            <span class="echo-badge">↻ Echoes GET scene 4</span>
+          </div>
+          <div class="scene-tags">
+            <span class="scene-tag echo">ECHO</span>
+          </div>
+        </div>
+        <div class="scene-content">
+          <div class="scene-image-slot" id="slot-1">
+            <div class="slot-placeholder">
+              <div class="slot-placeholder-icon">🎨</div>
+              <div>Upload image here</div>
+              <div class="image-controls">
+                <label class="image-btn" for="upload-1">CHOOSE FILE</label>
+                <input type="file" id="upload-1" accept="image/*" style="display:none;" onchange="loadImg(this, 1)">
+              </div>
+            </div>
+          </div>
+          <div class="scene-text-block">
+            <div class="scene-narrative">
+              On the way home, the younger boy passes a <strong>younger VIP snake</strong> — smaller, chubbier, still wearing the orange hi-vis vest and sunglasses. Same bouncer, same gate, checked again on the way back.
+            </div>
+            <div class="hook-box">
+              <div class="hook-label">HOOK — ECHOES GET SCENE 4</div>
+              Same <strong>Security Exceptions allowlist</strong>, checked again on the response. Request and response are independent streams — each one gets its own allowlist gate.
+            </div>
+            <div class="prompt-block">
+              <div class="prompt-label">
+                <span>IMAGE PROMPT</span>
+                <button class="copy-btn" onclick="copyPrompt(this, 1)">COPY</button>
+              </div>
+              <div class="prompt-text" id="prompt-1">A younger, chubbier anthropomorphic snake bouncer wearing a bright orange hi-vis safety vest and tiny dark sunglasses, holding a velvet-rope VIP clipboard, standing at a smaller nightclub entrance, amber and orange colour palette, cute cartoon illustration style.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCENE 2 -->
+    <div class="scene">
+      <div class="scene-num">
+        <div class="scene-num-big">2</div>
+        <div class="scene-colour-bar colour-red"></div>
+      </div>
+      <div class="scene-body">
+        <div class="scene-header-row">
+          <div class="scene-titles">
+            <div class="scene-room-name">Young Tennis Prodigy — Signatures</div>
+            <div class="scene-policy-name">Policy → <strong>IPS Signature Detection</strong> (ATP)</div>
+            <span class="echo-badge">↻ Echoes GET scene 8</span>
+          </div>
+          <div class="scene-tags">
+            <span class="scene-tag echo">ECHO</span>
+          </div>
+        </div>
+        <div class="scene-content">
+          <div class="scene-image-slot" id="slot-2">
+            <div class="slot-placeholder">
+              <div class="slot-placeholder-icon">🎨</div>
+              <div>Upload image here</div>
+              <div class="image-controls">
+                <label class="image-btn" for="upload-2">CHOOSE FILE</label>
+                <input type="file" id="upload-2" accept="image/*" style="display:none;" onchange="loadImg(this, 2)">
+              </div>
+            </div>
+          </div>
+          <div class="scene-text-block">
+            <div class="scene-narrative">
+              The younger boy is already a <strong>tennis prodigy</strong> — a child star on the junior circuit. Little kids his own age crowd around him asking for his <strong>signature</strong> with red sharpies.
+            </div>
+            <div class="hook-box">
+              <div class="hook-label">HOOK — ECHOES GET SCENE 8</div>
+              Same signature imagery = <strong>IPS Signature Detection</strong>. Pattern matching on the <em>response payload</em>.
+            </div>
+            <div class="prompt-block">
+              <div class="prompt-label"><span>IMAGE PROMPT</span><button class="copy-btn" onclick="copyPrompt(this, 2)">COPY</button></div>
+              <div class="prompt-text" id="prompt-2">A young child tennis prodigy in a junior-size Fortinet t-shirt holding a tiny tennis racket, surrounded by cheering younger kid fans holding tennis balls and small notebooks with red permanent markers, asking for autographs, joyful bright red colour palette, animated movie style.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCENE 3 -->
+    <div class="scene">
+      <div class="scene-num">
+        <div class="scene-num-big">3</div>
+        <div class="scene-colour-bar colour-red"></div>
+      </div>
+      <div class="scene-body">
+        <div class="scene-header-row">
+          <div class="scene-titles">
+            <div class="scene-room-name">The Glowing SCP 22 Book Again</div>
+            <div class="scene-policy-name">Policy → <strong>Suspicious Content Protection / Page Risk</strong> (ATP)</div>
+            <span class="echo-badge">↻ Echoes GET scene 9</span>
+          </div>
+          <div class="scene-tags">
+            <span class="scene-tag echo">ECHO</span>
+          </div>
+        </div>
+        <div class="scene-content">
+          <div class="scene-image-slot" id="slot-3">
+            <div class="slot-placeholder">
+              <div class="slot-placeholder-icon">🎨</div>
+              <div>Upload image here</div>
+              <div class="image-controls">
+                <label class="image-btn" for="upload-3">CHOOSE FILE</label>
+                <input type="file" id="upload-3" accept="image/*" style="display:none;" onchange="loadImg(this, 3)">
+              </div>
+            </div>
+          </div>
+          <div class="scene-text-block">
+            <div class="scene-narrative">
+              One little fan pushes forward with the <strong>same glowing red book</strong> stamped "22 SCP" — same ominous pulsing red light. Checked again on the response content.
+            </div>
+            <div class="hook-box">
+              <div class="hook-label">HOOK — ECHOES GET SCENE 9</div>
+              <strong>SCP = Suspicious Content Protection</strong>. Page Risk score calculated on the full response content.
+            </div>
+            <div class="prompt-block">
+              <div class="prompt-label"><span>IMAGE PROMPT</span><button class="copy-btn" onclick="copyPrompt(this, 3)">COPY</button></div>
+              <div class="prompt-text" id="prompt-3">A young child holding up an ominous leather-bound book with "22 SCP" embossed in gold on the cover, the book glowing with a bright pulsing red aura, smaller and cuter than before, surrounded by slightly blurred child crowd, deep red colour palette, dark fantasy illustration with a childlike twist.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCENE 4 -->
+    <div class="scene">
+      <div class="scene-num">
+        <div class="scene-num-big">4</div>
+        <div class="scene-colour-bar colour-orange"></div>
+      </div>
+      <div class="scene-body">
+        <div class="scene-header-row">
+          <div class="scene-titles">
+            <div class="scene-room-name">Boy Playing Happily in the Sandbox</div>
+            <div class="scene-policy-name">Policy → <strong>Sandbox — known malicious files</strong></div>
+          </div>
+          <div class="scene-tags"><span class="scene-tag">NEW</span></div>
+        </div>
+        <div class="scene-content">
+          <div class="scene-image-slot" id="slot-4">
+            <div class="slot-placeholder">
+              <div class="slot-placeholder-icon">🎨</div>
+              <div>Upload image here</div>
+              <div class="image-controls">
+                <label class="image-btn" for="upload-4">CHOOSE FILE</label>
+                <input type="file" id="upload-4" accept="image/*" style="display:none;" onchange="loadImg(this, 4)">
+              </div>
+            </div>
+          </div>
+          <div class="scene-text-block">
+            <div class="scene-narrative">
+              The younger boy arrives at a <strong>playground sandbox</strong>, drops his backpack, and starts playing happily and freely in the sand.
+            </div>
+            <div class="hook-box">
+              <div class="hook-label">HOOK — NEW</div>
+              <strong>Literal sandbox = Cloud Sandbox</strong>. Fast hash lookup against the Sandbox database. If seen before — caught here in microseconds.
+            </div>
+            <div class="prompt-block">
+              <div class="prompt-label"><span>IMAGE PROMPT</span><button class="copy-btn" onclick="copyPrompt(this, 4)">COPY</button></div>
+              <div class="prompt-text" id="prompt-4">A young boy in a Fortinet t-shirt playing happily and freely in a sunny playground sandbox, building sandcastles, green Bowser-shell backpack beside him, big joyful smile, warm orange and yellow colour palette, cheerful childhood illustration, golden hour lighting.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCENE 5 -->
+    <div class="scene">
+      <div class="scene-num">
+        <div class="scene-num-big">5</div>
+        <div class="scene-colour-bar colour-purple"></div>
+      </div>
+      <div class="scene-body">
+        <div class="scene-header-row">
+          <div class="scene-titles">
+            <div class="scene-room-name">Younger Pat McAfee's Contract</div>
+            <div class="scene-policy-name">Policy → <strong>Malware Protection</strong></div>
+          </div>
+          <div class="scene-tags"><span class="scene-tag">NEW</span></div>
+        </div>
+        <div class="scene-content">
+          <div class="scene-image-slot" id="slot-5">
+            <div class="slot-placeholder">
+              <div class="slot-placeholder-icon">🎨</div>
+              <div>Upload image here</div>
+              <div class="image-controls">
+                <label class="image-btn" for="upload-5">CHOOSE FILE</label>
+                <input type="file" id="upload-5" accept="image/*" style="display:none;" onchange="loadImg(this, 5)">
+              </div>
+            </div>
+          </div>
+          <div class="scene-text-block">
+            <div class="scene-narrative">
+              A <strong>younger Pat McAfee</strong> strolls up to the sandbox holding a rolled-up contract — looking like a college-era Pat, still upbeat.
+            </div>
+            <div class="hook-box">
+              <div class="hook-label">HOOK — NEW</div>
+              Pat <strong>McAfee</strong> = <strong>Malware Protection</strong>. AV + anti-spyware scanning on the file in the response. Dedicated threads for files over 10 MB.
+            </div>
+            <div class="prompt-block">
+              <div class="prompt-label"><span>IMAGE PROMPT</span><button class="copy-btn" onclick="copyPrompt(this, 5)">COPY</button></div>
+              <div class="prompt-text" id="prompt-5">A younger college-age version of NFL podcaster Pat McAfee in athletic wear, holding a rolled-up contract, walking confidently toward a playground sandbox, cheerful friendly expression, purple and warm tones, comic-book illustration style.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCENE 6 -->
+    <div class="scene">
+      <div class="scene-num">
+        <div class="scene-num-big">6</div>
+        <div class="scene-colour-bar colour-purple"></div>
+      </div>
+      <div class="scene-body">
+        <div class="scene-header-row">
+          <div class="scene-titles">
+            <div class="scene-room-name">The Contract = The File</div>
+            <div class="scene-policy-name">Policy → <strong>File Type Control</strong></div>
+          </div>
+          <div class="scene-tags"><span class="scene-tag">NEW</span></div>
+        </div>
+        <div class="scene-content">
+          <div class="scene-image-slot" id="slot-6">
+            <div class="slot-placeholder">
+              <div class="slot-placeholder-icon">🎨</div>
+              <div>Upload image here</div>
+              <div class="image-controls">
+                <label class="image-btn" for="upload-6">CHOOSE FILE</label>
+                <input type="file" id="upload-6" accept="image/*" style="display:none;" onchange="loadImg(this, 6)">
+              </div>
+            </div>
+          </div>
+          <div class="scene-text-block">
+            <div class="scene-narrative">
+              Young Pat unrolls the contract on a tiny picnic bench. The paper has a big official seal at the top — golden <strong>magic bytes</strong> stamped in wax.
+            </div>
+            <div class="hook-box">
+              <div class="hook-label">HOOK — NEW</div>
+              <strong>Contract = File</strong>. Golden seal = <strong>magic bytes</strong>. <strong>File Type Control</strong> uses magic bytes for true file-type detection — can't be fooled by renamed extensions.
+            </div>
+            <div class="prompt-block">
+              <div class="prompt-label"><span>IMAGE PROMPT</span><button class="copy-btn" onclick="copyPrompt(this, 6)">COPY</button></div>
+              <div class="prompt-text" id="prompt-6">A formal contract document unrolled on a tiny wooden picnic bench, with a large golden wax seal at the top stamped with mysterious glowing bytes, younger Pat McAfee examining it carefully, purple and gold colour palette, legal-document illustration style.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCENE 7 -->
+    <div class="scene">
+      <div class="scene-num">
+        <div class="scene-num-big">7</div>
+        <div class="scene-colour-bar colour-orange"></div>
+      </div>
+      <div class="scene-body">
+        <div class="scene-header-row">
+          <div class="scene-titles">
+            <div class="scene-room-name">The Unknown Contract — Confused Boy</div>
+            <div class="scene-policy-name">Policy → <strong>Sandbox — unknown files</strong> (detonation)</div>
+          </div>
+          <div class="scene-tags"><span class="scene-tag">NEW</span></div>
+        </div>
+        <div class="scene-content">
+          <div class="scene-image-slot" id="slot-7">
+            <div class="slot-placeholder">
+              <div class="slot-placeholder-icon">🎨</div>
+              <div>Upload image here</div>
+              <div class="image-controls">
+                <label class="image-btn" for="upload-7">CHOOSE FILE</label>
+                <input type="file" id="upload-7" accept="image/*" style="display:none;" onchange="loadImg(this, 7)">
+              </div>
+            </div>
+          </div>
+          <div class="scene-text-block">
+            <div class="scene-narrative">
+              Pat hands the boy a <strong>different, unfamiliar contract</strong>. The younger boy looks up, completely confused, still in the sandbox holding the unknown paper.
+            </div>
+            <div class="hook-box">
+              <div class="hook-label">HOOK — NEW</div>
+              Unknown contract in the sandbox = <strong>Sandbox detonation for unknown files</strong>. Full behavioural detonation in an isolated VM. Slow out-of-band path.
+            </div>
+            <div class="prompt-block">
+              <div class="prompt-label"><span>IMAGE PROMPT</span><button class="copy-btn" onclick="copyPrompt(this, 7)">COPY</button></div>
+              <div class="prompt-text" id="prompt-7">A young boy in a Fortinet t-shirt sitting in a playground sandbox holding a mysterious unfamiliar contract with a baffled confused expression, question marks floating above his head, younger Pat McAfee standing nearby watching, warm orange and sand-coloured tones, comedic storybook illustration style.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCENE 8 -->
+    <div class="scene">
+      <div class="scene-num">
+        <div class="scene-num-big">8</div>
+        <div class="scene-colour-bar colour-purple"></div>
+      </div>
+      <div class="scene-body">
+        <div class="scene-header-row">
+          <div class="scene-titles">
+            <div class="scene-room-name">Allen Iverson — "NO, Don't Sign That!"</div>
+            <div class="scene-policy-name">Policy → <strong>AI/ML-based Content Categorization</strong></div>
+          </div>
+          <div class="scene-tags"><span class="scene-tag">NEW</span></div>
+        </div>
+        <div class="scene-content">
+          <div class="scene-image-slot" id="slot-8">
+            <div class="slot-placeholder">
+              <div class="slot-placeholder-icon">🎨</div>
+              <div>Upload image here</div>
+              <div class="image-controls">
+                <label class="image-btn" for="upload-8">CHOOSE FILE</label>
+                <input type="file" id="upload-8" accept="image/*" style="display:none;" onchange="loadImg(this, 8)">
+              </div>
+            </div>
+          </div>
+          <div class="scene-text-block">
+            <div class="scene-narrative">
+              Basketball legend <strong>Allen Iverson (A.I.)</strong> bursts onto the scene, pointing at the contract and yelling <em>"NO, young boy — DON'T sign that!"</em> He reads it carefully and assigns it a category: "this is <em>gambling</em> paperwork."
+            </div>
+            <div class="hook-box">
+              <div class="hook-label">HOOK — NEW</div>
+              <strong>A.I. = Allen Iverson = AI/ML</strong>. <strong>AI/ML Content Categorization</strong> assigns a URL category, then <em>loops back into URL Filtering</em>. The only engine that triggers another engine.
+            </div>
+            <div class="prompt-block">
+              <div class="prompt-label"><span>IMAGE PROMPT</span><button class="copy-btn" onclick="copyPrompt(this, 8)">COPY</button></div>
+              <div class="prompt-text" id="prompt-8">Basketball legend Allen Iverson in his classic Philadelphia 76ers jersey and headband, pointing dramatically at a contract with an urgent warning expression, shouting "NO", a young boy nearby looking up startled, purple and cream colour palette, dynamic sports-poster illustration style.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCENE 9 -->
+    <div class="scene">
+      <div class="scene-num">
+        <div class="scene-num-big">9</div>
+        <div class="scene-colour-bar colour-grey"></div>
+      </div>
+      <div class="scene-body">
+        <div class="scene-header-row">
+          <div class="scene-titles">
+            <div class="scene-room-name">Sleepy Boy with a Bottle of Milk</div>
+            <div class="scene-policy-name">Policy → <strong>Bandwidth Control</strong></div>
+            <span class="echo-badge">↻ Echoes GET scene 14</span>
+          </div>
+          <div class="scene-tags">
+            <span class="scene-tag echo">ECHO</span>
+          </div>
+        </div>
+        <div class="scene-content">
+          <div class="scene-image-slot" id="slot-9">
+            <div class="slot-placeholder">
+              <div class="slot-placeholder-icon">🎨</div>
+              <div>Upload image here</div>
+              <div class="image-controls">
+                <label class="image-btn" for="upload-9">CHOOSE FILE</label>
+                <input type="file" id="upload-9" accept="image/*" style="display:none;" onchange="loadImg(this, 9)">
+              </div>
+            </div>
+          </div>
+          <div class="scene-text-block">
+            <div class="scene-narrative">
+              The younger boy finally goes home. He curls up in bed with a <strong>bottle of milk</strong>, eyes drooping shut. Bandwidth spent.
+            </div>
+            <div class="hook-box">
+              <div class="hook-label">HOOK — ECHOES GET SCENE 14</div>
+              Sleepy boy + bottle of milk = <strong>Bandwidth Control</strong>. Final gate on the response. Allocates delivery bandwidth.
+            </div>
+            <div class="prompt-block">
+              <div class="prompt-label"><span>IMAGE PROMPT</span><button class="copy-btn" onclick="copyPrompt(this, 9)">COPY</button></div>
+              <div class="prompt-text" id="prompt-9">A younger boy in Fortinet-themed pyjamas curled up sleepily in a cozy bed, clutching a small baby-style bottle of milk, eyes drooping shut, green Bowser-shell backpack resting beside the bed, soft grey and warm night tones, peaceful bedtime illustration, moonlight through the window.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- SUMMARY -->
+  <div class="section-block" id="section-summary">
+    <div class="section-label">QUICK REFERENCE</div>
+    <h2>The 9 rooms at a glance</h2>
+
+    <table class="summary-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Scene</th>
+          <th>Maps to Policy</th>
+          <th>Notes</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>1</td><td class="scene-col">Younger VIP Snake Guard</td><td>Security Exceptions (allowlist)</td><td><span class="echo-mark">↻ GET #4</span></td></tr>
+        <tr><td>2</td><td class="scene-col">Young Tennis Prodigy — Signatures</td><td>IPS Signature Detection (ATP)</td><td><span class="echo-mark">↻ GET #8</span></td></tr>
+        <tr><td>3</td><td class="scene-col">Glowing SCP 22 Book Again</td><td>Suspicious Content Protection / Page Risk (ATP)</td><td><span class="echo-mark">↻ GET #9</span></td></tr>
+        <tr><td>4</td><td class="scene-col">Boy Playing Happily in Sandbox</td><td>Sandbox — known malicious files (fast)</td><td>New</td></tr>
+        <tr><td>5</td><td class="scene-col">Younger Pat McAfee's Contract</td><td>Malware Protection</td><td>New</td></tr>
+        <tr><td>6</td><td class="scene-col">Contract = The File</td><td>File Type Control</td><td>New</td></tr>
+        <tr><td>7</td><td class="scene-col">Unknown Contract — Confused Boy</td><td>Sandbox — unknown files (detonation, slow)</td><td>New</td></tr>
+        <tr><td>8</td><td class="scene-col">Allen Iverson — "NO, Don't Sign!"</td><td>AI/ML Content Categorization</td><td>New</td></tr>
+        <tr><td>9</td><td class="scene-col">Sleepy Boy with Bottle of Milk</td><td>Bandwidth Control</td><td><span class="echo-mark">↻ GET #14</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+</main>
+
+<footer>
+  <div class="footer-left">ZDTE<span>.</span></div>
+  <div class="footer-right">Zscaler Digital Transformation Engineer · Memory Palace — Response Flow</div>
+</footer>
+
+<script>
+  function navTo(id, el) {
+    const target = document.getElementById(id);
+    if (!target) return;
+    const top = target.getBoundingClientRect().top + window.scrollY - 60;
+    window.scrollTo({ top, behavior: 'smooth' });
+    document.querySelectorAll('nav.section-nav button').forEach(b => b.classList.remove('active'));
+    if (el) el.classList.add('active');
+  }
+
+  function toggleDone(li) {
+    li.classList.toggle('done');
+    updateProgress();
+  }
+
+  function updateProgress() {
+    const items = document.querySelectorAll('#subtopic-list li');
+    const done = document.querySelectorAll('#subtopic-list li.done').length;
+    const pct = items.length ? Math.round((done / items.length) * 100) : 0;
+    const el = document.getElementById('prog-num');
+    if (el) el.innerHTML = pct + '<span style="font-size:18px;color:#7a6a55;">%</span>';
+  }
+
+  function copyPrompt(btn, num) {
+    const text = document.getElementById('prompt-' + num).textContent.trim();
+    navigator.clipboard.writeText(text).then(() => {
+      btn.textContent = 'COPIED';
+      btn.classList.add('copied');
+      setTimeout(() => { btn.textContent = 'COPY'; btn.classList.remove('copied'); }, 2000);
+    }).catch(() => {
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+      btn.textContent = 'COPIED';
+      btn.classList.add('copied');
+      setTimeout(() => { btn.textContent = 'COPY'; btn.classList.remove('copied'); }, 2000);
+    });
+  }
+
+  function loadImg(input, num) {
+    const file = input.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      const slot = document.getElementById('slot-' + num);
+      slot.innerHTML = '<img src="' + e.target.result + '" alt="Scene ' + num + '">';
+    };
+    reader.readAsDataURL(file);
+  }
+</script>
+
+</body>
+</html>

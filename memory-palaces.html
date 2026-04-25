@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ZDTE Study Bites</title>
+<title>ZDTE Memory Palaces</title>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;0,700;1,400&family=Epilogue:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -92,7 +92,7 @@
     font-size: 13px;
     color: var(--ink-muted);
     margin-top: 10px;
-    max-width: 420px;
+    max-width: 440px;
     line-height: 1.7;
   }
 
@@ -136,14 +136,14 @@
   .category-label:first-child { margin-top: 0; }
   .category-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
 
-  .bites-grid {
+  .palaces-grid {
     display: flex;
     flex-direction: column;
     gap: 10px;
     margin-bottom: 8px;
   }
 
-  .bite-card {
+  .palace-card {
     display: flex;
     align-items: center;
     gap: 20px;
@@ -156,45 +156,52 @@
     transition: background 0.15s, border-color 0.15s, transform 0.1s;
   }
 
-  .bite-card:hover {
+  .palace-card:hover {
     background: var(--orange-light);
     border-color: var(--orange-border);
     transform: translateX(3px);
   }
 
-  .bite-icon {
-    width: 44px;
-    height: 44px;
-    border-radius: 12px;
+  .palace-icon {
+    width: 52px;
+    height: 52px;
+    border-radius: 14px;
     background: var(--ink);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 18px;
+    font-size: 22px;
     flex-shrink: 0;
   }
 
-  .bite-body { flex: 1; }
+  .palace-body { flex: 1; }
 
-  .bite-title {
+  .palace-title {
     font-family: 'Fraunces', serif;
-    font-size: 16px;
+    font-size: 17px;
     font-weight: 600;
     color: var(--ink);
-    margin-bottom: 3px;
+    margin-bottom: 4px;
     line-height: 1.3;
   }
 
-  .bite-desc {
+  .palace-desc {
     font-size: 12px;
     color: var(--ink-muted);
     line-height: 1.5;
   }
 
-  .bite-tags {
+  .palace-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    align-items: flex-end;
+    flex-shrink: 0;
+  }
+
+  .palace-tags {
     display: flex;
     gap: 6px;
-    flex-shrink: 0;
     flex-wrap: wrap;
     justify-content: flex-end;
   }
@@ -208,20 +215,45 @@
     white-space: nowrap;
   }
   .tag-zia    { background: var(--blue-light);   color: var(--blue);   border-color: var(--blue-border); }
+  .tag-zdx    { background: var(--purple-light); color: var(--purple); border-color: var(--purple-border); }
   .tag-arch   { background: var(--amber-light);  color: #a07c00;       border-color: #ffe680; }
-  .tag-zpa    { background: var(--green-light);  color: var(--green);  border-color: var(--green-border); }
-  .tag-bite   { background: var(--purple-light); color: var(--purple); border-color: var(--purple-border); }
-  .tag-dlp    { background: var(--red-light);    color: var(--red);    border-color: var(--red-border); }
+  .tag-palace { background: var(--purple-light); color: var(--purple); border-color: var(--purple-border); }
 
-  .bite-arrow {
+  .palace-room-count {
+    font-size: 10px;
+    color: var(--ink-muted);
+    letter-spacing: 0.06em;
+  }
+
+  .palace-arrow {
     font-size: 16px;
     color: var(--orange);
     flex-shrink: 0;
     opacity: 0.5;
     transition: opacity 0.15s;
   }
+  .palace-card:hover .palace-arrow { opacity: 1; }
 
-  .bite-card:hover .bite-arrow { opacity: 1; }
+  /* What is a memory palace card */
+  .explainer {
+    background: var(--purple-light);
+    border: 1px solid var(--purple-border);
+    border-radius: 14px;
+    padding: 22px 26px;
+    margin-bottom: 40px;
+  }
+  .explainer h2 {
+    font-family: 'Fraunces', serif;
+    font-size: 18px;
+    color: var(--purple);
+    margin-bottom: 10px;
+  }
+  .explainer p {
+    font-size: 13px;
+    color: #3a1f8a;
+    line-height: 1.7;
+  }
+  .explainer p + p { margin-top: 8px; }
 
   footer {
     padding: 20px 60px;
@@ -239,17 +271,15 @@
     header { padding: 20px 16px 16px; flex-direction: column; gap: 16px; }
     .main { padding: 24px 16px 48px; }
     h1 { font-size: 32px; }
-    .header-sub { font-size: 12px; }
-    .bite-card { flex-wrap: wrap; gap: 12px; padding: 14px 16px; }
-    .bite-tags { justify-content: flex-start; }
-    .bite-title { font-size: 14px; }
+    .palace-card { flex-wrap: wrap; gap: 12px; padding: 14px 16px; }
+    .palace-meta { align-items: flex-start; }
+    .palace-tags { justify-content: flex-start; }
     footer { padding: 16px; flex-direction: column; gap: 8px; text-align: center; }
   }
 
   @media (max-width: 480px) {
     h1 { font-size: 26px; }
-    .bite-icon { width: 36px; height: 36px; font-size: 15px; }
-    .category-label { font-size: 9px; }
+    .palace-icon { width: 42px; height: 42px; font-size: 18px; }
   }
 </style>
 </head>
@@ -260,103 +290,114 @@
     <div class="breadcrumb">
       <a href="index.html">Study Plan</a>
       <span class="breadcrumb-sep">›</span>
-      <span>Study Bites</span>
+      <span>Memory Palaces</span>
     </div>
     <div class="page-badge">
       <span class="page-badge-dot"></span>
-      ZDTE — STUDY BITES
+      ZDTE — MEMORY PALACES
     </div>
-    <h1>Study <em>Bites</em></h1>
-    <p class="header-sub">Focused topic deep-dives. Each bite covers one concept end-to-end — pipeline order, mental models, exam traps, and quick reference.</p>
+    <h1>Memory <em>Palaces</em></h1>
+    <p class="header-sub">Narrative-driven deep memory. Each palace locks a complex topic to vivid scenes — walk through it once, recall it for life. Your own images make each room unforgettable.</p>
   </div>
   <div class="header-right">
     <div class="count-card">
       <div class="big">4</div>
-      <div class="lbl">BITES</div>
+      <div class="lbl">PALACES</div>
     </div>
   </div>
 </header>
 
 <div class="main">
 
+  <div class="explainer">
+    <h2>How memory palaces work</h2>
+    <p>Each palace assigns one concept per room — a vivid scene anchors the fact. You generate an image for each room, upload it, and review the palace as a visual story. The narrative sticks where bullet points slip away.</p>
+    <p>Click any palace to open it. Expand the collapsible image prompts under each room to copy a prompt for your image generator, then upload your result.</p>
+  </div>
+
   <div class="category-label">ZIA — POLICY FLOW</div>
-  <div class="bites-grid">
+  <div class="palaces-grid">
 
-    <a href="study-bites/http-get-response-order.html" class="bite-card">
-      <div class="bite-icon">⇄</div>
-      <div class="bite-body">
-        <div class="bite-title">⇄ HTTP GET & Response — Policy Enforcement Order</div>
-        <div class="bite-desc">Two-phase model · GET 10-step order · Response 9-step order · SSL/CONNECT gate · ATP is distributed</div>
+    <a href="memory-palaces/memory-palace-get-post.html" class="palace-card">
+      <div class="palace-icon">🧒</div>
+      <div class="palace-body">
+        <div class="palace-title">The Boy's 14-Stage Journey — GET + POST</div>
+        <div class="palace-desc">Santa's naughty list → exhausted boy · 4 dark POST-only scenes · IPS, Malware, DLP, File Type anchored to vivid characters</div>
       </div>
-      <div class="bite-tags">
-        <span class="tag tag-zia">ZIA</span>
-        <span class="tag tag-arch">Architecture</span>
+      <div class="palace-meta">
+        <div class="palace-tags">
+          <span class="tag tag-zia">ZIA</span>
+          <span class="tag tag-palace">14 scenes</span>
+        </div>
+        <div class="palace-room-count">Policy enforcement order</div>
       </div>
-      <div class="bite-arrow">→</div>
+      <div class="palace-arrow">→</div>
+    </a>
+
+    <a href="memory-palaces/memory-palace-response-flow.html" class="palace-card">
+      <div class="palace-icon">🏠</div>
+      <div class="palace-body">
+        <div class="palace-title">The Younger Boy's 9-Stage Homecoming — Response Flow</div>
+        <div class="palace-desc">VIP snake echo → Allen Iverson AI/ML → sleepy boy · 4 echo scenes · 5 new response-only scenes · Sandbox detonation</div>
+      </div>
+      <div class="palace-meta">
+        <div class="palace-tags">
+          <span class="tag tag-zia">ZIA</span>
+          <span class="tag tag-palace">9 scenes</span>
+        </div>
+        <div class="palace-room-count">Response policy flow</div>
+      </div>
+      <div class="palace-arrow">→</div>
     </a>
 
   </div>
 
-  <div class="category-label">ZIA — PIPELINE SCENARIOS</div>
-  <div class="bites-grid">
+  <div class="category-label">ZIA — DATA PROTECTION</div>
+  <div class="palaces-grid">
 
-    <a href="study-bites/pipeline-scenarios.html" class="bite-card">
-      <div class="bite-icon">⚖</div>
-      <div class="bite-body">
-        <div class="bite-title">⚖ 3 Pipeline Outcomes, Side by Side</div>
-        <div class="bite-desc">Gambling blocked at URL Filtering · Cascading inverts CAC allow · Unknown file survives inline → Sandbox detonation</div>
+    <a href="memory-palaces/memory-palace-dlp.html" class="palace-card">
+      <div class="palace-icon">🏛️</div>
+      <div class="palace-body">
+        <div class="palace-title">The DLP Data Mansion</div>
+        <div class="palace-desc">Front door guard → cloud auditor → building inspector → employee's desk · 5 rooms · Inline vs API vs DSPM vs Endpoint · blur-to-reveal exam scenarios</div>
       </div>
-      <div class="bite-tags">
-        <span class="tag tag-zia">ZIA</span>
-        <span class="tag tag-arch">Side-by-side</span>
+      <div class="palace-meta">
+        <div class="palace-tags">
+          <span class="tag tag-zia">ZIA</span>
+          <span class="tag tag-palace">5 rooms</span>
+        </div>
+        <div class="palace-room-count">DLP methods compared</div>
       </div>
-      <div class="bite-arrow">→</div>
+      <div class="palace-arrow">→</div>
     </a>
 
   </div>
 
-  <div class="category-label">ZIA — CYBERTHREAT PROTECTION</div>
-  <div class="bites-grid">
+  <div class="category-label">ZDX — DIGITAL EXPERIENCE</div>
+  <div class="palaces-grid">
 
-    <a href="study-bites/studybite-deception.html" class="bite-card">
-      <div class="bite-icon">🕵</div>
-      <div class="bite-body">
-        <div class="bite-title">🕵 Zscaler Deception</div>
-        <div class="bite-desc">Zero false positives · Lures on real endpoints · Decoys in cloud · DNS glue · Post-breach lateral movement detection</div>
+    <a href="memory-palaces/memory-palace-zdx.html" class="palace-card">
+      <div class="palace-icon">🏥</div>
+      <div class="palace-body">
+        <div class="palace-title">The ZDX Hospital</div>
+        <div class="palace-desc">8 rooms · Score Desk (PFT + Avail) · Triage (worst app) · Lab (Web/Cloud Path/Autosense probes) · Deep Tracing · Alarm Tower · Inventory · RBAC · AI Wing</div>
       </div>
-      <div class="bite-tags">
-        <span class="tag tag-zia">ZIA</span>
-        <span class="tag tag-bite">Study Bite</span>
+      <div class="palace-meta">
+        <div class="palace-tags">
+          <span class="tag tag-zdx">ZDX</span>
+          <span class="tag tag-palace">8 rooms</span>
+        </div>
+        <div class="palace-room-count">Blueprint: 8%</div>
       </div>
-      <div class="bite-arrow">→</div>
+      <div class="palace-arrow">→</div>
     </a>
 
   </div>
-
-  <div class="category-label">ZIA — CONNECTIVITY</div>
-  <div class="bites-grid">
-
-    <a href="study-bites/studybite-zcc-gre-tunnel.html" class="bite-card">
-      <div class="bite-icon">⚡</div>
-      <div class="bite-body">
-        <div class="bite-title">⚡ ZCC + GRE Coexistence on Trusted Networks</div>
-        <div class="bite-desc">Tunnel-in-tunnel problem · DTLS dropped by GRE path · Trusted Network Detection · No Tunnel mode</div>
-      </div>
-      <div class="bite-tags">
-        <span class="tag tag-zia">ZIA</span>
-        <span class="tag tag-zpa">ZPA</span>
-      </div>
-      <div class="bite-arrow">→</div>
-    </a>
-
-  </div>
-
 
 </div>
 
-
 <footer>
-  <div class="footer-left">ZDTE <span>Study Bites</span></div>
+  <div class="footer-left">ZDTE <span>Memory Palaces</span></div>
   <div class="footer-right">Zscaler Digital Transformation Engineer · Study Plan 2026</div>
 </footer>
 
