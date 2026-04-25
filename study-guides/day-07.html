@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ZDTE Study Guide — Day 7: Risk Management &amp; ZDX Part 1</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;0,700;1,400&family=Epilogue:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../study-guide.css">
+</head>
+<body>
+
+<header>
+  <div class="header-left">
+    <div class="breadcrumb">
+      <a href="../index.html">Study Plan</a>
+      <span class="breadcrumb-sep">›</span>
+      <a href="../study-guides.html">Study Guides</a>
+      <span class="breadcrumb-sep">›</span>
+      <span>Day 7 — Risk Management &amp; ZDX Part 1</span>
+    </div>
+    <div class="day-badge">
+      <span class="day-badge-dot"></span>
+      DAY 07 — SATURDAY, 25 APRIL 2026
+    </div>
+    <h1>Risk Management<br><em>&amp; ZDX Part 1</em></h1>
+    <div class="header-meta-row">
+      <span class="tag tag-zia">ZIA</span>
+      <span class="tag tag-zdx">ZDX</span>
+      <span class="tag tag-weight">Blueprint: 4% + 8%</span>
+    </div>
+  </div>
+  <div class="header-right">
+    <div class="progress-card">
+      <div class="big" id="prog-num">0<span style="font-size:18px;color:#7a6a55;">%</span></div>
+      <div class="lbl">COMPLETE</div>
+    </div>
+  </div>
+</header>
+
+<nav class="section-nav">
+  <button class="nav-tab active" onclick="navTo('section-risk360', this)">Risk360</button>
+  <button class="nav-tab" onclick="navTo('section-uvm', this)">UVM &amp; Proactive Tools</button>
+  <button class="nav-tab" onclick="navTo('section-zdx-scores', this)">ZDX Scores</button>
+  <button class="nav-tab" onclick="navTo('section-probes', this)">Probes &amp; Diagnostics</button>
+  <button class="nav-tab" onclick="navTo('section-alerts', this)">Alerts &amp; Data Explorer</button>
+</nav>
+
+<main>
+  <div class="main-content">
+
+    <!-- ══ RISK360 ══ -->
+    <div class="section-block" id="section-risk360">
+      <div class="section-label">RISK MANAGEMENT</div>
+      <h2>Risk360 — Holistic Risk Scoring</h2>
+      <p>Risk360 solves a structural problem in enterprise security: every security tool produces its own risk score in its own format, with no common language between them. An attacker that hops across endpoint → identity → network → app → data is fragmented across multiple dashboards, and no single tool sees the full picture. Risk360 unifies all of this into one score, on one plane, with one language.</p>
+
+      <div class="key-concept">
+        <strong>The one-liner:</strong> Risk360 gives you a single unified risk score pulled from Zscaler telemetry, config posture, and third-party signals — so you can answer "how risky are we right now?" with evidence, not gut feel.
+      </div>
+
+      <h3>Scoring Direction</h3>
+      <div class="callout callout-warn">
+        <div class="callout-header"><div class="callout-icon">!</div> WATCH OUT</div>
+        <div class="callout-body">
+          <strong>High score = MORE risk = WORSE.</strong> Scale runs 0 (low risk) → 100 (critical). This is the <em>opposite</em> of ZDX scores. Dashboard colour-codes: green → yellow → orange → red.
+        </div>
+      </div>
+
+      <h3>The Four Risk Factors — Attack Chain Order</h3>
+      <table class="compare-table">
+        <thead>
+          <tr>
+            <th>Factor</th>
+            <th>Question it answers</th>
+            <th>Attack chain stage</th>
+            <th>Key Zscaler controls</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Attack Surface</strong></td>
+            <td>"What can an attacker see and target?"</td>
+            <td>Before the attack</td>
+            <td>ZPA (inside-out), EASM, Tenant Restrictions</td>
+          </tr>
+          <tr>
+            <td><strong>Compromise</strong></td>
+            <td>"How likely is initial foothold?"</td>
+            <td>Getting in</td>
+            <td>URL filtering, ATP, Sandbox, Browser Isolation</td>
+          </tr>
+          <tr>
+            <td><strong>Lateral Propagation</strong></td>
+            <td>"Once inside, how far can they spread?"</td>
+            <td>Moving around</td>
+            <td>ZPA segmentation, Deception, ITDR Posture, CASB</td>
+          </tr>
+          <tr>
+            <td><strong>Data Loss</strong></td>
+            <td>"What can they steal or exfiltrate?"</td>
+            <td>Taking the prize</td>
+            <td>Inline DLP, CASB API DLP, Endpoint DLP</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="callout callout-analogy">
+        <div class="callout-header"><div class="callout-icon">⟳</div> ANALOGY</div>
+        <div class="callout-body">
+          <strong>Fever thermometer, not credit score.</strong> A high reading means something is wrong. The score goes down as the organisation gets healthier — not up.
+        </div>
+      </div>
+
+      <h3>Data Sources</h3>
+      <p>Risk360 pulls from three buckets: <strong>Zscaler inline telemetry</strong> (ZIA/ZPA logs, ZCC posture, ZDX scores), <strong>Zscaler config posture</strong> (how well your own tenant is configured — e.g., SSL inspection coverage), and <strong>third-party integrations</strong> (IdP, EDR, MDM, vulnerability scanners). Config posture is the often-overlooked bucket — Risk360 scores your own tenant hygiene, not just what's happening in traffic.</p>
+
+      <h3>Outputs Beyond the Score</h3>
+      <ul class="content-list">
+        <li><strong>Remediation recommendations</strong> — ranked by score impact vs. effort, with deep-links into the admin console to fix them</li>
+        <li><strong>Financial exposure quantification</strong> — estimated $ cost of a breach based on industry, size, and current risk factors. The board-ready number.</li>
+        <li><strong>Board-ready reporting</strong> — one-click executive PDF: score, trend, top risks, top recommendations, financial exposure</li>
+      </ul>
+    </div>
+
+    <!-- ══ UVM & PROACTIVE TOOLS ══ -->
+    <div class="section-block" id="section-uvm">
+      <div class="section-label">PROACTIVE RISK TOOLS</div>
+      <h2>UVM &amp; Proactive Risk Capabilities</h2>
+
+      <h3>Unified Vulnerability Management (UVM)</h3>
+      <p>CVSS tells you how bad a vulnerability theoretically is. UVM tells you what actually matters in your environment. It ingests vulnerability data from multiple scanners and enriches each finding with Zscaler-native context: exposure, reachability, exploitability, business impact, and compensating controls. The result is a single prioritised list of what to fix first — not a raw CVE dump.</p>
+
+      <div class="key-concept">
+        <strong>Zscaler's unique edge:</strong> Because ZPA knows which apps are published and which users are entitled, UVM can compute actual attack paths to vulnerabilities — not just theoretical ones. A CVSS 9.8 on an app only reachable via ZPA is a very different risk than one exposed directly to the internet.
+      </div>
+
+      <div class="callout callout-analogy">
+        <div class="callout-header"><div class="callout-icon">⟳</div> ANALOGY</div>
+        <div class="callout-body">
+          UVM is the <strong>ER triage nurse</strong>. CVSS tells you who's bleeding; UVM tells you who to treat first based on severity, who's already stabilised (compensating controls), and who's about to walk out the door (active exploitation).
+        </div>
+      </div>
+
+      <h3>The Four Proactive Risk Capabilities</h3>
+      <table class="compare-table">
+        <thead>
+          <tr>
+            <th>Capability</th>
+            <th>Primary Risk360 Factor</th>
+            <th>What it does</th>
+            <th>Mental model</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Deception</strong></td>
+            <td>Lateral Propagation</td>
+            <td>Plants fake assets (decoy servers, credentials, files). Any interaction = confirmed attacker. Zero false positives.</td>
+            <td>Silent tripwire in a dark room</td>
+          </tr>
+          <tr>
+            <td><strong>ITDR Posture</strong></td>
+            <td>Lateral Propagation (identity)</td>
+            <td>Continuously scans IdP (AD/Entra/Okta) for misconfigured identity attack paths — unconstrained delegation, shadow admins, stale accounts, priv-esc routes.</td>
+            <td>BloodHound running 24/7 against your own directory</td>
+          </tr>
+          <tr>
+            <td><strong>EASM</strong></td>
+            <td>Attack Surface</td>
+            <td>Outside-in scan of the public internet for anything with your organisation's name on it — shadow IT, forgotten assets, exposed subdomains, leaked credentials.</td>
+            <td>Googling your company as an attacker</td>
+          </tr>
+          <tr>
+            <td><strong>Breach Predictor</strong></td>
+            <td>All four (forward-looking)</td>
+            <td>ML models pattern-match your current telemetry against known attack progressions to forecast likely breach scenarios and predicted attack paths.</td>
+            <td>Weather forecast for cyber attacks</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="callout callout-note">
+        <div class="callout-header"><div class="callout-icon">★</div> MENTAL NOTE</div>
+        <div class="callout-body">
+          <strong>Deception vs ITDR Posture both reduce Lateral Propagation</strong> — but via different vectors. Deception catches network/endpoint exploration (attacker moving between systems). ITDR Posture catches identity-based privilege escalation (attacker moving from normal user to admin via misconfigured AD). Two lenses on the same kill-chain stage.
+        </div>
+      </div>
+
+      <div class="callout callout-warn">
+        <div class="callout-header"><div class="callout-icon">!</div> WATCH OUT — ITDR POSTURE vs ITDR DETECTION</div>
+        <div class="callout-body">
+          <strong>ITDR Posture</strong> = proactive — scans IdP config for weakness before any attack. <strong>ITDR Detection</strong> = reactive — behavioural monitoring that catches attacks in progress. If the question is about "misconfiguration" or "attack paths in AD" → Posture. If it's about "anomalous behaviour" or "real-time alerts" → Detection.
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ ZDX SCORES ══ -->
+    <div class="section-block" id="section-zdx-scores">
+      <div class="section-label">ZDX — DIGITAL EXPERIENCE</div>
+      <h2>ZDX Scores — Device, Network, Application</h2>
+
+      <p>ZDX solves the "user complains about app slowness" problem. In a traditional environment, IT has no visibility into the user's last-mile (home WiFi, ISP path) and no single source of truth for the full user-to-app journey. ZDX piggybacks on ZCC — already deployed for traffic forwarding — to continuously collect telemetry and probe business apps from the endpoint, with zero additional agent deployment.</p>
+
+      <div class="callout callout-warn">
+        <div class="callout-header"><div class="callout-icon">!</div> SCORING DIRECTION — OPPOSITE OF RISK360</div>
+        <div class="callout-body">
+          <strong>ZDX Score: HIGH = GOOD. LOW = BAD.</strong> A score of 90 = excellent experience. A score of 30 = terrible experience. Don't confuse with Risk360 (high = bad).
+        </div>
+      </div>
+
+      <h3>The Three Sub-Scores</h3>
+      <table class="compare-table">
+        <thead>
+          <tr>
+            <th>Score</th>
+            <th>Layer</th>
+            <th>What it measures</th>
+            <th>Low score means…</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Device Score</strong></td>
+            <td>Endpoint</td>
+            <td>CPU %, memory utilisation, disk IO, battery, OS version, top processes</td>
+            <td>The laptop is the bottleneck — fix the machine</td>
+          </tr>
+          <tr>
+            <td><strong>Network Score</strong></td>
+            <td>Path (WiFi → ISP → internet → Zscaler edge → app edge)</td>
+            <td>Latency, jitter, packet loss, throughput — per hop via traceroute</td>
+            <td>A specific hop on the path is degraded — drill in to find which</td>
+          </tr>
+          <tr>
+            <td><strong>Application Score</strong></td>
+            <td>App / SaaS</td>
+            <td>DNS resolution time, server response time, page fetch time, HTTP availability</td>
+            <td>The app itself is slow — escalate to the SaaS vendor</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="key-concept">
+        <strong>The triage flow:</strong> Device Score low → fix the laptop. Network Score low → drill into hops (WiFi? ISP? Zscaler? App edge?). Application Score low → the SaaS is having a bad day, escalate with evidence.
+      </div>
+
+      <div class="callout callout-analogy">
+        <div class="callout-header"><div class="callout-icon">⟳</div> ANALOGY</div>
+        <div class="callout-body">
+          <strong>Fitness tracker for digital experience.</strong> ZCC is the watch already on the user's wrist. ZDX turns on the heart-rate sensor and GPS. The three sub-scores are like cardiovascular health (device), route quality (network), and destination quality (app).
+        </div>
+      </div>
+
+      <h3>The Four Classic Network Metrics</h3>
+      <ul class="content-list">
+        <li><strong>Latency</strong> — round-trip time (RTT). High latency = laggy feel, especially for real-time apps (Zoom, RDP)</li>
+        <li><strong>Jitter</strong> — variation in latency between packets. High jitter = choppy voice/video even when average latency looks fine</li>
+        <li><strong>Packet Loss</strong> — % of packets that don't arrive. Causes retransmissions → slowdowns, dropped audio, frozen video</li>
+        <li><strong>Throughput / Bandwidth</strong> — data capacity of the path. Low throughput = slow file transfers and page loads</li>
+      </ul>
+    </div>
+
+    <!-- ══ PROBES & DIAGNOSTICS ══ -->
+    <div class="section-block" id="section-probes">
+      <div class="section-label">ZDX CONFIGURATION</div>
+      <h2>Configuring Probes and Diagnostics</h2>
+
+      <p>ZDX monitoring is built around three configuration decisions for each app you want to monitor: <strong>what</strong> (the Application target), <strong>how</strong> (the Probe type and frequency), and <strong>who</strong> (the monitored users or locations).</p>
+
+      <h3>Probe Types</h3>
+      <table class="compare-table">
+        <thead>
+          <tr>
+            <th>Probe Type</th>
+            <th>Protocol</th>
+            <th>What it measures</th>
+            <th>Feeds</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>ICMP / Ping Probe</strong></td>
+            <td>ICMP</td>
+            <td>Round-trip latency and packet loss to the target</td>
+            <td>Network Score</td>
+          </tr>
+          <tr>
+            <td><strong>Traceroute Probe</strong></td>
+            <td>ICMP / UDP</td>
+            <td>Per-hop path mapping with latency and loss at each hop</td>
+            <td>Network Score (per-hop)</td>
+          </tr>
+          <tr>
+            <td><strong>Web Probe</strong></td>
+            <td>HTTP/HTTPS</td>
+            <td>DNS resolution time, server response time, page fetch time, HTTP availability</td>
+            <td>Application Score</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Deep Trace — On-Demand Diagnostics</h3>
+
+      <div class="callout callout-tip">
+        <div class="callout-header"><div class="callout-icon">→</div> EXAM TIP — KNOW THIS DISTINCTION</div>
+        <div class="callout-body">
+          <strong>Synthetic Probes</strong> = continuous background measurement → baseline, trend, alerting. <strong>Deep Trace</strong> = on-demand, admin-triggered, per-user + per-app → live troubleshooting when a user has an issue right now. If an exam scenario describes a user with a live active problem, the answer is Deep Trace — not "check the dashboard."
+        </div>
+      </div>
+
+      <table class="compare-table">
+        <thead>
+          <tr>
+            <th></th>
+            <th>Synthetic Probes</th>
+            <th>Deep Trace</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>When</strong></td>
+            <td>Continuous, scheduled</td>
+            <td>On-demand, admin-triggered</td>
+          </tr>
+          <tr>
+            <td><strong>Scope</strong></td>
+            <td>All monitored users</td>
+            <td>Specific user + specific app</td>
+          </tr>
+          <tr>
+            <td><strong>Purpose</strong></td>
+            <td>Baseline, trend, alerting</td>
+            <td>Active troubleshooting of live issue</td>
+          </tr>
+          <tr>
+            <td><strong>Output</strong></td>
+            <td>Score history charts</td>
+            <td>Full per-hop diagnostic report at the moment of the issue</td>
+          </tr>
+          <tr>
+            <td><strong>Analogy</strong></td>
+            <td>Fitness tracker running 24/7</td>
+            <td>Doctor running a full blood panel right now</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ══ ALERTS & DATA EXPLORER ══ -->
+    <div class="section-block" id="section-alerts">
+      <div class="section-label">ZDX ANALYTICS</div>
+      <h2>Alerts and Data Explorer</h2>
+
+      <h3>Alerts</h3>
+      <table class="compare-table">
+        <thead>
+          <tr>
+            <th>Alert Field</th>
+            <th>What you configure</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Application</strong></td>
+            <td>Which app to watch (e.g., Salesforce, Zoom, M365)</td>
+          </tr>
+          <tr>
+            <td><strong>Metric / Score</strong></td>
+            <td>ZDX Score, Device Score, Network Score, App Score, or a specific probe metric</td>
+          </tr>
+          <tr>
+            <td><strong>Threshold</strong></td>
+            <td>Score level that triggers the alert (e.g., ZDX Score drops below 40)</td>
+          </tr>
+          <tr>
+            <td><strong>Affected Users</strong></td>
+            <td>Minimum number or % of users impacted before firing — prevents noise from individual issues</td>
+          </tr>
+          <tr>
+            <td><strong>Duration</strong></td>
+            <td>How long condition must persist before alert fires — avoids momentary blips</td>
+          </tr>
+          <tr>
+            <td><strong>Scope</strong></td>
+            <td>Can be scoped to specific location or department — e.g., APAC users only</td>
+          </tr>
+          <tr>
+            <td><strong>Notification</strong></td>
+            <td>Email, webhook, integration</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="callout callout-analogy">
+        <div class="callout-header"><div class="callout-icon">⟳</div> ANALOGY</div>
+        <div class="callout-body">
+          ZDX Alerts are like a <strong>flight delay notification system</strong>. You don't get pinged every time one passenger's seat is uncomfortable. You get pinged when the whole flight is delayed — a systemic problem affecting many people simultaneously. The "affected users" threshold is the key design decision between signal and noise.
+        </div>
+      </div>
+
+      <h3>Data Explorer</h3>
+      <table class="compare-table">
+        <thead>
+          <tr>
+            <th></th>
+            <th>ZDX Dashboard</th>
+            <th>Data Explorer</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Time horizon</strong></td>
+            <td>Real-time / recent</td>
+            <td>Historical — days, weeks, months</td>
+          </tr>
+          <tr>
+            <td><strong>Use case</strong></td>
+            <td>Monitoring, alerting, live triage</td>
+            <td>Trend analysis, reporting, capacity planning</td>
+          </tr>
+          <tr>
+            <td><strong>Audience</strong></td>
+            <td>IT ops / helpdesk</td>
+            <td>IT leadership, network architects</td>
+          </tr>
+          <tr>
+            <td><strong>Example questions</strong></td>
+            <td>"Is Zoom slow right now for London users?"</td>
+            <td>"Which office has had the worst ZDX scores over the last 90 days?"</td>
+          </tr>
+          <tr>
+            <td><strong>Analogy</strong></td>
+            <td>Cockpit speedometer</td>
+            <td>Flight recorder / fuel economy report</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div><!-- end .main-content -->
+
+  <div class="sidebar">
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">SUBTOPICS — TICK WHEN DONE</div>
+      <ul class="subtopic-list" id="subtopic-list">
+        <li onclick="toggleDone(this)"><div class="subtopic-check"></div><span>Risk360 — holistic risk scoring</span></li>
+        <li onclick="toggleDone(this)"><div class="subtopic-check"></div><span>Unified Vulnerability Management</span></li>
+        <li onclick="toggleDone(this)"><div class="subtopic-check"></div><span>Deception, ITDR Posture, EASM, Breach Predictor</span></li>
+        <li onclick="toggleDone(this)"><div class="subtopic-check"></div><span>ZDX metrics — Device, App, Network scores</span></li>
+        <li onclick="toggleDone(this)"><div class="subtopic-check"></div><span>Configuring Probes and Diagnostics</span></li>
+        <li onclick="toggleDone(this)"><div class="subtopic-check"></div><span>Configuring Alerts and Data Explorer</span></li>
+      </ul>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">QUICK REFERENCE</div>
+      <div class="quick-ref">
+        <div class="quick-ref-term">RISK360 SCORE DIRECTION</div>
+        <div class="quick-ref-def">High = more risk = WORSE. Fever thermometer. 0 (safe) → 100 (critical).</div>
+      </div>
+      <div class="quick-ref">
+        <div class="quick-ref-term">ZDX SCORE DIRECTION</div>
+        <div class="quick-ref-def">High = good experience = BETTER. Opposite of Risk360. Don't mix them up.</div>
+      </div>
+      <div class="quick-ref">
+        <div class="quick-ref-term">RISK360 FOUR FACTORS</div>
+        <div class="quick-ref-def">Attack Surface → Compromise → Lateral Propagation → Data Loss. Maps to the kill chain in order.</div>
+      </div>
+      <div class="quick-ref">
+        <div class="quick-ref-term">ZDX THREE SCORES</div>
+        <div class="quick-ref-def">Device (endpoint health) → Network (per-hop path) → Application (server responsiveness).</div>
+      </div>
+      <div class="quick-ref">
+        <div class="quick-ref-term">DEEP TRACE</div>
+        <div class="quick-ref-def">On-demand, admin-triggered, per-user diagnostic. Use when a user has a live active issue — not for trend analysis.</div>
+      </div>
+      <div class="quick-ref">
+        <div class="quick-ref-term">4 NETWORK METRICS</div>
+        <div class="quick-ref-def">Latency · Jitter · Packet Loss · Throughput. These feed the ZDX Network Score.</div>
+      </div>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">MY NOTES</div>
+      <div class="sidebar-note">Risk360 = diagnostic (where am I now). Breach Predictor = prognostic (where am I heading). Same data, different question.</div>
+      <div class="sidebar-note">Deception and ITDR Posture both target Lateral Propagation — but Deception catches network movement, ITDR catches identity-based privilege escalation.</div>
+      <div class="sidebar-note">ZCC is already on the endpoint for ZIA/ZPA — ZDX just turns on the telemetry sensors. Zero extra agent deployment.</div>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">RELATED DAYS</div>
+      <ul class="subtopic-list">
+        <li style="cursor:default;">
+          <div style="width:14px;height:14px;background:var(--orange-light);border:1px solid var(--orange-border);border-radius:3px;flex-shrink:0;"></div>
+          <span>Day 05 — Cyberthreat Protection (ITDR Detection)</span>
+        </li>
+        <li style="cursor:default;">
+          <div style="width:14px;height:14px;background:var(--orange-light);border:1px solid var(--orange-border);border-radius:3px;flex-shrink:0;"></div>
+          <span>Day 08 — ZDX Part 2 (RBAC, Dashboard, Reporting)</span>
+        </li>
+        <li style="cursor:default;">
+          <div style="width:14px;height:14px;background:var(--orange-light);border:1px solid var(--orange-border);border-radius:3px;flex-shrink:0;"></div>
+          <span>Day 06 — Data Protection (DLP feeds Data Loss factor)</span>
+        </li>
+      </ul>
+    </div>
+
+  </div><!-- end .sidebar -->
+
+</main>
+
+<footer>
+  <div class="footer-left">ZDTE<span>.</span></div>
+  <div class="footer-right">Zscaler Digital Transformation Engineer · Day 07 Study Guide</div>
+</footer>
+
+<script>
+  function navTo(id, el) {
+    const target = document.getElementById(id);
+    if (!target) return;
+    const top = target.getBoundingClientRect().top + window.scrollY - 60;
+    window.scrollTo({ top, behavior: 'smooth' });
+    document.querySelectorAll('nav.section-nav button').forEach(b => b.classList.remove('active'));
+    if (el) el.classList.add('active');
+  }
+
+  function toggleDone(li) {
+    li.classList.toggle('done');
+    updateProgress();
+  }
+
+  function updateProgress() {
+    const items = document.querySelectorAll('#subtopic-list li');
+    const done  = document.querySelectorAll('#subtopic-list li.done');
+    const pct   = items.length ? Math.round((done.length / items.length) * 100) : 0;
+    const el    = document.getElementById('prog-num');
+    if (el) el.innerHTML = pct + '<span style="font-size:18px;color:#7a6a55;">%</span>';
+  }
+</script>
+
+</body>
+</html>

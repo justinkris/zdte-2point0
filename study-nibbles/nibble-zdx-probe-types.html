@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ZDTE Study Nibble — ZDX Probe Types &amp; What They Feed</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;0,700;1,400&family=Epilogue:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../nibble.css">
+</head>
+<body>
+
+<header>
+  <div class="breadcrumb">
+    <a href="../index.html">Study Plan</a>
+    <span class="breadcrumb-sep">›</span>
+    <a href="../study-nibbles.html">Study Nibbles</a>
+    <span class="breadcrumb-sep">›</span>
+    <span>ZDX Probe Types</span>
+  </div>
+
+  <div class="nibble-badge">
+    <span class="nibble-badge-dot"></span>
+    STUDY NIBBLE
+  </div>
+
+  <h1>ZDX Probe Types<br><em>&amp; What They Feed</em></h1>
+  <p>Three probe types, three scores — know which feeds which.</p>
+
+  <div class="header-meta-row">
+    <span class="tag tag-zdx">ZDX</span>
+    <span class="tag tag-arch">Digital Experience</span>
+  </div>
+</header>
+
+<main>
+
+  <div class="section-block">
+
+    <div class="key-concept">
+      <strong>The pattern:</strong> Each probe type measures a different layer of the user-to-app journey, and feeds a specific ZDX sub-score. Getting this mapping wrong on the exam means misidentifying what to fix and how to triage.
+    </div>
+
+    <table class="compare-table">
+      <thead>
+        <tr>
+          <th>Probe Type</th>
+          <th>Protocol</th>
+          <th>What it measures</th>
+          <th>Feeds</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>ICMP / Ping Probe</strong></td>
+          <td>ICMP</td>
+          <td>Round-trip latency and packet loss to the target host</td>
+          <td><span class="score-badge score-network">Network Score</span></td>
+        </tr>
+        <tr>
+          <td><strong>Traceroute Probe</strong></td>
+          <td>ICMP / UDP</td>
+          <td>Per-hop path mapping — latency and packet loss at every hop from endpoint to app</td>
+          <td><span class="score-badge score-network">Network Score (per-hop)</span></td>
+        </tr>
+        <tr>
+          <td><strong>Web Probe</strong></td>
+          <td>HTTP / HTTPS</td>
+          <td>DNS resolution time, server response time, page fetch time, HTTP availability (200 vs 5xx)</td>
+          <td><span class="score-badge score-app">Application Score</span></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="divider"></div>
+
+    <div class="mini-card" style="margin-bottom:16px;">
+      <div class="mini-card-label">WHAT FEEDS DEVICE SCORE?</div>
+      <div class="mini-card-title">Not probes — telemetry from ZCC</div>
+      <div class="mini-card-body">Device Score isn't fed by any probe. It comes from ZCC's direct endpoint telemetry: CPU %, memory utilisation, disk IO, battery state, OS version, and top running processes. No probe type needed — ZCC can already see everything on the device it runs on.</div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="engine-grid">
+      <div class="mini-card">
+        <div class="mini-card-label">SYNTHETIC PROBES</div>
+        <div class="mini-card-title">Continuous · Background</div>
+        <div class="mini-card-body">Run silently on ZCC at configured frequency (e.g., every 1–5 min) for all monitored users. Build the baseline. Feed score history and alerts.</div>
+      </div>
+      <div class="mini-card">
+        <div class="mini-card-label">DEEP TRACE</div>
+        <div class="mini-card-title">On-demand · Per-user</div>
+        <div class="mini-card-body">Admin-triggered for a specific user + app right now. Full traceroute + packet capture + HTTP probe in one report. Use for live active issues — not trend analysis.</div>
+      </div>
+    </div>
+
+    <div class="callout callout-warn">
+      <div class="callout-header"><div class="callout-icon">!</div> WATCH OUT — WiFi IS NOT Device Score</div>
+      <div class="callout-body">
+        WiFi signal quality is measured by ZDX but it belongs to <strong>Network Score</strong>, not Device Score. The rule: Device Score = intrinsic to the hardware/OS (CPU, RAM, disk, battery). Network Score = everything from the WiFi card outward (first hop onwards).
+      </div>
+    </div>
+
+    <div class="callout callout-tip">
+      <div class="callout-header"><div class="callout-icon">→</div> EXAM TIP — TRIAGE BY SCORE</div>
+      <div class="callout-body">
+        When an exam scenario describes a user with a poor ZDX experience, identify which sub-score is low:<br>
+        <strong>Device low</strong> → fix the laptop (CPU, RAM, processes)<br>
+        <strong>Network low</strong> → drill traceroute hops (WiFi? ISP? Zscaler edge? App edge?)<br>
+        <strong>Application low</strong> → the SaaS is slow, escalate to vendor with Web Probe evidence<br><br>
+        If the issue is <strong>happening right now</strong> and the user is live → answer is <strong>Deep Trace</strong>.
+      </div>
+    </div>
+
+    <div class="callout callout-analogy">
+      <div class="callout-header"><div class="callout-icon">⟳</div> ANALOGY TO HOLD IT ALL TOGETHER</div>
+      <div class="callout-body">
+        <strong>ICMP Probe</strong> = checking if the road is open (can I reach you?).<br>
+        <strong>Traceroute Probe</strong> = GPS showing every turn and where you got stuck.<br>
+        <strong>Web Probe</strong> = timing how long the restaurant took to serve you after you arrived.<br>
+        <strong>Device telemetry</strong> = checking whether your car was the problem before you even left.
+      </div>
+    </div>
+
+  </div>
+
+</main>
+
+<footer>
+  <div class="footer-left">ZDTE<span>.</span></div>
+  <div class="footer-right">Zscaler Digital Transformation Engineer · Study Nibble — ZDX Probe Types</div>
+</footer>
+
+</body>
+</html>

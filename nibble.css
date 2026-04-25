@@ -215,6 +215,21 @@ p code, li code { background: var(--cream-dark); padding: 1px 6px; border-radius
 .engine-chip-name { font-weight: 600; color: var(--ink); font-size: 13px; margin-bottom: 4px; letter-spacing: 0.02em; }
 .engine-chip-body { font-size: 13px; color: var(--ink-soft); line-height: 1.55; }
 
+/* ── SCORE BADGES (ZDX probe nibble) ── */
+.score-badge { display: inline-block; padding: 3px 10px; border-radius: 12px; font-size: 11px; font-weight: 600; letter-spacing: 0.05em; border: 1px solid; }
+.score-network { background: var(--blue-light);   color: var(--blue);   border-color: var(--blue-border); }
+.score-app     { background: var(--green-light);  color: var(--green);  border-color: var(--green-border); }
+.score-device  { background: var(--purple-light); color: var(--purple); border-color: var(--purple-border); }
+
+/* ── MINI CARDS (two-up panels) ── */
+.mini-card { background: var(--cream-dark); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; }
+.mini-card-label { font-size: 10px; letter-spacing: 0.14em; color: var(--ink-muted); margin-bottom: 6px; }
+.mini-card-title { font-family: 'Fraunces', serif; font-size: 15px; font-weight: 600; color: var(--ink); margin-bottom: 6px; }
+.mini-card-body  { font-size: 12px; color: var(--ink-soft); line-height: 1.6; }
+
+/* ── DIVIDER ── */
+.divider { height: 1px; background: var(--border); margin: 20px 0; }
+
 /* ── FOOTER ── */
 footer { padding: 20px 60px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; background: var(--cream-dark); }
 .footer-left { font-family: 'Fraunces', serif; font-size: 16px; font-weight: 700; }
