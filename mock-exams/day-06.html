@@ -3,11 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ZDTE Mock Exam #3 — Day 6</title>
+<title>ZDTE Mock Exam #3 — Cyberthreat &amp; Data Protection</title>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;0,700;1,400&family=Epilogue:wght@300;400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../study-guide.css">
 </head>
 <body>
+
 <header>
   <div class="header-left">
     <div class="breadcrumb">
@@ -17,37 +18,465 @@
       <span class="breadcrumb-sep">›</span>
       <span>Mock Exam #3</span>
     </div>
-    <div class="day-badge"><span class="day-badge-dot"></span> DAY 06 — FRIDAY, 24 APRIL 2026</div>
-    <h1>Mock Exam #3<br><em>All Domains</em></h1>
+
+    <div class="day-badge">
+      <span class="day-badge-dot"></span>
+      MOCK EXAM #3 — SAT, 25 APR 2026
+    </div>
+
+    <h1>Mock Exam #3<br><em>Cyberthreat &amp; Data Protection</em></h1>
+
+    <div class="header-meta-row">
+      <span class="tag tag-zia">ZIA</span>
+      <span class="tag tag-zpa">ZPA</span>
+      <span class="tag tag-weight">Blueprint: 23%</span>
+      <span class="tag tag-weight">30 questions</span>
+    </div>
+  </div>
+
+  <div class="header-right">
+    <div class="progress-card">
+      <div class="big">96.7<span style="font-size:18px;color:#7a6a55;">%</span></div>
+      <div class="lbl">SCORE</div>
+    </div>
   </div>
 </header>
-<main class="main-full">
-  <div class="placeholder">
-    <div class="placeholder-icon">📋</div>
-    <div class="placeholder-title">Not Yet Completed</div>
-    <div class="placeholder-date">To Be Completed on Friday, 24 April 2026</div>
-    <div class="placeholder-desc">This exam covers all 11 ZDTE blueprint domains. Results, identified gaps, and strong areas will appear here once completed.</div>
-    <div class="domains-label">ALL 11 BLUEPRINT DOMAINS TESTED</div>
-    <div class="domains-grid">
-      <div class="domain-chip">Zscaler Overview</div>
-      <div class="domain-chip">Architecture</div>
-      <div class="domain-chip">Identity Services</div>
-      <div class="domain-chip">Connectivity Services</div>
-      <div class="domain-chip">Platform Services</div>
-      <div class="domain-chip">Access Control Services</div>
-      <div class="domain-chip">Cyberthreat Protection</div>
-      <div class="domain-chip">Data Protection</div>
-      <div class="domain-chip">Risk Management</div>
-      <div class="domain-chip">ZDX</div>
-      <div class="domain-chip" style="grid-column: span 2;">Zero Trust Automation</div>
+
+<nav class="section-nav">
+  <button class="nav-tab active" onclick="navTo('section-result', this)">Result</button>
+  <button class="nav-tab" onclick="navTo('section-pipeline', this)">Inspection Pipeline</button>
+  <button class="nav-tab" onclick="navTo('section-cyberthreat', this)">Cyberthreat Recap</button>
+  <button class="nav-tab" onclick="navTo('section-dataprotection', this)">Data Protection Recap</button>
+  <button class="nav-tab" onclick="navTo('section-examtips', this)">Exam Tips</button>
+</nav>
+
+<main>
+
+  <div class="main-content">
+
+    <!-- ══ RESULT ══ -->
+    <div class="section-block" id="section-result">
+      <div class="section-label">RESULT</div>
+      <h2>Mock Exam #3 — Score Summary</h2>
+
+      <div class="score-summary">
+        <div class="score-summary-num">29<span style="font-size:22px;color:#7a6a55;">/30</span></div>
+        <div class="score-summary-text">
+          <strong>96.7% — passing comfortably</strong>
+          <span>This mock covered Cyberthreat Protection (12%) and Data Protection (11%) — together 23% of the real ZDTE blueprint. One question missed: ZIA inspection pipeline order.</span>
+        </div>
+      </div>
+
+      <div class="score-breakdown">
+        <div class="score-domain">
+          <div class="score-domain-name">CYBERTHREAT PROTECTION</div>
+          <div class="score-domain-num">15<span style="font-size:14px;color:var(--ink-muted);">/16</span></div>
+          <div class="score-domain-detail">94% · Q6 missed</div>
+        </div>
+        <div class="score-domain">
+          <div class="score-domain-name">DATA PROTECTION</div>
+          <div class="score-domain-num">14<span style="font-size:14px;color:var(--ink-muted);">/14</span></div>
+          <div class="score-domain-detail">100% · clean sweep</div>
+        </div>
+      </div>
+
+      <div class="key-concept">
+        <strong>Key takeaway:</strong> Strong recall across both domains. The single weak point was an order-of-operations question — exactly the trap Zscaler tends to set on the real exam. Lock the inspection pipeline order in muscle memory.
+      </div>
     </div>
-    <div class="emphasis-note"><strong>Days 5–6 emphasis:</strong> Cyberthreat Protection (ATP, Sandbox, IPS, Browser Isolation, Deception, ITDR) and Data Protection (SSL inspection, DLP inline, CASB inline vs API, BYOD, incident management).</div>
-    <a href="../mock-exams.html" class="back-btn">← Back to Mock Exams</a>
-  </div>
+
+    <!-- ══ INSPECTION PIPELINE ══ -->
+    <div class="section-block" id="section-pipeline">
+      <div class="section-label">THE ONE I MISSED — Q6</div>
+      <h2>ZIA Inspection Pipeline Order</h2>
+
+      <p>
+        A file is downloaded over HTTPS. ZIA processes it through a sequence of inspection stages. The exam expects you to know the canonical stage order — the order Zscaler documents in the official EDU 202 study material.
+      </p>
+
+      <div class="pipeline-stages">
+        <div class="pipeline-stage">
+          <div class="pipeline-stage-num">STAGE 1</div>
+          <div class="pipeline-stage-name">SSL Decryption</div>
+          <div class="pipeline-stage-desc">Open the bag — you can't inspect what you can't see.</div>
+        </div>
+        <div class="pipeline-stage">
+          <div class="pipeline-stage-num">STAGE 2</div>
+          <div class="pipeline-stage-name">IPS</div>
+          <div class="pipeline-stage-desc">Metal detector — fast, network-level pattern checks.</div>
+        </div>
+        <div class="pipeline-stage">
+          <div class="pipeline-stage-num">STAGE 3</div>
+          <div class="pipeline-stage-name">ATP / AV</div>
+          <div class="pipeline-stage-desc">X-ray — file/content signature scan against known malware.</div>
+        </div>
+        <div class="pipeline-stage">
+          <div class="pipeline-stage-num">STAGE 4</div>
+          <div class="pipeline-stage-name">Sandbox</div>
+          <div class="pipeline-stage-desc">Secondary inspection — detonate unknown files in a VM.</div>
+        </div>
+      </div>
+
+      <div class="callout callout-analogy">
+        <div class="callout-header"><div class="callout-icon">⟳</div> AIRPORT SECURITY ANALOGY</div>
+        <div class="callout-body">
+          The pipeline is a security funnel. Cheap, fast checks first; slow, expensive ones last. SSL decryption opens the bag. IPS is the metal detector you walk through. ATP/AV is the X-ray of the bag's contents. Sandbox is the room where they actually open and examine the suspicious item. You wouldn't send everyone to the back room — only what survives the earlier checks goes there.
+        </div>
+      </div>
+
+      <div class="callout callout-warn">
+        <div class="callout-header"><div class="callout-icon">!</div> WATCH OUT</div>
+        <div class="callout-body">
+          The trap on Q6 was placing ATP <em>before</em> IPS. Plausible-sounding, because "advanced" feels heavier than "intrusion prevention". But the layering is by <em>cost and depth</em>, not by name. IPS sees the network stream (cheaper). ATP/AV needs the reconstructed file (more expensive). Sandbox actually <em>runs</em> the file (most expensive — always last).
+        </div>
+      </div>
+
+      <h3>Each stage by what it sees</h3>
+      <table class="compare-table">
+        <thead>
+          <tr>
+            <th>Stage</th>
+            <th>What it sees</th>
+            <th>What it catches</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>IPS</td>
+            <td>The network stream / packets</td>
+            <td>Protocol exploits, network attack signatures</td>
+          </tr>
+          <tr>
+            <td>ATP / AV</td>
+            <td>The reconstructed file / content payload</td>
+            <td>Known malware, malicious payloads (signature)</td>
+          </tr>
+          <tr>
+            <td>Sandbox</td>
+            <td>The file <em>running</em> in a VM</td>
+            <td>Zero-day, unknown, behaviour-based threats</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="callout callout-note">
+        <div class="callout-header"><div class="callout-icon">★</div> MENTAL HOOK</div>
+        <div class="callout-body">
+          <strong>"Decrypt → IPS → ATP → Sandbox"</strong> — say it out loud three times before the exam. If a question shows ATP before IPS or Sandbox not last, it's wrong.
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ CYBERTHREAT RECAP ══ -->
+    <div class="section-block" id="section-cyberthreat">
+      <div class="section-label">CYBERTHREAT RECAP</div>
+      <h2>Cyberthreat Protection — Concepts I Confirmed</h2>
+
+      <p>Quick reference for revision — not new material, just the most testable framings.</p>
+
+      <div class="definition">
+        <div class="definition-term">ATP vs IPS — the right framing</div>
+        <div class="definition-body">ATP protects against threats like botnets, phishing, command-and-control, and malicious active content (browser exploits, suspicious scripts). IPS detects and blocks network-based exploits and protocol-level attacks. They are complementary, not competing.</div>
+      </div>
+
+      <div class="definition">
+        <div class="definition-term">Cloud Sandbox</div>
+        <div class="definition-body">Detonates unknown files in an isolated VM to determine behaviour before the verdict is rendered. Configurable by file type and user group; can quarantine a file until the verdict comes back. Always the most expensive stage — runs only on files that weren't already blocked or cleared by signature.</div>
+      </div>
+
+      <div class="definition">
+        <div class="definition-term">Browser Isolation</div>
+        <div class="definition-body">Renders a risky session inside the Zscaler cloud and streams pixels to the user — no active code touches the endpoint. Can be policy-driven (auto-isolate uncategorised or risky sites) and can restrict download / copy-paste / print for BYOD scenarios.</div>
+      </div>
+
+      <div class="definition">
+        <div class="definition-term">Deception vs ITDR — easy to confuse</div>
+        <div class="definition-body"><strong>Deception</strong> plants decoy assets, credentials, and files to lure and detect attackers who have already bypassed perimeter controls — it's a tripwire for active intruders. <strong>ITDR</strong> focuses on identity hygiene: scans Active Directory and identity systems for misconfigurations, weak credentials, and risky trust relationships, and detects identity-based attacks.</div>
+      </div>
+
+      <div class="definition">
+        <div class="definition-term">Breach Predictor</div>
+        <div class="definition-body">Forward-looking, AI-driven capability that simulates and forecasts potential breach paths based on current posture and telemetry. Not historical reporting, not pen testing — predictive modelling.</div>
+      </div>
+
+      <div class="definition">
+        <div class="definition-term">Private Access AppProtection</div>
+        <div class="definition-body">A WAF-style inline inspection layer for private applications accessed via ZPA. Protects against OWASP Top 10 and similar application-layer threats. Sits in the ZPA path, not the ZIA path.</div>
+      </div>
+
+      <div class="definition">
+        <div class="definition-term">C2 / botnet defence — layered</div>
+        <div class="definition-body">ATP (botnet/C2 categories) + DNS Control + Firewall + IPS together. No single control owns this — exam answers that mention only one are usually wrong.</div>
+      </div>
+    </div>
+
+    <!-- ══ DATA PROTECTION RECAP ══ -->
+    <div class="section-block" id="section-dataprotection">
+      <div class="section-label">DATA PROTECTION RECAP</div>
+      <h2>Data Protection — Concepts I Confirmed</h2>
+
+      <h3>Inline DLP vs SaaS API CASB</h3>
+      <table class="compare-table">
+        <thead>
+          <tr>
+            <th>Aspect</th>
+            <th>Inline DLP / Inline CASB</th>
+            <th>SaaS API CASB (Out-of-Band)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>When it acts</td>
+            <td>Real time, in the proxy path</td>
+            <td>Asynchronously, via SaaS API</td>
+          </tr>
+          <tr>
+            <td>What it inspects</td>
+            <td>Data in motion (uploads, posts, transfers)</td>
+            <td>Data at rest already in the SaaS</td>
+          </tr>
+          <tr>
+            <td>Requires SSL inspection?</td>
+            <td>Yes — to see HTTPS payloads</td>
+            <td>No — uses authenticated API</td>
+          </tr>
+          <tr>
+            <td>Use case</td>
+            <td>Block sensitive uploads as they happen</td>
+            <td>Scan historical content, retroactive policy</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>DLP detection techniques</h3>
+      <table class="compare-table">
+        <thead>
+          <tr>
+            <th>Technique</th>
+            <th>What it does</th>
+            <th>When to use it</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Dictionaries + Engines</td>
+            <td>Patterns + logic (proximity, count, confidence)</td>
+            <td>General-purpose detection (PCI, PII)</td>
+          </tr>
+          <tr>
+            <td>EDM — Exact Data Match</td>
+            <td>Matches exact values from a known list (e.g. specific SSNs)</td>
+            <td>Protecting a defined set of records</td>
+          </tr>
+          <tr>
+            <td>IDM — Indexed Document Match</td>
+            <td>Fingerprints whole documents and detects derivatives</td>
+            <td>Protecting known sensitive documents</td>
+          </tr>
+          <tr>
+            <td>OCR</td>
+            <td>Reads text inside images / screenshots / scans</td>
+            <td>Photographed IDs, scanned forms, screenshots</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="callout callout-tip">
+        <div class="callout-header"><div class="callout-icon">→</div> BYOD SCENARIO PATTERN</div>
+        <div class="callout-body">
+          When the question says "personal device" or "BYOD" and "allow access but prevent download/copy/print" — the answer is almost always <strong>Browser Isolation with restricted controls</strong>. Don't get pulled into "block with URL filtering" — the user still needs access.
+        </div>
+      </div>
+
+      <div class="callout callout-tip">
+        <div class="callout-header"><div class="callout-icon">→</div> SSL INSPECTION IS A PREREQUISITE</div>
+        <div class="callout-body">
+          If a DLP rule "works on HTTP but misses HTTPS", the cause is almost certainly that SSL inspection isn't enabled or isn't applied to that traffic. DLP can only inspect payloads it can see in cleartext. This is a classic exam scenario.
+        </div>
+      </div>
+
+      <div class="definition">
+        <div class="definition-term">Endpoint DLP</div>
+        <div class="definition-body">Extends DLP enforcement to local actions on the device — USB transfers, printing, clipboard — even when the user is offline. Complements inline DLP rather than replacing it.</div>
+      </div>
+
+      <div class="definition">
+        <div class="definition-term">Tenant Restrictions</div>
+        <div class="definition-body">Allows access to a SaaS app (e.g. Microsoft 365) <em>only</em> for the organisation's own tenant and blocks sign-ins to personal or third-party tenants of the same app. Stops users from logging into "other" M365 instances from corporate devices.</div>
+      </div>
+
+      <div class="definition">
+        <div class="definition-term">Inline DLP decision flow</div>
+        <div class="definition-body">SSL decryption → content extraction → DLP engine evaluation (dictionary / EDM / IDM / OCR as configured) → policy action (allow / block / quarantine / notify) → incident logged with metadata.</div>
+      </div>
+
+      <div class="definition">
+        <div class="definition-term">Cloud App Control / CASB inline</div>
+        <div class="definition-body">The control plane for shadow IT — visibility into what SaaS apps are being used, plus policy to allow / restrict / coach / block based on app risk score. This is the right answer when the scenario mentions "unsanctioned SaaS" or "shadow IT".</div>
+      </div>
+    </div>
+
+    <!-- ══ EXAM TIPS ══ -->
+    <div class="section-block" id="section-examtips">
+      <div class="section-label">EXAM TIPS</div>
+      <h2>What this mock revealed about the real exam</h2>
+
+      <div class="callout callout-tip">
+        <div class="callout-header"><div class="callout-icon">→</div> ORDERING QUESTIONS ARE TRAPS</div>
+        <div class="callout-body">
+          The single question I missed was an ordering question. Whenever the exam asks about the order of operations in a pipeline, slow down. The pattern Zscaler uses is <strong>"cheap and broad first, expensive and narrow last"</strong>. Decrypt → fast network check → file signature check → expensive behavioural check.
+        </div>
+      </div>
+
+      <div class="callout callout-tip">
+        <div class="callout-header"><div class="callout-icon">→</div> "MOST COMPLETE" ANSWERS</div>
+        <div class="callout-body">
+          When a question asks "how does Zscaler protect against X" — the right answer is almost always the one that lists <em>multiple</em> layers (e.g. ATP + URL filtering + SSL inspection + Browser Isolation for phishing). Single-control answers are distractors.
+        </div>
+      </div>
+
+      <div class="callout callout-tip">
+        <div class="callout-header"><div class="callout-icon">→</div> SCENARIO PATTERN MATCHING</div>
+        <div class="callout-body">
+          Most Data Protection questions are scenario-driven. Train yourself to spot the keyword that pins the answer:<br>
+          · "Personal device / BYOD" → Browser Isolation with restricted controls<br>
+          · "Already in SaaS / data at rest" → SaaS API CASB<br>
+          · "Real-time upload block" → Inline DLP<br>
+          · "Other tenants of M365" → Tenant Restrictions<br>
+          · "Image / screenshot / photo of doc" → OCR<br>
+          · "Specific known records" → EDM<br>
+          · "Whole sensitive document" → IDM
+        </div>
+      </div>
+
+      <div class="callout callout-tip">
+        <div class="callout-header"><div class="callout-icon">→</div> DECEPTION vs ITDR</div>
+        <div class="callout-body">
+          One sentence each:<br>
+          · <strong>Deception</strong> = decoys to catch active attackers in the network.<br>
+          · <strong>ITDR</strong> = identity hygiene + detecting identity-based attacks.<br>
+          If the question mentions "decoy / honeypot / lure" → Deception. If it mentions "Active Directory / identity / credentials" → ITDR.
+        </div>
+      </div>
+
+      <ul class="content-list">
+        <li>Inspection order: Decrypt → IPS → ATP → Sandbox (always lock this in)</li>
+        <li>Cyberthreat domain weight = 12% (~7 questions on the real exam)</li>
+        <li>Data Protection domain weight = 11% (~7 questions on the real exam)</li>
+        <li>Together = 23% of the exam — solid here means a strong overall pass</li>
+        <li>Watch for "most complete" answers on layered defence questions</li>
+        <li>Sandbox is always last in any inspection-order question</li>
+      </ul>
+    </div>
+
+  </div><!-- end .main-content -->
+
+  <div class="sidebar">
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">MOCK COVERAGE — TICK WHEN REVIEWED</div>
+      <ul class="subtopic-list" id="subtopic-list">
+        <li onclick="toggleDone(this)"><div class="subtopic-check"></div><span>ATP vs IPS distinction</span></li>
+        <li onclick="toggleDone(this)"><div class="subtopic-check"></div><span>Cloud Sandbox role &amp; config</span></li>
+        <li onclick="toggleDone(this)"><div class="subtopic-check"></div><span>Browser Isolation modes</span></li>
+        <li onclick="toggleDone(this)"><div class="subtopic-check"></div><span>Deception vs ITDR</span></li>
+        <li onclick="toggleDone(this)"><div class="subtopic-check"></div><span>Breach Predictor</span></li>
+        <li onclick="toggleDone(this)"><div class="subtopic-check"></div><span>Private Access AppProtection</span></li>
+        <li onclick="toggleDone(this)"><div class="subtopic-check"></div><span>ZIA inspection pipeline order ⚠</span></li>
+        <li onclick="toggleDone(this)"><div class="subtopic-check"></div><span>Inline DLP vs SaaS API CASB</span></li>
+        <li onclick="toggleDone(this)"><div class="subtopic-check"></div><span>EDM / IDM / OCR techniques</span></li>
+        <li onclick="toggleDone(this)"><div class="subtopic-check"></div><span>Endpoint DLP scope</span></li>
+        <li onclick="toggleDone(this)"><div class="subtopic-check"></div><span>Tenant Restrictions</span></li>
+        <li onclick="toggleDone(this)"><div class="subtopic-check"></div><span>Incident Management workflow</span></li>
+      </ul>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">QUICK REFERENCE</div>
+      <div class="quick-ref">
+        <div class="quick-ref-term">PIPELINE ORDER</div>
+        <div class="quick-ref-def">Decrypt → IPS → ATP → Sandbox. Cheap to expensive.</div>
+      </div>
+      <div class="quick-ref">
+        <div class="quick-ref-term">ATP</div>
+        <div class="quick-ref-def">Advanced Threat Protection — botnets, phishing, C2, malicious active content.</div>
+      </div>
+      <div class="quick-ref">
+        <div class="quick-ref-term">IPS</div>
+        <div class="quick-ref-def">Intrusion Prevention System — network exploits, protocol-level attacks.</div>
+      </div>
+      <div class="quick-ref">
+        <div class="quick-ref-term">SANDBOX</div>
+        <div class="quick-ref-def">Detonates unknown files in a VM. Always last in the pipeline.</div>
+      </div>
+      <div class="quick-ref">
+        <div class="quick-ref-term">ITDR</div>
+        <div class="quick-ref-def">Identity Threat Detection &amp; Response — AD posture &amp; identity attack detection.</div>
+      </div>
+      <div class="quick-ref">
+        <div class="quick-ref-term">DECEPTION</div>
+        <div class="quick-ref-def">Decoy assets / credentials to detect active attackers post-perimeter.</div>
+      </div>
+      <div class="quick-ref">
+        <div class="quick-ref-term">EDM</div>
+        <div class="quick-ref-def">Exact Data Match — match against a known list of values.</div>
+      </div>
+      <div class="quick-ref">
+        <div class="quick-ref-term">IDM</div>
+        <div class="quick-ref-def">Indexed Document Match — fingerprint whole sensitive docs.</div>
+      </div>
+      <div class="quick-ref">
+        <div class="quick-ref-term">OCR</div>
+        <div class="quick-ref-def">Optical Character Recognition — read text inside images/screenshots.</div>
+      </div>
+      <div class="quick-ref">
+        <div class="quick-ref-term">CASB</div>
+        <div class="quick-ref-def">Inline = real-time in proxy. API = scans data at rest in SaaS.</div>
+      </div>
+      <div class="quick-ref">
+        <div class="quick-ref-term">TENANT RESTRICTIONS</div>
+        <div class="quick-ref-def">Allow only your org's SaaS tenant; block personal/third-party tenants.</div>
+      </div>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">MY NOTES</div>
+      <div class="sidebar-note">Q6 was the only miss — and it was an ordering question. I knew ATP has many sub-functions (some early, some late), and that's true in real life — but the exam wants the canonical stage order. Always answer with the documented order, not the nuanced reality.</div>
+      <div class="sidebar-note">Lock in: Decrypt → IPS → ATP → Sandbox. Airport security analogy: bag opened → metal detector → X-ray → secondary inspection. Sandbox is always last.</div>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">RELATED DAYS</div>
+      <ul class="subtopic-list">
+        <li style="cursor:default;"><div style="width:14px;height:14px;background:var(--orange-light);border:1px solid var(--orange-border);border-radius:3px;flex-shrink:0;"></div><span>Day 05 — Cyberthreat Protection</span></li>
+        <li style="cursor:default;"><div style="width:14px;height:14px;background:var(--orange-light);border:1px solid var(--orange-border);border-radius:3px;flex-shrink:0;"></div><span>Day 06 — Data Protection</span></li>
+        <li style="cursor:default;"><div style="width:14px;height:14px;background:var(--orange-light);border:1px solid var(--orange-border);border-radius:3px;flex-shrink:0;"></div><span>Day 09 — ZIA Deep Dive</span></li>
+      </ul>
+    </div>
+
+  </div><!-- end .sidebar -->
+
 </main>
+
 <footer>
-  <div class="footer-left">ZDTE <span>Mock Exams</span></div>
-  <div class="footer-right">Zscaler Digital Transformation Engineer · Mock Exam #3 · Day 06</div>
+  <div class="footer-left">ZDTE<span>.</span></div>
+  <div class="footer-right">Mock Exam #3 · Cyberthreat &amp; Data Protection · 29/30 (96.7%)</div>
 </footer>
+
+<script>
+  function navTo(id, el) {
+    const target = document.getElementById(id);
+    if (!target) return;
+    const top = target.getBoundingClientRect().top + window.scrollY - 60;
+    window.scrollTo({ top, behavior: 'smooth' });
+    document.querySelectorAll('nav.section-nav button').forEach(b => b.classList.remove('active'));
+    if (el) el.classList.add('active');
+  }
+
+  function toggleDone(li) {
+    li.classList.toggle('done');
+  }
+</script>
+
 </body>
 </html>

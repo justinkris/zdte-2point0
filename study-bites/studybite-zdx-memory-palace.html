@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ZDTE Study Bite — ZDX Memory Palace: The Hospital</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;0,700;1,400&family=Epilogue:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #fef9f0;
+    --cream-dark: #f5eddb;
+    --ink: #1a1209;
+    --ink-soft: #5a4a35;
+    --ink-muted: #8a7660;
+    --orange: #ff6b35;
+    --orange-light: #fff3ec;
+    --orange-border: #ffd5c0;
+    --amber-light: #fffbe6;
+    --green: #3a7d44;
+    --green-light: #edf7ee;
+    --green-border: #b2dfb4;
+    --purple: #5c35cc;
+    --purple-light: #ece8ff;
+    --purple-border: #c8bbff;
+    --blue-light: #e8f0fb;
+    --blue-border: #b3ccf0;
+    --blue: #1a6bcc;
+    --red-light: #fce8e8;
+    --red-border: #f7c1c1;
+    --red: #a32d2d;
+    --border: #ede5d8;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Epilogue', sans-serif;
+    background: var(--cream);
+    color: var(--ink);
+    min-height: 100vh;
+  }
+
+  header {
+    padding: 40px 60px 28px;
+    border-bottom: 1px solid var(--border);
+    background: var(--cream);
+  }
+
+  .breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+    color: var(--ink-muted);
+    letter-spacing: 0.08em;
+    margin-bottom: 12px;
+  }
+
+  .breadcrumb a { color: var(--orange); text-decoration: none; }
+  .breadcrumb-sep { color: var(--border); }
+
+  .bite-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--purple);
+    color: var(--cream);
+    padding: 5px 14px;
+    border-radius: 100px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 18px;
+  }
+
+  .bite-badge-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--cream);
+  }
+
+  h1 {
+    font-family: 'Fraunces', serif;
+    font-size: 44px;
+    font-weight: 700;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+    margin-bottom: 14px;
+  }
+
+  h1 em {
+    font-style: italic;
+    color: var(--orange);
+    font-weight: 600;
+  }
+
+  .header-meta-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 14px;
+  }
+
+  .tag {
+    display: inline-block;
+    padding: 4px 11px;
+    border-radius: 100px;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+  }
+  .tag-zdx { background: var(--purple-light); color: var(--purple); border: 1px solid var(--purple-border); }
+  .tag-weight { background: var(--cream-dark); color: var(--ink-soft); border: 1px solid var(--border); }
+
+  main {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 40px 60px 60px;
+  }
+
+  .intro-card {
+    background: var(--orange-light);
+    border: 1px solid var(--orange-border);
+    border-left: 4px solid var(--orange);
+    border-radius: 10px;
+    padding: 22px 26px;
+    margin-bottom: 40px;
+  }
+
+  .intro-card h2 {
+    font-family: 'Fraunces', serif;
+    font-size: 22px;
+    color: var(--ink);
+    margin-bottom: 10px;
+  }
+
+  .intro-card p {
+    font-size: 15px;
+    line-height: 1.65;
+    color: var(--ink-soft);
+  }
+
+  .intro-card p + p { margin-top: 10px; }
+
+  .room {
+    margin-bottom: 36px;
+    padding-bottom: 32px;
+    border-bottom: 1px dashed var(--border);
+  }
+  .room:last-child { border-bottom: none; }
+
+  .room-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 16px;
+  }
+
+  .room-num {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: var(--ink);
+    color: var(--cream);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Fraunces', serif;
+    font-size: 18px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  .room-title-block { flex: 1; }
+
+  .room-icon {
+    font-size: 22px;
+    margin-right: 6px;
+  }
+
+  .room h2 {
+    font-family: 'Fraunces', serif;
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--ink);
+    line-height: 1.15;
+    margin-bottom: 2px;
+  }
+
+  .room h2 em {
+    color: var(--orange);
+    font-style: italic;
+    font-weight: 600;
+    font-size: 18px;
+  }
+
+  .room-subtitle {
+    font-size: 12px;
+    color: var(--ink-muted);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .scene {
+    background: var(--purple-light);
+    border: 1px solid var(--purple-border);
+    border-radius: 10px;
+    padding: 18px 22px;
+    margin-bottom: 16px;
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--ink-soft);
+  }
+
+  /* ── IMAGE PLACEHOLDER + PROMPT ── */
+  .image-block { margin-bottom: 16px; }
+
+  .image-placeholder {
+    background: var(--cream-dark);
+    border: 2px dashed var(--orange-border);
+    border-radius: 10px;
+    aspect-ratio: 16 / 9;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    color: var(--ink-muted);
+    text-align: center;
+    padding: 20px;
+    overflow: hidden;
+    position: relative;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+
+  .image-placeholder:hover { background: var(--orange-light); }
+
+  .image-placeholder img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 8px;
+  }
+
+  .image-placeholder-icon { font-size: 36px; opacity: 0.5; line-height: 1; }
+  .image-placeholder-text { font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 600; }
+  .image-placeholder-hint { font-size: 11px; color: var(--ink-muted); font-style: italic; max-width: 320px; line-height: 1.4; }
+  .image-placeholder input[type="file"] { display: none; }
+
+  .image-prompt {
+    background: var(--ink);
+    color: var(--cream);
+    border-radius: 0 0 10px 10px;
+    margin-top: -2px;
+    padding: 0;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .image-prompt-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 14px;
+    border-bottom: 1px solid #2a2010;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .image-prompt-header:hover { background: #2a2010; }
+
+  .image-prompt-header-left {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .image-prompt-label {
+    font-family: 'Epilogue', sans-serif;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    color: var(--orange);
+    text-transform: uppercase;
+  }
+
+  .prompt-chevron { font-size: 9px; color: #9a8070; transition: transform 0.2s ease; display: inline-block; }
+  .image-prompt:not(.collapsed) .prompt-chevron { transform: rotate(90deg); }
+  .image-prompt.collapsed .image-prompt-body { display: none; }
+
+  .image-prompt-body {
+    padding: 12px 14px;
+    font-family: 'SF Mono', 'Monaco', 'Consolas', monospace;
+    font-size: 12px;
+    line-height: 1.55;
+    color: var(--cream-dark);
+  }
+
+  .copy-btn {
+    font-size: 10px;
+    font-family: 'Epilogue', sans-serif;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    color: var(--cream);
+    background: #2a2010;
+    border: 1px solid #3a3020;
+    border-radius: 6px;
+    padding: 4px 10px;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .copy-btn:hover { background: var(--orange); border-color: var(--orange); }
+  .copy-btn.copied { background: var(--green); border-color: var(--green); }
+
+  .scene strong { color: var(--purple); font-weight: 600; }
+
+  .scene-label {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    color: var(--purple);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .anchor {
+    background: var(--cream);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 20px;
+  }
+
+  .anchor-label {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    color: var(--ink-muted);
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+
+  .anchor-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px 24px;
+    font-size: 14px;
+    line-height: 1.55;
+  }
+
+  .anchor-item { color: var(--ink-soft); }
+
+  .anchor-item strong {
+    display: block;
+    color: var(--ink);
+    font-weight: 600;
+    margin-bottom: 2px;
+  }
+
+  .key-concept {
+    background: var(--amber-light);
+    border-left: 3px solid var(--orange);
+    padding: 14px 18px;
+    border-radius: 0 8px 8px 0;
+    margin-top: 14px;
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--ink-soft);
+  }
+
+  .key-concept strong { color: var(--ink); }
+
+  .walkthrough {
+    background: var(--green-light);
+    border: 1px solid var(--green-border);
+    border-radius: 10px;
+    padding: 24px 28px;
+    margin-top: 40px;
+  }
+
+  .walkthrough h3 {
+    font-family: 'Fraunces', serif;
+    font-size: 22px;
+    color: var(--green);
+    margin-bottom: 14px;
+  }
+
+  .walkthrough ol {
+    list-style: none;
+    counter-reset: step;
+    padding: 0;
+  }
+
+  .walkthrough ol li {
+    counter-increment: step;
+    padding: 10px 0 10px 36px;
+    position: relative;
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--ink-soft);
+    border-bottom: 1px dotted var(--green-border);
+  }
+  .walkthrough ol li:last-child { border-bottom: none; }
+
+  .walkthrough ol li::before {
+    content: counter(step);
+    position: absolute;
+    left: 0;
+    top: 11px;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: var(--green);
+    color: var(--cream);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 600;
+    font-family: 'Epilogue', sans-serif;
+  }
+
+  .walkthrough ol li strong { color: var(--ink); }
+
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 24px 60px;
+    font-size: 12px;
+    color: var(--ink-muted);
+    text-align: center;
+  }
+
+  @media (max-width: 720px) {
+    header { padding: 28px 22px 20px; }
+    main { padding: 28px 22px 40px; }
+    h1 { font-size: 32px; }
+    .room h2 { font-size: 21px; }
+    .anchor-grid { grid-template-columns: 1fr; gap: 12px; }
+    footer { padding: 20px 22px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="breadcrumb">
+    <a href="../index.html">Study Plan</a>
+    <span class="breadcrumb-sep">›</span>
+    <a href="../study-bites.html">Study Bites</a>
+    <span class="breadcrumb-sep">›</span>
+    <span>ZDX Memory Palace</span>
+  </div>
+
+  <div class="bite-badge">
+    <span class="bite-badge-dot"></span>
+    STUDY BITE — MEMORY PALACE
+  </div>
+
+  <h1>The ZDX Hospital<br><em>A memory palace for Zscaler Digital Experience</em></h1>
+
+  <div class="header-meta-row">
+    <span class="tag tag-zdx">ZDX</span>
+    <span class="tag tag-weight">Blueprint: 8%</span>
+  </div>
+</header>
+
+<main>
+
+  <div class="intro-card">
+    <h2>Why a hospital?</h2>
+    <p>
+      ZDX is a <strong>digital health monitor</strong> for users, devices, applications and the network paths
+      between them. It triages problems, runs diagnostics, raises alarms, and keeps charts on every patient.
+      A hospital is the natural metaphor — and a much easier place to remember than a list of bullet points.
+    </p>
+    <p>
+      Walk through the building once, slowly. Each room anchors a ZDX concept. After two or three walk-throughs,
+      the concepts will recall themselves in order whenever you need them on the exam.
+    </p>
+    <p style="font-size:13px;color:var(--ink-muted);font-style:italic;margin-top:14px;padding-top:14px;border-top:1px dashed var(--orange-border);">
+      <strong style="color:var(--ink);font-style:normal;">Using the image slots:</strong>
+      Each room has a placeholder and a collapsible generation prompt below it. Click the placeholder to upload an image. Click the prompt header to expand it and COPY the prompt for your image generator.
+    </p>
+  </div>
+
+  <!-- ROOM 1 -->
+  <div class="room">
+    <div class="room-header">
+      <div class="room-num">1</div>
+      <div class="room-title-block">
+        <h2><span class="room-icon">🏥</span>Reception &mdash; The ZDX Score Desk <em>the front door</em></h2>
+        <div class="room-subtitle">ZDX SCORE · COMPONENTS · BASELINING · SMOOTH SCORE</div>
+      </div>
+    </div>
+
+    <div class="image-block">
+      <div class="image-placeholder" id="ph-1" onclick="document.getElementById('fi-1').click()">
+        <img src="../images/memory-palace-zdx/1.png" style="cursor:pointer;">
+        <input type="file" id="fi-1" accept="image/*" onchange="loadImg(this,'ph-1')">
+      </div>
+      <div class="image-prompt collapsed" id="ip-1">
+        <div class="image-prompt-header" onclick="togglePrompt('ip-1')">
+          <div class="image-prompt-header-left"><span class="prompt-chevron">▶</span><span class="image-prompt-label">🎨 Image Prompt</span></div>
+          <button class="copy-btn" onclick="event.stopPropagation();copyPrompt(this,'iptxt-1')">COPY</button>
+        </div>
+        <div class="image-prompt-body" id="iptxt-1">Modern flat cartoon illustration, clean cel-shaded style. A friendly cartoon receptionist in a hospital scrub top stands behind a tall reception desk, smiling, holding up two oversized thermometers — one clearly labelled "PFT" and the other clearly labelled "AVAILABILITY". Behind her on the wall: a large calendar with the last 7 days circled in red, and a sign reading "ZDX SCORE DESK". On the desk in front of her sits a chunky toggle switch labelled "SMOOTH". Warm golden lighting, simple shapes, bold outlines, limited palette of cream/gold/orange with teal accents. 16:9.</div>
+      </div>
+    </div>
+
+    <div class="scene">
+      <span class="scene-label">Imagine</span>
+      A receptionist behind a tall counter is holding up <strong>two thermometers</strong>: one labelled <strong>PFT</strong>
+      (Page Fetch Time) and one labelled <strong>Availability</strong>. Behind her, a wall calendar shows the
+      last <strong>seven days</strong> circled in red — that's the rolling window she compares every new reading against.
+      A small toggle on the desk says <em>"Smooth"</em>; flicking it makes the readings stop jittering.
+    </div>
+
+    <div class="anchor">
+      <span class="anchor-label">What this anchors</span>
+      <div class="anchor-grid">
+        <div class="anchor-item"><strong>Two components</strong>Page Fetch Time + Availability → combined into one ZDX Score.</div>
+        <div class="anchor-item"><strong>Baselining, not thresholds</strong>App performance changes constantly; static thresholds are unworkable. Baselines learn.</div>
+        <div class="anchor-item"><strong>Rolling 7-day window</strong>Recalculated daily, for both predefined and custom apps.</div>
+        <div class="anchor-item"><strong>Smooth ZDX Score</strong>Optional toggle: ~30-min moving average to dampen point-in-time spikes.</div>
+      </div>
+      <div class="key-concept"><strong>Anchor phrase:</strong> "<em>Two thermometers, seven-day calendar, smoothing toggle.</em>"</div>
+    </div>
+  </div>
+
+  <!-- ROOM 2 -->
+  <div class="room">
+    <div class="room-header">
+      <div class="room-num">2</div>
+      <div class="room-title-block">
+        <h2><span class="room-icon">📋</span>Triage Board &mdash; The Score Hierarchy <em>who's the sickest?</em></h2>
+        <div class="room-subtitle">APP TILE · USER SCORE · DEVICE SCORES</div>
+      </div>
+    </div>
+
+    <div class="image-block">
+      <div class="image-placeholder" id="ph-2" onclick="document.getElementById('fi-2').click()">
+        <img src="../images/memory-palace-zdx/2.png" style="cursor:pointer;">
+        <input type="file" id="fi-2" accept="image/*" onchange="loadImg(this,'ph-2')">
+      </div>
+      <div class="image-prompt collapsed" id="ip-2">
+        <div class="image-prompt-header" onclick="togglePrompt('ip-2')">
+          <div class="image-prompt-header-left"><span class="prompt-chevron">▶</span><span class="image-prompt-label">🎨 Image Prompt</span></div>
+          <button class="copy-btn" onclick="event.stopPropagation();copyPrompt(this,'iptxt-2')">COPY</button>
+        </div>
+        <div class="image-prompt-body" id="iptxt-2">Modern flat cartoon illustration, clean cel-shaded style. A cartoon doctor in a white coat with a stethoscope stands beside a giant whiteboard labelled at the top "TRIAGE BOARD". The board has three labelled columns: "USER SCORE = WORST APP" (with a frowning face icon next to a red circled number), "DEVICE SCORE = AVERAGE" (with multiple laptop icons and an equals sign), and "APP OVER TIME" (with a small line graph). The doctor points at the worst-performing row with a confident expression. Bold outlines, limited palette of cream/gold/orange with red and teal accents, simple background, 16:9.</div>
+      </div>
+    </div>
+
+    <div class="scene">
+      <span class="scene-label">Imagine</span>
+      Past reception, a giant whiteboard lists patients. Each <strong>user's name</strong> is written in red marker
+      with the score of their <strong>worst-performing app</strong> — that's the rule. A second column averages all the
+      <strong>devices</strong> they own. A third column tracks each <strong>application tile</strong> over time.
+      A doctor mutters: <em>"A user is only as well as their sickest app."</em>
+    </div>
+
+    <div class="anchor">
+      <span class="anchor-label">What this anchors</span>
+      <div class="anchor-grid">
+        <div class="anchor-item"><strong>Application Tile Score</strong>Average score of an app over the selected period (shown on the App Tile).</div>
+        <div class="anchor-item"><strong>User Score</strong>The <em>worst</em>-performing app's score (not an average) — pessimistic on purpose.</div>
+        <div class="anchor-item"><strong>Device Score</strong>Average of all device scores tied to a user.</div>
+        <div class="anchor-item"><strong>App Score Over Time</strong>Average of all users at each point in time — the dashboard line graph.</div>
+      </div>
+      <div class="key-concept"><strong>Trap to avoid:</strong> User Score is the <em>worst</em> app, but Device Score is an <em>average</em>. Different math, different meaning.</div>
+    </div>
+  </div>
+
+  <!-- ROOM 3 -->
+  <div class="room">
+    <div class="room-header">
+      <div class="room-num">3</div>
+      <div class="room-title-block">
+        <h2><span class="room-icon">🔬</span>The Lab &mdash; Probes <em>how the readings are taken</em></h2>
+        <div class="room-subtitle">WEB · CLOUD PATH · AUTOSENSE · THE THREE PATHS</div>
+      </div>
+    </div>
+
+    <div class="image-block">
+      <div class="image-placeholder" id="ph-3" onclick="document.getElementById('fi-3').click()">
+        <img src="../images/memory-palace-zdx/3.png" style="cursor:pointer;">
+        <input type="file" id="fi-3" accept="image/*" onchange="loadImg(this,'ph-3')">
+      </div>
+      <div class="image-prompt collapsed" id="ip-3">
+        <div class="image-prompt-header" onclick="togglePrompt('ip-3')">
+          <div class="image-prompt-header-left"><span class="prompt-chevron">▶</span><span class="image-prompt-label">🎨 Image Prompt</span></div>
+          <button class="copy-btn" onclick="event.stopPropagation();copyPrompt(this,'iptxt-3')">COPY</button>
+        </div>
+        <div class="image-prompt-body" id="iptxt-3">Modern flat cartoon illustration, clean cel-shaded style. Three cartoon lab technicians in white coats stand side by side at a long lab bench in a hospital lab. Above them a sign reads "ZDX PROBE LAB". The first technician holds a stopwatch and a tablet showing a browser window — a label below her reads "WEB PROBE". The second pins a paper map to a corkboard showing three coloured routes labelled "DIRECT", "VIA ZIA", "VIA ZPA" — labelled "CLOUD PATH PROBE". The third holds a leashed cartoon bloodhound mid-sniff — labelled "AUTOSENSE PROBE". Bold outlines, limited cream/gold/orange palette with teal accents, simple lab background, 16:9.</div>
+      </div>
+    </div>
+
+    <div class="scene">
+      <span class="scene-label">Imagine</span>
+      Three lab technicians work side by side. The first holds a <strong>stopwatch and a browser</strong> — she's the
+      <strong>Web Probe</strong>, fetching pages without caching to time DNS, fetch and server response.
+      The second holds a <strong>map with three coloured routes</strong> — she's the <strong>Cloud Path Probe</strong>,
+      running traceroute to count hops, latency and loss along <em>Direct</em>, <em>via ZIA</em>, or <em>via ZPA</em>.
+      The third has a <strong>bloodhound on a leash</strong> sniffing the air — she's the <strong>Autosense Cloud Path
+      Probe</strong>, dynamically detecting destination IP/port for UCaaS calls that move around.
+    </div>
+
+    <div class="anchor">
+      <span class="anchor-label">What this anchors</span>
+      <div class="anchor-grid">
+        <div class="anchor-item"><strong>Web Probe</strong>Page Fetch Time, DNS Time, Server Response Time, Availability. No caching.</div>
+        <div class="anchor-item"><strong>Cloud Path Probe</strong>Traceroute → Hop Count, Packet Loss, Latency. ICMP / TCP / UDP.</div>
+        <div class="anchor-item"><strong>Autosense Cloud Path</strong>Dynamic destination — built for UCaaS where IP/port shifts per call.</div>
+        <div class="anchor-item"><strong>Three paths, one direction</strong>Direct · via ZIA Public Service Edge · via ZPA Service Edge.</div>
+      </div>
+      <div class="key-concept"><strong>Anchor phrase:</strong> "<em>Browser, map, bloodhound</em>" → Web, Cloud Path, Autosense.</div>
+    </div>
+  </div>
+
+  <!-- ROOM 4 -->
+  <div class="room">
+    <div class="room-header">
+      <div class="room-num">4</div>
+      <div class="room-title-block">
+        <h2><span class="room-icon">🩻</span>Imaging Suite &mdash; Deep Tracing <em>the MRI machine</em></h2>
+        <div class="room-subtitle">DIAGNOSTICS · 5–60 MIN · PCAP · BANDWIDTH TEST</div>
+      </div>
+    </div>
+
+    <div class="image-block">
+      <div class="image-placeholder" id="ph-4" onclick="document.getElementById('fi-4').click()">
+        <img src="../images/memory-palace-zdx/4.png" style="cursor:pointer;">
+        <input type="file" id="fi-4" accept="image/*" onchange="loadImg(this,'ph-4')">
+      </div>
+      <div class="image-prompt collapsed" id="ip-4">
+        <div class="image-prompt-header" onclick="togglePrompt('ip-4')">
+          <div class="image-prompt-header-left"><span class="prompt-chevron">▶</span><span class="image-prompt-label">🎨 Image Prompt</span></div>
+          <button class="copy-btn" onclick="event.stopPropagation();copyPrompt(this,'iptxt-4')">COPY</button>
+        </div>
+        <div class="image-prompt-body" id="iptxt-4">Modern flat cartoon illustration, clean cel-shaded style. A cartoon radiology technician in scrubs operates a large MRI-style scanner labelled "DEEP TRACING". The control panel has a big timer dial showing a range "5–60 MIN". Mounted on the wall behind: an X-ray light board displaying film labelled "PCAP". To one side, a small treadmill labelled "BANDWIDTH TEST" with up/down arrows. A printer is producing a document labelled "PDF EXPORT". Bold outlines, simple shapes, limited cream/gold/orange palette with teal accents, soft clinical setting, 16:9.</div>
+      </div>
+    </div>
+
+    <div class="scene">
+      <span class="scene-label">Imagine</span>
+      A radiology room. The technician sets the timer between <strong>5 and 60 minutes</strong>, picks one user, one device,
+      one app, and presses <em>start</em>. The machine prints out <strong>process-level data every minute</strong>,
+      attaches a <strong>packet capture</strong> like an X-ray film, and runs a <strong>bandwidth test</strong> for the
+      patient's upload and download lungs. Results <strong>export to PDF</strong> for the L2/L3 specialists.
+    </div>
+
+    <div class="anchor">
+      <span class="anchor-label">What this anchors</span>
+      <div class="anchor-grid">
+        <div class="anchor-item"><strong>Targeting</strong>One user + one device + one application — Deep Tracing is laser-focused.</div>
+        <div class="anchor-item"><strong>Duration</strong>5 to 60 minutes per session.</div>
+        <div class="anchor-item"><strong>What it captures</strong>Process-level info, PCAP, bandwidth test results.</div>
+        <div class="anchor-item"><strong>Export</strong>PDF output for documentation and ticket attachment.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ROOM 5 -->
+  <div class="room">
+    <div class="room-header">
+      <div class="room-num">5</div>
+      <div class="room-title-block">
+        <h2><span class="room-icon">🚨</span>Alarm Tower &mdash; Alerts <em>three colours of siren</em></h2>
+        <div class="room-subtitle">APPLICATION · DEVICE · NETWORK</div>
+      </div>
+    </div>
+
+    <div class="image-block">
+      <div class="image-placeholder" id="ph-5" onclick="document.getElementById('fi-5').click()">
+        <img src="../images/memory-palace-zdx/5.png" style="cursor:pointer;">
+        <input type="file" id="fi-5" accept="image/*" onchange="loadImg(this,'ph-5')">
+      </div>
+      <div class="image-prompt collapsed" id="ip-5">
+        <div class="image-prompt-header" onclick="togglePrompt('ip-5')">
+          <div class="image-prompt-header-left"><span class="prompt-chevron">▶</span><span class="image-prompt-label">🎨 Image Prompt</span></div>
+          <button class="copy-btn" onclick="event.stopPropagation();copyPrompt(this,'iptxt-5')">COPY</button>
+        </div>
+        <div class="image-prompt-body" id="iptxt-5">Modern flat cartoon illustration, clean cel-shaded style. A tall stone hospital tower at dusk with three large stacked sirens visible at the top. Each siren is clearly labelled and colour-coded: top siren BLUE labelled "APPLICATION", middle siren GREEN labelled "DEVICE", bottom siren RED labelled "NETWORK". A big brass throttle valve protrudes from the side of the tower, labelled "THROTTLE". Mounted on the wall, a chalkboard shows a wavy "ADAPTIVE BASELINE" graph. Bold outlines, simple shapes, dramatic warm sunset sky, cream/gold/orange palette with the three sirens as the only saturated colour spots, 16:9.</div>
+      </div>
+    </div>
+
+    <div class="scene">
+      <span class="scene-label">Imagine</span>
+      A tower with <strong>three sirens</strong> stacked: <span style="color:var(--blue);font-weight:600;">blue
+      (Application)</span>, <span style="color:var(--green);font-weight:600;">green (Device)</span>, and
+      <span style="color:var(--red);font-weight:600;">red (Network)</span>. Each siren has its own filters —
+      location, user group, individual device. A throttle valve below stops the alarms from screaming all night
+      (alert fatigue). On the wall: a chart of <strong>adaptive baselines</strong> that learn what "normal" looks like.
+    </div>
+
+    <div class="anchor">
+      <span class="anchor-label">Metric examples by event type</span>
+      <div class="anchor-grid">
+        <div class="anchor-item"><strong>Application (blue)</strong>DNS Time · Page Fetch Time · Server Response Time · Web Request Availability · ZDX Score Drops.</div>
+        <div class="anchor-item"><strong>Device (green)</strong>Bandwidth · Battery Level · CPU · Disk · Memory · Wi-Fi Signal.</div>
+        <div class="anchor-item"><strong>Network (red)</strong>Latency · Packet Count · Hops · Packet Loss · ZDX Score Drops.</div>
+        <div class="anchor-item"><strong>Actions</strong>Muted (portal only) · Email · Webhook (ServiceNow / Slack / PagerDuty).</div>
+      </div>
+      <div class="key-concept"><strong>Memory hook:</strong> Notice that <em>ZDX Score Drops</em> shows up under both Application and Network — it's a cross-cutting trigger.</div>
+    </div>
+  </div>
+
+  <!-- ROOM 6 -->
+  <div class="room">
+    <div class="room-header">
+      <div class="room-num">6</div>
+      <div class="room-title-block">
+        <h2><span class="room-icon">📦</span>Records Room &mdash; Inventory <em>the filing cabinets</em></h2>
+        <div class="room-subtitle">DEVICE · SOFTWARE · PROCESS</div>
+      </div>
+    </div>
+
+    <div class="image-block">
+      <div class="image-placeholder" id="ph-6" onclick="document.getElementById('fi-6').click()">
+        <img src="../images/memory-palace-zdx/6.png" style="cursor:pointer;">
+        <input type="file" id="fi-6" accept="image/*" onchange="loadImg(this,'ph-6')">
+      </div>
+      <div class="image-prompt collapsed" id="ip-6">
+        <div class="image-prompt-header" onclick="togglePrompt('ip-6')">
+          <div class="image-prompt-header-left"><span class="prompt-chevron">▶</span><span class="image-prompt-label">🎨 Image Prompt</span></div>
+          <button class="copy-btn" onclick="event.stopPropagation();copyPrompt(this,'iptxt-6')">COPY</button>
+        </div>
+        <div class="image-prompt-body" id="iptxt-6">Modern flat cartoon illustration, clean cel-shaded style. A hospital records room. Three tall wooden filing cabinets stand in a row, each with a large brass plate label clearly visible: "DEVICE INVENTORY", "SOFTWARE INVENTORY", "PROCESS INVENTORY". The "PROCESS" cabinet's drawer is open mid-motion with paper files flying out (showing it updates constantly). A small clock on the wall reads "1 MIN" with a smaller note "TOP 5 MIN". A friendly cartoon hospital records clerk in scrubs holds a clipboard. Bold outlines, simple shapes, warm cream/gold/orange palette with soft lamp light, 16:9.</div>
+      </div>
+    </div>
+
+    <div class="scene">
+      <span class="scene-label">Imagine</span>
+      Three filing cabinets along the wall. The first holds <strong>Device</strong> records (who owns what hardware).
+      The second holds <strong>Software</strong> records — current and historical versions, like medical history.
+      The third is labelled <strong>Process</strong> and the drawer is constantly opening — top processes refresh
+      <strong>every five minutes</strong>, with metrics updated <strong>every minute</strong>.
+    </div>
+
+    <div class="anchor">
+      <span class="anchor-label">What this anchors</span>
+      <div class="anchor-grid">
+        <div class="anchor-item"><strong>Device Inventory</strong>Real-time visibility into devices and their users.</div>
+        <div class="anchor-item"><strong>Software Inventory</strong>Current + historical software versions and patches.</div>
+        <div class="anchor-item"><strong>Process Inventory</strong>Metrics every 1 min · top processes shown every 5 min.</div>
+        <div class="anchor-item"><strong>Common prerequisites</strong>Min ZCC + ZDX Module versions · subscription tier · data collection enabled · permissions.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ROOM 7 -->
+  <div class="room">
+    <div class="room-header">
+      <div class="room-num">7</div>
+      <div class="room-title-block">
+        <h2><span class="room-icon">🔑</span>Security Office &mdash; RBAC <em>the keycard maker</em></h2>
+        <div class="room-subtitle">FULL · VIEW ONLY · CUSTOM · NONE</div>
+      </div>
+    </div>
+
+    <div class="image-block">
+      <div class="image-placeholder" id="ph-7" onclick="document.getElementById('fi-7').click()">
+        <img src="../images/memory-palace-zdx/7.png" style="cursor:pointer;">
+        <input type="file" id="fi-7" accept="image/*" onchange="loadImg(this,'ph-7')">
+      </div>
+      <div class="image-prompt collapsed" id="ip-7">
+        <div class="image-prompt-header" onclick="togglePrompt('ip-7')">
+          <div class="image-prompt-header-left"><span class="prompt-chevron">▶</span><span class="image-prompt-label">🎨 Image Prompt</span></div>
+          <button class="copy-btn" onclick="event.stopPropagation();copyPrompt(this,'iptxt-7')">COPY</button>
+        </div>
+        <div class="image-prompt-body" id="iptxt-7">Modern flat cartoon illustration, clean cel-shaded style. A hospital security office. A friendly cartoon security guard in uniform stands behind a desk operating a keycard printer. Four freshly-printed keycards are fanned out on the desk in front of him, each with a clear large label: GREEN card reads "FULL", BLUE card reads "VIEW ONLY", PURPLE card reads "CUSTOM", RED card reads "NONE". Behind him, a row of doors is visible with small signs above each: "DASHBOARD", "UCAAS", "CONFIG", "USER MGMT", "DEEP TRACING", "ALERTS", "WEBHOOKS". Bold outlines, simple shapes, warm cream/gold/orange palette, 16:9.</div>
+      </div>
+    </div>
+
+    <div class="scene">
+      <span class="scene-label">Imagine</span>
+      A security guard prints keycards in <strong>four colours</strong>: <strong>Full</strong> (read+write),
+      <strong>View Only</strong> (look but don't touch), <strong>Custom</strong> (tailored), and <strong>None</strong>
+      (door won't open). Each card opens a different combination of doors: Dashboard, UCaaS Monitoring,
+      Configuration, User Management, Deep Tracing, Alerts, Webhooks.
+    </div>
+
+    <div class="anchor">
+      <span class="anchor-label">What this anchors</span>
+      <div class="anchor-grid">
+        <div class="anchor-item"><strong>Four access levels</strong>Full · View Only · Custom · None — applied per section.</div>
+        <div class="anchor-item"><strong>Sections covered</strong>Dashboard · UCaaS · Config · User Mgmt · Deep Tracing · Alerts · Webhooks.</div>
+      </div>
+      <div class="key-concept"><strong>Why it matters:</strong> RBAC in ZDX is granular <em>per section</em>, not a single role-wide switch — that's the engineer-level detail.</div>
+    </div>
+  </div>
+
+  <!-- ROOM 8 -->
+  <div class="room">
+    <div class="room-header">
+      <div class="room-num">8</div>
+      <div class="room-title-block">
+        <h2><span class="room-icon">🤖</span>The AI Wing &mdash; Y Engine, Copilot, API <em>the smart side of the hospital</em></h2>
+        <div class="room-subtitle">Y ENGINE · ZDX COPILOT · API · WEBHOOKS · INTUNE</div>
+      </div>
+    </div>
+
+    <div class="image-block">
+      <div class="image-placeholder" id="ph-8" onclick="document.getElementById('fi-8').click()">
+        <img src="../images/memory-palace-zdx/8.png" style="cursor:pointer;">
+        <input type="file" id="fi-8" accept="image/*" onchange="loadImg(this,'ph-8')">
+      </div>
+      <div class="image-prompt collapsed" id="ip-8">
+        <div class="image-prompt-header" onclick="togglePrompt('ip-8')">
+          <div class="image-prompt-header-left"><span class="prompt-chevron">▶</span><span class="image-prompt-label">🎨 Image Prompt</span></div>
+          <button class="copy-btn" onclick="event.stopPropagation();copyPrompt(this,'iptxt-8')">COPY</button>
+        </div>
+        <div class="image-prompt-body" id="iptxt-8">Modern flat cartoon illustration, clean cel-shaded style. A bright glass-walled hospital wing. A cartoon AI robot doctor in a white coat labelled "Y ENGINE" stands at a desk reading a patient chart through a magnifying glass. Beside it, a friendly assistant chatbot character with a tablet has a name badge labelled "ZDX COPILOT". On the back wall, a brass pneumatic tube system has three slots clearly labelled "REPORTS", "TROUBLESHOOTING", "SERVICENOW". Through a window outside, three cartoon delivery trucks are parked with signs reading "SERVICENOW", "SLACK", "PAGERDUTY". A side door has a sign labelled "INTUNE". Bold outlines, simple shapes, warm cream/gold/orange palette with subtle teal tech accents, 16:9.</div>
+      </div>
+    </div>
+
+    <div class="scene">
+      <span class="scene-label">Imagine</span>
+      A glass-walled wing at the back of the hospital. The <strong>Y Engine</strong> is an AI doctor doing
+      <strong>automated root-cause analysis</strong> on the charts. <strong>ZDX Copilot</strong> sits at a desk fielding
+      questions from junior staff. A <strong>pneumatic tube system</strong> on the wall is the <strong>ZDX API</strong>
+      with three slots: <em>Reports</em>, <em>Troubleshooting</em>, and <em>ServiceNow integration</em>. Outside, three
+      delivery trucks idle for the webhooks: <strong>ServiceNow, Slack, PagerDuty</strong>. A side door connects to
+      <strong>Microsoft Intune</strong> for endpoint analytics — boot times, startup performance, software reliability.
+    </div>
+
+    <div class="anchor">
+      <span class="anchor-label">What this anchors</span>
+      <div class="anchor-grid">
+        <div class="anchor-item"><strong>Y Engine</strong>AI-driven automated root-cause analysis.</div>
+        <div class="anchor-item"><strong>ZDX Copilot</strong>AI-powered assistant for IT teams.</div>
+        <div class="anchor-item"><strong>ZDX API</strong>Reports · Troubleshooting (start/stop sessions) · ServiceNow on-demand.</div>
+        <div class="anchor-item"><strong>Webhook integrations</strong>ServiceNow · Slack · PagerDuty for incident workflow.</div>
+        <div class="anchor-item"><strong>Intune integration</strong>Endpoint analytics: boot times, startup, software reliability.</div>
+        <div class="anchor-item"><strong>Workflow Automation</strong>Tie alerts to actions across the Zero Trust Exchange.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- WALKTHROUGH -->
+  <div class="walkthrough">
+    <h3>The 60-second walk-through</h3>
+    <p style="font-size:14px;color:var(--ink-soft);margin-bottom:14px;line-height:1.6;">
+      Run this in your head before any ZDX question on the exam. If you can recite it, you can answer it.
+    </p>
+    <ol>
+      <li><strong>Reception:</strong> two thermometers (PFT + Availability), 7-day calendar, smoothing toggle.</li>
+      <li><strong>Triage board:</strong> User Score = worst app · Device Score = average of devices.</li>
+      <li><strong>The Lab:</strong> browser, map, bloodhound — Web, Cloud Path, Autosense. Three paths: Direct / ZIA / ZPA.</li>
+      <li><strong>Imaging Suite:</strong> Deep Tracing — 5–60 min, one user/device/app, PCAP + bandwidth + PDF export.</li>
+      <li><strong>Alarm Tower:</strong> three sirens — Application / Device / Network — actions: muted, email, webhook.</li>
+      <li><strong>Records Room:</strong> Device · Software · Process inventories.</li>
+      <li><strong>Security Office:</strong> Full / View Only / Custom / None — applied per section.</li>
+      <li><strong>AI Wing:</strong> Y Engine · Copilot · API · Webhooks (ServiceNow/Slack/PagerDuty) · Intune.</li>
+    </ol>
+  </div>
+
+</main>
+
+<footer>
+  ZDTE Study Bite · Memory Palace · Anchored to ZDX domain (8% of blueprint)
+</footer>
+
+<script>
+  function togglePrompt(id) {
+    document.getElementById(id).classList.toggle('collapsed');
+  }
+
+  function copyPrompt(btn, textId) {
+    const text = document.getElementById(textId).innerText;
+    navigator.clipboard.writeText(text).then(() => {
+      btn.textContent = 'COPIED ✓';
+      btn.classList.add('copied');
+      setTimeout(() => { btn.textContent = 'COPY'; btn.classList.remove('copied'); }, 2000);
+    });
+  }
+
+  function loadImg(input, phId) {
+    const file = input.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = e => {
+      const ph = document.getElementById(phId);
+      ph.querySelectorAll('.image-placeholder-icon,.image-placeholder-text,.image-placeholder-hint').forEach(el => el.style.display = 'none');
+      let img = ph.querySelector('img');
+      if (!img) { img = document.createElement('img'); ph.insertBefore(img, ph.querySelector('input')); }
+      img.src = e.target.result;
+      img.alt = '';
+    };
+    reader.readAsDataURL(file);
+  }
+</script>
+
+</body>
+</html>

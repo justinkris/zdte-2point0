@@ -286,6 +286,43 @@ code { background: var(--cream-dark); padding: 1px 6px; border-radius: 4px; font
 .scenario-a { font-size: 13px; color: var(--cream); line-height: 1.7; border-top: 1px solid #3a3020; padding-top: 10px; }
 .scenario-a strong { color: var(--orange); }
 
+/* ── PIPELINE STAGES (horizontal cards, mock exam inspection pipeline) ── */
+.pipeline-stages { display: flex; gap: 8px; margin: 18px 0 22px; flex-wrap: wrap; }
+.pipeline-stage { flex: 1; min-width: 130px; background: var(--cream); border: 1px solid var(--border); border-top: 3px solid var(--orange); border-radius: 8px; padding: 12px 14px; }
+.pipeline-stage-num { font-family: 'Fraunces', serif; font-size: 11px; color: var(--orange); letter-spacing: 0.1em; margin-bottom: 4px; }
+.pipeline-stage-name { font-size: 13px; font-weight: 600; color: var(--ink); margin-bottom: 4px; }
+.pipeline-stage-desc { font-size: 11px; color: var(--ink-muted); line-height: 1.5; }
+
+/* ── SCORE SUMMARY (dark banner, mock exam result) ── */
+.score-summary { background: var(--ink); color: var(--cream); border-radius: 14px; padding: 22px 26px; margin-bottom: 20px; display: flex; gap: 24px; align-items: center; flex-wrap: wrap; }
+.score-summary-num { font-family: 'Fraunces', serif; font-size: 56px; font-weight: 700; color: var(--orange); line-height: 1; flex-shrink: 0; }
+.score-summary-text { flex: 1; }
+.score-summary-text strong { color: var(--cream); font-size: 15px; display: block; margin-bottom: 4px; }
+.score-summary-text span { color: #b8a18a; font-size: 12px; line-height: 1.6; }
+.score-breakdown { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
+.score-domain { background: var(--cream-dark); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; }
+.score-domain-name { font-size: 11px; letter-spacing: 0.08em; color: var(--ink-muted); margin-bottom: 6px; }
+.score-domain-num { font-family: 'Fraunces', serif; font-size: 28px; font-weight: 700; color: var(--green); }
+.score-domain-detail { font-size: 11px; color: var(--ink-muted); margin-top: 2px; }
+@media (max-width: 900px) { .score-breakdown { grid-template-columns: 1fr; } }
+
+/* ── IMAGE SLOTS (memory palace upload + prompt) ── */
+.img-slot { margin-top: 12px; border: 2px dashed var(--border); border-radius: 12px; overflow: hidden; background: var(--cream-dark); position: relative; }
+.img-slot img { width: 100%; display: block; border-radius: 10px; }
+.img-slot-empty { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; padding: 20px 16px; cursor: pointer; min-height: 100px; }
+.img-slot-empty:hover { background: var(--orange-light); }
+.img-slot-label { font-size: 11px; font-weight: 600; letter-spacing: 0.1em; color: var(--ink-muted); }
+.img-slot-hint { font-size: 10px; color: var(--ink-muted); }
+.img-slot input[type="file"] { display: none; }
+.img-slot-full .img-slot-empty { min-height: 160px; }
+.img-prompt-block { margin-top: 10px; background: var(--ink); border-radius: 10px; overflow: hidden; }
+.img-prompt-header { display: flex; align-items: center; justify-content: space-between; padding: 8px 12px; border-bottom: 1px solid #2a2010; }
+.img-prompt-label { font-size: 10px; letter-spacing: 0.12em; color: var(--orange); font-weight: 600; }
+.img-prompt-text { padding: 10px 12px; font-size: 11px; color: #c8b898; line-height: 1.6; font-style: italic; }
+.copy-btn { font-size: 10px; font-family: 'Epilogue', sans-serif; font-weight: 600; letter-spacing: 0.08em; color: var(--cream); background: #2a2010; border: 1px solid #3a3020; border-radius: 6px; padding: 4px 10px; cursor: pointer; transition: background 0.15s; }
+.copy-btn:hover { background: var(--orange); border-color: var(--orange); }
+.copy-btn.copied { background: var(--green); border-color: var(--green); }
+
 /* ── PLACEHOLDER (pending exam pages) ── */
 main.main-full { display: block; padding: 60px; max-width: 860px; margin: 0 auto; }
 .placeholder { text-align: center; padding: 60px 40px; max-width: 620px; margin: 0 auto; }
