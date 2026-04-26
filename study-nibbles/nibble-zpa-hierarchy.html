@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ZDTE Study Nibble — ZPA Component Hierarchy</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;0,700;1,400&family=Epilogue:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #fef9f0;
+    --cream-dark: #f5eddb;
+    --ink: #1a1209;
+    --ink-soft: #5a4a35;
+    --ink-muted: #8a7660;
+    --orange: #ff6b35;
+    --orange-light: #fff3ec;
+    --orange-border: #ffd5c0;
+    --amber-light: #fffbe6;
+    --green: #3a7d44;
+    --green-light: #edf7ee;
+    --green-border: #b2dfb4;
+    --blue-light: #e8f0fb;
+    --blue-border: #b3ccf0;
+    --blue: #1a6bcc;
+    --red-light: #fce8e8;
+    --red-border: #f7c1c1;
+    --red: #a32d2d;
+    --border: #ede5d8;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Epilogue', sans-serif;
+    background: var(--cream);
+    color: var(--ink);
+    min-height: 100vh;
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 40px 24px 60px;
+  }
+
+  .nibble-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 20px;
+    margin-bottom: 32px;
+    padding-bottom: 24px;
+    border-bottom: 2px solid var(--border);
+  }
+
+  .nibble-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--orange);
+    color: white;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    margin-bottom: 10px;
+  }
+
+  h1 {
+    font-family: 'Fraunces', serif;
+    font-size: 32px;
+    font-weight: 700;
+    line-height: 1.05;
+    color: var(--ink);
+    margin-bottom: 8px;
+  }
+
+  h1 em { font-style: italic; font-weight: 400; color: var(--orange); }
+
+  .nibble-meta {
+    font-size: 12px;
+    color: var(--ink-muted);
+    letter-spacing: 0.06em;
+  }
+
+  .nibble-tags {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-top: 10px;
+  }
+
+  .tag {
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 10px;
+    font-weight: 500;
+    border: 1px solid;
+    display: inline-block;
+  }
+
+  .tag-zpa { background: var(--green-light); color: var(--green); border-color: var(--green-border); }
+  .tag-arch { background: var(--amber-light); color: #a07c00; border-color: #ffe680; }
+
+  .breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    color: var(--ink-muted);
+    letter-spacing: 0.06em;
+    margin-bottom: 20px;
+  }
+  .breadcrumb a { color: var(--orange); text-decoration: none; }
+  .breadcrumb-sep { color: var(--border); }
+
+  .h-card {
+    flex: 1;
+    border-radius: 12px;
+    padding: 14px 18px;
+    border: 1px solid;
+    position: relative;
+    margin-bottom: 0;
+  }
+
+  .h-card-title {
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 3px;
+  }
+
+  .h-card-sub {
+    font-size: 11px;
+    line-height: 1.5;
+  }
+
+  .h-card-badge {
+    position: absolute;
+    top: -1px;
+    right: 12px;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    padding: 3px 8px;
+    border-radius: 0 0 8px 8px;
+    border: 1px solid;
+    border-top: none;
+  }
+
+  .h-l1 { background: var(--ink); border-color: var(--ink); }
+  .h-l1 .h-card-title { color: var(--orange); font-size: 15px; }
+  .h-l1 .h-card-sub { color: #9a8070; }
+  .h-l1 .h-card-badge { background: var(--orange); color: white; border-color: var(--orange); }
+
+  .h-l2 { background: var(--green-light); border-color: var(--green-border); margin-left: 32px; }
+  .h-l2 .h-card-title { color: var(--green); }
+  .h-l2 .h-card-sub { color: #2a5c32; }
+  .h-l2 .h-card-badge { background: var(--green); color: white; border-color: var(--green); }
+
+  .h-l3 { background: var(--blue-light); border-color: var(--blue-border); margin-left: 64px; }
+  .h-l3 .h-card-title { color: var(--blue); }
+  .h-l3 .h-card-sub { color: #153d7a; }
+  .h-l3 .h-card-badge { background: var(--blue); color: white; border-color: var(--blue); }
+
+  .level-arrow { text-align: center; font-size: 18px; color: var(--border); margin: 4px 0; line-height: 1; }
+  .level-arrow-2 { margin-left: 48px; }
+  .level-arrow-3 { margin-left: 80px; }
+
+  .section-label {
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    color: var(--ink-muted);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  table.ref-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    margin-bottom: 24px;
+  }
+
+  table.ref-table th {
+    background: var(--ink);
+    color: var(--cream);
+    padding: 10px 14px;
+    text-align: center;
+    font-weight: 500;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+  }
+
+  table.ref-table th:first-child { border-radius: 10px 0 0 0; }
+  table.ref-table th:last-child { border-radius: 0 10px 0 0; }
+
+  table.ref-table td {
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+    color: var(--ink-soft);
+    vertical-align: middle;
+    line-height: 1.6;
+    text-align: center;
+  }
+
+  table.ref-table tr:nth-child(even) td { background: var(--cream-dark); }
+  table.ref-table tr:last-child td:first-child { border-radius: 0 0 0 10px; }
+  table.ref-table tr:last-child td:last-child { border-radius: 0 0 10px 0; }
+
+  .cell-l1 { color: var(--orange); font-weight: 600; }
+  .cell-l2 { color: var(--green); font-weight: 600; }
+  .cell-l3 { color: var(--blue); font-weight: 600; }
+
+  .callout {
+    border-radius: 14px;
+    padding: 16px 18px;
+    margin-bottom: 14px;
+    border: 1px solid;
+  }
+
+  .callout-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    margin-bottom: 8px;
+  }
+
+  .callout-icon {
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    flex-shrink: 0;
+  }
+
+  .callout-body { font-size: 13px; line-height: 1.7; }
+
+  .callout-note { background: var(--amber-light); border-color: #ffe680; }
+  .callout-note .callout-header { color: #a07c00; }
+  .callout-note .callout-icon { background: #ffe680; color: #a07c00; }
+  .callout-note .callout-body { color: #7a5c00; }
+
+  .callout-analogy { background: var(--green-light); border-color: var(--green-border); }
+  .callout-analogy .callout-header { color: var(--green); }
+  .callout-analogy .callout-icon { background: var(--green-border); color: var(--green); }
+  .callout-analogy .callout-body { color: #2a5c32; }
+
+  .callout-warn { background: var(--red-light); border-color: var(--red-border); }
+  .callout-warn .callout-header { color: var(--red); }
+  .callout-warn .callout-icon { background: var(--red-border); color: var(--red); }
+  .callout-warn .callout-body { color: #7a1f1f; }
+
+  .callout-tip { background: var(--blue-light); border-color: var(--blue-border); }
+  .callout-tip .callout-header { color: var(--blue); }
+  .callout-tip .callout-icon { background: var(--blue-border); color: var(--blue); }
+  .callout-tip .callout-body { color: #153d7a; }
+
+  .mnemonic-box {
+    background: var(--ink);
+    border-radius: 14px;
+    padding: 20px 24px;
+    margin-bottom: 24px;
+    text-align: center;
+  }
+
+  .mnemonic-label {
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    color: #9a8070;
+    margin-bottom: 12px;
+  }
+
+  .mnemonic-letters {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+  }
+
+  .mnemonic-letter {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .mnemonic-char {
+    font-family: 'Fraunces', serif;
+    font-size: 36px;
+    font-weight: 700;
+    color: var(--orange);
+    line-height: 1;
+  }
+
+  .mnemonic-word {
+    font-size: 10px;
+    color: #9a8070;
+    letter-spacing: 0.06em;
+  }
+
+  .mnemonic-sep {
+    font-family: 'Fraunces', serif;
+    font-size: 28px;
+    color: #3a3028;
+    align-self: center;
+    padding-top: 2px;
+  }
+
+  .mnemonic-phrase {
+    font-size: 12px;
+    color: #9a8070;
+    font-style: italic;
+    line-height: 1.6;
+  }
+
+  .img-placeholder {
+    background: var(--cream-dark);
+    border: 2px dashed var(--border);
+    border-radius: 14px;
+    padding: 28px 20px;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  .img-placeholder-title {
+    font-family: 'Fraunces', serif;
+    font-size: 14px;
+    color: var(--ink-muted);
+    margin-bottom: 8px;
+  }
+
+  .img-placeholder-prompt {
+    font-size: 11px;
+    color: var(--ink-muted);
+    font-style: italic;
+    line-height: 1.6;
+  }
+
+  .nibble-footer {
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 11px;
+    color: var(--ink-muted);
+  }
+
+  .nibble-footer-brand {
+    font-family: 'Fraunces', serif;
+    font-size: 14px;
+    font-weight: 700;
+  }
+
+  .nibble-footer-brand span { color: var(--orange); }
+</style>
+</head>
+<body>
+
+<div class="breadcrumb">
+  <a href="../index.html">Study Plan</a>
+  <span class="breadcrumb-sep">›</span>
+  <a href="../study-nibbles.html">Study Nibbles</a>
+  <span class="breadcrumb-sep">›</span>
+  <span>ZPA Component Hierarchy</span>
+</div>
+
+<div class="nibble-header">
+  <div>
+    <div class="nibble-badge">⬡ STUDY NIBBLE</div>
+    <h1>ZPA Component<br><em>Hierarchy</em></h1>
+    <div class="nibble-meta">Quick Reference · Access Control Services · 10% Blueprint</div>
+    <div class="nibble-tags">
+      <span class="tag tag-zpa">ZPA</span>
+      <span class="tag tag-arch">Access Control</span>
+    </div>
+  </div>
+</div>
+
+<div class="section-label">VISUAL HIERARCHY — BROADEST TO MOST SPECIFIC</div>
+
+<div style="margin-bottom: 28px;">
+  <div class="h-card h-l1">
+    <div class="h-card-badge">BROADEST — INFRASTRUCTURE</div>
+    <div class="h-card-title">App Connector Group</div>
+    <div class="h-card-sub">The pool of deployed App Connectors. Defines which connectors are available. Built first — nothing else can exist without it.</div>
+  </div>
+
+  <div class="level-arrow level-arrow-2">↓</div>
+
+  <div class="h-card h-l2">
+    <div class="h-card-badge">MIDDLE — NETWORK SCOPE</div>
+    <div class="h-card-title">Server Group</div>
+    <div class="h-card-sub">Defines which backend servers the App Connectors in the group can reach. Links connectors to destinations. References the App Connector Group above it.</div>
+  </div>
+
+  <div class="level-arrow level-arrow-3">↓</div>
+
+  <div class="h-card h-l3">
+    <div class="h-card-badge">MOST SPECIFIC — POLICY</div>
+    <div class="h-card-title">Application Segment</div>
+    <div class="h-card-sub">The specific FQDNs, IP addresses, and ports that users are granted access to. This is what appears in access policies. References the Server Group above it.</div>
+  </div>
+</div>
+
+<img src="../images/study-nibbles/zpa-hierarchy/warehouse.png" alt="ZPA Hierarchy — Warehouse Analogy" style="width:100%;border-radius:14px;margin-bottom:20px;display:block;">
+
+<div class="section-label">QUICK REFERENCE</div>
+
+<table class="ref-table">
+  <thead>
+    <tr>
+      <th>Component</th>
+      <th>What It Defines</th>
+      <th>Analogy</th>
+      <th>Config Location</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td class="cell-l1">App Connector Group</td>
+      <td>Which App Connectors are available as a pool</td>
+      <td>The warehouse (all your delivery trucks)</td>
+      <td>ZPA Admin → App Connectors → Groups</td>
+    </tr>
+    <tr>
+      <td class="cell-l2">Server Group</td>
+      <td>Which servers the connectors in that group can reach</td>
+      <td>Shelf sections inside the warehouse</td>
+      <td>ZPA Admin → Server Groups</td>
+    </tr>
+    <tr>
+      <td class="cell-l3">Application Segment</td>
+      <td>The specific FQDNs / IPs / ports users access</td>
+      <td>The individual product on the shelf</td>
+      <td>ZPA Admin → Application Segments</td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="section-label">BUILD ORDER — DEPENDENCY CHAIN</div>
+
+<table class="ref-table">
+  <thead>
+    <tr>
+      <th>Step</th>
+      <th>Create This</th>
+      <th>Requires</th>
+      <th>Why</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>1</td>
+      <td class="cell-l1">App Connector Group</td>
+      <td>App Connectors installed &amp; enrolled</td>
+      <td>Foundation — everything depends on connectors</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td class="cell-l2">Server Group</td>
+      <td>App Connector Group exists</td>
+      <td>Must reference a connector group to know which connectors can reach those servers</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td class="cell-l3">Application Segment</td>
+      <td>Server Group exists</td>
+      <td>Must reference a server group — defines the path from connector to application</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td style="color:var(--ink-soft);font-weight:600;">Access Policy Rule</td>
+      <td>Application Segment exists</td>
+      <td>Policy rules reference segments — without a segment, no policy can be created for that app</td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="section-label">MNEMONIC</div>
+
+<div class="mnemonic-box">
+  <div class="mnemonic-label">REMEMBER THE ORDER WITH</div>
+  <div class="mnemonic-letters">
+    <div class="mnemonic-letter">
+      <div class="mnemonic-char">A</div>
+      <div class="mnemonic-word">App Connector</div>
+      <div class="mnemonic-word">Group</div>
+    </div>
+    <div class="mnemonic-sep">→</div>
+    <div class="mnemonic-letter">
+      <div class="mnemonic-char">S</div>
+      <div class="mnemonic-word">Server</div>
+      <div class="mnemonic-word">Group</div>
+    </div>
+    <div class="mnemonic-sep">→</div>
+    <div class="mnemonic-letter">
+      <div class="mnemonic-char">A</div>
+      <div class="mnemonic-word">Application</div>
+      <div class="mnemonic-word">Segment</div>
+    </div>
+  </div>
+  <div class="mnemonic-phrase">"Always Start with Architecture"<br>— or — "A Solid Application needs infrastructure first"</div>
+</div>
+
+<div class="section-label">KEY RULES</div>
+
+<div class="callout callout-analogy">
+  <div class="callout-header">
+    <div class="callout-icon">⟳</div>
+    ANALOGY — The Warehouse
+  </div>
+  <div class="callout-body">
+    Think of ZPA like a warehouse delivery system. The <strong>App Connector Group</strong> is the whole warehouse with your fleet of trucks. The <strong>Server Group</strong> is which sections of the warehouse (aisles) those trucks are allowed into. The <strong>Application Segment</strong> is the specific product on the shelf that a customer (user) is allowed to pick up. You can't stock a shelf until you have aisles. You can't have aisles until you have a warehouse.
+  </div>
+</div>
+
+<div class="callout callout-note">
+  <div class="callout-header">
+    <div class="callout-icon">★</div>
+    MENTAL NOTE — First-Match Policy
+  </div>
+  <div class="callout-body">
+    ZPA evaluates access policies using a <strong>first-match principle</strong>. If two policies match the same destination, ZPA picks the most specific Application Segment. Ordering matters — a broad allow rule above a narrow deny rule will grant access before the deny rule is ever evaluated. Always put more specific rules higher in the list.
+  </div>
+</div>
+
+<div class="callout callout-note">
+  <div class="callout-header">
+    <div class="callout-icon">★</div>
+    MENTAL NOTE — Default Deny
+  </div>
+  <div class="callout-body">
+    ZPA is <strong>default deny</strong>. All application access is blocked unless explicitly allowed by an Access Policy rule. There is no implicit allow. This is the opposite of legacy VPN — you do not get access to anything just by being connected.
+  </div>
+</div>
+
+<div class="callout callout-warn">
+  <div class="callout-header">
+    <div class="callout-icon">!</div>
+    EXAM TRAP — Reversed Order
+  </div>
+  <div class="callout-body">
+    The exam frequently presents the hierarchy in reverse order (Application Segment → Server Group → App Connector Group) as a distractor. This is wrong. Always read "broadest to most specific" as infrastructure first, policy object last. If a question asks "what must be configured before an Application Segment can be created?" — the answer is Server Group (and by extension, App Connector Group beneath it).
+  </div>
+</div>
+
+<div class="callout callout-tip">
+  <div class="callout-header">
+    <div class="callout-icon">→</div>
+    EXAM TIP — Scenario Questions
+  </div>
+  <div class="callout-body">
+    Scenario: "An admin creates an Application Segment but users cannot access the app." First thing to check — is a Server Group assigned to the segment? Is the Server Group linked to an active App Connector Group? Are the App Connectors healthy and enrolled? The troubleshooting path follows the hierarchy from bottom up: Connectors → Server Group → Segment → Policy.
+  </div>
+</div>
+
+<img src="../images/study-nibbles/zpa-hierarchy/ladder.png" alt="ZPA Troubleshooting — Bottom-Up Ladder" style="width:100%;max-width:420px;border-radius:14px;margin-bottom:20px;display:block;margin-left:auto;margin-right:auto;">
+
+<div class="nibble-footer">
+  <div class="nibble-footer-brand">ZDTE <span>Study Nibble</span></div>
+  <div>ZPA Component Hierarchy · Access Control Services · 10% Blueprint</div>
+</div>
+
+</body>
+</html>

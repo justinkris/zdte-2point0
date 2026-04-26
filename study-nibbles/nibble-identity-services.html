@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ZDTE Nibble — Identity Services</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;0,700;1,400&family=Epilogue:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --cream: #fef9f0;
+  --cream-dark: #f5eddb;
+  --ink: #1a1209;
+  --ink-soft: #5a4a35;
+  --ink-muted: #8a7660;
+  --orange: #ff6b35;
+  --orange-light: #fff3ec;
+  --orange-border: #ffd5c0;
+  --amber-light: #fffbe6;
+  --green: #3a7d44;
+  --green-light: #edf7ee;
+  --green-border: #b2dfb4;
+  --purple: #5c35cc;
+  --purple-light: #ece8ff;
+  --purple-border: #c8bbff;
+  --blue-light: #e8f0fb;
+  --blue-border: #b3ccf0;
+  --blue: #1a6bcc;
+  --red-light: #fce8e8;
+  --red-border: #f7c1c1;
+  --red: #a32d2d;
+  --border: #ede5d8;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Epilogue', sans-serif; background: var(--cream); color: var(--ink); }
+
+/* ── BREADCRUMB BAR ── */
+.breadcrumb-bar {
+  padding: 10px 60px;
+  background: var(--cream-dark);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  color: var(--ink-muted);
+  letter-spacing: 0.06em;
+}
+.breadcrumb-bar a { color: var(--orange); text-decoration: none; }
+.breadcrumb-bar a:hover { text-decoration: underline; }
+.breadcrumb-sep { color: var(--border); }
+
+/* ── HEADER ── */
+header {
+  padding: 36px 60px 24px;
+  border-bottom: 2px solid var(--border);
+  background: var(--ink);
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+}
+.header-label {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  color: var(--orange);
+  margin-bottom: 8px;
+  text-transform: uppercase;
+}
+h1 {
+  font-family: 'Fraunces', serif;
+  font-size: 30px;
+  font-weight: 700;
+  color: var(--cream);
+  line-height: 1.15;
+}
+h1 em { font-style: italic; font-weight: 400; color: var(--orange); }
+.header-badge {
+  background: var(--orange);
+  color: white;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  padding: 6px 14px;
+  border-radius: 20px;
+  white-space: nowrap;
+  margin-top: 4px;
+  display: inline-block;
+}
+.header-right {
+  text-align: right;
+  flex-shrink: 0;
+}
+.nibble-label {
+  font-size: 10px;
+  color: #7a6a55;
+  letter-spacing: 0.12em;
+  margin-bottom: 6px;
+}
+.blueprint-chip {
+  background: var(--orange-light);
+  border: 1px solid var(--orange-border);
+  color: var(--orange);
+  font-size: 13px;
+  font-weight: 600;
+  padding: 8px 16px;
+  border-radius: 10px;
+  display: inline-block;
+}
+
+/* ── MAIN GRID ── */
+main {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 40px 60px 60px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+/* ── CARDS ── */
+.card {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  overflow: visible;
+}
+.card.full-width { grid-column: 1 / -1; }
+
+.card-header {
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.card-header .icon { font-size: 16px; }
+.card-title {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+.card-body { padding: 18px 20px; }
+
+/* ── FLOW TABLE (SAML) ── */
+.flow-table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+.flow-table tr { border-bottom: 1px solid var(--border); }
+.flow-table tr:last-child { border-bottom: none; }
+.flow-table td { padding: 9px 12px; vertical-align: top; line-height: 1.55; }
+.step-num {
+  background: var(--orange);
+  color: white;
+  font-weight: 700;
+  font-size: 11px;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-family: 'Fraunces', serif;
+}
+.step-cell { width: 36px; }
+.who-cell {
+  width: 100px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--ink-muted);
+  letter-spacing: 0.04em;
+}
+.action-cell { color: var(--ink-soft); }
+.action-cell strong { color: var(--ink); font-weight: 600; }
+
+/* ── AL LEVELS ── */
+.al-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.al-row {
+  border-radius: 10px;
+  padding: 12px 14px;
+  border: 1px solid;
+}
+.al-row.al1 { background: var(--green-light); border-color: var(--green-border); }
+.al-row.al2 { background: var(--blue-light); border-color: var(--blue-border); }
+.al-row.al3 { background: var(--amber-light); border-color: #ffe680; }
+.al-row.al4 { background: var(--red-light); border-color: var(--red-border); }
+
+.al-badge {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  margin-bottom: 4px;
+}
+.al1 .al-badge { color: var(--green); }
+.al2 .al-badge { color: var(--blue); }
+.al3 .al-badge { color: #a07c00; }
+.al4 .al-badge { color: var(--red); }
+.al-desc { font-size: 12px; color: var(--ink-soft); line-height: 1.5; }
+.al-emoji { font-size: 18px; margin-bottom: 4px; }
+
+/* ── MFA METHODS ── */
+.methods-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+.method-chip {
+  background: var(--purple-light);
+  border: 1px solid var(--purple-border);
+  border-radius: 10px;
+  padding: 12px 10px;
+  text-align: center;
+}
+.method-icon { font-size: 20px; margin-bottom: 6px; }
+.method-name { font-size: 11px; font-weight: 600; color: var(--purple); letter-spacing: 0.04em; }
+.method-desc { font-size: 10.5px; color: var(--ink-muted); margin-top: 3px; line-height: 1.4; }
+
+.mfa-note {
+  margin-top: 12px;
+  background: var(--orange-light);
+  border: 1px solid var(--orange-border);
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 12px;
+  color: var(--ink-soft);
+}
+.mfa-note strong { color: var(--orange); }
+
+/* ── IDP TABLE ── */
+.idp-compare { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+.idp-compare th {
+  padding: 10px 14px;
+  text-align: left;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border-bottom: 2px solid var(--border);
+}
+.th-saml { color: var(--blue); background: var(--blue-light); }
+.th-oidc { color: var(--purple); background: var(--purple-light); }
+.th-label { background: var(--cream-dark); color: var(--ink-muted); width: 30%; }
+.idp-compare td {
+  padding: 8px 14px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+  line-height: 1.5;
+  color: var(--ink-soft);
+}
+.idp-compare tr:last-child td { border-bottom: none; }
+.idp-compare td:first-child { font-weight: 600; color: var(--ink); font-size: 11.5px; }
+.saml-cell { background: #f5f8fe; }
+.oidc-cell { background: #f7f5ff; }
+.tag { font-size: 10px; font-weight: 600; padding: 2px 7px; border-radius: 10px; }
+.tag-saml { background: var(--blue-light); color: var(--blue); border: 1px solid var(--blue-border); }
+.tag-oidc { background: var(--purple-light); color: var(--purple); border: 1px solid var(--purple-border); }
+
+/* ── STEP-UP FLOW ── */
+.stepup-flow { display: flex; align-items: stretch; gap: 0; }
+.stepup-box {
+  flex: 1;
+  padding: 14px 12px;
+  text-align: center;
+  position: relative;
+}
+.stepup-box:not(:last-child)::after {
+  content: '→';
+  position: absolute;
+  right: -10px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 16px;
+  color: var(--orange);
+  font-weight: 700;
+  z-index: 1;
+}
+.stepup-num {
+  width: 22px; height: 22px;
+  background: var(--orange);
+  color: white;
+  border-radius: 50%;
+  font-size: 11px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 6px;
+  font-family: 'Fraunces', serif;
+}
+.stepup-label { font-size: 11px; font-weight: 600; color: var(--ink); margin-bottom: 3px; }
+.stepup-sub { font-size: 10.5px; color: var(--ink-muted); line-height: 1.4; }
+.stepup-box.trigger { background: var(--red-light); border-radius: 10px; border: 1px solid var(--red-border); }
+.stepup-box.trigger .stepup-label { color: var(--red); }
+
+/* ── IDENTITY PROXY ── */
+.proxy-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+.proxy-app {
+  background: var(--cream-dark);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px 8px;
+  text-align: center;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--ink-soft);
+}
+.proxy-app .app-icon { font-size: 18px; margin-bottom: 4px; }
+
+.proxy-note {
+  margin-top: 12px;
+  background: var(--red-light);
+  border: 1px solid var(--red-border);
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 12px;
+  color: var(--red);
+}
+.proxy-note strong { font-weight: 700; }
+
+/* ── EXAM TRAPS ── */
+.traps-list { list-style: none; }
+.traps-list li {
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--border);
+  font-size: 12.5px;
+  color: var(--ink-soft);
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  line-height: 1.55;
+}
+.traps-list li:last-child { border-bottom: none; }
+.trap-icon { font-size: 14px; flex-shrink: 0; margin-top: 1px; }
+.traps-list strong { color: var(--red); font-weight: 600; }
+
+/* ── IMAGE PLACEHOLDER ── */
+.img-placeholder {
+  background: #fffbe6;
+  border: 2px dashed #f0a500;
+  border-radius: 12px;
+  padding: 22px 20px 18px;
+  text-align: center;
+  margin-top: 16px;
+  display: block;
+  width: 100%;
+}
+.img-placeholder .ph-room {
+  display: inline-block;
+  background: var(--orange);
+  color: white;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 3px 10px;
+  border-radius: 20px;
+  margin-bottom: 10px;
+}
+.img-placeholder .ph-icon { font-size: 32px; margin-bottom: 6px; display: block; }
+.img-placeholder .ph-title {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: #8a5f00;
+  margin-bottom: 8px;
+  line-height: 1.4;
+}
+.img-placeholder .ph-prompt {
+  font-size: 11px;
+  color: #a07c00;
+  font-style: italic;
+  line-height: 1.6;
+  background: white;
+  border-radius: 8px;
+  padding: 8px 12px;
+  text-align: left;
+  display: block;
+}
+
+/* ── FOOTER ── */
+footer {
+  padding: 20px 60px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--cream-dark);
+}
+.footer-left { font-family: 'Fraunces', serif; font-size: 16px; font-weight: 700; }
+.footer-left span { color: var(--orange); }
+.footer-right { font-size: 11px; color: var(--ink-muted); letter-spacing: 0.06em; }
+
+@media (max-width: 800px) {
+  .breadcrumb-bar { padding: 10px 20px; }
+  header { padding: 24px 20px; flex-direction: column; }
+  main { padding: 24px 20px; grid-template-columns: 1fr; }
+  .card.full-width { grid-column: 1; }
+  .methods-grid { grid-template-columns: repeat(2, 1fr); }
+  .proxy-grid { grid-template-columns: repeat(2, 1fr); }
+  .stepup-flow { flex-direction: column; gap: 8px; }
+  .stepup-box:not(:last-child)::after { content: '↓'; right: auto; left: 50%; top: auto; bottom: -14px; transform: translateX(-50%); }
+  footer { flex-direction: column; gap: 8px; text-align: center; padding: 20px; }
+}
+</style>
+</head>
+<body>
+
+<div class="breadcrumb-bar">
+  <a href="../index.html">Study Plan</a>
+  <span class="breadcrumb-sep">›</span>
+  <a href="../study-nibbles.html">Study Nibbles</a>
+  <span class="breadcrumb-sep">›</span>
+  <span>Identity Services</span>
+</div>
+
+<header>
+  <div>
+    <div class="header-label">Study Nibble · Identity Services</div>
+    <h1>ZIdentity &amp; Authentication<br><em>Quick-Reference Cheat Sheet</em></h1>
+    <div class="header-badge">Blueprint: 10% · ZIA + ZPA</div>
+  </div>
+  <div class="header-right">
+    <div class="nibble-label">EXAM WEIGHT</div>
+    <div class="blueprint-chip">10 %</div>
+  </div>
+</header>
+
+<main>
+
+  <!-- ══ SAML WORKFLOW ══ -->
+  <div class="card full-width">
+    <div class="card-header">
+      <span class="icon">✈️</span>
+      <span class="card-title">SAML Authentication Workflow — End to End</span>
+    </div>
+    <div class="card-body">
+      <table class="flow-table">
+        <tr>
+          <td class="step-cell"><div class="step-num">1</div></td>
+          <td class="who-cell">User</td>
+          <td class="action-cell">Requests an application. Not yet authenticated.</td>
+        </tr>
+        <tr>
+          <td class="step-cell"><div class="step-num">2</div></td>
+          <td class="who-cell">ZIA / ZPA</td>
+          <td class="action-cell">Redirects user to authenticate. <strong>ZIA</strong> for public apps, <strong>ZPA</strong> for private apps.</td>
+        </tr>
+        <tr>
+          <td class="step-cell"><div class="step-num">3</div></td>
+          <td class="who-cell">Zscaler → IdP</td>
+          <td class="action-cell">Sends a <strong>SAML authentication request</strong> to the external Identity Provider.</td>
+        </tr>
+        <tr>
+          <td class="step-cell"><div class="step-num">4</div></td>
+          <td class="who-cell">IdP</td>
+          <td class="action-cell">Challenges the user to authenticate (MFA, password, etc.).</td>
+        </tr>
+        <tr>
+          <td class="step-cell"><div class="step-num">5</div></td>
+          <td class="who-cell">IdP → Browser</td>
+          <td class="action-cell">Assembles a <strong>SAML Assertion</strong>, signs it cryptographically, and delivers it via the user's browser.</td>
+        </tr>
+        <tr>
+          <td class="step-cell"><div class="step-num">6</div></td>
+          <td class="who-cell">Zscaler</td>
+          <td class="action-cell">Validates the <strong>digital signature</strong> — confirms trusted source and data integrity.</td>
+        </tr>
+        <tr>
+          <td class="step-cell"><div class="step-num">7</div></td>
+          <td class="who-cell">Zscaler → User</td>
+          <td class="action-cell">Issues an <strong>auth token</strong> (to ZCC) or a <strong>cookie</strong> (to browser). User is now authenticated.</td>
+        </tr>
+        <tr>
+          <td class="step-cell"><div class="step-num">8</div></td>
+          <td class="who-cell">User</td>
+          <td class="action-cell">Request resumes via the <strong>Zero Trust Exchange</strong>. Access granted.</td>
+        </tr>
+      </table>
+
+      <img src="../images/study-nibbles/identity-services/saml-checkin.png" alt="Room 1 — SAML Authentication Flow" style="width:100%;border-radius:12px;margin-top:16px;display:block;">
+    </div>
+  </div>
+
+  <!-- ══ STEP-UP AUTH ══ -->
+  <div class="card full-width">
+    <div class="card-header">
+      <span class="icon">⬆️</span>
+      <span class="card-title">Step-Up Authentication — How It Triggers</span>
+    </div>
+    <div class="card-body">
+      <div class="stepup-flow">
+        <div class="stepup-box">
+          <div class="stepup-num">1</div>
+          <div class="stepup-label">User Logs In</div>
+          <div class="stepup-sub">Standard credentials (e.g. password only = AL1)</div>
+        </div>
+        <div class="stepup-box">
+          <div class="stepup-num">2</div>
+          <div class="stepup-label">Sensitive Resource</div>
+          <div class="stepup-sub">Defined by ZIA or ZPA policy — e.g. finance app</div>
+        </div>
+        <div class="stepup-box trigger">
+          <div class="stepup-num">3</div>
+          <div class="stepup-label">Step-Up Triggered</div>
+          <div class="stepup-sub">Current AL insufficient — ZIdentity checks required level</div>
+        </div>
+        <div class="stepup-box">
+          <div class="stepup-num">4</div>
+          <div class="stepup-label">MFA Prompt</div>
+          <div class="stepup-sub">User reauthenticates via MFA through ZCC</div>
+        </div>
+        <div class="stepup-box">
+          <div class="stepup-num">5</div>
+          <div class="stepup-label">Access Granted</div>
+          <div class="stepup-sub">Higher AL satisfied — resource unlocked</div>
+        </div>
+      </div>
+      <img src="../images/study-nibbles/identity-services/stepup-vip-lounge.png" alt="Room 2 — Step-Up Authentication" style="width:100%;border-radius:12px;margin-top:16px;display:block;">
+    </div>
+  </div>
+
+  <!-- ══ AUTH LEVELS ══ -->
+  <div class="card">
+    <div class="card-header">
+      <span class="icon">📊</span>
+      <span class="card-title">Authentication Levels — AL1 to AL4</span>
+    </div>
+    <div class="card-body">
+      <div class="al-grid">
+        <div class="al-row al1">
+          <div class="al-emoji">🚌</div>
+          <div class="al-badge">AL1 — Economy</div>
+          <div class="al-desc">Password only. Lowest assurance. Basic access.</div>
+        </div>
+        <div class="al-row al2">
+          <div class="al-emoji">🚶</div>
+          <div class="al-badge">AL2 — Standard</div>
+          <div class="al-desc">Password + lightweight second factor. Normal access.</div>
+        </div>
+        <div class="al-row al3">
+          <div class="al-emoji">🏃</div>
+          <div class="al-badge">AL3 — Fast-Track</div>
+          <div class="al-desc">Stronger MFA required. Elevated assurance.</div>
+        </div>
+        <div class="al-row al4">
+          <div class="al-emoji">✈️</div>
+          <div class="al-badge">AL4 — Private Jet</div>
+          <div class="al-desc">Highest assurance. Strongest MFA. Critical resources only.</div>
+        </div>
+      </div>
+      <div class="mfa-note" style="margin-top:12px;">
+        <strong>Key rule:</strong> Levels are hierarchical — a higher AL includes all lower ones. Policy defines which resource requires which AL.
+      </div>
+      <div class="img-placeholder" style="margin-top:14px;">
+        <div class="ph-room">🏛️ Memory Palace · Room 3</div>
+        <span class="ph-icon">🖼️</span>
+        <div class="ph-title">The Departure Board — Authentication Levels AL1–AL4</div>
+        <span class="ph-prompt">Cartoon airport departure board on a wall. Four rows: AL1 = slow economy bus outside, AL2 = normal terminal walk, AL3 = fast-track express lane, AL4 = private jet on tarmac with fingerprint scanner and two guards. Each level visibly harder to reach. Bold flat illustration, funny exaggerated style, memory palace aesthetic.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ MFA METHODS ══ -->
+  <div class="card">
+    <div class="card-header">
+      <span class="icon">🔐</span>
+      <span class="card-title">Authentication Methods</span>
+    </div>
+    <div class="card-body">
+      <div class="methods-grid">
+        <div class="method-chip">
+          <div class="method-icon">🔑</div>
+          <div class="method-name">Password</div>
+          <div class="method-desc">Single factor. Lowest assurance.</div>
+        </div>
+        <div class="method-chip">
+          <div class="method-icon">📧</div>
+          <div class="method-name">Email OTP</div>
+          <div class="method-desc">One-time code sent to email.</div>
+        </div>
+        <div class="method-chip">
+          <div class="method-icon">⏱️</div>
+          <div class="method-name">TOTP</div>
+          <div class="method-desc">Time-based OTP. Authenticator app.</div>
+        </div>
+        <div class="method-chip">
+          <div class="method-icon">👆</div>
+          <div class="method-name">FIDO</div>
+          <div class="method-desc">Fast Identity Online. Biometric / hardware key.</div>
+        </div>
+      </div>
+      <div class="mfa-note">
+        <strong>Exam trap:</strong> MFA is <strong>required by default</strong> in ZIdentity — it is NOT optional.
+      </div>
+      <div class="img-placeholder" style="margin-top:14px;">
+        <div class="ph-room">🏛️ Memory Palace · Room 4</div>
+        <span class="ph-icon">🖼️</span>
+        <div class="ph-title">The MFA Security Scanner — Authentication Methods</div>
+        <span class="ph-prompt">Cartoon airport security checkpoint with three lanes. Lane 1: passenger typing password on keypad. Lane 2: passenger reading email OTP code aloud to guard. Lane 3: passenger holding up a spinning clock app (TOTP). Special VIP gate on the side: thumb pressed to glowing FIDO pad. All lanes mandatory — no bypass exit visible. Flat bold illustration, memory palace style.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ IDP COMPARISON ══ -->
+  <div class="card full-width">
+    <div class="card-header">
+      <span class="icon">🚪</span>
+      <span class="card-title">External Identity Providers — SAML vs OIDC</span>
+    </div>
+    <div class="card-body">
+      <table class="idp-compare">
+        <thead>
+          <tr>
+            <th class="th-label">Provider</th>
+            <th class="th-saml">SAML <span class="tag tag-saml">4 IdPs</span></th>
+            <th class="th-oidc">OIDC <span class="tag tag-oidc">5 IdPs</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Okta</td>
+            <td class="saml-cell">✅ Supported</td>
+            <td class="oidc-cell">✅ Supported (OIN App or Custom App)</td>
+          </tr>
+          <tr>
+            <td>Microsoft Entra ID</td>
+            <td class="saml-cell">✅ Supported</td>
+            <td class="oidc-cell">✅ Supported</td>
+          </tr>
+          <tr>
+            <td>Microsoft AD FS</td>
+            <td class="saml-cell">✅ Supported</td>
+            <td class="oidc-cell">❌ Not listed</td>
+          </tr>
+          <tr>
+            <td>PingFederate</td>
+            <td class="saml-cell">✅ Supported</td>
+            <td class="oidc-cell">❌ Not listed</td>
+          </tr>
+          <tr>
+            <td>PingOne</td>
+            <td class="saml-cell">❌ Not listed</td>
+            <td class="oidc-cell">✅ Supported</td>
+          </tr>
+          <tr>
+            <td>Auth0</td>
+            <td class="saml-cell">❌ Not listed</td>
+            <td class="oidc-cell">✅ Supported</td>
+          </tr>
+          <tr>
+            <td>OneLogin</td>
+            <td class="saml-cell">❌ Not listed</td>
+            <td class="oidc-cell">✅ Supported</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="mfa-note" style="margin-top:12px; background: var(--blue-light); border-color: var(--blue-border); color: var(--blue);">
+        <strong>Memory hook:</strong> SAML = 4 providers (the established enterprise names). OIDC = 5 providers (adds PingOne, Auth0, OneLogin).
+      </div>
+      <div class="img-placeholder" style="margin-top:14px;">
+        <div class="ph-room">🏛️ Memory Palace · Room 5</div>
+        <span class="ph-icon">🖼️</span>
+        <div class="ph-title">The IdP Lounge Doors — SAML vs OIDC Identity Providers</div>
+        <span class="ph-prompt">Cartoon airport corridor with two large lounge doors side by side. Left door labelled SAML in blue — four brand sticker logos on it (Okta, Entra ID, AD FS, PingFederate). Right door labelled OIDC in purple — five brand sticker logos (Entra ID, Okta, PingOne, Auth0, OneLogin). Both doors lead into the same ZIdentity desk in the centre. Flat friendly illustration, bold outlines, memory palace style.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ IDENTITY PROXY ══ -->
+  <div class="card full-width">
+    <div class="card-header">
+      <span class="icon">🛑</span>
+      <span class="card-title">Identity Proxy — Zscaler as IdP for SaaS Apps</span>
+    </div>
+    <div class="card-body">
+      <p style="font-size:13px; color:var(--ink-soft); margin-bottom:14px; line-height:1.6;">
+        When Zscaler is configured as the IdP for these apps, any attempt to access them <strong>without going through Zscaler fails</strong>. All auth is forced through the Zero Trust Exchange.
+      </p>
+      <div class="proxy-grid">
+        <div class="proxy-app"><div class="app-icon">📦</div>Box</div>
+        <div class="proxy-app"><div class="app-icon">🐙</div>GitHub</div>
+        <div class="proxy-app"><div class="app-icon">🔵</div>Google Apps</div>
+        <div class="proxy-app"><div class="app-icon">🟦</div>Microsoft 365</div>
+        <div class="proxy-app"><div class="app-icon">☁️</div>Salesforce</div>
+        <div class="proxy-app"><div class="app-icon">🎫</div>ServiceNow</div>
+        <div class="proxy-app"><div class="app-icon">📁</div>ShareFile</div>
+        <div class="proxy-app"><div class="app-icon">💬</div>Slack</div>
+      </div>
+      <div class="proxy-note">
+        <strong>Exam trap:</strong> Know the exact list of 8 apps. Side-door bypasses are <strong>blocked</strong> — not downgraded.
+      </div>
+      <div class="img-placeholder" style="margin-top:14px;">
+        <div class="ph-room">🏛️ Memory Palace · Room 6</div>
+        <span class="ph-icon">🖼️</span>
+        <div class="ph-title">The Identity Proxy Checkpoint — Zscaler as IdP</div>
+        <span class="ph-prompt">Cartoon airport side exit door being slammed shut by a giant cartoon hand. Big red sign reads "ALL TRAFFIC THROUGH ZSCALER." Correct path shows user going through a Zscaler turnstile, with 8 app logos (Box, GitHub, Google, O365, Salesforce, ServiceNow, ShareFile, Slack) displayed on the wall beyond the gate. Exaggerated funny style, bold flat illustration, memory palace aesthetic.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ EXAM TRAPS ══ -->
+  <div class="card full-width">
+    <div class="card-header">
+      <span class="icon">⚠️</span>
+      <span class="card-title">Common Exam Traps — Identity Services</span>
+    </div>
+    <div class="card-body">
+      <ul class="traps-list">
+        <li>
+          <span class="trap-icon">🪤</span>
+          <span><strong>Token vs Cookie:</strong> ZCC gets an auth <em>token</em>. A browser-only user gets a <em>cookie</em>. Don't mix these up.</span>
+        </li>
+        <li>
+          <span class="trap-icon">🪤</span>
+          <span><strong>MFA is default:</strong> ZIdentity enforces MFA by default. Questions implying it's optional are traps.</span>
+        </li>
+        <li>
+          <span class="trap-icon">🪤</span>
+          <span><strong>Step-up uses ZCC:</strong> The MFA prompt during step-up is delivered <em>via Zscaler Client Connector</em>, not the browser alone.</span>
+        </li>
+        <li>
+          <span class="trap-icon">🪤</span>
+          <span><strong>AD FS is SAML only:</strong> Microsoft AD FS appears in the SAML list but NOT in OIDC. Don't assume all Microsoft products support both.</span>
+        </li>
+        <li>
+          <span class="trap-icon">🪤</span>
+          <span><strong>Policy defines the AL:</strong> It's the <em>ZIA or ZPA policy</em> that specifies which resource requires which authentication level — not the user's role directly.</span>
+        </li>
+        <li>
+          <span class="trap-icon">🪤</span>
+          <span><strong>Identity Proxy = forced routing:</strong> Accessing a proxy-protected SaaS app without Zscaler doesn't degrade experience — it <em>fails entirely</em>.</span>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  <div class="footer-left">ZDTE<span>.</span></div>
+  <div class="footer-right">Study Nibble · Identity Services · Zscaler Digital Transformation Engineer</div>
+</footer>
+
+</body>
+</html>
