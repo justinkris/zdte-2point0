@@ -464,8 +464,14 @@
   }
 
   /* ── SOLO CARD GRID (centred single card) ── */
+  #fortinet-section {
+    width: 100%;
+    max-width: 1500px;
+  }
   .card-grid-solo {
     grid-template-columns: repeat(3, 1fr);
+    width: 100%;
+    max-width: 1500px;
   }
   .card-grid-solo .cert-card {
     grid-column: 2;
@@ -490,7 +496,7 @@
     transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease, transform 0.15s ease;
   }
   .vendor-btn:hover { border-color: var(--ink-muted); color: var(--ink); transform: translateY(-1px); }
-  .vendor-btn.active[data-vendor="zscaler"] { background: #1a6bcc; border-color: #1a6bcc; color: #fff; }
+  .vendor-btn.active[data-vendor="zscaler"] { background: #5b9de8; border-color: #5b9de8; color: #fff; }
   .vendor-btn.active[data-vendor="fortinet"] { background: var(--red); border-color: var(--red); color: #fff; }
   .vendor-btn.active[data-vendor="all"]     { background: var(--ink); border-color: var(--ink); color: var(--cream); }
   .vendor-btn.active:hover { transform: none; }
@@ -624,6 +630,7 @@ body { animation: pageEnter 0.6s cubic-bezier(0.15, 0.85, 0.2, 1.08) both; }
 
     <!-- ═══════════════ CARD 3 — ZDDC (IN PROGRESS) ═══════════════ -->
     <div class="cert-card status-progress">
+      <div class="corner-flag">▲ ACTIVE</div>
       <div class="card-content">
         <div class="cert-code-row">
           <div class="cert-code">ZDDC</div>
@@ -637,7 +644,6 @@ body { animation: pageEnter 0.6s cubic-bezier(0.15, 0.85, 0.2, 1.08) both; }
         </div>
         <div class="cert-edu">EDU-302</div>
         <div class="cert-name"><span class="cert-prefix">Zscaler Digital Delivery&nbsp;-&nbsp;</span><span class="cert-suffix">Consultant</span></div>
-        <div class="corner-flag">▲ ACTIVE</div>
         <div class="card-details">
           <div class="status-badge"><span class="status-dot"></span>In Progress</div>
           <div class="exam-date" style="margin-bottom:6px;">Study Starts: <strong>Star Wars Day — May 4th</strong> 🌟</div>

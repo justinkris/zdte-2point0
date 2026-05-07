@@ -24,6 +24,29 @@
   .config-list strong { color: var(--ink); font-weight: 600; }
   code { background: var(--cream); border: 1px solid var(--border); padding: 1px 6px; border-radius: 4px; font-size: 12px; font-family: 'SF Mono', Consolas, monospace; color: var(--ink); }
 
+  /* ── LAB NAV ── */
+  .lab-nav {
+    display: flex; flex-wrap: wrap; gap: 7px;
+    padding: 10px 32px 12px;
+    background: var(--cream); border-bottom: 1px solid var(--border);
+  }
+  .lab-btn {
+    padding: 5px 13px; border-radius: 20px;
+    font-size: 11px; font-weight: 600; letter-spacing: 0.08em;
+    border: 1.5px solid var(--border);
+    background: transparent; color: var(--ink-muted);
+    cursor: pointer; font-family: 'Epilogue', sans-serif;
+    transition: background 0.15s, border-color 0.15s, color 0.15s, transform 0.12s;
+    white-space: nowrap;
+  }
+  .lab-btn:hover { transform: translateY(-1px); color: var(--ink); border-color: var(--ink-muted); }
+  .lab-btn.active { background: var(--orange); border-color: var(--orange); color: #fff; }
+  .lab-btn[data-section="section-connectivity"]:hover  { border-color: #1a6bcc; color: #1a6bcc; }
+  .lab-btn[data-section="section-inspection"]:hover    { border-color: #5c35cc; color: #5c35cc; }
+  .lab-btn[data-section="section-zpa"]:hover           { border-color: var(--green); color: var(--green); }
+  .lab-btn[data-section="section-threat"]:hover        { border-color: var(--orange); color: var(--orange); }
+  .lab-btn[data-section="section-dashboards"]:hover    { border-color: #0d9488; color: #0d9488; }
+
   /* Collapsible steps */
   details.steps { margin-top: 12px; background: var(--cream); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
   details.steps[open] { background: var(--cream); }
@@ -130,6 +153,23 @@ body { animation: pageEnter 0.6s cubic-bezier(0.15, 0.85, 0.2, 1.08) both; }
   <button class="nav-tab" onclick="navTo('section-threat', this)">Threat &amp; Data</button>
   <button class="nav-tab" onclick="navTo('section-dashboards', this)">Dashboards</button>
 </nav>
+<div class="lab-nav">
+  <button class="lab-btn" data-lab="1"  data-section="section-connectivity">Lab 1 — Virtual Lab</button>
+  <button class="lab-btn" data-lab="2"  data-section="section-connectivity">Lab 2 — Users &amp; Groups</button>
+  <button class="lab-btn" data-lab="3"  data-section="section-connectivity">Lab 3 — Client Connector</button>
+  <button class="lab-btn" data-lab="4"  data-section="section-inspection">Lab 4 — SSL Inspection</button>
+  <button class="lab-btn" data-lab="5"  data-section="section-inspection">Lab 5 — Content Filtering</button>
+  <button class="lab-btn" data-lab="6"  data-section="section-zpa">Lab 6 — ZPA Infrastructure</button>
+  <button class="lab-btn" data-lab="7"  data-section="section-zpa">Lab 7 — Corporate App</button>
+  <button class="lab-btn" data-lab="8"  data-section="section-zpa">Lab 8 — App Discovery</button>
+  <button class="lab-btn" data-lab="9"  data-section="section-threat">Lab 9 — Threat Exposure</button>
+  <button class="lab-btn" data-lab="10" data-section="section-threat">Lab 10 — Data Visibility</button>
+  <button class="lab-btn" data-lab="11" data-section="section-threat">Lab 11 — DLP</button>
+  <button class="lab-btn" data-lab="12" data-section="section-dashboards">Lab 12 — Risk360</button>
+  <button class="lab-btn" data-lab="13" data-section="section-dashboards">Lab 13 — Deception</button>
+  <button class="lab-btn" data-lab="14" data-section="section-dashboards">Lab 14 — ZDX Portal</button>
+  <button class="lab-btn" data-lab="15" data-section="section-dashboards">Lab 15 — ZDX Dashboards</button>
+</div>
 
 <main>
 <div class="main-content">
@@ -242,7 +282,7 @@ body { animation: pageEnter 0.6s cubic-bezier(0.15, 0.85, 0.2, 1.08) both; }
 
 
     <!-- LAB 1 -->
-    <div class="lab-block">
+    <div class="lab-block" id="lab-1">
       <div class="lab-meta">LAB 1 · STEPS SHOWN BY DEFAULT</div>
       <div class="lab-title">Connecting to the <em>Virtual Lab</em></div>
       <p>Bring your Skytap pod online, sign into ZIdentity, and confirm you can reach all the lab portals.</p>
@@ -337,7 +377,7 @@ body { animation: pageEnter 0.6s cubic-bezier(0.15, 0.85, 0.2, 1.08) both; }
 
 
     <!-- LAB 2 -->
-    <div class="lab-block">
+    <div class="lab-block" id="lab-2">
       <div class="lab-meta">LAB 2</div>
       <div class="lab-title">Configuring Users, Groups, &amp; <em>Entitlements</em></div>
       <p>Three users — Joe, Sam, Bev — need different access. Build the groups, assign service vs administrative entitlements, and prove it works at Client Connector login.</p>
@@ -568,7 +608,7 @@ body { animation: pageEnter 0.6s cubic-bezier(0.15, 0.85, 0.2, 1.08) both; }
 
 
     <!-- LAB 3 -->
-    <div class="lab-block">
+    <div class="lab-block" id="lab-3">
       <div class="lab-meta">LAB 3</div>
       <div class="lab-title">Forwarding Traffic with <em>Client Connector</em></div>
       <p>Build a Forwarding Profile and an App Profile that intercepts on every network type, for both ZIA and ZPA.</p>
@@ -672,7 +712,7 @@ body { animation: pageEnter 0.6s cubic-bezier(0.15, 0.85, 0.2, 1.08) both; }
 
 
     <!-- LAB 4 -->
-    <div class="lab-block">
+    <div class="lab-block" id="lab-4">
       <div class="lab-meta">LAB 4</div>
       <div class="lab-title">Configuring <em>SSL Inspection</em> Policies</div>
       <p>The Zscaler Root CA is already trusted on the client (installed by Client Connector via the App Profile setting). You need the inline policy that turns inspection on, plus a privacy carve-out for healthcare.</p>
@@ -758,7 +798,7 @@ body { animation: pageEnter 0.6s cubic-bezier(0.15, 0.85, 0.2, 1.08) both; }
 
 
     <!-- LAB 5 -->
-    <div class="lab-block">
+    <div class="lab-block" id="lab-5">
       <div class="lab-meta">LAB 5</div>
       <div class="lab-title">Content Filtering &amp; <em>Access Control</em></div>
       <p>Review threat protection state, then build URL Filtering and Cloud App Control rules and verify the user experience.</p>
@@ -912,7 +952,7 @@ body { animation: pageEnter 0.6s cubic-bezier(0.15, 0.85, 0.2, 1.08) both; }
 
 
     <!-- LAB 6 -->
-    <div class="lab-block">
+    <div class="lab-block" id="lab-6">
       <div class="lab-meta">LAB 6</div>
       <div class="lab-title">Provisioning <em>ZPA Infrastructure</em></div>
       <p>The CentOS App Connector VM is pre-built with networking, DNS, NTP, and the App Connector RPM. You need to mint a provisioning key, hand it to the VM, and bring it online.</p>
@@ -1037,7 +1077,7 @@ body { animation: pageEnter 0.6s cubic-bezier(0.15, 0.85, 0.2, 1.08) both; }
 
 
     <!-- LAB 7 -->
-    <div class="lab-block">
+    <div class="lab-block" id="lab-7">
       <div class="lab-meta">LAB 7</div>
       <div class="lab-title">Add a <em>Corporate Application</em></div>
       <p>Define one Application Segment for the Intranet server, attach it to a Segment Group and Server Group, then write the Access Policy that lets users in.</p>
@@ -1148,7 +1188,7 @@ body { animation: pageEnter 0.6s cubic-bezier(0.15, 0.85, 0.2, 1.08) both; }
 
 
     <!-- LAB 8 -->
-    <div class="lab-block">
+    <div class="lab-block" id="lab-8">
       <div class="lab-meta">LAB 8</div>
       <div class="lab-title">Discover <em>Corporate Applications</em></div>
       <p>Instead of hand-defining every internal app, give ZPA a wildcard segment so it can <strong>discover</strong> apps just-in-time when users ask for them.</p>
@@ -1270,7 +1310,7 @@ body { animation: pageEnter 0.6s cubic-bezier(0.15, 0.85, 0.2, 1.08) both; }
 
 
     <!-- LAB 9 -->
-    <div class="lab-block">
+    <div class="lab-block" id="lab-9">
       <div class="lab-meta">LAB 9</div>
       <div class="lab-title">Internet Threat <em>Exposure Analysis</em></div>
       <p>Run the same threat assessment twice — first naked, then behind ZIA — and compare.</p>
@@ -1331,7 +1371,7 @@ body { animation: pageEnter 0.6s cubic-bezier(0.15, 0.85, 0.2, 1.08) both; }
 
 
     <!-- LAB 10 -->
-    <div class="lab-block">
+    <div class="lab-block" id="lab-10">
       <div class="lab-meta">LAB 10 · SDC TENANT</div>
       <div class="lab-title">Application &amp; Data <em>Visibility</em></div>
       <p>On the SDC tenant: walk SaaS visibility, AI/ML app visibility, data at rest, and the Gen AI Security Report.</p>
@@ -1408,7 +1448,7 @@ body { animation: pageEnter 0.6s cubic-bezier(0.15, 0.85, 0.2, 1.08) both; }
 
 
     <!-- LAB 11 -->
-    <div class="lab-block">
+    <div class="lab-block" id="lab-11">
       <div class="lab-meta">LAB 11 · SDC TENANT</div>
       <div class="lab-title">Protecting Against <em>Data Loss</em></div>
       <p>On the SDC tenant: walk the DLP building blocks (dictionaries → engines → inline rule), then review reports.</p>
@@ -1496,7 +1536,7 @@ body { animation: pageEnter 0.6s cubic-bezier(0.15, 0.85, 0.2, 1.08) both; }
 
 
     <!-- LAB 12 -->
-    <div class="lab-block">
+    <div class="lab-block" id="lab-12">
       <div class="lab-meta">LAB 12 · RISK360</div>
       <div class="lab-title">Navigating the <em>Risk360 Portal</em></div>
       <p>Risk360 quantifies and helps remediate risk across entities, configurations, and external attack surface.</p>
@@ -1531,7 +1571,7 @@ body { animation: pageEnter 0.6s cubic-bezier(0.15, 0.85, 0.2, 1.08) both; }
 
 
     <!-- LAB 13 -->
-    <div class="lab-block">
+    <div class="lab-block" id="lab-13">
       <div class="lab-meta">LAB 13 · DECEPTION</div>
       <div class="lab-title">Navigating the <em>Deception Portal</em></div>
       <p>Zscaler Deception uses lures and decoys to detect threats that bypass traditional defenses — APT, lateral movement, AD attacks, ransomware, SCADA/ICS.</p>
@@ -1569,7 +1609,7 @@ body { animation: pageEnter 0.6s cubic-bezier(0.15, 0.85, 0.2, 1.08) both; }
 
 
     <!-- LAB 14 -->
-    <div class="lab-block">
+    <div class="lab-block" id="lab-14">
       <div class="lab-meta">LAB 14 · ZDX</div>
       <div class="lab-title">Navigating the <em>ZDX Admin Portal</em></div>
       <p>ZDX synthetically probes apps from Client Connector to measure user digital experience. The ZDX module rides inside Client Connector but upgrades independently.</p>
@@ -1601,7 +1641,7 @@ body { animation: pageEnter 0.6s cubic-bezier(0.15, 0.85, 0.2, 1.08) both; }
 
 
     <!-- LAB 15 -->
-    <div class="lab-block">
+    <div class="lab-block" id="lab-15">
       <div class="lab-meta">LAB 15 · ZDX DASHBOARDS</div>
       <div class="lab-title">Incident, Self-Service, &amp; <em>Application Overview</em></div>
       <p>The remaining ZDX dashboards. Each answers a different operational question.</p>
@@ -1840,6 +1880,33 @@ body { animation: pageEnter 0.6s cubic-bezier(0.15, 0.85, 0.2, 1.08) both; }
       if (el && el.getBoundingClientRect().top < offset + 40) active = i;
     });
     tabs.forEach((t, i) => t.classList.toggle('active', i === active));
+
+    // Highlight active lab button
+    const labBtns = document.querySelectorAll('.lab-btn');
+    let activeLab = null;
+    for (let n = 15; n >= 1; n--) {
+      const el = document.getElementById('lab-' + n);
+      if (el && el.getBoundingClientRect().top < offset + 80) { activeLab = n; break; }
+    }
+    labBtns.forEach(b => b.classList.toggle('active', parseInt(b.dataset.lab) === activeLab));
+  });
+
+  /* ── LAB QUICK-JUMP ── */
+  document.querySelectorAll('.lab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const labId  = 'lab-' + btn.dataset.lab;
+      const secId  = btn.dataset.section;
+      // Activate section tab
+      const tabs = document.querySelectorAll('.nav-tab');
+      const secs = ['section-overview','section-connectivity','section-inspection','section-zpa','section-threat','section-dashboards'];
+      tabs.forEach((t, i) => t.classList.toggle('active', secs[i] === secId));
+      // Scroll to lab
+      const el = document.getElementById(labId);
+      if (el) {
+        const navH = document.querySelector('.section-nav').offsetHeight + document.querySelector('.lab-nav').offsetHeight;
+        window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - navH - 16, behavior: 'smooth' });
+      }
+    });
   });
 </script>
 

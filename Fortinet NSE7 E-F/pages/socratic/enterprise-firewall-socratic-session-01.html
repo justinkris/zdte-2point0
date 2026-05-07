@@ -20,9 +20,9 @@
   --ink: #1a1209;
   --ink-soft: #5a4a35;
   --ink-muted: #8a7660;
-  --orange: #ff6b35;
-  --orange-light: #fff3ec;
-  --orange-border: #ffd5c0;
+  --orange: #cc2020;
+  --orange-light: #fef0ef;
+  --orange-border: #f5c0bc;
   --amber-light: #fffbe6;
   --green: #3a7d44;
   --green-light: #edf7ee;
@@ -81,7 +81,7 @@ h1 em { font-style: italic; font-weight: 400; color: var(--orange); }
 .tag-zia    { background: var(--blue-light);   color: var(--blue);   border-color: var(--blue-border); }
 .tag-zpa    { background: var(--green-light);  color: var(--green);  border-color: var(--green-border); }
 .tag-arch   { background: var(--amber-light);  color: #a07c00;       border-color: #ffe680; }
-.tag-weight { background: var(--orange-light); color: #cc4a18;       border-color: var(--orange-border); }
+.tag-weight { background: var(--orange-light); color: #991414;       border-color: var(--orange-border); }
 
 /* ── PROGRESS CARD ── */
 .header-right { display: flex; flex-direction: column; gap: 10px; align-items: flex-end; flex-shrink: 0; }
@@ -134,7 +134,7 @@ ul.content-list li { font-size: 14px; color: var(--ink-soft); padding-left: 16px
 ul.content-list li::before { content: '·'; position: absolute; left: 2px; color: var(--orange); font-weight: 700; font-size: 18px; line-height: 1.2; }
 
 /* ── KEY CONCEPT ── */
-.key-concept { background: var(--orange-light); border: 1px solid var(--orange-border); border-radius: 10px; padding: 14px 18px; margin-bottom: 16px; font-size: 13px; color: #7a3010; line-height: 1.7; }
+.key-concept { background: var(--orange-light); border: 1px solid var(--orange-border); border-radius: 10px; padding: 14px 18px; margin-bottom: 16px; font-size: 13px; color: #6e1414; line-height: 1.7; }
 .key-concept strong { color: var(--orange); font-weight: 600; }
 
 /* ── DEFINITIONS ── */
@@ -281,7 +281,7 @@ code { background: var(--cream-dark); padding: 1px 6px; border-radius: 4px; font
 .room-desc     { font-size: 13px; color: var(--ink-soft); line-height: 1.6; }
 .room-tags     { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
 .room-tag      { font-size: 10px; font-weight: 600; letter-spacing: 0.06em; padding: 3px 10px; border-radius: 20px; border: 1px solid; }
-.rt-motion  { background: var(--orange-light);  color: #cc4a18;       border-color: var(--orange-border); }
+.rt-motion  { background: var(--orange-light);  color: #991414;       border-color: var(--orange-border); }
 .rt-rest    { background: var(--blue-light);    color: var(--blue);   border-color: var(--blue-border); }
 .rt-device  { background: var(--green-light);   color: var(--green);  border-color: var(--green-border); }
 .rt-posture { background: var(--purple-light);  color: var(--purple); border-color: var(--purple-border); }
@@ -342,7 +342,7 @@ main.main-full { display: block; padding: 60px; max-width: 860px; margin: 0 auto
 .domains-label { font-size: 10px; letter-spacing: 0.18em; color: var(--ink-muted); margin-bottom: 12px; text-transform: uppercase; }
 .domains-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-bottom: 24px; }
 .domain-chip { background: var(--cream-dark); border: 1px solid var(--border); border-radius: 8px; padding: 8px 12px; font-size: 12px; color: var(--ink-soft); text-align: center; }
-.emphasis-note { background: var(--orange-light); border: 1px solid var(--orange-border); border-radius: 10px; padding: 14px 18px; font-size: 13px; color: #7a3010; line-height: 1.7; margin-bottom: 24px; text-align: left; }
+.emphasis-note { background: var(--orange-light); border: 1px solid var(--orange-border); border-radius: 10px; padding: 14px 18px; font-size: 13px; color: #6e1414; line-height: 1.7; margin-bottom: 24px; text-align: left; }
 .back-btn { display: inline-flex; align-items: center; gap: 6px; background: var(--ink); color: var(--cream); padding: 10px 20px; border-radius: 20px; font-size: 12px; font-weight: 500; text-decoration: none; transition: background 0.15s; letter-spacing: 0.04em; }
 .back-btn:hover { background: #2a1f10; }
 
@@ -370,7 +370,9 @@ footer { padding: 20px 60px; border-top: 1px solid var(--border); display: flex;
 <header>
   <div class="header-left">
     <div class="breadcrumb">
-      <a href="../../index.html">NSE7</a>
+      <a href="../../../index.html">Home</a>
+    <span class="breadcrumb-sep">/</span>
+    <a href="../../index.html">NSE7</a>
       <span class="breadcrumb-sep">›</span>
       <a href="../socratic/enterprise-firewall-socratic-hub.html">Socratic Sessions</a>
       <span class="breadcrumb-sep">›</span>
@@ -768,7 +770,7 @@ footer { padding: 20px 60px; border-top: 1px solid var(--border); display: flex;
       .nav-hub:hover .nav-hub-dropdown { opacity: 1; pointer-events: all; transform: translateY(0); }
       .nav-hub-item { display: flex; align-items: center; gap: 12px; padding: 13px 20px; color: var(--cream); font-size: 12px; letter-spacing: 0.08em; font-weight: 500; text-decoration: none; border-bottom: 1px solid rgba(255,255,255,0.06); transition: background 0.15s; }
       .nav-hub-item:last-child { border-bottom: none; }
-      .nav-hub-item:hover { background: rgba(255,107,53,0.15); color: var(--orange); }
+      .nav-hub-item:hover { background: rgba(204,32,32,0.15); color: var(--orange); }
       .nav-hub-item .nav-icon { font-size: 18px; flex-shrink: 0; }
     `;
     document.head.appendChild(style);

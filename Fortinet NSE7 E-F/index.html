@@ -71,13 +71,13 @@
 
   .nav-card:hover {
     transform: translateY(-20px) scale(1.04);
-    box-shadow: 0 28px 56px rgba(255,107,53,0.22), 0 0 0 2px var(--orange-border);
+    box-shadow: 0 28px 56px rgba(204,32,32,0.22), 0 0 0 2px var(--orange-border);
     border-color: var(--orange-border);
   }
 
   /* card image zoom on hover */
   .nav-card .card-img { transition: background 0.3s ease; overflow: hidden; }
-  .nav-card:hover .card-img { background: #ffd4b8; }
+  .nav-card:hover .card-img { background: #f7c0bc; }
   .nav-card .card-img img { transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); }
   .nav-card:hover .card-img img { transform: scale(1.08); }
 
@@ -95,7 +95,7 @@
   }
   .nav-card.c-guide:hover {
     transform: translateY(-22px) scale(1.05) rotate(1.5deg);
-    box-shadow: 0 32px 64px rgba(255,107,53,0.32), 0 0 0 2px var(--orange-border);
+    box-shadow: 0 32px 64px rgba(204,32,32,0.32), 0 0 0 2px var(--orange-border);
     border-color: var(--orange-border);
   }
   .nav-card.c-notebook:hover {
@@ -147,7 +147,7 @@
 
   /* image tints */
   .nav-card.c-blueprint:hover .card-img { background: #b8d5f5 !important; }
-  .nav-card.c-guide:hover     .card-img { background: #ffd4b8 !important; }
+  .nav-card.c-guide:hover     .card-img { background: #f7c0bc !important; }
   .nav-card.c-notebook:hover  .card-img { background: #f7c1c1 !important; }
   .nav-card.c-guides:hover    .card-img { background: #fff0a0 !important; }
   .nav-card.c-bites:hover     .card-img { background: #c6e6ca !important; }
@@ -347,6 +347,14 @@
 </head>
 <body>
 
+<div class="breadcrumb-wrap" style="position:absolute;top:28px;left:40px;">
+  <div class="breadcrumb">
+    <a href="../index.html">Home</a>
+    <span class="breadcrumb-sep">/</span>
+    <span>NSE7 — Enterprise Firewall 7.6</span>
+  </div>
+</div>
+
 <div class="page-title">
   <div class="day-badge">
     <span class="day-badge-dot"></span>
@@ -400,21 +408,21 @@
   <a class="nav-card c-guide" href="pages/study-guides/enterprise-firewall-topic-guide-hub.html">
     <div class="card-img">
       <svg viewBox="0 0 280 210" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <rect width="280" height="210" fill="#fff3ec"/>
-        <rect x="52" y="32" width="190" height="158" rx="5" fill="#ff6b35" fill-opacity="0.06" stroke="#ff6b35" stroke-width="1" transform="rotate(2 147 111)"/>
+        <rect width="280" height="210" fill="#fef0ef"/>
+        <rect x="52" y="32" width="190" height="158" rx="5" fill="#cc2020" fill-opacity="0.06" stroke="#cc2020" stroke-width="1" transform="rotate(2 147 111)"/>
         <g class="idx-doc">
-        <rect x="44" y="22" width="192" height="162" rx="6" fill="#fef9f0" stroke="#ff6b35" stroke-width="2"/>
-        <rect x="44" y="22" width="192" height="32" rx="6" fill="#ff6b35" fill-opacity="0.2"/>
-        <rect x="60" y="31"  width="90"  height="9" rx="2.5" fill="#ff6b35" fill-opacity="0.55"/>
-        <rect x="158" y="33" width="50"  height="5" rx="2"   fill="#ff6b35" fill-opacity="0.3"/>
-        <rect x="60" y="70"  width="164" height="6" rx="2"   fill="#ff6b35" fill-opacity="0.35"/>
-        <rect x="60" y="82"  width="140" height="5" rx="2"   fill="#ff6b35" fill-opacity="0.2"/>
-        <rect x="60" y="93"  width="155" height="5" rx="2"   fill="#ff6b35" fill-opacity="0.2"/>
-        <rect x="60" y="111" width="164" height="32" rx="4"  fill="#ff6b35" fill-opacity="0.1" stroke="#ff6b35" stroke-width="1.5"/>
-        <rect x="68" y="120" width="108" height="5" rx="2"   fill="#ff6b35" fill-opacity="0.45"/>
-        <rect x="68" y="130" width="82"  height="5" rx="2"   fill="#ff6b35" fill-opacity="0.25"/>
-        <rect x="60" y="155" width="164" height="5" rx="2"   fill="#ff6b35" fill-opacity="0.2"/>
-        <rect x="60" y="167" width="124" height="5" rx="2"   fill="#ff6b35" fill-opacity="0.2"/>
+        <rect x="44" y="22" width="192" height="162" rx="6" fill="#fef9f0" stroke="#cc2020" stroke-width="2"/>
+        <rect x="44" y="22" width="192" height="32" rx="6" fill="#cc2020" fill-opacity="0.2"/>
+        <rect x="60" y="31"  width="90"  height="9" rx="2.5" fill="#cc2020" fill-opacity="0.55"/>
+        <rect x="158" y="33" width="50"  height="5" rx="2"   fill="#cc2020" fill-opacity="0.3"/>
+        <rect x="60" y="70"  width="164" height="6" rx="2"   fill="#cc2020" fill-opacity="0.35"/>
+        <rect x="60" y="82"  width="140" height="5" rx="2"   fill="#cc2020" fill-opacity="0.2"/>
+        <rect x="60" y="93"  width="155" height="5" rx="2"   fill="#cc2020" fill-opacity="0.2"/>
+        <rect x="60" y="111" width="164" height="32" rx="4"  fill="#cc2020" fill-opacity="0.1" stroke="#cc2020" stroke-width="1.5"/>
+        <rect x="68" y="120" width="108" height="5" rx="2"   fill="#cc2020" fill-opacity="0.45"/>
+        <rect x="68" y="130" width="82"  height="5" rx="2"   fill="#cc2020" fill-opacity="0.25"/>
+        <rect x="60" y="155" width="164" height="5" rx="2"   fill="#cc2020" fill-opacity="0.2"/>
+        <rect x="60" y="167" width="124" height="5" rx="2"   fill="#cc2020" fill-opacity="0.2"/>
         </g>
       </svg>
     </div>
