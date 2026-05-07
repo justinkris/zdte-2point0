@@ -1,0 +1,1143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script>if(sessionStorage.getItem('pt')){document.documentElement.classList.add('pt-init')}</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NSE7 Enterprise Firewall 7.6 — Exam Blueprint</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;0,700;1,400&family=Epilogue:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/template.css">
+<style>
+/* ── BLUEPRINT OVERRIDES ── */
+.bp-hero {
+  background: linear-gradient(135deg, #1a1209 0%, #3b2a14 100%);
+  color: #fef9f0;
+  padding: 56px 60px 48px;
+  border-bottom: 3px solid var(--orange);
+}
+.bp-hero h1 { font-family: 'Fraunces', serif; font-size: 42px; font-weight: 700; margin-bottom: 8px; }
+.bp-hero h1 em { font-style: italic; color: var(--orange); }
+.bp-hero-sub { font-size: 14px; color: #c9b49a; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 20px; }
+.bp-hero-meta { font-size: 13px; color: #a08a6e; }
+
+/* Domain nav tabs */
+.domain-nav {
+  display: flex;
+  gap: 0;
+  border-bottom: 2px solid var(--border);
+  background: var(--cream-dark);
+  overflow-x: auto;
+  padding: 0 40px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 8px rgba(26,18,9,0.06);
+}
+.domain-tab {
+  padding: 14px 22px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  color: var(--ink-muted);
+  border-bottom: 3px solid transparent;
+  margin-bottom: -2px;
+  white-space: nowrap;
+  transition: all 0.15s;
+}
+.domain-tab:hover { color: var(--ink); }
+.domain-tab.active { color: var(--orange); border-bottom-color: var(--orange); }
+
+/* Domain sections */
+.blueprint-body { max-width: 1100px; margin: 0 auto; padding: 0 40px 80px; }
+.domain-section { display: none; padding-top: 40px; }
+.domain-section.active { display: block; }
+
+/* Domain header */
+.domain-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+  margin-bottom: 32px;
+  padding-bottom: 24px;
+  border-bottom: 2px solid var(--border);
+}
+.domain-number {
+  font-family: 'Fraunces', serif;
+  font-size: 52px;
+  font-weight: 700;
+  color: var(--orange);
+  opacity: 0.3;
+  line-height: 1;
+  min-width: 60px;
+}
+.domain-title-block h2 {
+  font-family: 'Fraunces', serif;
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+.domain-title-block p { font-size: 14px; color: var(--ink-soft); line-height: 1.6; }
+
+/* Topic card */
+.topic-card {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  margin-bottom: 20px;
+  overflow: hidden;
+  transition: box-shadow 0.15s;
+}
+.topic-card:hover { box-shadow: 0 4px 16px rgba(26,18,9,0.08); }
+.topic-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 20px;
+  cursor: pointer;
+  user-select: none;
+  background: var(--cream);
+  border-bottom: 1px solid transparent;
+  transition: background 0.12s;
+}
+.topic-card.open .topic-header { border-bottom-color: var(--border); background: #fdf6ea; }
+.topic-header:hover { background: #fdf6ea; }
+.topic-icon { font-size: 18px; min-width: 28px; text-align: center; }
+.topic-name { font-size: 15px; font-weight: 600; flex: 1; }
+.topic-badge { font-size: 10px; padding: 3px 8px; border-radius: 10px; font-weight: 600; letter-spacing: 0.05em; }
+.badge-high { background: var(--red-light); color: var(--red); border: 1px solid var(--red-border); }
+.badge-med { background: var(--orange-light); color: #a0440a; border: 1px solid var(--orange-border); }
+.badge-low { background: var(--green-light); color: var(--green); border: 1px solid var(--green-border); }
+.topic-toggle { font-size: 12px; color: var(--ink-muted); transition: transform 0.2s; }
+.topic-card.open .topic-toggle { transform: rotate(90deg); }
+
+/* Topic body */
+.topic-body { padding: 20px 20px 20px 62px; display: none; }
+.topic-card.open .topic-body { display: block; }
+
+/* Sub-topics list */
+.subtopic-section { margin-bottom: 18px; }
+.subtopic-section-label {
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+.subtopic-list-inner { display: flex; flex-direction: column; gap: 6px; }
+.subtopic-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 13px;
+  color: var(--ink-soft);
+  line-height: 1.5;
+  padding: 8px 12px;
+  background: var(--cream);
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  cursor: pointer;
+  transition: background 0.1s;
+}
+.subtopic-item:hover { background: var(--cream-dark); }
+.subtopic-item.done { background: var(--green-light); border-color: var(--green-border); }
+.subtopic-item.done .sub-check { background: var(--green); border-color: var(--green); color: white; }
+.sub-check {
+  width: 18px; height: 18px; min-width: 18px;
+  border: 2px solid var(--border);
+  border-radius: 4px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px;
+  transition: all 0.15s;
+}
+
+/* Questions */
+.questions-section { margin-top: 18px; }
+.q-item {
+  display: flex;
+  gap: 10px;
+  padding: 10px 12px;
+  background: var(--blue-light);
+  border: 1px solid var(--blue-border);
+  border-radius: 8px;
+  margin-bottom: 8px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: #1a3a6a;
+}
+.q-num {
+  font-weight: 700;
+  font-size: 11px;
+  color: var(--blue);
+  min-width: 20px;
+  padding-top: 1px;
+}
+.q-trap {
+  background: var(--red-light);
+  border-color: var(--red-border);
+  color: #6a1a1a;
+}
+.q-trap .q-num { color: var(--red); }
+
+/* Exam weight summary bar */
+.weight-bar-section {
+  background: var(--cream-dark);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px 24px;
+  margin-bottom: 32px;
+}
+.weight-bar-title { font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-muted); font-weight: 600; margin-bottom: 14px; }
+.weight-row { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
+.weight-label { font-size: 12px; font-weight: 500; min-width: 220px; color: var(--ink-soft); }
+.weight-track { flex: 1; background: var(--border); border-radius: 4px; height: 8px; }
+.weight-fill { height: 8px; border-radius: 4px; background: var(--orange); }
+.weight-pct { font-size: 12px; font-weight: 600; color: var(--orange); min-width: 36px; text-align: right; }
+
+/* Legend */
+.legend { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 28px; }
+.legend-item { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--ink-soft); }
+.legend-dot { width: 10px; height: 10px; border-radius: 50%; }
+
+/* Overview intro */
+.intro-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 32px; }
+.intro-card {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 18px;
+  text-align: center;
+}
+.intro-card .num { font-family: 'Fraunces', serif; font-size: 32px; font-weight: 700; color: var(--orange); }
+.intro-card .lbl { font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink-muted); margin-top: 4px; }
+
+/* CLI pill */
+.cli-block {
+  font-family: monospace;
+  font-size: 12px;
+  background: #1a1209;
+  color: #e8d5b5;
+  padding: 10px 14px;
+  border-radius: 6px;
+  margin: 4px 0 10px;
+  line-height: 1.7;
+  white-space: pre-wrap;
+}
+
+/* Responsive */
+@media (max-width: 700px) {
+  .bp-hero { padding: 32px 20px; }
+  .blueprint-body { padding: 0 16px 60px; }
+  .domain-nav { padding: 0 10px; }
+  .intro-grid { grid-template-columns: repeat(2,1fr); }
+  .topic-body { padding: 16px 14px; }
+  .weight-label { min-width: 140px; font-size: 11px; }
+}
+</style>
+</head>
+<body>
+
+<a class="back-btn" href="../../index.html" style="position:fixed;top:20px;left:28px;z-index:200;">← Home</a>
+
+<!-- ═══════════════════════════════════════════ HERO ═══════════════════════════════════════════ -->
+<div class="bp-hero">
+  <div class="bp-hero-sub">NSE7 — FortiOS 7.6 · Enterprise Firewall Administrator</div>
+  <h1>Exam <em>Blueprint</em></h1>
+  <div class="bp-hero-meta">5 Domains · All Core Topics · Exam Questions per Topic · Expand each card to study</div>
+</div>
+
+<!-- ═══════════════════════════════════════════ DOMAIN NAV ═══════════════════════════════════════════ -->
+<nav class="domain-nav">
+  <button class="domain-tab active" onclick="showDomain('overview', this)">📋 Overview</button>
+  <button class="domain-tab" onclick="showDomain('d1', this)">🛡️ System &amp; Security Fabric</button>
+  <button class="domain-tab" onclick="showDomain('d2', this)">🖥️ Central Management</button>
+  <button class="domain-tab" onclick="showDomain('d3', this)">🔍 Security Profiles</button>
+  <button class="domain-tab" onclick="showDomain('d4', this)">🗺️ Routing</button>
+  <button class="domain-tab" onclick="showDomain('d5', this)">🔐 VPN Technologies</button>
+</nav>
+
+<!-- ═══════════════════════════════════════════ BODY ═══════════════════════════════════════════ -->
+<div class="blueprint-body">
+
+<!-- ════════════════════ OVERVIEW ════════════════════ -->
+<section class="domain-section active" id="domain-overview">
+
+  <div style="padding-top:40px;">
+    <div class="section-label">EXAM OVERVIEW</div>
+    <h2 style="font-family:'Fraunces',serif;font-size:26px;margin-bottom:16px;">NSE7 Enterprise Firewall 7.6</h2>
+    <p style="color:var(--ink-soft);font-size:14px;line-height:1.7;margin-bottom:28px;">
+      The NSE7 Enterprise Firewall exam tests your ability to design, configure, manage, and troubleshoot enterprise-grade FortiGate deployments. 
+      It covers complex multi-device topologies, centralised management via FortiManager, dynamic routing, advanced VPN architectures, and deep security profile logic.
+      Scenario-based reasoning and CLI literacy are critical.
+    </p>
+
+    <div class="intro-grid">
+      <div class="intro-card"><div class="num">5</div><div class="lbl">Exam Domains</div></div>
+      <div class="intro-card"><div class="num">~60</div><div class="lbl">Questions</div></div>
+      <div class="intro-card"><div class="num">75<span style="font-size:18px">min</span></div><div class="lbl">Duration</div></div>
+    </div>
+
+    <div class="weight-bar-section">
+      <div class="weight-bar-title">Approximate Domain Weight</div>
+      <div class="weight-row"><span class="weight-label">System Configuration &amp; Security Fabric</span><div class="weight-track"><div class="weight-fill" style="width:20%"></div></div><span class="weight-pct">~20%</span></div>
+      <div class="weight-row"><span class="weight-label">Central Management</span><div class="weight-track"><div class="weight-fill" style="width:18%"></div></div><span class="weight-pct">~18%</span></div>
+      <div class="weight-row"><span class="weight-label">Security Profiles</span><div class="weight-track"><div class="weight-fill" style="width:20%"></div></div><span class="weight-pct">~20%</span></div>
+      <div class="weight-row"><span class="weight-label">Routing</span><div class="weight-track"><div class="weight-fill" style="width:22%"></div></div><span class="weight-pct">~22%</span></div>
+      <div class="weight-row"><span class="weight-label">VPN Technologies</span><div class="weight-track"><div class="weight-fill" style="width:20%"></div></div><span class="weight-pct">~20%</span></div>
+    </div>
+
+    <div class="legend">
+      <div class="legend-item"><div class="legend-dot" style="background:var(--red)"></div> HIGH priority</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--orange)"></div> MEDIUM priority</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--green)"></div> LOWER priority</div>
+    </div>
+
+    <div class="key-concept" style="background:var(--orange-light);border:1px solid var(--orange-border);border-radius:10px;padding:16px 20px;font-size:13px;color:#7a3010;line-height:1.7;">
+      <strong>How to use this blueprint:</strong> Click any domain tab above to explore its topics. Expand each topic card to see sub-topics and exam questions you must be able to answer. 
+      Tick sub-topics as you lock them in. Blue questions are conceptual. <span style="color:var(--red);font-weight:600;">Red questions are common exam traps.</span>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════ DOMAIN 1: SYSTEM CONFIG & SECURITY FABRIC ════════════════════ -->
+<section class="domain-section" id="domain-d1">
+  <div class="domain-header">
+    <div class="domain-number">01</div>
+    <div class="domain-title-block">
+      <h2>System Configuration &amp; Security Fabric</h2>
+      <p>Enterprise network architecture, VLAN/VDOM design, HA clustering, hardware acceleration, and the Fortinet Security Fabric ecosystem including automation and integrations.</p>
+    </div>
+  </div>
+
+  <!-- Topic: Enterprise Network Architecture -->
+  <div class="topic-card" id="tc-arch">
+    <div class="topic-header" onclick="toggleTopic('tc-arch')">
+      <span class="topic-icon">🏛️</span>
+      <span class="topic-name">Enterprise Network Architecture &amp; Firewall Roles</span>
+      <span class="topic-badge badge-high">HIGH</span>
+      <span class="topic-toggle">▶</span>
+    </div>
+    <div class="topic-body">
+      <div class="subtopic-section">
+        <div class="subtopic-section-label">Sub-topics — tick when locked in</div>
+        <div class="subtopic-list-inner">
+          <div class="subtopic-item" onclick="toggleSub(this)"><div class="sub-check"></div>NGFW role — internet gateway, SNAT, web filtering, IPS</div>
+          <div class="subtopic-item" onclick="toggleSub(this)"><div class="sub-check"></div>ISFW role — internal segmentation, device detection, DoS, breach isolation</div>
+          <div class="subtopic-item" onclick="toggleSub(this)"><div class="sub-check"></div>DCFW role — data-centre protection, IPS on inbound server traffic</div>
+          <div class="subtopic-item" onclick="toggleSub(this)"><div class="sub-check"></div>Zero-trust network model and why perimeter security is insufficient</div>
+          <div class="subtopic-item" onclick="toggleSub(this)"><div class="sub-check"></div>UTM profile placement strategy across NGFW / ISFW / DCFW</div>
+          <div class="subtopic-item" onclick="toggleSub(this)"><div class="sub-check"></div>Packet flow — full order of operations on FortiGate</div>
+          <div class="subtopic-item" onclick="toggleSub(this)"><div class="sub-check"></div>Session table fast-path vs slow-path logic</div>
+          <div class="subtopic-item" onclick="toggleSub(this)"><div class="sub-check"></div>Flow mode vs proxy mode — inspection differences</div>
+        </div>
+      </div>
+      <div class="questions-section">
+        <div class="subtopic-section-label">Questions you must be able to answer</div>
+        <div class="q-item"><span class="q-num">Q1</span>What is the fundamental difference between how an NGFW and an ISFW are positioned in an enterprise network, and what types of traffic does each primarily inspect?</div>
+        <div class="q-item"><span class="q-num">Q2</span>Describe the full order of operations for a packet arriving on a FortiGate interface. At what stage does policy lookup occur relative to routing lookup?</div>
+        <div class="q-item"><span class="q-num">Q3</span>What is the difference between flow mode and proxy mode inspection? What does "buffering the full stream" mean in proxy mode and why does it matter?</div>
+        <div class="q-item q-trap"><span class="q-num">⚠</span>TRAP: A session is in the session table and being fast-pathed. At what point does FortiGate stop applying security profiles to that session — and why?</div>
+        <div class="q-item"><span class="q-num">Q4</span>A DCFW is connected directly to the internet and uses VDOMs. How does VDOM segmentation simulate separate virtual firewalls on a single physical device?</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Topic: VLANs and VDOMs -->
+  <div class="topic-card" id="tc-vdom">
+    <div class="topic-header" onclick="toggleTopic('tc-vdom')">
+      <span class="topic-icon">🗂️</span>
+      <span class="topic-name">VLANs and VDOMs</span>
+      <span class="topic-badge badge-high">HIGH</span>
+      <span class="topic-toggle">▶</span>
+    </div>
+    <div class="topic-body">
+      <div class="subtopic-section">
+        <div class="subtopic-section-label">Sub-topics — tick when locked in</div>
+        <div class="subtopic-list-inner">
+          <div class="subtopic-item" onclick="toggleSub(this)"><div class="sub-check"></div>VDOM types — traffic VDOM vs management VDOM</div>
+          <div class="subtopic-item" onclick="toggleSub(this)"><div class="sub-check"></div>Inter-VDOM links — purpose, configuration, routing between VDOMs</div>
+          <div class="subtopic-item" onclick="toggleSub(this)"><div class="sub-check"></div>VDOM partitioning in HA — load sharing across VDOMs</div>
+          <div class="subtopic-item" onclick="toggleSub(this)"><div class="sub-check"></div>VLAN subinterfaces — 802.1Q tagging, parent interface, VLAN ID</div>
+          <div class="subtopic-item" onclick="toggleSub(this)"><div class="sub-check"></div>Global settings vs VDOM-specific settings</div>
+          <div class="subtopic-item" onclick="toggleSub(this)"><div class="sub-check"></div>NAT46 / NAT64 — IPv4/IPv6 translation via VDOMs</div>
+        </div>
+      </div>
+      <div class="questions-section">
+        <div class="subtopic-section-label">Questions you must be able to answer</div>
+        <div class="q-item"><span class="q-num">Q1</span>Why would you use an inter-VDOM link rather than a physical cable between VDOMs? What are the routing implications?</div>
+        <div class="q-item"><span class="q-num">Q2</span>Explain how VDOM partitioning improves performance in an active-active HA cluster. Which VDOMs process traffic on which unit?</div>
+        <div class="q-item q-trap"><span class="q-num">⚠</span>TRAP: A FortiGate has two VDOMs. An administrator changes a DNS setting — will this change apply to both VDOMs or only one? How do you know?</div>
+        <div class="q-item"><span class="q-num">Q3</span>What is the purpose of a management VDOM and what traffic does it handle?</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Topic: High Availability -->
+  <div class="topic-card" id="tc-ha">
+    <div class="topic-header" onclick="toggleTopic('tc-ha')">
+      <span class="topic-icon">👑</span>
+      <span class="topic-name">High Availability — FGCP, FGSP, VRRP</span>
+      <span class="topic-badge badge-high">HIGH</span>
+      <span class="topic-toggle">▶</span>
+    </div>
+    <div class="topic-body">
+      <div class="subtopic-section">
+        <div class="subtopic-section-label">Sub-topics — tick when locked in</div>
+        <div class="subtopic-list-inner">
+          <div class="subtopic-item" onclick="toggleSub(this)"><div class="sub-check"></div>FGCP — active-passive and active-active modes, heartbeat, failover</div>
+          <div class="subtopic-item" onclick="toggleSub(this)"><div class="sub-check"></div>FGCP — session synchronisation, sync scope, TCP vs UDP sessions</div>
+          <div class="subtopic-item" onclick="toggleSub(this)"><div class="sub-check"></div>FGCP — device priority, override, primary election logic</div>
+          <div class="subtopic-item" onclick="toggleSub(this)"><div class="sub-check"></div>FGSP — standalone FortiGates with external load balancer, asymmetric routing</div>
+          <div class="subtopic-item" onclick="toggleSub(this)"><div class="sub-check"></div>FGSP — session synchronisation over IPsec, layer 3 asymmetric traffic</div>
+          <div class="subtopic-item" onclick="toggleSub(this)"><div class="sub-check"></div>VRRP — virtual router, priority, preemption, destination monitoring</div>
+          <div class="subtopic-item" onclick="toggleSub(this)"><div class="sub-check"></div>FGCP vs FGSP vs VRRP comparison — load balancing, session sync, config sync</div>
+          <div class="subtopic-item" onclick="toggleSub(this)"><div class="sub-check"></div>VDOM partitioning in FGCP HA</div>
+        </div>
+      </div>
+      <div class="questions-section">
+        <div class="subtopic-section-label">Questions you must be able to answer</div>
+        <div class="q-item"><span class="q-num">Q1</span>What is the primary difference between FGCP active-passive and active-active modes in terms of traffic handling and session synchronisation?</div>
+        <div class="q-item"><span class="q-num">Q2</span>FGSP uses an external load balancer. What problem does this solve that FGCP active-active cannot? What does FGSP require that FGCP does not?</div>
+        <div class="q-item"><span class="q-num">Q3</span>In VRRP, what is destination monitoring and why should you monitor remote (internet) addresses rather than local ones?</div>
+        <div class="q-item q-trap"><span class="q-num">⚠</span>TRAP: Does FGSP synchronise configuration between devices? What about VRRP? How does this differ from FGCP?</div>
+        <div class="q-item"><span class="q-num">Q4</span>A support engineer tells you that UDP sessions are not synchronised in FGCP. Is this correct? What sessions ARE synchronised by default?</div>
+        <div class="q-item"><span class="q-num">Q5</span>Walk through the FGCP primary election process. What is checked first — and what does the "override" setting change?</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Topic: Hardware Acceleration -->
+  <div class="topic-card" id="tc-hw">
+    <div class="topic-header" onclick="toggleTopic('tc-hw')">
+      <span class="topic-icon">⚡</span>
+      <span class="topic-name">Hardware Acceleration — NP &amp; CP Processors</span>
+      <span class="topic-badge badge-med">MEDIUM</span>
+      <span class="topic-toggle">▶</span>
+    </div>
+    <div class="topic-body">
+      <div class="subtopic-section">
+        <div class="subtopic-section-label">Sub-topics — tick when locked in</div>
+        <div class="subtopic-list-inner">
+          <div class="subtopic-item" onclick="toggleSub(this)"><div class="sub-check"></div>NP (Network Processor) — what it offloads, fast-path vs slow-path</div>
+          <div class="subtopic-item" onclick="toggleSub(this)"><div class="sub-check"></div>CP (Content Processor) — SSL/IPsec crypto offload</div>
+          <div class="subtopic-item" onclick="toggleSub(this)"><div class="sub-check"></div>Conditions that bypass NP offload (UTM, proxy mode, etc.)</div>
+          <div class="subtopic-item" onclick="toggleSub(this)"><div class="sub-check"></div>npu-offload setting in firewall policy</div>
+          <div class="subtopic-item" onclick="toggleSub(this)"><div class="sub-check"></div>NTurbo — offloading flow-based UTM to NP</div>
+          <div class="subtopic-item" onclick="toggleSub(this)"><div class="sub-check"></div>Diagnosing NP offload with CLI</div>
+        </div>
+      </div>
+      <div class="questions-section">
+        <div class="subtopic-section-label">Questions you must be able to answer</div>
+        <div class="q-item"><span class="q-num">Q1</span>What types of traffic can be offloaded to the NP, and what conditions prevent offload from occurring?</div>
+        <div class="q-item"><span class="q-num">Q2</span>A policy has IPS and proxy-mode web filter enabled. Will NP offload apply? Explain why or why not.</div>
+        <div class="q-item q-trap"><span class="q-num">⚠</span>TRAP: NTurbo is enabled. Does this mean proxy mode inspection can be NP offloaded? What exactly does NTurbo offload?</div>
+        <div class="q-item"><span class="q-num">Q3</span>What CLI command would you use to verify whether a session is being NP-offloaded?</div>
+        <div class="cli-block">diagnose sys session list
+diagnose npu np6 session-stats</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Topic: Security Fabric -->
+  <div class="topic-card" id="tc-fab">
+    <div class="topic-header" onclick="toggleTopic('tc-fab')">
+      <span class="topic-icon">🕸️</span>
+      <span class="topic-name">Security Fabric — Connectors, Automation &amp; Use Cases</span>
+      <span class="topic-badge badge-high">HIGH</span>
+      <span class="topic-toggle">▶</span>
+    </div>
+    <div class="topic-body">
+      <div class="subtopic-section">
+        <div class="subtopic-section-label">Sub-topics — tick when locked in</div>
+        <div class="subtopic-list-inner">
+          <div class="subtopic-item" onclick="toggleSub(this)"><div class="sub-check"></div>Security Fabric pillars — broad, integrated, automated</div>
+          <div class="subtopic-item" onclick="toggleSub(this)"><div class="sub-check"></div>Fabric connectors vs external connectors — scope and use</div>
+          <div class="subtopic-item" onclick="toggleSub(this)"><div class="sub-check"></div>External feeds — HTTP/HTTPS/STIX, push API, dynamic list objects</div>
+          <div class="subtopic-item" onclick="toggleSub(this)"><div class="sub-check"></div>Automation stitches — triggers and actions</div>
+          <div class="subtopic-item" onclick="toggleSub(this)"><div class="sub-check"></div>Security Fabric logging on FortiAnalyzer — single-log rule, NAT exception, UTM correlation</div>
+          <div class="subtopic-item" onclick="toggleSub(this)"><div class="sub-check"></div>FortiNDR integration — inline blocking mode, ML/ANN analysis</div>
+          <div class="subtopic-item" onclick="toggleSub(this)"><div class="sub-check"></div>IoC detection and automated quarantine flow (FortiGate + FortiAnalyzer + EMS + FortiClient)</div>
+          <div class="subtopic-item" onclick="toggleSub(this)"><div class="sub-check"></div>Root FortiGate requirements and downstream device acceptance</div>
+        </div>
+      </div>
+      <div class="questions-section">
+        <div class="subtopic-section-label">Questions you must be able to answer</div>
+        <div class="q-item"><span class="q-num">Q1</span>In a Security Fabric with three FortiGates (ISFW → NGFW → DCFW), which device logs the initial traffic session, and under what condition would another device generate an additional traffic log?</div>
+        <div class="q-item"><span class="q-num">Q2</span>Explain the difference between a fabric connector and an external connector. Give one example of each.</div>
+        <div class="q-item"><span class="q-num">Q3</span>Walk through the five-step IoC quarantine flow when FortiClient detects a malicious site. Which component sends the quarantine instruction to the endpoint?</div>
+        <div class="q-item q-trap"><span class="q-num">⚠</span>TRAP: The NGFW in a Security Fabric performs SNAT. Will the ISFW's traffic log cover this NAT information, or will a second log be generated? Why?</div>
+        <div class="q-item"><span class="q-num">Q4</span>FortiNDR is being used in inline blocking mode. A file passes FortiGate's AV scan but isn't clean. What happens next — and what does FortiGate do while waiting for FortiNDR's verdict?</div>
+        <div class="q-item"><span class="q-num">Q5</span>What is an external feed in the Security Fabric? What protocol does it use and how is the dynamic list object used in policy?</div>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<!-- ════════════════════ DOMAIN 2: CENTRAL MANAGEMENT ════════════════════ -->
+<section class="domain-section" id="domain-d2">
+  <div class="domain-header">
+    <div class="domain-number">02</div>
+    <div class="domain-title-block">
+      <h2>Central Management</h2>
+      <p>FortiManager architecture, ADOMs, global database, dynamic objects, scripts, policy packages, IPsec templates, and centralised deployment workflows.</p>
+    </div>
+  </div>
+
+  <!-- Topic: FortiManager Architecture -->
+  <div class="topic-card" id="tc-fmg-arch">
+    <div class="topic-header" onclick="toggleTopic('tc-fmg-arch')">
+      <span class="topic-icon">🏗️</span>
+      <span class="topic-name">FortiManager Architecture — ADOMs &amp; Databases</span>
+      <span class="topic-badge badge-high">HIGH</span>
+      <span class="topic-toggle">▶</span>
+    </div>
+    <div class="topic-body">
+      <div class="subtopic-section">
+        <div class="subtopic-section-label">Sub-topics — tick when locked in</div>
+        <div class="subtopic-list-inner">
+          <div class="subtopic-item" onclick="toggleSub(this)"><div class="sub-check"></div>FortiManager core layers — device layer vs policy layer</div>
+          <div class="subtopic-item" onclick="toggleSub(this)"><div class="sub-check"></div>ADOMs — purpose, firmware version per ADOM, mixing versions</div>
+          <div class="subtopic-item" onclick="toggleSub(this)"><div class="sub-check"></div>Root ADOM — default when ADOMs disabled, functions available</div>
+          <div class="subtopic-item" onclick="toggleSub(this)"><div class="sub-check"></div>Global ADOM / Global Database — global policies and objects, "g" prefix reserved</div>
+          <div class="subtopic-item" onclick="toggleSub(this)"><div class="sub-check"></div>Global ADOM compatibility — supports same version and two versions earlier</div>
+          <div class="subtopic-item" onclick="toggleSub(this)"><div class="sub-check"></div>FortiGuard database — serves all ADOMs from one central source</div>
+          <div class="subtopic-item" onclick="toggleSub(this)"><div class="sub-check"></div>ADOM functions — scripts, provisioning templates, SD-WAN Manager, VPN Manager, AP/FortiSwitch Manager</div>
+          <div class="subtopic-item" onclick="toggleSub(this)"><div class="sub-check"></div>Installation and import workflows — discovering devices, adding to ADOMs</div>
+        </div>
+      </div>
+      <div class="questions-section">
+        <div class="subtopic-section-label">Questions you must be able to answer</div>
+        <div class="q-item"><span class="q-num">Q1</span>What are the two database layers within a FortiManager ADOM, and what does each one store?</div>
+        <div class="q-item"><span class="q-num">Q2</span>FortiManager is at version 7.6. An administrator wants to manage a FortiGate running 7.2. Can this be done with ADOMs? What is the compatibility rule for the Global ADOM?</div>
+        <div class="q-item q-trap"><span class="q-num">⚠</span>TRAP: An admin creates an object called "g_dmz_servers." FortiManager rejects it. Why?</div>
+        <div class="q-item"><span class="q-num">Q3</span>What is the purpose of the Global Database in FortiManager and how do global objects differ from local ADOM objects in policy?</div>
+        <div class="q-item"><span class="q-num">Q4</span>If ADOMs are not enabled, which ADOM is active by default and what are its limitations?</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Topic: Dynamic Objects -->
+  <div class="topic-card" id="tc-dynobj">
+    <div class="topic-header" onclick="toggleTopic('tc-dynobj')">
+      <span class="topic-icon">🔄</span>
+      <span class="topic-name">Dynamic Objects on FortiManager</span>
+      <span class="topic-badge badge-high">HIGH</span>
+      <span class="topic-toggle">▶</span>
+    </div>
+    <div class="topic-body">
+      <div class="subtopic-section">
+        <div class="subtopic-section-label">Sub-topics — tick when locked in</div>
+        <div class="subtopic-list-inner">
+          <div class="subtopic-item" onclick="toggleSub(this)"><div class="sub-check"></div>Dynamic objects — purpose and why a single policy can map to multiple per-device values</div>
+          <div class="subtopic-item" onclick="toggleSub(this)"><div class="sub-check"></div>Dynamic interface objects — mapping FortiManager interface name to per-device physical interface</div>
+          <div class="subtopic-item" onclick="toggleSub(this)"><div class="sub-check"></div>Dynamic address objects — per-device IP mapping within a shared policy</div>
+          <div class="subtopic-item" onclick="toggleSub(this)"><div class="sub-check"></div>Per-device mapping workflow — where and how to configure mappings</div>
+          <div class="subtopic-item" onclick="toggleSub(this)"><div class="sub-check"></div>Policy package — how one package can deploy to many FortiGates using dynamic objects</div>
+        </div>
+      </div>
+      <div class="questions-section">
+        <div class="subtopic-section-label">Questions you must be able to answer</div>
+        <div class="q-item"><span class="q-num">Q1</span>You have 20 branch FortiGates in one ADOM and want a single policy to allow LAN to WAN traffic, but each branch uses a different physical WAN interface name. How do dynamic objects solve this?</div>
+        <div class="q-item"><span class="q-num">Q2</span>What is a per-device mapping, and where is it configured in FortiManager?</div>
+        <div class="q-item q-trap"><span class="q-num">⚠</span>TRAP: A policy package is installed to 10 FortiGates. One FortiGate has no per-device mapping for a dynamic interface. What happens when you install to that device?</div>
+        <div class="q-item"><span class="q-num">Q3</span>What is the difference between a normal address object and a dynamic address object in a FortiManager policy package?</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Topic: Scripts -->
+  <div class="topic-card" id="tc-scripts">
+    <div class="topic-header" onclick="toggleTopic('tc-scripts')">
+      <span class="topic-icon">📜</span>
+      <span class="topic-name">Scripts on FortiManager</span>
+      <span class="topic-badge badge-med">MEDIUM</span>
+      <span class="topic-toggle">▶</span>
+    </div>
+    <div class="topic-body">
+      <div class="subtopic-section">
+        <div class="subtopic-section-label">Sub-topics — tick when locked in</div>
+        <div class="subtopic-list-inner">
+          <div class="subtopic-item" onclick="toggleSub(this)"><div class="sub-check"></div>CLI scripts — FortiOS CLI commands executed on managed devices</div>
+          <div class="subtopic-item" onclick="toggleSub(this)"><div class="sub-check"></div>TCL scripts — conditional logic and loops for complex automation</div>
+          <div class="subtopic-item" onclick="toggleSub(this)"><div class="sub-check"></div>Script run targets — device database, policy package, remote device (FortiGate)</div>
+          <div class="subtopic-item" onclick="toggleSub(this)"><div class="sub-check"></div>Pre-run CLI vs post-run CLI — sequence during installation</div>
+          <div class="subtopic-item" onclick="toggleSub(this)"><div class="sub-check"></div>Script execution scope — ADOM-level, device-level</div>
+        </div>
+      </div>
+      <div class="questions-section">
+        <div class="subtopic-section-label">Questions you must be able to answer</div>
+        <div class="q-item"><span class="q-num">Q1</span>What is the difference between running a script against the device database versus running it directly on a remote FortiGate?</div>
+        <div class="q-item"><span class="q-num">Q2</span>You need to apply a hostname change to 50 FortiGates but each hostname must be unique. Which script type (CLI or TCL) would you use and why?</div>
+        <div class="q-item q-trap"><span class="q-num">⚠</span>TRAP: A CLI script is run against the device database. Does this immediately push the change to the FortiGate? What additional step is needed?</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Topic: IPsec & SD-WAN via FortiManager -->
+  <div class="topic-card" id="tc-fmg-vpn">
+    <div class="topic-header" onclick="toggleTopic('tc-fmg-vpn')">
+      <span class="topic-icon">🔧</span>
+      <span class="topic-name">FortiManager — VPN Manager &amp; SD-WAN Manager</span>
+      <span class="topic-badge badge-high">HIGH</span>
+      <span class="topic-toggle">▶</span>
+    </div>
+    <div class="topic-body">
+      <div class="subtopic-section">
+        <div class="subtopic-section-label">Sub-topics — tick when locked in</div>
+        <div class="subtopic-list-inner">
+          <div class="subtopic-item" onclick="toggleSub(this)"><div class="sub-check"></div>VPN Manager — creating IPsec topologies centrally (hub-and-spoke, full mesh)</div>
+          <div class="subtopic-item" onclick="toggleSub(this)"><div class="sub-check"></div>IPsec templates in FortiManager — template parameters, per-device mappings</div>
+          <div class="subtopic-item" onclick="toggleSub(this)"><div class="sub-check"></div>SD-WAN Manager — central SD-WAN profile creation and push</div>
+          <div class="subtopic-item" onclick="toggleSub(this)"><div class="sub-check"></div>Installing VPN configuration via FortiManager vs direct FortiGate config</div>
+          <div class="subtopic-item" onclick="toggleSub(this)"><div class="sub-check"></div>ADOM-level VPN vs device-level VPN</div>
+        </div>
+      </div>
+      <div class="questions-section">
+        <div class="subtopic-section-label">Questions you must be able to answer</div>
+        <div class="q-item"><span class="q-num">Q1</span>What is the advantage of using FortiManager VPN Manager to build an IPsec hub-and-spoke topology versus configuring each device individually?</div>
+        <div class="q-item"><span class="q-num">Q2</span>IPsec templates on FortiManager use per-device mappings. What values would typically be per-device rather than shared across the template?</div>
+        <div class="q-item q-trap"><span class="q-num">⚠</span>TRAP: An ADVPN spoke is managed by FortiManager. A network engineer modifies the spoke's IPsec phase1 directly on the FortiGate CLI. What risk does this create?</div>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<!-- ════════════════════ DOMAIN 3: SECURITY PROFILES ════════════════════ -->
+<section class="domain-section" id="domain-d3">
+  <div class="domain-header">
+    <div class="domain-number">03</div>
+    <div class="domain-title-block">
+      <h2>Security Profiles</h2>
+      <p>SSL/SSH inspection, web filtering, application control, IPS, antivirus, DNS filtering, and UTM placement strategy in enterprise deployments.</p>
+    </div>
+  </div>
+
+  <!-- Topic: SSL/SSH Inspection -->
+  <div class="topic-card" id="tc-ssl">
+    <div class="topic-header" onclick="toggleTopic('tc-ssl')">
+      <span class="topic-icon">🔒</span>
+      <span class="topic-name">SSL/SSH Inspection Profiles</span>
+      <span class="topic-badge badge-high">HIGH</span>
+      <span class="topic-toggle">▶</span>
+    </div>
+    <div class="topic-body">
+      <div class="subtopic-section">
+        <div class="subtopic-section-label">Sub-topics — tick when locked in</div>
+        <div class="subtopic-list-inner">
+          <div class="subtopic-item" onclick="toggleSub(this)"><div class="sub-check"></div>Certificate inspection vs full SSL inspection — what each examines</div>
+          <div class="subtopic-item" onclick="toggleSub(this)"><div class="sub-check"></div>Full inspection — FortiGate as man-in-the-middle, re-signing certificates</div>
+          <div class="subtopic-item" onclick="toggleSub(this)"><div class="sub-check"></div>CA certificate — distributing the FortiGate CA to clients</div>
+          <div class="subtopic-item" onclick="toggleSub(this)"><div class="sub-check"></div>SNI (Server Name Indication) — purpose, TLS handshake use</div>
+          <div class="subtopic-item" onclick="toggleSub(this)"><div class="sub-check"></div>SAN (Subject Alternative Name) — single cert covering multiple domains, wildcard support</div>
+          <div class="subtopic-item" onclick="toggleSub(this)"><div class="sub-check"></div>Inspection exceptions — exempt by URL, certificate category, address</div>
+          <div class="subtopic-item" onclick="toggleSub(this)"><div class="sub-check"></div>SSH deep inspection — decrypting SSH for application control and DLP</div>
+          <div class="subtopic-item" onclick="toggleSub(this)"><div class="sub-check"></div>Flow mode vs proxy mode SSL inspection behaviour</div>
+        </div>
+      </div>
+      <div class="questions-section">
+        <div class="subtopic-section-label">Questions you must be able to answer</div>
+        <div class="q-item"><span class="q-num">Q1</span>What is the difference between certificate inspection and full SSL inspection? Which security profiles require full SSL inspection to function properly?</div>
+        <div class="q-item"><span class="q-num">Q2</span>Explain how SNI is used during the TLS handshake. Why is it useful for FortiGate's SSL inspection even in certificate-only mode?</div>
+        <div class="q-item"><span class="q-num">Q3</span>What is a SAN certificate and how does it differ from SNI? Which supports wildcards?</div>
+        <div class="q-item q-trap"><span class="q-num">⚠</span>TRAP: SSL full inspection is enabled but users are seeing certificate errors for banking sites. What is the most likely cause and how do you fix it without disabling inspection globally?</div>
+        <div class="q-item"><span class="q-num">Q4</span>Why must you distribute the FortiGate CA certificate to client machines when using full SSL inspection?</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Topic: Web Filter & App Control -->
+  <div class="topic-card" id="tc-webfilter">
+    <div class="topic-header" onclick="toggleTopic('tc-webfilter')">
+      <span class="topic-icon">🌐</span>
+      <span class="topic-name">Web Filter, Application Control &amp; ISDB</span>
+      <span class="topic-badge badge-high">HIGH</span>
+      <span class="topic-toggle">▶</span>
+    </div>
+    <div class="topic-body">
+      <div class="subtopic-section">
+        <div class="subtopic-section-label">Sub-topics — tick when locked in</div>
+        <div class="subtopic-list-inner">
+          <div class="subtopic-item" onclick="toggleSub(this)"><div class="sub-check"></div>FortiGuard web filter categories — actions (block, allow, monitor, warning, authenticate)</div>
+          <div class="subtopic-item" onclick="toggleSub(this)"><div class="sub-check"></div>URL filter — static overrides, order of precedence over categories</div>
+          <div class="subtopic-item" onclick="toggleSub(this)"><div class="sub-check"></div>Web filter override — per-user, per-group, time-based</div>
+          <div class="subtopic-item" onclick="toggleSub(this)"><div class="sub-check"></div>Application control — application signatures, categories, QUIC protocol</div>
+          <div class="subtopic-item" onclick="toggleSub(this)"><div class="sub-check"></div>ISDB (Internet Service Database) — geo-IP, vendor-IP, protocol-based objects in policy</div>
+          <div class="subtopic-item" onclick="toggleSub(this)"><div class="sub-check"></div>ISDB in routing — using ISDB objects to steer SD-WAN traffic</div>
+          <div class="subtopic-item" onclick="toggleSub(this)"><div class="sub-check"></div>Flow mode vs proxy mode web filter — buffering vs streaming inspection</div>
+        </div>
+      </div>
+      <div class="questions-section">
+        <div class="subtopic-section-label">Questions you must be able to answer</div>
+        <div class="q-item"><span class="q-num">Q1</span>A URL filter entry conflicts with a FortiGuard category. Which takes precedence?</div>
+        <div class="q-item"><span class="q-num">Q2</span>What is the ISDB and how is it different from a regular address object? Give an example of why you would use it in a policy.</div>
+        <div class="q-item q-trap"><span class="q-num">⚠</span>TRAP: Web filter is configured with proxy mode. A user accesses a streaming video site. FortiGate seems slow. Why — and is this expected behaviour?</div>
+        <div class="q-item"><span class="q-num">Q3</span>Application control is blocking QUIC. What protocol is QUIC based on and why might FortiGate block it by default in some profiles?</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Topic: IPS -->
+  <div class="topic-card" id="tc-ips">
+    <div class="topic-header" onclick="toggleTopic('tc-ips')">
+      <span class="topic-icon">🛑</span>
+      <span class="topic-name">IPS — Signatures, Filters &amp; Use Cases</span>
+      <span class="topic-badge badge-high">HIGH</span>
+      <span class="topic-toggle">▶</span>
+    </div>
+    <div class="topic-body">
+      <div class="subtopic-section">
+        <div class="subtopic-section-label">Sub-topics — tick when locked in</div>
+        <div class="subtopic-list-inner">
+          <div class="subtopic-item" onclick="toggleSub(this)"><div class="sub-check"></div>IPS sensors — signature-based and filter-based entries</div>
+          <div class="subtopic-item" onclick="toggleSub(this)"><div class="sub-check"></div>IPS actions — allow, monitor, block, reset, default</div>
+          <div class="subtopic-item" onclick="toggleSub(this)"><div class="sub-check"></div>False positive handling — override action per signature</div>
+          <div class="subtopic-item" onclick="toggleSub(this)"><div class="sub-check"></div>IPS on encrypted traffic — requires SSL full inspection</div>
+          <div class="subtopic-item" onclick="toggleSub(this)"><div class="sub-check"></div>DNS exfiltration use case — DNSExfiltrator signature, DNS-over-TLS</div>
+          <div class="subtopic-item" onclick="toggleSub(this)"><div class="sub-check"></div>PHP code injection — how HTTPS injection is detected and blocked</div>
+          <div class="subtopic-item" onclick="toggleSub(this)"><div class="sub-check"></div>IPS placement in enterprise — NGFW vs DCFW scenarios</div>
+          <div class="subtopic-item" onclick="toggleSub(this)"><div class="sub-check"></div>Protocol options profile — how it enables decoding for IPS</div>
+        </div>
+      </div>
+      <div class="questions-section">
+        <div class="subtopic-section-label">Questions you must be able to answer</div>
+        <div class="q-item"><span class="q-num">Q1</span>IPS is generating false positives for a custom application. How do you suppress a specific signature without removing the IPS sensor from the policy?</div>
+        <div class="q-item"><span class="q-num">Q2</span>A PHP code injection is being sent over HTTPS. What two things must be configured for FortiGate to detect and block it?</div>
+        <div class="q-item"><span class="q-num">Q3</span>Explain the DNS exfiltration technique. What does the attacker control, and how does FortiGate detect it?</div>
+        <div class="q-item q-trap"><span class="q-num">⚠</span>TRAP: IPS is enabled in flow mode. An attack arrives in an HTTPS stream. Will IPS detect it? What is the deciding factor?</div>
+        <div class="q-item"><span class="q-num">Q4</span>What is the difference between a signature-based IPS entry and a filter-based IPS entry? When would you use each?</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Topic: AV & UTM Placement -->
+  <div class="topic-card" id="tc-av">
+    <div class="topic-header" onclick="toggleTopic('tc-av')">
+      <span class="topic-icon">🦠</span>
+      <span class="topic-name">Antivirus &amp; UTM Profile Placement Strategy</span>
+      <span class="topic-badge badge-med">MEDIUM</span>
+      <span class="topic-toggle">▶</span>
+    </div>
+    <div class="topic-body">
+      <div class="subtopic-section">
+        <div class="subtopic-section-label">Sub-topics — tick when locked in</div>
+        <div class="subtopic-list-inner">
+          <div class="subtopic-item" onclick="toggleSub(this)"><div class="sub-check"></div>AV in flow mode vs proxy mode — scan depth, buffering, timeout</div>
+          <div class="subtopic-item" onclick="toggleSub(this)"><div class="sub-check"></div>FortiNDR / sandbox integration — files forwarded when AV verdict is inconclusive</div>
+          <div class="subtopic-item" onclick="toggleSub(this)"><div class="sub-check"></div>UTM placement — NGFW for outbound, DCFW for inbound, ISFW for lateral</div>
+          <div class="subtopic-item" onclick="toggleSub(this)"><div class="sub-check"></div>Redundancy between NGFW and DCFW UTM — how to avoid duplicate inspection</div>
+          <div class="subtopic-item" onclick="toggleSub(this)"><div class="sub-check"></div>Protocol options — port-based vs application-based scanning scope</div>
+        </div>
+      </div>
+      <div class="questions-section">
+        <div class="subtopic-section-label">Questions you must be able to answer</div>
+        <div class="q-item"><span class="q-num">Q1</span>What is the strategic logic for placing web filter and IPS on the NGFW, but IPS (inbound) on the DCFW? Why not apply all profiles on every device?</div>
+        <div class="q-item"><span class="q-num">Q2</span>AV is in proxy mode. A very large file is being downloaded. What could go wrong — and what setting controls this?</div>
+        <div class="q-item q-trap"><span class="q-num">⚠</span>TRAP: ISFW has no UTM profiles. Is this a security gap? Explain the Security Fabric logging architecture and why it still provides visibility.</div>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<!-- ════════════════════ DOMAIN 4: ROUTING ════════════════════ -->
+<section class="domain-section" id="domain-d4">
+  <div class="domain-header">
+    <div class="domain-number">04</div>
+    <div class="domain-title-block">
+      <h2>Routing</h2>
+      <p>OSPF features, BGP enterprise deployment, BGP optimisation, SD-WAN traffic steering, ECMP, policy routes, and FortiManager-based routing management.</p>
+    </div>
+  </div>
+
+  <!-- Topic: OSPF -->
+  <div class="topic-card" id="tc-ospf">
+    <div class="topic-header" onclick="toggleTopic('tc-ospf')">
+      <span class="topic-icon">🔵</span>
+      <span class="topic-name">OSPF — Areas, LSAs, DR/BDR &amp; Redistribution</span>
+      <span class="topic-badge badge-high">HIGH</span>
+      <span class="topic-toggle">▶</span>
+    </div>
+    <div class="topic-body">
+      <div class="subtopic-section">
+        <div class="subtopic-section-label">Sub-topics — tick when locked in</div>
+        <div class="subtopic-list-inner">
+          <div class="subtopic-item" onclick="toggleSub(this)"><div class="sub-check"></div>OSPF as a link-state protocol — LSDB, Dijkstra's algorithm, SPF tree</div>
+          <div class="subtopic-item" onclick="toggleSub(this)"><div class="sub-check"></div>OSPF areas — backbone (area 0), regular, stub, NSSA, totally stubby</div>
+          <div class="subtopic-item" onclick="toggleSub(this)"><div class="sub-check"></div>LSA types — Type 1 (Router), Type 2 (Network), Type 3 (Summary), Type 5 (External), Type 7 (NSSA)</div>
+          <div class="subtopic-item" onclick="toggleSub(this)"><div class="sub-check"></div>DR/BDR election — priority, router ID, broadcast networks</div>
+          <div class="subtopic-item" onclick="toggleSub(this)"><div class="sub-check"></div>OSPF neighbour states — Down → Init → 2-Way → ExStart → Exchange → Loading → Full</div>
+          <div class="subtopic-item" onclick="toggleSub(this)"><div class="sub-check"></div>Route redistribution — redistributing static/BGP into OSPF and vice versa</div>
+          <div class="subtopic-item" onclick="toggleSub(this)"><div class="sub-check"></div>OSPF on FortiGate — network commands, interface configuration, passive interfaces</div>
+          <div class="subtopic-item" onclick="toggleSub(this)"><div class="sub-check"></div>OSPF authentication — plain text vs MD5</div>
+          <div class="subtopic-item" onclick="toggleSub(this)"><div class="sub-check"></div>OSPF with VDOMs — routing table isolation</div>
+        </div>
+      </div>
+      <div class="questions-section">
+        <div class="subtopic-section-label">Questions you must be able to answer</div>
+        <div class="q-item"><span class="q-num">Q1</span>What is the difference between a stub area and an NSSA in OSPF? When would you use each?</div>
+        <div class="q-item"><span class="q-num">Q2</span>Explain the OSPF DR/BDR election process. What happens if the DR goes down — does a new election occur?</div>
+        <div class="q-item"><span class="q-num">Q3</span>Two FortiGates are stuck at 2-Way OSPF neighbour state. What is the likely cause?</div>
+        <div class="q-item q-trap"><span class="q-num">⚠</span>TRAP: OSPF is configured with area 1 as totally stubby. A Type 5 LSA from an external BGP source needs to reach area 1. Will it? Why not?</div>
+        <div class="q-item"><span class="q-num">Q4</span>What CLI commands would you use to verify OSPF neighbour state and the OSPF routing table on FortiGate?</div>
+        <div class="cli-block">get router info ospf neighbor
+get router info ospf database
+get router info routing-table ospf</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Topic: BGP -->
+  <div class="topic-card" id="tc-bgp">
+    <div class="topic-header" onclick="toggleTopic('tc-bgp')">
+      <span class="topic-icon">🟠</span>
+      <span class="topic-name">BGP — iBGP, eBGP, Attributes &amp; Rapid Convergence</span>
+      <span class="topic-badge badge-high">HIGH</span>
+      <span class="topic-toggle">▶</span>
+    </div>
+    <div class="topic-body">
+      <div class="subtopic-section">
+        <div class="subtopic-section-label">Sub-topics — tick when locked in</div>
+        <div class="subtopic-list-inner">
+          <div class="subtopic-item" onclick="toggleSub(this)"><div class="sub-check"></div>BGP path vector protocol — AS_PATH, NEXT_HOP, MED, LOCAL_PREF, WEIGHT</div>
+          <div class="subtopic-item" onclick="toggleSub(this)"><div class="sub-check"></div>iBGP vs eBGP — same AS vs different AS, iBGP full-mesh requirement</div>
+          <div class="subtopic-item" onclick="toggleSub(this)"><div class="sub-check"></div>Route reflectors — solving iBGP full-mesh problem</div>
+          <div class="subtopic-item" onclick="toggleSub(this)"><div class="sub-check"></div>BGP best-path selection algorithm — weight → local-pref → originated → AS path → origin → MED → eBGP vs iBGP → IGP metric → router ID</div>
+          <div class="subtopic-item" onclick="toggleSub(this)"><div class="sub-check"></div>BGP rapid convergence — BFD, graceful restart, route dampening</div>
+          <div class="subtopic-item" onclick="toggleSub(this)"><div class="sub-check"></div>BGP network advertisement — network command vs redistribution</div>
+          <div class="subtopic-item" onclick="toggleSub(this)"><div class="sub-check"></div>BGP in ADVPN — iBGP for hub-spoke, eBGP for multi-region</div>
+          <div class="subtopic-item" onclick="toggleSub(this)"><div class="sub-check"></div>BGP via FortiManager — deploying BGP config centrally</div>
+          <div class="subtopic-item" onclick="toggleSub(this)"><div class="sub-check"></div>ECMP in BGP — equal-cost multipath configuration</div>
+        </div>
+      </div>
+      <div class="questions-section">
+        <div class="subtopic-section-label">Questions you must be able to answer</div>
+        <div class="q-item"><span class="q-num">Q1</span>What is the iBGP full-mesh requirement and how does a route reflector solve it?</div>
+        <div class="q-item"><span class="q-num">Q2</span>List the BGP best-path selection attributes in order. Which attribute has the highest priority and which is Fortinet-only?</div>
+        <div class="q-item"><span class="q-num">Q3</span>What is BFD and how does it improve BGP convergence compared to relying on BGP hold-timers alone?</div>
+        <div class="q-item q-trap"><span class="q-num">⚠</span>TRAP: In ADVPN, iBGP is used between spokes and the hub. What is the NEXT_HOP problem with iBGP and how is it resolved in the ADVPN design?</div>
+        <div class="q-item"><span class="q-num">Q4</span>Two BGP paths to the same destination have equal weight, local-pref, and AS path length. What is checked next?</div>
+        <div class="q-item"><span class="q-num">Q5</span>What CLI commands would you use to verify BGP neighbour state and the BGP routing table?</div>
+        <div class="cli-block">get router info bgp summary
+get router info bgp neighbors &lt;ip&gt; advertised-routes
+get router info routing-table bgp</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Topic: SD-WAN -->
+  <div class="topic-card" id="tc-sdwan">
+    <div class="topic-header" onclick="toggleTopic('tc-sdwan')">
+      <span class="topic-icon">🗺️</span>
+      <span class="topic-name">SD-WAN — Rules, Health Checks &amp; Traffic Steering</span>
+      <span class="topic-badge badge-high">HIGH</span>
+      <span class="topic-toggle">▶</span>
+    </div>
+    <div class="topic-body">
+      <div class="subtopic-section">
+        <div class="subtopic-section-label">Sub-topics — tick when locked in</div>
+        <div class="subtopic-list-inner">
+          <div class="subtopic-item" onclick="toggleSub(this)"><div class="sub-check"></div>SD-WAN zones and members — adding interfaces to SD-WAN</div>
+          <div class="subtopic-item" onclick="toggleSub(this)"><div class="sub-check"></div>SD-WAN rules — traffic matching, preferred member, load balancing strategies</div>
+          <div class="subtopic-item" onclick="toggleSub(this)"><div class="sub-check"></div>SD-WAN health checks — ping, HTTP, DNS probes; SLA targets</div>
+          <div class="subtopic-item" onclick="toggleSub(this)"><div class="sub-check"></div>Quality criteria — latency, jitter, packet loss thresholds</div>
+          <div class="subtopic-item" onclick="toggleSub(this)"><div class="sub-check"></div>Load balancing algorithms — source-IP, sessions, spillover, volume, least-cost, SLA</div>
+          <div class="subtopic-item" onclick="toggleSub(this)"><div class="sub-check"></div>SD-WAN with ADVPN — traffic steering over overlay tunnels</div>
+          <div class="subtopic-item" onclick="toggleSub(this)"><div class="sub-check"></div>Overlay stickiness — shortcut path selection in ADVPN + SD-WAN</div>
+          <div class="subtopic-item" onclick="toggleSub(this)"><div class="sub-check"></div>ADVPN 2.0 — edge discovery, path management, 5-second WAN link updates</div>
+          <div class="subtopic-item" onclick="toggleSub(this)"><div class="sub-check"></div>SD-WAN via FortiManager — SD-WAN Manager, central profile deployment</div>
+        </div>
+      </div>
+      <div class="questions-section">
+        <div class="subtopic-section-label">Questions you must be able to answer</div>
+        <div class="q-item"><span class="q-num">Q1</span>How does an SD-WAN health check work? What happens to an SD-WAN rule when a member fails its SLA target?</div>
+        <div class="q-item"><span class="q-num">Q2</span>What is the difference between the "lowest cost" and "best quality" SD-WAN load balancing strategies?</div>
+        <div class="q-item"><span class="q-num">Q3</span>Explain overlay stickiness in ADVPN + SD-WAN. Why does the shortcut path not automatically switch to a faster link once established?</div>
+        <div class="q-item q-trap"><span class="q-num">⚠</span>TRAP: An SD-WAN rule is configured with ISP1 as preferred. ISP1's SLA fails. Does FortiGate fall back to ISP2 automatically? What must be configured for this to work?</div>
+        <div class="q-item"><span class="q-num">Q4</span>What improvement does ADVPN 2.0 bring over ADVPN 1.0 specifically in SD-WAN environments?</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Topic: Policy Routes & ECMP -->
+  <div class="topic-card" id="tc-pr">
+    <div class="topic-header" onclick="toggleTopic('tc-pr')">
+      <span class="topic-icon">🔀</span>
+      <span class="topic-name">Policy Routes, Static Routes &amp; ECMP</span>
+      <span class="topic-badge badge-med">MEDIUM</span>
+      <span class="topic-toggle">▶</span>
+    </div>
+    <div class="topic-body">
+      <div class="subtopic-section">
+        <div class="subtopic-section-label">Sub-topics — tick when locked in</div>
+        <div class="subtopic-list-inner">
+          <div class="subtopic-item" onclick="toggleSub(this)"><div class="sub-check"></div>Static route — destination, gateway, interface, distance, priority</div>
+          <div class="subtopic-item" onclick="toggleSub(this)"><div class="sub-check"></div>Policy route — match on source, destination, protocol, port → next hop override</div>
+          <div class="subtopic-item" onclick="toggleSub(this)"><div class="sub-check"></div>ECMP — equal-cost multipath, load balancing across multiple equal-metric routes</div>
+          <div class="subtopic-item" onclick="toggleSub(this)"><div class="sub-check"></div>Route priority vs distance — how FortiGate selects between routes of same destination</div>
+          <div class="subtopic-item" onclick="toggleSub(this)"><div class="sub-check"></div>Recursive routing — resolving next-hops through the routing table</div>
+          <div class="subtopic-item" onclick="toggleSub(this)"><div class="sub-check"></div>Routing lookup order — static, policy route, dynamic (OSPF, BGP), default</div>
+        </div>
+      </div>
+      <div class="questions-section">
+        <div class="subtopic-section-label">Questions you must be able to answer</div>
+        <div class="q-item"><span class="q-num">Q1</span>How does a policy route differ from a static route? Can a policy route override a more specific static route?</div>
+        <div class="q-item"><span class="q-num">Q2</span>Two BGP routes to the same destination have equal attributes. How do you enable ECMP on FortiGate — and what does load balancing across ECMP routes look like in the session table?</div>
+        <div class="q-item q-trap"><span class="q-num">⚠</span>TRAP: FortiGate has a static default route (distance 10) and a BGP-learned default route (distance 20). Which is preferred? What if the BGP route has a lower metric?</div>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<!-- ════════════════════ DOMAIN 5: VPN TECHNOLOGIES ════════════════════ -->
+<section class="domain-section" id="domain-d5">
+  <div class="domain-header">
+    <div class="domain-number">05</div>
+    <div class="domain-title-block">
+      <h2>VPN Technologies</h2>
+      <p>IPsec fundamentals, topology design, IKEv1 vs IKEv2, ADVPN shortcut messaging, ADVPN 2.0, BGP over overlay, loopback design, and FortiManager IPsec templates.</p>
+    </div>
+  </div>
+
+  <!-- Topic: IPsec Fundamentals -->
+  <div class="topic-card" id="tc-ipsec-fund">
+    <div class="topic-header" onclick="toggleTopic('tc-ipsec-fund')">
+      <span class="topic-icon">🔑</span>
+      <span class="topic-name">IPsec Fundamentals — IKE, Phase 1 &amp; Phase 2</span>
+      <span class="topic-badge badge-high">HIGH</span>
+      <span class="topic-toggle">▶</span>
+    </div>
+    <div class="topic-body">
+      <div class="subtopic-section">
+        <div class="subtopic-section-label">Sub-topics — tick when locked in</div>
+        <div class="subtopic-list-inner">
+          <div class="subtopic-item" onclick="toggleSub(this)"><div class="sub-check"></div>IKEv1 — main mode vs aggressive mode, 6 vs 3 messages, peer ID exposure</div>
+          <div class="subtopic-item" onclick="toggleSub(this)"><div class="sub-check"></div>IKEv2 — 4 messages, 2 exchanges, efficiency and security advantages</div>
+          <div class="subtopic-item" onclick="toggleSub(this)"><div class="sub-check"></div>Phase 1 — authentication (PSK / certificates), DH group, encryption, integrity</div>
+          <div class="subtopic-item" onclick="toggleSub(this)"><div class="sub-check"></div>Phase 2 — quick mode / child SA, encryption, PFS, selectors</div>
+          <div class="subtopic-item" onclick="toggleSub(this)"><div class="sub-check"></div>IPsec modes — tunnel mode vs transport mode</div>
+          <div class="subtopic-item" onclick="toggleSub(this)"><div class="sub-check"></div>ESP vs AH — encryption and authentication coverage</div>
+          <div class="subtopic-item" onclick="toggleSub(this)"><div class="sub-check"></div>Network ID — Fortinet-proprietary attribute for ADVPN multi-tunnel selection</div>
+          <div class="subtopic-item" onclick="toggleSub(this)"><div class="sub-check"></div>Phase 2 selector alphabetical lookup — impact on ADVPN overlay advertisement</div>
+        </div>
+      </div>
+      <div class="questions-section">
+        <div class="subtopic-section-label">Questions you must be able to answer</div>
+        <div class="q-item"><span class="q-num">Q1</span>What is the security risk in IKEv1 aggressive mode that does not exist in main mode or IKEv2?</div>
+        <div class="q-item"><span class="q-num">Q2</span>Explain PFS (Perfect Forward Secrecy) in Phase 2. Why is it recommended and what is the trade-off?</div>
+        <div class="q-item"><span class="q-num">Q3</span>What is the Network ID attribute in FortiGate IPsec and why is it necessary for ADVPN when multiple IKEv2 tunnels exist between the same peer IPs?</div>
+        <div class="q-item q-trap"><span class="q-num">⚠</span>TRAP: ADVPN has two Phase 2 entries: "Overlay_advertisement" and "Spoke". Which one is processed first and why does this alphabetical order matter?</div>
+        <div class="q-item"><span class="q-num">Q4</span>IKEv1 main mode uses 6 messages. What does each pair of messages accomplish?</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Topic: IPsec Topology Design -->
+  <div class="topic-card" id="tc-ipsec-topo">
+    <div class="topic-header" onclick="toggleTopic('tc-ipsec-topo')">
+      <span class="topic-icon">📐</span>
+      <span class="topic-name">IPsec Topology Design — Hub-Spoke &amp; Full Mesh</span>
+      <span class="topic-badge badge-high">HIGH</span>
+      <span class="topic-toggle">▶</span>
+    </div>
+    <div class="topic-body">
+      <div class="subtopic-section">
+        <div class="subtopic-section-label">Sub-topics — tick when locked in</div>
+        <div class="subtopic-list-inner">
+          <div class="subtopic-item" onclick="toggleSub(this)"><div class="sub-check"></div>Hub-and-spoke — hub forwards spoke-to-spoke traffic, single point of management</div>
+          <div class="subtopic-item" onclick="toggleSub(this)"><div class="sub-check"></div>Full mesh — direct spoke-to-spoke tunnels, complexity scales O(n²)</div>
+          <div class="subtopic-item" onclick="toggleSub(this)"><div class="sub-check"></div>Partial mesh — manual spoke-to-spoke for specific pairs</div>
+          <div class="subtopic-item" onclick="toggleSub(this)"><div class="sub-check"></div>Redundant hubs — dual hub design for HA</div>
+          <div class="subtopic-item" onclick="toggleSub(this)"><div class="sub-check"></div>Single vs multiple internet connections — IPsec interface count, overlay IP addressing</div>
+          <div class="subtopic-item" onclick="toggleSub(this)"><div class="sub-check"></div>Loopback approach — reduces BGP peers, ideal for multi-WAN and large deployments</div>
+          <div class="subtopic-item" onclick="toggleSub(this)"><div class="sub-check"></div>NAT traversal — encapsulating ESP in UDP 4500</div>
+        </div>
+      </div>
+      <div class="questions-section">
+        <div class="subtopic-section-label">Questions you must be able to answer</div>
+        <div class="q-item"><span class="q-num">Q1</span>A hub-and-spoke topology has 3 firewalls each with 3 internet connections. How many IPsec virtual interfaces exist? How does the loopback approach reduce this complexity?</div>
+        <div class="q-item"><span class="q-num">Q2</span>What is the bottleneck risk of a traditional hub-and-spoke topology and how does ADVPN address it?</div>
+        <div class="q-item q-trap"><span class="q-num">⚠</span>TRAP: An ADVPN spoke sits behind NAT. What must be enabled on the FortiGate IPsec config for the tunnel to establish through a NAT device?</div>
+        <div class="q-item"><span class="q-num">Q3</span>Why must IKEv2 be used for ADVPN (rather than IKEv1) when multiple tunnels exist between the same gateway pair?</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Topic: ADVPN -->
+  <div class="topic-card" id="tc-advpn">
+    <div class="topic-header" onclick="toggleTopic('tc-advpn')">
+      <span class="topic-icon">⚡</span>
+      <span class="topic-name">ADVPN — Shortcut Messaging &amp; On-Demand Tunnels</span>
+      <span class="topic-badge badge-high">HIGH</span>
+      <span class="topic-toggle">▶</span>
+    </div>
+    <div class="topic-body">
+      <div class="subtopic-section">
+        <div class="subtopic-section-label">Sub-topics — tick when locked in</div>
+        <div class="subtopic-list-inner">
+          <div class="subtopic-item" onclick="toggleSub(this)"><div class="sub-check"></div>ADVPN concept — dynamic spoke-to-spoke on-demand tunnels via hub coordination</div>
+          <div class="subtopic-item" onclick="toggleSub(this)"><div class="sub-check"></div>Shortcut message interchange — Offer → Query → Forward → Reply → Negotiation (6 steps)</div>
+          <div class="subtopic-item" onclick="toggleSub(this)"><div class="sub-check"></div>auto-discovery-sender (hub→spoke) vs auto-discovery-forwarder (hub→hub)</div>
+          <div class="subtopic-item" onclick="toggleSub(this)"><div class="sub-check"></div>Overlay network — required for dynamic routing protocol to advertise local subnets</div>
+          <div class="subtopic-item" onclick="toggleSub(this)"><div class="sub-check"></div>Underlay vs overlay — tunnels built on underlay IPs, routing runs on overlay IPs</div>
+          <div class="subtopic-item" onclick="toggleSub(this)"><div class="sub-check"></div>ADVPN with iBGP — hub as route reflector, spoke-to-hub neighbours</div>
+          <div class="subtopic-item" onclick="toggleSub(this)"><div class="sub-check"></div>ADVPN with eBGP — multi-region, IBGP intra-region, EBGP inter-region</div>
+          <div class="subtopic-item" onclick="toggleSub(this)"><div class="sub-check"></div>ADVPN with SD-WAN — overlay stickiness, initial SD-WAN rule selects path</div>
+        </div>
+      </div>
+      <div class="questions-section">
+        <div class="subtopic-section-label">Questions you must be able to answer</div>
+        <div class="q-item"><span class="q-num">Q1</span>Walk through the 6-step ADVPN shortcut message exchange. Who initiates the offer — and what information is sent in the shortcut reply?</div>
+        <div class="q-item"><span class="q-num">Q2</span>Why is an overlay network necessary in ADVPN? What does the dynamic routing protocol use the overlay IP addresses for?</div>
+        <div class="q-item"><span class="q-num">Q3</span>What is the difference between auto-discovery-sender and auto-discovery-forwarder? When would you configure forwarder?</div>
+        <div class="q-item q-trap"><span class="q-num">⚠</span>TRAP: In ADVPN + SD-WAN, Spoke 1 sends traffic to Spoke 2 via ISP1. A shortcut is established. ISP2 is now faster. Does ADVPN automatically switch to ISP2? Why not?</div>
+        <div class="q-item"><span class="q-num">Q4</span>In a dual-region ADVPN topology, iBGP is used within each region and eBGP between regions. What are the ASN requirements for this design?</div>
+        <div class="q-item"><span class="q-num">Q5</span>ADVPN iBGP configuration on Spoke 1: what three things must be defined? Write the key CLI blocks.</div>
+        <div class="cli-block">config router bgp
+  set as 65100
+  set router-id 172.16.1.2
+  config neighbor
+    edit "172.16.1.1"       # Hub overlay IP
+      set remote-as 65100
+    end
+  config network
+    edit 1
+      set prefix 172.20.2.0 255.255.255.0
+    end
+end</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Topic: ADVPN 2.0 -->
+  <div class="topic-card" id="tc-advpn2">
+    <div class="topic-header" onclick="toggleTopic('tc-advpn2')">
+      <span class="topic-icon">🚀</span>
+      <span class="topic-name">ADVPN 2.0 — Edge Discovery &amp; Path Management</span>
+      <span class="topic-badge badge-med">MEDIUM</span>
+      <span class="topic-toggle">▶</span>
+    </div>
+    <div class="topic-body">
+      <div class="subtopic-section">
+        <div class="subtopic-section-label">Sub-topics — tick when locked in</div>
+        <div class="subtopic-list-inner">
+          <div class="subtopic-item" onclick="toggleSub(this)"><div class="sub-check"></div>ADVPN 2.0 improvements over 1.0 — edge discovery, path management</div>
+          <div class="subtopic-item" onclick="toggleSub(this)"><div class="sub-check"></div>Edge discovery — spokes exchange WAN link info via IKE, updated every 5 seconds</div>
+          <div class="subtopic-item" onclick="toggleSub(this)"><div class="sub-check"></div>Path management — IKE selects best shortcut based on SD-WAN rules and link health</div>
+          <div class="subtopic-item" onclick="toggleSub(this)"><div class="sub-check"></div>ADVPN 2.0 shortcut reply — includes ALL WAN links of Spoke 2, not just receiving ISP</div>
+          <div class="subtopic-item" onclick="toggleSub(this)"><div class="sub-check"></div>Overlay stickiness fix — ADVPN 2.0 can switch to a better path over time</div>
+        </div>
+      </div>
+      <div class="questions-section">
+        <div class="subtopic-section-label">Questions you must be able to answer</div>
+        <div class="q-item"><span class="q-num">Q1</span>What specific limitation of ADVPN 1.0 does ADVPN 2.0 address? What two new features enable this?</div>
+        <div class="q-item"><span class="q-num">Q2</span>In ADVPN 1.0, the shortcut reply only includes the receiving ISP's IP. What does ADVPN 2.0 include in the reply, and why does this matter for path selection?</div>
+        <div class="q-item q-trap"><span class="q-num">⚠</span>TRAP: ADVPN 2.0 is enabled. Edge discovery updates WAN link info every 5 seconds. Does this mean shortcuts are renegotiated every 5 seconds? What is actually being updated?</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Topic: FortiManager IPsec Templates -->
+  <div class="topic-card" id="tc-fmg-ipsec">
+    <div class="topic-header" onclick="toggleTopic('tc-fmg-ipsec')">
+      <span class="topic-icon">📋</span>
+      <span class="topic-name">FortiManager IPsec Templates &amp; VPN Manager</span>
+      <span class="topic-badge badge-high">HIGH</span>
+      <span class="topic-toggle">▶</span>
+    </div>
+    <div class="topic-body">
+      <div class="subtopic-section">
+        <div class="subtopic-section-label">Sub-topics — tick when locked in</div>
+        <div class="subtopic-list-inner">
+          <div class="subtopic-item" onclick="toggleSub(this)"><div class="sub-check"></div>VPN Manager topology types — hub-and-spoke, full mesh</div>
+          <div class="subtopic-item" onclick="toggleSub(this)"><div class="sub-check"></div>IPsec template parameters — phase1/2 settings shared vs per-device</div>
+          <div class="subtopic-item" onclick="toggleSub(this)"><div class="sub-check"></div>Per-device mappings in IPsec templates — local gateway, interface, pre-shared key</div>
+          <div class="subtopic-item" onclick="toggleSub(this)"><div class="sub-check"></div>Installing VPN via FortiManager — workflow and install preview</div>
+          <div class="subtopic-item" onclick="toggleSub(this)"><div class="sub-check"></div>ADOM-level VPN management — VPN is stored in ADOM, deployed to devices</div>
+        </div>
+      </div>
+      <div class="questions-section">
+        <div class="subtopic-section-label">Questions you must be able to answer</div>
+        <div class="q-item"><span class="q-num">Q1</span>You need to deploy the same ADVPN hub-and-spoke config to 30 branch FortiGates. How does FortiManager VPN Manager simplify this compared to individual device configuration?</div>
+        <div class="q-item"><span class="q-num">Q2</span>What values in an IPsec template would be per-device rather than shared across all devices in the template?</div>
+        <div class="q-item q-trap"><span class="q-num">⚠</span>TRAP: An engineer modifies a spoke's IPsec tunnel directly on the device CLI. The same spoke is managed by FortiManager. What happens on the next install from FortiManager?</div>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+</div><!-- end .blueprint-body -->
+
+<footer>
+  <div class="footer-left">NSE7 <span>Blueprint</span></div>
+  <div class="footer-right">ENTERPRISE FIREWALL 7.6 · FORTIOS · NSE7-EFW-7.6</div>
+</footer>
+
+<script>
+function showDomain(id, btn) {
+  document.querySelectorAll('.domain-section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.domain-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('domain-' + id).classList.add('active');
+  btn.classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function toggleTopic(id) {
+  const card = document.getElementById(id);
+  card.classList.toggle('open');
+}
+
+function toggleSub(el) {
+  el.classList.toggle('done');
+  el.querySelector('.sub-check').textContent = el.classList.contains('done') ? '✓' : '';
+  updateProgress();
+}
+
+function updateProgress() {
+  const all = document.querySelectorAll('.subtopic-item');
+  const done = document.querySelectorAll('.subtopic-item.done');
+  const pct = all.length > 0 ? Math.round((done.length / all.length) * 100) : 0;
+  const el = document.getElementById('prog-num');
+  if (el) el.innerHTML = pct + '<span style="font-size:18px;color:#7a6a55;">%</span>';
+}
+
+// Restore checked state from sessionStorage
+window.addEventListener('DOMContentLoaded', () => {
+  try {
+    const saved = JSON.parse(sessionStorage.getItem('bp-checks') || '[]');
+    saved.forEach(idx => {
+      const items = document.querySelectorAll('.subtopic-item');
+      if (items[idx]) {
+        items[idx].classList.add('done');
+        items[idx].querySelector('.sub-check').textContent = '✓';
+      }
+    });
+    updateProgress();
+  } catch(e) {}
+
+  document.querySelectorAll('.subtopic-item').forEach((el, idx) => {
+    el._idx = idx;
+  });
+});
+
+// Save on check
+document.addEventListener('click', () => {
+  try {
+    const checked = [];
+    document.querySelectorAll('.subtopic-item').forEach((el, idx) => {
+      if (el.classList.contains('done')) checked.push(idx);
+    });
+    sessionStorage.setItem('bp-checks', JSON.stringify(checked));
+  } catch(e) {}
+});
+</script>
+
+<script src="../../assets/transitions.js"></script>
+</body>
+</html>

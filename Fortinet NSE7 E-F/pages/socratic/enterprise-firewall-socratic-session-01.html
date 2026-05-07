@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script>if(sessionStorage.getItem('pt')){document.documentElement.classList.add('pt-init')}</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Enterprise Firewall 7.6 — Session 01 — Enterprise Firewall Foundations</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;0,700;1,400&family=Epilogue:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<style>
+/* ============================================================
+   ZDTE Study Guide — Shared Stylesheet
+   Fonts: Fraunces (headings) + Epilogue (body)
+   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;0,700;1,400&family=Epilogue:wght@300;400;500;600&display=swap" rel="stylesheet">
+   ============================================================ */
+
+/* ── TOKENS ── */
+:root {
+  --cream: #fef9f0;
+  --cream-dark: #f5eddb;
+  --ink: #1a1209;
+  --ink-soft: #5a4a35;
+  --ink-muted: #8a7660;
+  --orange: #ff6b35;
+  --orange-light: #fff3ec;
+  --orange-border: #ffd5c0;
+  --amber-light: #fffbe6;
+  --green: #3a7d44;
+  --green-light: #edf7ee;
+  --green-border: #b2dfb4;
+  --purple: #5c35cc;
+  --purple-light: #ece8ff;
+  --purple-border: #c8bbff;
+  --blue-light: #e8f0fb;
+  --blue-border: #b3ccf0;
+  --blue: #1a6bcc;
+  --red-light: #fce8e8;
+  --red-border: #f7c1c1;
+  --red: #a32d2d;
+  --border: #ede5d8;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body { font-family: 'Epilogue', sans-serif; background: var(--cream); color: var(--ink); min-height: 100vh; }
+
+/* ── HEADER ── */
+header {
+  padding: 40px 60px 28px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 32px;
+  background: var(--cream);
+}
+
+.header-left { flex: 1; }
+
+.breadcrumb {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 11px; color: var(--ink-muted); letter-spacing: 0.08em; margin-bottom: 12px;
+}
+.breadcrumb a { color: var(--orange); text-decoration: none; cursor: pointer; }
+.breadcrumb-sep { color: var(--border); }
+
+.day-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: var(--ink); color: var(--cream);
+  padding: 5px 14px; border-radius: 20px;
+  font-size: 11px; letter-spacing: 0.1em; margin-bottom: 14px;
+}
+.day-badge-dot { width: 5px; height: 5px; background: var(--orange); border-radius: 50%; }
+
+h1 { font-family: 'Fraunces', serif; font-size: 44px; font-weight: 700; line-height: 1.0; color: var(--ink); margin-bottom: 10px; }
+h1 em { font-style: italic; font-weight: 400; color: var(--orange); }
+
+.header-meta-row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-top: 14px; }
+
+/* ── TAGS ── */
+.tag { padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 500; border: 1px solid; display: inline-block; }
+.tag-zia    { background: var(--blue-light);   color: var(--blue);   border-color: var(--blue-border); }
+.tag-zpa    { background: var(--green-light);  color: var(--green);  border-color: var(--green-border); }
+.tag-arch   { background: var(--amber-light);  color: #a07c00;       border-color: #ffe680; }
+.tag-weight { background: var(--orange-light); color: #cc4a18;       border-color: var(--orange-border); }
+
+/* ── PROGRESS CARD ── */
+.header-right { display: flex; flex-direction: column; gap: 10px; align-items: flex-end; flex-shrink: 0; }
+
+.progress-card { background: var(--ink); color: var(--cream); padding: 14px 20px; border-radius: 14px; text-align: center; min-width: 110px; }
+.progress-card .big { font-family: 'Fraunces', serif; font-size: 32px; font-weight: 700; color: var(--orange); line-height: 1; }
+.progress-card .lbl { font-size: 10px; color: #7a6a55; letter-spacing: 0.1em; margin-top: 4px; }
+
+/* ── SECTION NAV ── */
+.section-nav {
+  display: flex; gap: 0; padding: 0 60px;
+  border-bottom: 1px solid var(--border);
+  background: var(--cream-dark); overflow-x: auto;
+  position: sticky; top: 0; z-index: 100;
+}
+
+.nav-tab {
+  padding: 14px 20px; font-size: 12px; font-weight: 500;
+  color: var(--ink-muted); letter-spacing: 0.06em; cursor: pointer;
+  border-bottom: 2px solid transparent; white-space: nowrap;
+  transition: color 0.15s, border-color 0.15s;
+  background: none; border-top: none; border-left: none; border-right: none;
+  font-family: 'Epilogue', sans-serif;
+}
+.nav-tab:hover { color: var(--ink); }
+.nav-tab.active { color: var(--orange); border-bottom-color: var(--orange); }
+
+/* ── MAIN LAYOUT ── */
+main { display: grid; grid-template-columns: 1fr 320px; gap: 0; min-height: calc(100vh - 200px); }
+
+.main-content { padding: 36px 48px 60px 60px; border-right: 1px solid var(--border); }
+.sidebar { padding: 36px 28px 60px; background: var(--cream-dark); }
+
+/* ── CONTENT BLOCKS ── */
+.section-block { margin-bottom: 40px; }
+
+.section-label {
+  font-size: 10px; letter-spacing: 0.2em; color: var(--ink-muted);
+  margin-bottom: 10px; display: flex; align-items: center; gap: 8px;
+}
+.section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+h2 { font-family: 'Fraunces', serif; font-size: 24px; font-weight: 600; color: var(--ink); margin-bottom: 14px; line-height: 1.2; }
+h3 { font-family: 'Fraunces', serif; font-size: 18px; font-weight: 600; color: var(--ink); margin-bottom: 10px; margin-top: 24px; }
+
+p { font-size: 14px; color: var(--ink-soft); line-height: 1.8; margin-bottom: 12px; }
+
+ul.content-list { list-style: none; display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
+ul.content-list li { font-size: 14px; color: var(--ink-soft); padding-left: 16px; position: relative; line-height: 1.6; }
+ul.content-list li::before { content: '·'; position: absolute; left: 2px; color: var(--orange); font-weight: 700; font-size: 18px; line-height: 1.2; }
+
+/* ── KEY CONCEPT ── */
+.key-concept { background: var(--orange-light); border: 1px solid var(--orange-border); border-radius: 10px; padding: 14px 18px; margin-bottom: 16px; font-size: 13px; color: #7a3010; line-height: 1.7; }
+.key-concept strong { color: var(--orange); font-weight: 600; }
+
+/* ── DEFINITIONS ── */
+.definition { background: var(--cream); border: 1px solid var(--border); border-left: 3px solid var(--orange); border-radius: 0 10px 10px 0; padding: 14px 18px; margin-bottom: 16px; }
+.definition-term { font-size: 13px; font-weight: 600; color: var(--ink); margin-bottom: 4px; }
+.definition-body { font-size: 13px; color: var(--ink-soft); line-height: 1.7; }
+
+/* ── CALLOUTS ── */
+.callout { border-radius: 14px; padding: 18px 20px; margin-bottom: 16px; border: 1px solid; }
+.callout-header { display: flex; align-items: center; gap: 8px; font-size: 11px; font-weight: 600; letter-spacing: 0.1em; margin-bottom: 8px; }
+.callout-icon { width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; flex-shrink: 0; }
+.callout-body { font-size: 13px; line-height: 1.7; }
+
+/* Note (amber) */
+.callout-note { background: var(--amber-light); border-color: #ffe680; }
+.callout-note .callout-header { color: #a07c00; }
+.callout-note .callout-icon  { background: #ffe680; color: #a07c00; }
+.callout-note .callout-body  { color: #7a5c00; }
+
+/* Analogy (green) */
+.callout-analogy { background: var(--green-light); border-color: var(--green-border); }
+.callout-analogy .callout-header { color: var(--green); }
+.callout-analogy .callout-icon  { background: var(--green-border); color: var(--green); }
+.callout-analogy .callout-body  { color: #2a5c32; }
+
+/* Tip (blue) */
+.callout-tip { background: var(--blue-light); border-color: var(--blue-border); }
+.callout-tip .callout-header { color: var(--blue); }
+.callout-tip .callout-icon  { background: var(--blue-border); color: var(--blue); }
+.callout-tip .callout-body  { color: #153d7a; }
+
+/* Warning (red) */
+.callout-warn { background: var(--red-light); border-color: var(--red-border); }
+.callout-warn .callout-header { color: var(--red); }
+.callout-warn .callout-icon  { background: var(--red-border); color: var(--red); }
+.callout-warn .callout-body  { color: #7a1f1f; }
+
+/* ── COMPARE TABLE ── */
+.compare-table { width: 100%; border-collapse: collapse; font-size: 13px; margin-bottom: 20px; }
+.compare-table th { background: var(--ink); color: var(--cream); padding: 10px 14px; text-align: left; font-weight: 500; font-size: 11px; letter-spacing: 0.08em; }
+.compare-table th:first-child { border-radius: 10px 0 0 0; }
+.compare-table th:last-child  { border-radius: 0 10px 0 0; }
+.compare-table td { padding: 10px 14px; border-bottom: 1px solid var(--border); color: var(--ink-soft); vertical-align: top; line-height: 1.6; }
+.compare-table tr:nth-child(even) td { background: var(--cream-dark); }
+.compare-table tr:last-child td:first-child { border-radius: 0 0 0 10px; }
+.compare-table tr:last-child td:last-child  { border-radius: 0 0 10px 0; }
+
+/* ── SIDEBAR ── */
+.sidebar-section { margin-bottom: 28px; }
+.sidebar-label { font-size: 10px; letter-spacing: 0.18em; color: var(--ink-muted); margin-bottom: 10px; padding-bottom: 6px; border-bottom: 1px solid var(--border); }
+
+.subtopic-list { list-style: none; display: flex; flex-direction: column; gap: 4px; }
+.subtopic-list li { display: flex; align-items: flex-start; gap: 8px; font-size: 12px; color: var(--ink-soft); padding: 6px 0; border-bottom: 1px solid var(--border); line-height: 1.5; cursor: pointer; }
+.subtopic-list li:last-child { border-bottom: none; }
+.subtopic-check { width: 14px; height: 14px; border: 1px solid var(--border); border-radius: 3px; flex-shrink: 0; margin-top: 1px; transition: background 0.15s, border-color 0.15s; }
+.subtopic-list li.done .subtopic-check { background: var(--green); border-color: var(--green); }
+.subtopic-list li.done span { text-decoration: line-through; color: var(--ink-muted); }
+
+.quick-ref { background: var(--ink); border-radius: 12px; padding: 14px 16px; margin-bottom: 10px; }
+.quick-ref-term { font-size: 11px; font-weight: 600; color: var(--orange); letter-spacing: 0.06em; margin-bottom: 4px; }
+.quick-ref-def  { font-size: 12px; color: #9a8070; line-height: 1.6; }
+
+.sidebar-note { background: var(--amber-light); border: 1px solid #ffe680; border-radius: 10px; padding: 12px 14px; font-size: 12px; color: #7a5c00; line-height: 1.6; margin-bottom: 10px; font-style: italic; }
+
+/* ── SCORE GRID (mock exams) ── */
+.score-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 20px 0 28px; }
+.score-card { border-radius: 14px; padding: 16px 18px; border: 1px solid; }
+.score-card.strong  { background: var(--green-light);  border-color: var(--green-border); }
+.score-card.gap     { background: var(--red-light);    border-color: var(--red-border); }
+.score-card.partial { background: var(--amber-light);  border-color: #ffe680; }
+.score-card-label  { font-size: 10px; font-weight: 600; letter-spacing: 0.12em; margin-bottom: 5px; }
+.score-card.strong  .score-card-label { color: var(--green); }
+.score-card.gap     .score-card-label { color: var(--red); }
+.score-card.partial .score-card-label { color: #a07c00; }
+.score-card-domain { font-family: 'Fraunces', serif; font-size: 15px; font-weight: 600; color: var(--ink); margin-bottom: 6px; }
+.score-card-note   { font-size: 12px; line-height: 1.55; }
+.score-card.strong  .score-card-note { color: #2a5c32; }
+.score-card.gap     .score-card-note { color: #7a1f1f; }
+.score-card.partial .score-card-note { color: #7a5c00; }
+
+.overall-score { background: var(--ink); border-radius: 16px; padding: 22px 28px; margin-bottom: 24px; display: flex; align-items: center; gap: 24px; }
+.overall-score-num { font-family: 'Fraunces', serif; font-size: 52px; font-weight: 700; color: var(--orange); line-height: 1; flex-shrink: 0; }
+.overall-score-detail { flex: 1; }
+.overall-score-label { font-size: 11px; letter-spacing: 0.14em; color: #7a6a55; margin-bottom: 6px; }
+.overall-score-verdict { font-size: 15px; color: var(--cream); line-height: 1.55; }
+.score-bar-wrap  { margin-top: 12px; background: #2e2318; border-radius: 8px; height: 8px; overflow: hidden; }
+.score-bar-fill  { height: 100%; border-radius: 8px; background: var(--orange); }
+
+.strong-badge  { display: inline-block; background: var(--green-light);  color: var(--green); border: 1px solid var(--green-border); font-size: 11px; font-weight: 500; padding: 2px 10px; border-radius: 12px; margin-left: 8px; vertical-align: middle; }
+.gap-badge     { display: inline-block; background: var(--red-light);    color: var(--red);   border: 1px solid var(--red-border);   font-size: 11px; font-weight: 500; padding: 2px 10px; border-radius: 12px; margin-left: 8px; vertical-align: middle; }
+.partial-badge { display: inline-block; background: var(--amber-light);  color: #a07c00;      border: 1px solid #ffe680;             font-size: 11px; font-weight: 500; padding: 2px 10px; border-radius: 12px; margin-left: 8px; vertical-align: middle; }
+
+@media (max-width: 900px) {
+  .score-grid { grid-template-columns: 1fr; }
+  .overall-score { flex-direction: column; align-items: flex-start; gap: 12px; }
+}
+
+/* ── PIPELINE BOX (monospace diagram blocks) ── */
+.pipeline-box {
+  background: var(--ink);
+  color: #d9cfbf;
+  border-radius: 10px;
+  padding: 16px 20px;
+  font-family: 'JetBrains Mono', 'Courier New', monospace;
+  font-size: 12px;
+  line-height: 1.8;
+  margin: 14px 0 20px;
+  white-space: pre;
+  overflow-x: auto;
+}
+.pipeline-box .hl  { color: var(--orange); font-weight: 600; }
+.pipeline-box .dim { color: #7a6a55; }
+
+/* ── INLINE CODE ── */
+code { background: var(--cream-dark); padding: 1px 6px; border-radius: 4px; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--ink); }
+
+/* ── FLOW STEPS (Browser Access, numbered sequence) ── */
+.flow-steps { display: flex; flex-direction: column; gap: 0; margin: 16px 0 24px; }
+.flow-step { display: flex; align-items: flex-start; gap: 14px; position: relative; }
+.flow-step:not(:last-child)::after { content: ''; position: absolute; left: 17px; top: 38px; width: 2px; height: calc(100% - 6px); background: var(--border); }
+.flow-num { width: 36px; height: 36px; border-radius: 50%; background: var(--ink); color: var(--orange); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; flex-shrink: 0; position: relative; z-index: 1; }
+.flow-text { padding: 6px 0 22px; font-size: 13px; color: var(--ink-soft); line-height: 1.6; }
+.flow-text strong { color: var(--ink); }
+
+/* ── PIPELINE STEPS ── */
+.pipeline { display: flex; flex-direction: column; gap: 0; margin: 16px 0 24px; }
+.pipeline-step { display: flex; align-items: flex-start; gap: 14px; position: relative; }
+.pipeline-step:not(:last-child)::after { content: ''; position: absolute; left: 17px; top: 38px; width: 2px; height: calc(100% - 6px); background: var(--border); }
+.pipeline-num { width: 36px; height: 36px; border-radius: 50%; background: var(--ink); color: var(--orange); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; flex-shrink: 0; position: relative; z-index: 1; }
+.pipeline-body { padding: 6px 0 22px; }
+.pipeline-body strong { display: block; font-size: 13px; font-weight: 600; color: var(--ink); margin-bottom: 3px; }
+.pipeline-body span { font-size: 13px; color: var(--ink-soft); line-height: 1.6; }
+
+/* ── PALACE ROOMS (DLP memory palace nibble) ── */
+.palace-grid { display: flex; flex-direction: column; gap: 14px; margin-bottom: 24px; }
+.palace-room { border-radius: 14px; border: 1px solid var(--border); padding: 18px 20px; display: grid; grid-template-columns: 56px 1fr; gap: 16px; align-items: start; background: #fff; }
+.room-icon { width: 56px; height: 56px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 26px; flex-shrink: 0; }
+.room-icon.door   { background: var(--orange-light); }
+.room-icon.office { background: var(--blue-light); }
+.room-icon.vault  { background: var(--purple-light); }
+.room-icon.desk   { background: var(--green-light); }
+.room-title    { font-family: 'Fraunces', serif; font-size: 16px; font-weight: 600; color: var(--ink); margin-bottom: 4px; }
+.room-subtitle { font-size: 11px; letter-spacing: 0.08em; color: var(--ink-muted); margin-bottom: 8px; }
+.room-desc     { font-size: 13px; color: var(--ink-soft); line-height: 1.6; }
+.room-tags     { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
+.room-tag      { font-size: 10px; font-weight: 600; letter-spacing: 0.06em; padding: 3px 10px; border-radius: 20px; border: 1px solid; }
+.rt-motion  { background: var(--orange-light);  color: #cc4a18;       border-color: var(--orange-border); }
+.rt-rest    { background: var(--blue-light);    color: var(--blue);   border-color: var(--blue-border); }
+.rt-device  { background: var(--green-light);   color: var(--green);  border-color: var(--green-border); }
+.rt-posture { background: var(--purple-light);  color: var(--purple); border-color: var(--purple-border); }
+.rt-realtime{ background: var(--red-light);     color: var(--red);    border-color: var(--red-border); }
+.rt-after   { background: var(--amber-light);   color: #a07c00;       border-color: #ffe680; }
+
+/* ── SCENARIO BOXES (dark, DLP palace) ── */
+.scenario { background: var(--ink); color: var(--cream); border-radius: 14px; padding: 20px 22px; margin-bottom: 16px; }
+.scenario-label { font-size: 10px; letter-spacing: 0.15em; color: var(--orange); margin-bottom: 10px; font-weight: 600; }
+.scenario-q { font-size: 13px; color: #d4c8b8; line-height: 1.7; margin-bottom: 12px; }
+.scenario-a { font-size: 13px; color: var(--cream); line-height: 1.7; border-top: 1px solid #3a3020; padding-top: 10px; }
+.scenario-a strong { color: var(--orange); }
+
+/* ── PIPELINE STAGES (horizontal cards, mock exam inspection pipeline) ── */
+.pipeline-stages { display: flex; gap: 8px; margin: 18px 0 22px; flex-wrap: wrap; }
+.pipeline-stage { flex: 1; min-width: 130px; background: var(--cream); border: 1px solid var(--border); border-top: 3px solid var(--orange); border-radius: 8px; padding: 12px 14px; }
+.pipeline-stage-num { font-family: 'Fraunces', serif; font-size: 11px; color: var(--orange); letter-spacing: 0.1em; margin-bottom: 4px; }
+.pipeline-stage-name { font-size: 13px; font-weight: 600; color: var(--ink); margin-bottom: 4px; }
+.pipeline-stage-desc { font-size: 11px; color: var(--ink-muted); line-height: 1.5; }
+
+/* ── SCORE SUMMARY (dark banner, mock exam result) ── */
+.score-summary { background: var(--ink); color: var(--cream); border-radius: 14px; padding: 22px 26px; margin-bottom: 20px; display: flex; gap: 24px; align-items: center; flex-wrap: wrap; }
+.score-summary-num { font-family: 'Fraunces', serif; font-size: 56px; font-weight: 700; color: var(--orange); line-height: 1; flex-shrink: 0; }
+.score-summary-text { flex: 1; }
+.score-summary-text strong { color: var(--cream); font-size: 15px; display: block; margin-bottom: 4px; }
+.score-summary-text span { color: #b8a18a; font-size: 12px; line-height: 1.6; }
+.score-breakdown { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
+.score-domain { background: var(--cream-dark); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; }
+.score-domain-name { font-size: 11px; letter-spacing: 0.08em; color: var(--ink-muted); margin-bottom: 6px; }
+.score-domain-num { font-family: 'Fraunces', serif; font-size: 28px; font-weight: 700; color: var(--green); }
+.score-domain-detail { font-size: 11px; color: var(--ink-muted); margin-top: 2px; }
+@media (max-width: 900px) { .score-breakdown { grid-template-columns: 1fr; } }
+
+/* ── IMAGE SLOTS (memory palace upload + prompt) ── */
+.img-slot { margin-top: 12px; border: 2px dashed var(--border); border-radius: 12px; overflow: hidden; background: var(--cream-dark); position: relative; }
+.img-slot img { width: 100%; display: block; border-radius: 10px; }
+.img-slot-empty { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; padding: 20px 16px; cursor: pointer; min-height: 100px; }
+.img-slot-empty:hover { background: var(--orange-light); }
+.img-slot-label { font-size: 11px; font-weight: 600; letter-spacing: 0.1em; color: var(--ink-muted); }
+.img-slot-hint { font-size: 10px; color: var(--ink-muted); }
+.img-slot input[type="file"] { display: none; }
+.img-slot-full .img-slot-empty { min-height: 160px; }
+.img-prompt-block { margin-top: 10px; background: var(--ink); border-radius: 10px; overflow: hidden; }
+.img-prompt-header { display: flex; align-items: center; justify-content: space-between; padding: 8px 12px; border-bottom: 1px solid #2a2010; }
+.img-prompt-label { font-size: 10px; letter-spacing: 0.12em; color: var(--orange); font-weight: 600; }
+.img-prompt-text { padding: 10px 12px; font-size: 11px; color: #c8b898; line-height: 1.6; font-style: italic; }
+.copy-btn { font-size: 10px; font-family: 'Epilogue', sans-serif; font-weight: 600; letter-spacing: 0.08em; color: var(--cream); background: #2a2010; border: 1px solid #3a3020; border-radius: 6px; padding: 4px 10px; cursor: pointer; transition: background 0.15s; }
+.copy-btn:hover { background: var(--orange); border-color: var(--orange); }
+.copy-btn.copied { background: var(--green); border-color: var(--green); }
+
+/* ── PLACEHOLDER (pending exam pages) ── */
+main.main-full { display: block; padding: 60px; max-width: 860px; margin: 0 auto; }
+.placeholder { text-align: center; padding: 60px 40px; max-width: 620px; margin: 0 auto; }
+.placeholder-icon { font-size: 48px; margin-bottom: 16px; }
+.placeholder-title { font-family: 'Fraunces', serif; font-size: 28px; font-weight: 700; color: var(--ink); margin-bottom: 8px; }
+.placeholder-date { font-size: 13px; color: var(--orange); font-weight: 500; margin-bottom: 14px; letter-spacing: 0.04em; }
+.placeholder-desc { font-size: 14px; color: var(--ink-muted); line-height: 1.7; margin-bottom: 28px; }
+.domains-label { font-size: 10px; letter-spacing: 0.18em; color: var(--ink-muted); margin-bottom: 12px; text-transform: uppercase; }
+.domains-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-bottom: 24px; }
+.domain-chip { background: var(--cream-dark); border: 1px solid var(--border); border-radius: 8px; padding: 8px 12px; font-size: 12px; color: var(--ink-soft); text-align: center; }
+.emphasis-note { background: var(--orange-light); border: 1px solid var(--orange-border); border-radius: 10px; padding: 14px 18px; font-size: 13px; color: #7a3010; line-height: 1.7; margin-bottom: 24px; text-align: left; }
+.back-btn { display: inline-flex; align-items: center; gap: 6px; background: var(--ink); color: var(--cream); padding: 10px 20px; border-radius: 20px; font-size: 12px; font-weight: 500; text-decoration: none; transition: background 0.15s; letter-spacing: 0.04em; }
+.back-btn:hover { background: #2a1f10; }
+
+/* ── FOOTER ── */
+footer { padding: 20px 60px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; background: var(--cream-dark); }
+.footer-left { font-family: 'Fraunces', serif; font-size: 16px; font-weight: 700; }
+.footer-left span { color: var(--orange); }
+.footer-right { font-size: 11px; color: var(--ink-muted); letter-spacing: 0.06em; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 900px) {
+  header { padding: 24px 20px 20px; flex-direction: column; }
+  .header-right { align-items: flex-start; flex-direction: row; }
+  main { grid-template-columns: 1fr; }
+  .main-content { padding: 24px 20px 40px; border-right: none; }
+  .sidebar { padding: 24px 20px 40px; border-top: 1px solid var(--border); }
+  .section-nav { padding: 0 20px; }
+  footer { padding: 20px; flex-direction: column; gap: 8px; text-align: center; }
+}
+
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-left">
+    <div class="breadcrumb">
+      <a href="../../index.html">NSE7</a>
+      <span class="breadcrumb-sep">›</span>
+      <a href="../socratic/enterprise-firewall-socratic-hub.html">Socratic Sessions</a>
+      <span class="breadcrumb-sep">›</span>
+      <span>Session 01</span>
+    </div>
+    <div class="day-badge">
+      <span class="day-badge-dot"></span>
+      SESSION 01 · ENTERPRISE FIREWALL FOUNDATIONS
+    </div>
+    <h1>Enterprise Firewall <em>Foundations</em></h1>
+    <div class="header-meta-row">
+      <span class="tag tag-arch">Architecture</span>
+      <span class="tag tag-weight">High Weight</span>
+      <span class="tag tag-zpa">Zero Trust</span>
+      <span class="tag tag-zia">NGFW</span>
+    </div>
+  </div>
+  <div class="header-right">
+    <div class="progress-card">
+      <div class="big" id="prog-num">0<span style="font-size:18px;color:#7a6a55;">%</span></div>
+      <div class="lbl">REVIEWED</div>
+    </div>
+    <div class="nav-hub">
+      <div class="nav-hub-trigger">
+        <div class="icon">📚</div>
+        <div class="label">STUDY MATERIALS</div>
+        <div class="hint">hover to explore</div>
+      </div>
+      <div class="nav-hub-dropdown">
+        <a class="nav-hub-item" href="../../index.html"><span class="nav-icon">🏠</span> HOME</a>
+        <a class="nav-hub-item" href="../study-guides/enterprise-firewall-study-guides-hub.html"><span class="nav-icon">📖</span> STUDY GUIDES</a>
+        <a class="nav-hub-item" href="../memory-techniques/enterprise-firewall-memory-palace-hub.html"><span class="nav-icon">🧠</span> MEMORY TECHNIQUES</a>
+        <a class="nav-hub-item" href="../study-bites/enterprise-firewall-study-bites-hub.html"><span class="nav-icon">🍐</span> STUDY BITES</a>
+        <a class="nav-hub-item" href="../study-nibbles/enterprise-firewall-study-nibbles-hub.html"><span class="nav-icon">🍔</span> STUDY NIBBLES</a>
+        <a class="nav-hub-item" href="../mock-exams/enterprise-firewall-mock-exams-hub.html"><span class="nav-icon">📋</span> MOCK EXAMS</a>
+        <a class="nav-hub-item" href="../lab/enterprise-firewall-lab-hub.html"><span class="nav-icon">⚗️</span> LAB CHALLENGES</a>
+        <a class="nav-hub-item" href="../notebooklm/enterprise-firewall-notebooklm-hub.html"><span class="nav-icon">🎙️</span> NOTEBOOKLM</a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<nav class="section-nav">
+  <button class="nav-tab active" onclick="navTo('section-overview', this)">Overview</button>
+  <button class="nav-tab" onclick="navTo('section-ngfw', this)">NGFW &amp; FortiGuard</button>
+  <button class="nav-tab" onclick="navTo('section-traffic', this)">Traffic &amp; Deployment</button>
+  <button class="nav-tab" onclick="navTo('section-exam-tips', this)">Exam Tips</button>
+</nav>
+
+<main>
+<div class="main-content">
+
+
+  <!-- ═══════════════ OVERVIEW ═══════════════ -->
+  <div class="section-block" id="section-overview">
+    <div class="section-label">OVERVIEW</div>
+    <h2>Why perimeter-only security is no longer enough</h2>
+    <p>Traditional security drew a wall around the network and trusted everything inside. This worked when users sat at fixed desks, apps ran in the datacentre, and threats came exclusively from outside. None of those conditions hold today.</p>
+
+    <div class="key-concept">
+      <strong>Core idea:</strong> Perimeter security grants implicit trust based on location. Zero trust replaces this with identity and context-based continuous verification — trust is never assumed, always earned.
+    </div>
+
+    <h3>How the perimeter became irrelevant</h3>
+    <p>Attackers no longer need to punch through the firewall. Three vectors bypass it entirely without triggering any alert:</p>
+
+    <ul class="content-list">
+      <li><strong>Dormant malware</strong> — implanted on a user device, activates only once the device connects to the corporate network</li>
+      <li><strong>Credential theft via phishing</strong> — attacker authenticates as a legitimate user; the firewall sees a valid login and waves them through</li>
+      <li><strong>Exposed application exploitation</strong> — if a port is permitted, the firewall allowed it; any vulnerable app behind that port is reachable</li>
+    </ul>
+
+    <div class="callout callout-note">
+      <div class="callout-header"><div class="callout-icon">★</div>EXAM NOTE</div>
+      <div class="callout-body">In all three bypass vectors the perimeter firewall sees nothing suspicious. The wall didn't fail — it became irrelevant. This is the foundational argument for zero trust architecture.</div>
+    </div>
+
+    <h3>The zero-trust response</h3>
+    <p>If location cannot be trusted, access decisions must be based on something richer. Zero trust evaluates multiple factors on every request — not just at login.</p>
+
+    <table class="compare-table">
+      <thead>
+        <tr>
+          <th>Trust Factor</th>
+          <th>What it checks</th>
+          <th>Replaces</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Identity</td><td>Authenticated user, not just source IP</td><td>IP address = trusted</td></tr>
+        <tr><td>Device posture</td><td>Is the device compliant, patched, managed?</td><td>Corporate device = trusted</td></tr>
+        <tr><td>Location context</td><td>Where is the connection originating from?</td><td>Inside network = trusted</td></tr>
+        <tr><td>Application</td><td>What specific resource is being accessed?</td><td>Port-based allow/deny</td></tr>
+        <tr><td>Behaviour</td><td>Is this access pattern normal for this user?</td><td>No ongoing check</td></tr>
+        <tr><td>Continuous validation</td><td>Trust re-evaluated throughout session, not just at login</td><td>Session-based trust after auth</td></tr>
+      </tbody>
+    </table>
+
+    <div class="callout callout-analogy">
+      <div class="callout-header"><div class="callout-icon">≈</div>ANALOGY</div>
+      <div class="callout-body">Perimeter security is a castle with a moat — cross the drawbridge and you roam freely. Zero trust is a government building — you show ID at reception, badge in at every door, and each room checks whether you belong there.</div>
+    </div>
+  </div>
+
+
+  <!-- ═══════════════ NGFW & FORTIGUARD ═══════════════ -->
+  <div class="section-block" id="section-ngfw">
+    <div class="section-label">NGFW &amp; FORTIGUARD · WHAT NEXT-GEN ACTUALLY MEANS</div>
+    <h2>NGFW vs traditional firewall</h2>
+    <p>A traditional firewall makes decisions at Layer 3–4: source IP, destination IP, port, and protocol. An NGFW extends inspection to Layer 7 — it sees into the application itself, regardless of which port it uses.</p>
+
+    <div class="key-concept">
+      <strong>The port-hiding problem:</strong> Any application can run over any port. Port 443 can carry malware C2 traffic, data exfiltration, or anything else. A firewall that allows port 443 and assumes the content is safe is blind to what is actually inside the stream.
+    </div>
+
+    <table class="compare-table">
+      <thead>
+        <tr>
+          <th>Capability</th>
+          <th>Traditional Firewall</th>
+          <th>NGFW (FortiGate)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>OSI layer</td><td>Layer 3–4 only</td><td>Up to Layer 7</td></tr>
+        <tr><td>App identification</td><td>Port number only</td><td>Deep packet inspection — app regardless of port</td></tr>
+        <tr><td>User awareness</td><td>None — IP address only</td><td>User identity via FSSO / LDAP / RADIUS</td></tr>
+        <tr><td>Threat detection</td><td>Static admin rules only</td><td>IPS signatures, AV, behavioural analysis</td></tr>
+        <tr><td>Intelligence source</td><td>Manual rule updates</td><td>FortiGuard Labs live threat feeds</td></tr>
+        <tr><td>SSL/TLS inspection</td><td>Blind to HTTPS content</td><td>Can decrypt, inspect, re-encrypt</td></tr>
+      </tbody>
+    </table>
+
+    <h3>FortiGuard Labs vs FortiGuard subscriptions</h3>
+    <p>These two terms are often confused. They refer to different things and the distinction is exam-relevant.</p>
+
+    <div class="definition">
+      <div class="definition-term">FortiGuard Labs</div>
+      <div class="definition-body">Fortinet's internal threat research organisation. They hunt malware, reverse-engineer exploits, discover vulnerabilities, and build the signature databases. They are the source of intelligence — not a product you subscribe to.</div>
+    </div>
+
+    <div class="definition">
+      <div class="definition-term">FortiGuard Subscriptions (Services)</div>
+      <div class="definition-body">The licensed delivery mechanism that pushes FortiGuard Labs intelligence to your FortiGate. Each service (IPS, AV, Web Filter, App Control, DNS Filter) is a separate subscription. Without a valid licence, updates stop — the FortiGate keeps running on stale data.</div>
+    </div>
+
+    <h3>What each FortiGuard service delivers</h3>
+
+    <div class="pipeline-stages">
+      <div class="pipeline-stage">
+        <div class="pipeline-stage-num">IPS</div>
+        <div class="pipeline-stage-name">Intrusion Prevention</div>
+        <div class="pipeline-stage-desc">Signatures for known exploit patterns and attack techniques</div>
+      </div>
+      <div class="pipeline-stage">
+        <div class="pipeline-stage-num">AV</div>
+        <div class="pipeline-stage-name">Antivirus</div>
+        <div class="pipeline-stage-desc">Malware file signatures and heuristic detection rules</div>
+      </div>
+      <div class="pipeline-stage">
+        <div class="pipeline-stage-num">AC</div>
+        <div class="pipeline-stage-name">App Control</div>
+        <div class="pipeline-stage-desc">Layer 7 application identification database</div>
+      </div>
+      <div class="pipeline-stage">
+        <div class="pipeline-stage-num">WF</div>
+        <div class="pipeline-stage-name">Web Filter</div>
+        <div class="pipeline-stage-desc">URL categorisation and reputation database</div>
+      </div>
+    </div>
+
+    <div class="callout callout-warn">
+      <div class="callout-header"><div class="callout-icon">!</div>COMMON MISTAKE</div>
+      <div class="callout-body">An expired FortiGuard licence does not disable the FortiGate. The device keeps forwarding and enforcing existing rules — it just stops receiving fresh signature updates. Databases go stale. New threats become invisible. Do not confuse "subscription expired" with "firewall broken."</div>
+    </div>
+  </div>
+
+
+  <!-- ═══════════════ TRAFFIC & DEPLOYMENT ═══════════════ -->
+  <div class="section-block" id="section-traffic">
+    <div class="section-label">TRAFFIC &amp; DEPLOYMENT · WHERE INSPECTION HAPPENS</div>
+    <h2>North-south vs east-west traffic</h2>
+    <p>Where a firewall sits determines what traffic it can see. The two fundamental flow directions in enterprise networks require different placement strategies and different FortiGate deployment families.</p>
+
+    <table class="compare-table">
+      <thead>
+        <tr>
+          <th>Direction</th>
+          <th>Definition</th>
+          <th>Perimeter FW sees it?</th>
+          <th>Enforcement point</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>North-South</td><td>Traffic crossing a network perimeter — internet to internal, branch to DC, remote user to HQ</td><td>Yes — this is its purpose</td><td>DCFW / DEFW at the edge</td></tr>
+        <tr><td>East-West</td><td>Traffic between internal hosts, segments, VMs, or workloads within the same network</td><td>No — never traverses the perimeter</td><td>ISFW inline between segments</td></tr>
+      </tbody>
+    </table>
+
+    <div class="key-concept">
+      <strong>Why this matters:</strong> An attacker who lands inside the network via phishing operates entirely in east-west space. Without an ISFW, they traverse segments freely — the perimeter firewall never sees the lateral movement.
+    </div>
+
+    <div class="pipeline-box">Internet → <span class="hl">Perimeter FW [N-S]</span> → Corp Network ⇄ <span class="hl">ISFW [E-W]</span> ⇄ Internal Segments</div>
+
+    <h3>Fortinet deployment families</h3>
+    <p>Fortinet names four deployment models, each solving a specific placement problem. Scenario questions will test whether you can match a business requirement to the right family.</p>
+
+    <div class="flow-steps">
+      <div class="flow-step">
+        <div class="flow-num">DC</div>
+        <div class="flow-text"><strong>DCFW — Data Centre Firewall</strong> — High-throughput enforcement at the datacentre edge. Handles both north-south ingress/egress and east-west between DC segments. Built for maximum performance.</div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-num">IS</div>
+        <div class="flow-text"><strong>ISFW — Internal Segmentation Firewall</strong> — Sits inline between internal network segments. Enforces east-west policy. Prevents lateral movement by requiring all cross-segment traffic to pass inspection.</div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-num">DE</div>
+        <div class="flow-text"><strong>DEFW — Distributed Enterprise Firewall</strong> — Lightweight FortiGate deployed at branch offices. Brings consistent security enforcement to many distributed locations without large appliances at each site.</div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-num">☁</div>
+        <div class="flow-text"><strong>Cloud variants — FortiGate-VM / CNF / FortiSASE</strong> — FortiGate-VM deploys inside AWS, Azure, or GCP as a virtual machine. CNF (Cloud-Native Firewall) is a managed service for containerised and Kubernetes workloads. FortiSASE enforces policy at the cloud edge — policy follows the user, eliminating backhaul for remote access to SaaS apps.</div>
+      </div>
+    </div>
+
+    <div class="callout callout-tip">
+      <div class="callout-header"><div class="callout-icon">→</div>TIP</div>
+      <div class="callout-body">FortiSASE solves the backhaul problem: a remote user in Sydney accessing Microsoft 365 (also in Sydney) should not have their traffic hauled to the Melbourne DC and back out again. SASE enforces at the nearest PoP — latency drops, experience improves, policy still applies fully.</div>
+    </div>
+
+    <div class="scenario">
+      <div class="scenario-label">SCENARIO — EXAM QUESTION STYLE</div>
+      <div class="scenario-q">A company has 200 branch offices globally. Each site needs local security enforcement without deploying high-end appliances. Users at each branch access both local resources and the internet directly. Which Fortinet deployment family is the best fit?</div>
+      <div class="scenario-a"><strong>Answer:</strong> DEFW — Distributed Enterprise Firewall. Designed for lightweight, consistent enforcement at many distributed branch locations. DCFW is over-engineered for a branch. ISFW addresses internal segmentation, not branch edge enforcement.</div>
+    </div>
+  </div>
+
+
+  <!-- ═══════════════ EXAM TIPS ═══════════════ -->
+  <div class="section-block" id="section-exam-tips">
+    <div class="section-label">EXAM TIPS</div>
+    <h2>What the exam focuses on</h2>
+    <p>Session 01 concepts appear most often in scenario-style questions testing whether you can map a business requirement to the correct architecture decision. Focus on the reasoning, not just the names.</p>
+
+    <div class="callout callout-warn">
+      <div class="callout-header"><div class="callout-icon">!</div>TRAP — PORT ≠ APPLICATION</div>
+      <div class="callout-body">Port 443 does not guarantee HTTPS, and HTTPS does not guarantee safe content. Any application can tunnel over 443. A policy that permits 443 without Layer 7 inspection is blind to what is inside. NGFW App Control solves this — traditional firewall does not.</div>
+    </div>
+
+    <div class="callout callout-warn">
+      <div class="callout-header"><div class="callout-icon">!</div>TRAP — LABS ≠ SUBSCRIPTION</div>
+      <div class="callout-body">FortiGuard Labs is Fortinet's threat research organisation — the team that builds intelligence. A FortiGuard subscription is the licensed service that delivers that intelligence to your FortiGate. They are not the same thing. Exam questions may use both terms in close proximity to test this distinction.</div>
+    </div>
+
+    <div class="callout callout-warn">
+      <div class="callout-header"><div class="callout-icon">!</div>TRAP — EXPIRED LICENCE ≠ BROKEN FIREWALL</div>
+      <div class="callout-body">An expired FortiGuard subscription does not disable the FortiGate. It continues to enforce existing policies and forward traffic. What stops is signature database updates. The device goes blind to new threats gradually — it does not stop functioning.</div>
+    </div>
+
+    <div class="callout callout-warn">
+      <div class="callout-header"><div class="callout-icon">!</div>TRAP — DEFW vs ISFW</div>
+      <div class="callout-body">DEFW = distributed branches, many locations, lightweight edge enforcement. ISFW = internal segmentation, east-west inspection between segments inside a network. A scenario describing branch offices points to DEFW. A scenario describing lateral movement prevention inside a datacentre points to ISFW.</div>
+    </div>
+
+    <h3>Quiz results — Session 01</h3>
+
+    <div class="overall-score">
+      <div class="overall-score-num">9/10</div>
+      <div class="overall-score-detail">
+        <div class="overall-score-label">OVERALL SCORE</div>
+        <div class="overall-score-verdict">Strong session. All five topics at exam-ready level. Reasoning-led — arrived at zero trust, NGFW capabilities, and deployment families from first principles.</div>
+        <div class="score-bar-wrap"><div class="score-bar-fill" style="width:90%"></div></div>
+      </div>
+    </div>
+
+    <div class="score-grid">
+      <div class="score-card strong">
+        <div class="score-card-label">STRONG</div>
+        <div class="score-card-domain">Q1 — Perimeter &amp; Zero Trust</div>
+        <div class="score-card-note">9/10. Implicit trust and zero-trust principle both correct. Add "continuous" to complete the definition next time.</div>
+      </div>
+      <div class="score-card strong">
+        <div class="score-card-label">STRONG</div>
+        <div class="score-card-domain">Q2 — Layer 4 vs Layer 7</div>
+        <div class="score-card-note">10/10. Port-hiding problem and OSI layer distinction both perfectly stated.</div>
+      </div>
+      <div class="score-card partial">
+        <div class="score-card-label">IMPROVING</div>
+        <div class="score-card-domain">Q3 — FortiGuard Labs vs Subscription</div>
+        <div class="score-card-note">8/10. Concept correct. Tighten "R&amp;D domain" to "threat research organisation" for exam precision.</div>
+      </div>
+      <div class="score-card strong">
+        <div class="score-card-label">STRONG</div>
+        <div class="score-card-domain">Q4 — East-West Traffic</div>
+        <div class="score-card-note">10/10. Clean definition and perimeter gap reasoning both precise.</div>
+      </div>
+      <div class="score-card strong">
+        <div class="score-card-label">STRONG</div>
+        <div class="score-card-domain">Q5 — DEFW for Branch</div>
+        <div class="score-card-note">9/10. Correct family and reasoning. Add "lightweight" to sharpen the answer.</div>
+      </div>
+    </div>
+
+    <h3>Recommended next topics</h3>
+    <ul class="content-list">
+      <li><strong>Priority 1 — VIP deep dive:</strong> Types, port forwarding, VIP groups. Active weakness ledger item from Session 02.</li>
+      <li><strong>Priority 2 — SSL inspection:</strong> Certificate flows, deep inspection vs certificate inspection. Builds directly on Layer 7 NGFW concepts from this session.</li>
+      <li><strong>Priority 3 — Authentication (FSSO / LDAP / RADIUS):</strong> Connects user identity to the zero-trust model introduced today.</li>
+    </ul>
+  </div>
+
+
+</div><!-- end .main-content -->
+
+<!-- ═══ SIDEBAR ═══ -->
+<div class="sidebar">
+
+  <div class="sidebar-section">
+    <div class="sidebar-label">TOPICS — TICK WHEN LOCKED IN</div>
+    <ul class="subtopic-list" id="subtopic-list">
+      <li onclick="toggleDone(this)"><div class="subtopic-check"></div><span>Perimeter security failure — implicit trust problem</span></li>
+      <li onclick="toggleDone(this)"><div class="subtopic-check"></div><span>Zero-trust factors — identity, device, location, app, behaviour, continuous</span></li>
+      <li onclick="toggleDone(this)"><div class="subtopic-check"></div><span>NGFW — Layer 7 inspection vs Layer 4</span></li>
+      <li onclick="toggleDone(this)"><div class="subtopic-check"></div><span>Port-hiding problem — app does not equal port</span></li>
+      <li onclick="toggleDone(this)"><div class="subtopic-check"></div><span>FortiGuard Labs vs FortiGuard subscriptions</span></li>
+      <li onclick="toggleDone(this)"><div class="subtopic-check"></div><span>Expired licence — device still runs, signatures go stale</span></li>
+      <li onclick="toggleDone(this)"><div class="subtopic-check"></div><span>North-south vs east-west traffic</span></li>
+      <li onclick="toggleDone(this)"><div class="subtopic-check"></div><span>DCFW — datacentre edge, high throughput</span></li>
+      <li onclick="toggleDone(this)"><div class="subtopic-check"></div><span>ISFW — internal segmentation, east-west inspection</span></li>
+      <li onclick="toggleDone(this)"><div class="subtopic-check"></div><span>DEFW — branch offices, lightweight, distributed</span></li>
+      <li onclick="toggleDone(this)"><div class="subtopic-check"></div><span>FortiGate-VM / CNF / FortiSASE — cloud variants</span></li>
+    </ul>
+  </div>
+
+  <div class="sidebar-section">
+    <div class="sidebar-label">QUICK REFERENCE</div>
+    <div class="quick-ref">
+      <div class="quick-ref-term">ZERO TRUST</div>
+      <div class="quick-ref-def">Never implicit trust. Access based on identity, device, context, and continuous verification — not network location.</div>
+    </div>
+    <div class="quick-ref">
+      <div class="quick-ref-term">NGFW</div>
+      <div class="quick-ref-def">Adds Layer 7 app identification, user identity, and threat intelligence to traditional port/protocol firewall.</div>
+    </div>
+    <div class="quick-ref">
+      <div class="quick-ref-term">FORTIGUARD LABS</div>
+      <div class="quick-ref-def">Fortinet's threat research team. Builds signatures and databases. Not a subscription — the source behind subscriptions.</div>
+    </div>
+    <div class="quick-ref">
+      <div class="quick-ref-term">ISFW</div>
+      <div class="quick-ref-def">Internal Segmentation Firewall. Inline between segments. Stops east-west lateral movement.</div>
+    </div>
+    <div class="quick-ref">
+      <div class="quick-ref-term">DEFW</div>
+      <div class="quick-ref-def">Distributed Enterprise Firewall. Lightweight, many branch sites, consistent edge enforcement.</div>
+    </div>
+    <div class="quick-ref">
+      <div class="quick-ref-term">FORTISASE</div>
+      <div class="quick-ref-def">Policy at the cloud edge. Eliminates backhaul — remote users enforced at nearest PoP, not sent to DC first.</div>
+    </div>
+  </div>
+
+  <div class="sidebar-section">
+    <div class="sidebar-label">KEY REMINDER</div>
+    <div class="sidebar-note">FortiGuard Labs ≠ FortiGuard subscription. Labs = research team. Subscription = licensed delivery to FortiGate. An expired subscription doesn't break the firewall — signatures just stop updating.</div>
+  </div>
+
+  <div class="sidebar-section">
+    <div class="sidebar-label">SESSION RESULT</div>
+    <div class="sidebar-note" style="font-style:normal;">Quiz: <strong>9/10</strong> · No new ledger additions · Active weakness: NAT (ARP on VIP, Central SNAT CLI table name)</div>
+  </div>
+
+</div><!-- end .sidebar -->
+
+</main>
+
+<footer>
+  <div class="footer-left">NSE7<span>.</span></div>
+  <div class="footer-right">Session 01 · Enterprise Firewall Foundations · Study Guide</div>
+</footer>
+
+<script>
+  (function() {
+    const style = document.createElement('style');
+    style.textContent = `
+      .nav-hub { position: relative; }
+      .nav-hub-trigger { background: var(--ink); color: var(--cream); padding: 16px 24px; border-radius: 16px; text-align: center; width: 200px; cursor: pointer; user-select: none; transition: transform 0.18s ease, box-shadow 0.18s ease; }
+      .nav-hub-trigger .icon { font-size: 32px; line-height: 1; color: var(--orange); }
+      .nav-hub-trigger .label { font-size: 11px; color: #7a6a55; letter-spacing: 0.1em; margin-top: 4px; }
+      .nav-hub-trigger .hint { font-size: 11px; color: var(--cream); margin-top: 6px; font-weight: 300; opacity: 0.6; }
+      .nav-hub:hover .nav-hub-trigger { transform: translateY(-4px) scale(1.03); box-shadow: 0 8px 24px rgba(26,18,9,0.18); border-radius: 16px 16px 0 0; }
+      .nav-hub-dropdown { position: absolute; top: 100%; right: 0; width: 200px; background: var(--ink); border-radius: 0 0 16px 16px; overflow: hidden; opacity: 0; pointer-events: none; transform: translateY(-6px); transition: opacity 0.2s ease, transform 0.2s ease; z-index: 100; border-top: 1px solid rgba(255,255,255,0.08); }
+      .nav-hub:hover .nav-hub-dropdown { opacity: 1; pointer-events: all; transform: translateY(0); }
+      .nav-hub-item { display: flex; align-items: center; gap: 12px; padding: 13px 20px; color: var(--cream); font-size: 12px; letter-spacing: 0.08em; font-weight: 500; text-decoration: none; border-bottom: 1px solid rgba(255,255,255,0.06); transition: background 0.15s; }
+      .nav-hub-item:last-child { border-bottom: none; }
+      .nav-hub-item:hover { background: rgba(255,107,53,0.15); color: var(--orange); }
+      .nav-hub-item .nav-icon { font-size: 18px; flex-shrink: 0; }
+    `;
+    document.head.appendChild(style);
+  })();
+
+  function navTo(sectionId, el) {
+    document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+    el.classList.add('active');
+    const section = document.getElementById(sectionId);
+    if (section) {
+      const top = section.getBoundingClientRect().top + window.scrollY - 60;
+      window.scrollTo({ top, behavior: 'smooth' });
+    }
+  }
+
+  function toggleDone(li) {
+    li.classList.toggle('done');
+    li.querySelector('.subtopic-check').style.background = li.classList.contains('done') ? 'var(--green)' : '';
+    li.querySelector('.subtopic-check').style.borderColor = li.classList.contains('done') ? 'var(--green)' : '';
+    updateProgress();
+  }
+
+  function updateProgress() {
+    const items = document.querySelectorAll('#subtopic-list li');
+    const done  = document.querySelectorAll('#subtopic-list li.done').length;
+    const pct   = items.length ? Math.round(done / items.length * 100) : 0;
+    const el    = document.getElementById('prog-num');
+    if (el) el.innerHTML = pct + '<span style="font-size:18px;color:#7a6a55;">%</span>';
+  }
+
+  window.addEventListener('scroll', () => {
+    const sections = ['section-overview', 'section-ngfw', 'section-traffic', 'section-exam-tips'];
+    const tabs   = document.querySelectorAll('.nav-tab');
+    const nav    = document.querySelector('.section-nav');
+    const offset = nav ? nav.offsetHeight + 32 : 60;
+    let active = 0;
+    sections.forEach((id, i) => {
+      const el = document.getElementById(id);
+      if (el && el.getBoundingClientRect().top < offset + 40) active = i;
+    });
+    tabs.forEach((t, i) => t.classList.toggle('active', i === active));
+  });
+</script>
+
+<script src="../../assets/transitions.js"></script>
+</body>
+</html>
