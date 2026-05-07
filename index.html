@@ -434,33 +434,9 @@
     margin: 52px 0 28px;
     font-size: 10px; letter-spacing: 0.18em;
     color: var(--ink-muted); text-transform: uppercase; font-weight: 500;
-    cursor: pointer; user-select: none;
-    transition: color 0.2s ease;
-    position: relative; z-index: 1;
   }
-  .section-divider:hover { color: var(--ink); }
   .section-divider::before, .section-divider::after {
     content: ''; flex: 1; height: 1px; background: var(--border);
-    transition: background 0.2s ease;
-  }
-  .section-divider:hover::before, .section-divider:hover::after { background: var(--ink-muted); }
-
-  .section-toggle { display: flex; align-items: center; gap: 7px; white-space: nowrap; }
-  .section-chevron { transition: transform 0.38s cubic-bezier(0.15, 0.85, 0.2, 1); flex-shrink: 0; }
-  .section-divider.open .section-chevron { transform: rotate(180deg); }
-
-  /* ── COLLAPSIBLE PANEL ── */
-  .collapsible-section {
-    width: 100%; max-width: 1500px;
-    overflow: hidden;
-    max-height: 0;
-    opacity: 0;
-    transition: max-height 0.55s cubic-bezier(0.15, 0.85, 0.2, 1), opacity 0.4s ease;
-  }
-  .collapsible-section.open {
-    max-height: 700px;
-    opacity: 1;
-    overflow: visible;
   }
 
   /* ── FORTINET CARD GRID (2-up centred) ── */
@@ -503,14 +479,7 @@
   }
   .section-fade { animation: sectionFadeIn 0.4s ease forwards; }
 
-  /* When filtering to Fortinet only — override collapsible layout */
-  body.fortinet-filtered #other-certs-toggle { display: none; }
-  body.fortinet-filtered .collapsible-section {
-    max-height: none !important;
-    opacity: 1 !important;
-    overflow: visible !important;
-    margin-top: 0;
-  }
+  /* When filtering to Fortinet only */
   body.fortinet-filtered .card-grid-fortinet {
     max-width: 960px;
   }
@@ -647,16 +616,8 @@ body { animation: pageEnter 0.6s cubic-bezier(0.15, 0.85, 0.2, 1.08) both; }
   </div>
 
   <div id="fortinet-section">
-  <div class="section-divider" id="other-certs-toggle">
-    <span class="section-toggle">
-      Other Certifications
-      <svg class="section-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-        <polyline points="6 9 12 15 18 9"/>
-      </svg>
-    </span>
-  </div>
+  <div class="section-divider">Other Certifications</div>
 
-  <div class="collapsible-section" id="other-certs-panel">
   <div class="card-grid card-grid-fortinet" style="padding-bottom: 4px;">
 
     <!-- ═══════════════ CARD 4 — NSE7 (IN PROGRESS) ═══════════════ -->
@@ -711,21 +672,12 @@ body { animation: pageEnter 0.6s cubic-bezier(0.15, 0.85, 0.2, 1.08) both; }
 
   </div>
   </div>
-  </div>
 
   <footer>
     Five certs<span>.</span> One mission<span>.</span>
   </footer>
 
 <script>
-  // ── Collapsible "Other Certifications" panel ──
-  const toggle = document.getElementById('other-certs-toggle');
-  const panel  = document.getElementById('other-certs-panel');
-  toggle.addEventListener('click', () => {
-    toggle.classList.toggle('open');
-    panel.classList.toggle('open');
-  });
-
   // ── Vendor filter ──
   const zscalerSection  = document.getElementById('zscaler-section');
   const fortinetSection = document.getElementById('fortinet-section');

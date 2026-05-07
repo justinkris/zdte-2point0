@@ -153,17 +153,6 @@
   .weakness-entry.minor .correction-label { color: #8b6500; }
   .weakness-entry.minor .correction-text { color: #5c4400; }
 
-  /* ── STATUS TAGS ── */
-  .completed-tag, .in-progress-tag, .upcoming-tag {
-    display: inline-block;
-    font-size: 9px; font-weight: 700; letter-spacing: 0.12em;
-    padding: 2px 7px; border-radius: 4px; vertical-align: middle;
-    margin-left: 6px; color: #fff;
-  }
-  .completed-tag   { background: #2a7d44; }
-  .in-progress-tag { background: #c97b00; }
-  .upcoming-tag    { background: #1a6bcc; }
-
   /* ── FOOTER ── */
   footer {
     position: fixed; bottom: 0; left: 0; right: 0;
@@ -224,7 +213,7 @@
       <div class="weakness-top">
         <div class="weakness-icon">!</div>
         <div>
-          <div class="weakness-label">Minor — Terminology: Retrieve vs Import <span class="completed-tag">COMPLETED</span></div>
+          <div class="weakness-label">Minor — Terminology: Retrieve vs Import</div>
           <div class="weakness-text">Used the word "import" when describing the action of pulling a live FortiGate config into FortiManager.</div>
         </div>
       </div>
@@ -238,7 +227,7 @@
       <div class="weakness-top">
         <div class="weakness-icon">!</div>
         <div>
-          <div class="weakness-label">Medium — Install Workflow: Install vs Reinstall Policy <span class="in-progress-tag">IN-PROGRESS</span></div>
+          <div class="weakness-label">Medium — Install Workflow: Install vs Reinstall Policy</div>
           <div class="weakness-text">Confused by first-time vs repeat framing. Framed the distinction as "new vs existing" rather than the actual mechanical difference between the two operations.</div>
         </div>
       </div>
@@ -252,7 +241,7 @@
       <div class="weakness-top">
         <div class="weakness-icon">!</div>
         <div>
-          <div class="weakness-label">Medium — Script Type Selection: CLI vs Tcl <span class="in-progress-tag">IN-PROGRESS</span></div>
+          <div class="weakness-label">Medium — Script Type Selection: CLI vs Tcl</div>
           <div class="weakness-text">Selected CLI for a conditional logic scenario in Session 03. Missed the if/then/else signal that forces the type choice. Session 04: correct instinct on Tasks A and B — instinct is locking in.</div>
         </div>
       </div>
@@ -266,7 +255,7 @@
       <div class="weakness-top">
         <div class="weakness-icon">!</div>
         <div>
-          <div class="weakness-label">Medium — Jinja2 Scope <span class="upcoming-tag">UPCOMING</span></div>
+          <div class="weakness-label">Medium — Jinja2 Scope</div>
           <div class="weakness-text">Applied Jinja2 to a policy package script scenario. Jinja2 lives inside CLI Templates in the device layer — it is a templating language, not a script runner. It cannot touch the policy layer.</div>
         </div>
       </div>
