@@ -463,22 +463,18 @@
     overflow: visible;
   }
 
-  /* ── SOLO CARD GRID (centred single card) ── */
+  /* ── FORTINET CARD GRID (2-up centred) ── */
   #fortinet-section {
     width: 100%;
     max-width: 1500px;
   }
-  .card-grid-solo {
-    grid-template-columns: repeat(3, 1fr);
-    width: 100%;
-    max-width: 1500px;
-  }
-  .card-grid-solo .cert-card {
-    grid-column: 2;
+  .card-grid-fortinet {
+    grid-template-columns: repeat(2, 1fr);
+    max-width: 960px;
+    margin: 0 auto;
   }
   @media (max-width: 900px) {
-    .card-grid-solo { grid-template-columns: 1fr; }
-    .card-grid-solo .cert-card { grid-column: 1; }
+    .card-grid-fortinet { grid-template-columns: 1fr; }
   }
 
   /* ── VENDOR FILTERS ── */
@@ -515,12 +511,8 @@
     overflow: visible !important;
     margin-top: 0;
   }
-  body.fortinet-filtered .card-grid-solo {
-    grid-template-columns: repeat(3, 1fr);
-    max-width: 1500px;
-  }
-  body.fortinet-filtered .card-grid-solo .cert-card {
-    grid-column: 2 !important;
+  body.fortinet-filtered .card-grid-fortinet {
+    max-width: 960px;
   }
 
   /* ── FOOTER ── */
@@ -665,7 +657,7 @@ body { animation: pageEnter 0.6s cubic-bezier(0.15, 0.85, 0.2, 1.08) both; }
   </div>
 
   <div class="collapsible-section" id="other-certs-panel">
-  <div class="card-grid card-grid-solo" style="padding-bottom: 4px;">
+  <div class="card-grid card-grid-fortinet" style="padding-bottom: 4px;">
 
     <!-- ═══════════════ CARD 4 — NSE7 (IN PROGRESS) ═══════════════ -->
     <a href="Fortinet NSE7 E-F/index.html" class="cert-card status-fortinet">
@@ -693,12 +685,36 @@ body { animation: pageEnter 0.6s cubic-bezier(0.15, 0.85, 0.2, 1.08) both; }
       </div>
     </a>
 
+    <!-- ═══════════════ CARD 5 — NSE6 (TBA) ═══════════════ -->
+    <a href="Fortinet NSE6 NSS-E/index.html" class="cert-card status-fortinet">
+      <div class="card-content">
+        <div class="cert-code-row">
+          <div class="cert-code">NSE6</div>
+          <div class="cert-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+              <circle cx="12" cy="11" r="2" fill="currentColor" stroke="none"/>
+              <line x1="12" y1="13" x2="12" y2="16"/>
+            </svg>
+          </div>
+        </div>
+        <div class="cert-edu">NSE 6</div>
+        <div class="cert-name"><span class="cert-prefix">Fortinet Network Security Support&nbsp;</span><span class="cert-suffix">Engineer</span></div>
+        <div class="card-details">
+          <div class="status-badge"><span class="status-dot"></span>Scheduled</div>
+          <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;">
+            <div class="exam-date">Date <strong>TBA</strong></div>
+          </div>
+        </div>
+      </div>
+    </a>
+
   </div>
   </div>
   </div>
 
   <footer>
-    Four certs<span>.</span> One mission<span>.</span>
+    Five certs<span>.</span> One mission<span>.</span>
   </footer>
 
 <script>
