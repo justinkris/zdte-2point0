@@ -210,6 +210,16 @@
     display: inline-block; flex-shrink: 0;
     transition: color 0.4s ease;
   }
+  .cert-version {
+    display: inline-block;
+    overflow: hidden; white-space: nowrap;
+    max-width: 0; transition: none;
+    color: var(--ink-muted); font-style: normal; font-size: 0.85em;
+  }
+  .status-fortinet:hover .cert-version {
+    max-width: 60px;
+    transition: max-width 0.7s steps(5, end) 0.55s;
+  }
 
   /* Prefix expand on hover */
   .status-complete:hover .cert-prefix, .status-progress:hover .cert-prefix, .status-fortinet:hover .cert-prefix {
@@ -523,7 +533,7 @@ body { animation: pageEnter 0.6s cubic-bezier(0.15, 0.85, 0.2, 1.08) both; }
     </a>
 
     <!-- ═══════════════ CARD 2 — ZDTE (IN PROGRESS) ═══════════════ -->
-    <div class="cert-card status-progress">
+    <a href="ZDTE/study-plan/study-plan-zdte.html" class="cert-card status-progress">
       <div class="corner-flag">▲ ACTIVE</div>
       <div class="card-content">
         <div class="cert-code-row">
@@ -540,17 +550,17 @@ body { animation: pageEnter 0.6s cubic-bezier(0.15, 0.85, 0.2, 1.08) both; }
           <div class="status-badge"><span class="status-dot"></span>In Progress</div>
           <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;">
             <div class="exam-date">Exam <strong>May 8, 2026 — 8:30PM</strong></div>
-            <a href="ZDTE/study-plan/study-plan-zdte.html" class="credly-link" style="border-color:var(--orange-border);color:#cc4a18;" onclick="event.stopPropagation()">
+            <span class="credly-link" style="border-color:var(--orange-border);color:#cc4a18;">
               View Study Plan
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                 <line x1="5" y1="12" x2="19" y2="12"/>
                 <polyline points="12 5 19 12 12 19"/>
               </svg>
-            </a>
+            </span>
           </div>
         </div>
       </div>
-    </div>
+    </a>
 
     <!-- ═══════════════ CARD 3 — ZDDC (COMING SOON) ═══════════════ -->
     <div class="cert-card status-soon">
@@ -605,7 +615,7 @@ body { animation: pageEnter 0.6s cubic-bezier(0.15, 0.85, 0.2, 1.08) both; }
           </div>
         </div>
         <div class="cert-edu">NSE 7</div>
-        <div class="cert-name"><span class="cert-prefix">Fortinet&nbsp;</span><span class="cert-suffix">'Enterprise Firewall'</span></div>
+        <div class="cert-name"><span class="cert-prefix">Fortinet&nbsp;</span><span class="cert-suffix">Enterprise Firewall</span><span class="cert-version">&nbsp;7.6</span></div>
         <div class="card-details">
           <div class="status-badge"><span class="status-dot"></span>In Progress</div>
           <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;">
