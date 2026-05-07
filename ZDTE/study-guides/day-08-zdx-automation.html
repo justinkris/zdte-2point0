@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ZDTE Study Guide — Day 08: ZDX Part 2 & Zero Trust Automation</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;0,700;1,400&family=Epilogue:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #fef9f0;
+    --cream-dark: #f5eddb;
+    --ink: #1a1209;
+    --ink-soft: #5a4a35;
+    --ink-muted: #8a7660;
+    --orange: #ff6b35;
+    --orange-light: #fff3ec;
+    --orange-border: #ffd5c0;
+    --amber-light: #fffbe6;
+    --green: #3a7d44;
+    --green-light: #edf7ee;
+    --green-border: #b2dfb4;
+    --purple: #5c35cc;
+    --purple-light: #ece8ff;
+    --purple-border: #c8bbff;
+    --blue-light: #e8f0fb;
+    --blue-border: #b3ccf0;
+    --blue: #1a6bcc;
+    --red-light: #fce8e8;
+    --red-border: #f7c1c1;
+    --red: #a32d2d;
+    --border: #ede5d8;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body { font-family: 'Epilogue', sans-serif; background: var(--cream); color: var(--ink); min-height: 100vh; }
+
+  header {
+    padding: 40px 60px 28px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 32px;
+    background: var(--cream);
+  }
+
+  .header-left { flex: 1; }
+
+  .breadcrumb { display: flex; align-items: center; gap: 8px; font-size: 11px; color: var(--ink-muted); letter-spacing: 0.08em; margin-bottom: 12px; }
+  .breadcrumb a { color: var(--orange); text-decoration: none; }
+  .breadcrumb-sep { color: var(--border); }
+
+  .day-badge { display: inline-flex; align-items: center; gap: 6px; background: var(--ink); color: var(--cream); padding: 5px 14px; border-radius: 20px; font-size: 11px; letter-spacing: 0.1em; margin-bottom: 14px; }
+  .day-badge-dot { width: 5px; height: 5px; background: var(--orange); border-radius: 50%; }
+
+  h1 { font-family: 'Fraunces', serif; font-size: 44px; font-weight: 700; line-height: 1.0; color: var(--ink); margin-bottom: 10px; }
+  h1 em { font-style: italic; font-weight: 400; color: var(--orange); }
+
+  .header-meta-row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-top: 14px; }
+
+  .tag { padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 500; border: 1px solid; display: inline-block; }
+  .tag-zdx    { background: var(--purple-light); color: var(--purple); border-color: var(--purple-border); }
+  .tag-arch   { background: var(--amber-light);  color: #a07c00;       border-color: #ffe680; }
+  .tag-weight { background: var(--orange-light); color: #cc4a18;       border-color: var(--orange-border); }
+
+  .header-right { display: flex; flex-direction: column; gap: 10px; align-items: flex-end; flex-shrink: 0; }
+
+  .progress-card { background: var(--ink); color: var(--cream); padding: 14px 20px; border-radius: 14px; text-align: center; min-width: 110px; }
+  .progress-card .big { font-family: 'Fraunces', serif; font-size: 32px; font-weight: 700; color: var(--orange); line-height: 1; }
+  .progress-card .lbl { font-size: 10px; color: #7a6a55; letter-spacing: 0.1em; margin-top: 4px; }
+
+  .section-nav { display: flex; gap: 0; padding: 0 60px; border-bottom: 1px solid var(--border); background: var(--cream-dark); overflow-x: auto; position: sticky; top: 0; z-index: 100; }
+
+  .nav-tab { padding: 14px 20px; font-size: 12px; font-weight: 500; color: var(--ink-muted); letter-spacing: 0.06em; cursor: pointer; border-bottom: 2px solid transparent; white-space: nowrap; transition: color 0.15s, border-color 0.15s; background: none; border-top: none; border-left: none; border-right: none; font-family: 'Epilogue', sans-serif; }
+  .nav-tab:hover { color: var(--ink); }
+  .nav-tab.active { color: var(--orange); border-bottom-color: var(--orange); }
+
+  main { display: grid; grid-template-columns: 1fr 320px; gap: 0; min-height: calc(100vh - 200px); }
+  .main-content { padding: 36px 48px 60px 60px; border-right: 1px solid var(--border); }
+  .sidebar { padding: 36px 28px 60px; background: var(--cream-dark); }
+
+  .section-block { margin-bottom: 44px; }
+
+  .section-label { font-size: 10px; letter-spacing: 0.2em; color: var(--ink-muted); margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+  .section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+  h2 { font-family: 'Fraunces', serif; font-size: 24px; font-weight: 600; color: var(--ink); margin-bottom: 14px; line-height: 1.2; }
+  h3 { font-family: 'Fraunces', serif; font-size: 18px; font-weight: 600; color: var(--ink); margin-bottom: 10px; margin-top: 28px; }
+  p { font-size: 14px; color: var(--ink-soft); line-height: 1.8; margin-bottom: 12px; }
+
+  ul.content-list { list-style: none; display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
+  ul.content-list li { font-size: 14px; color: var(--ink-soft); padding-left: 16px; position: relative; line-height: 1.6; }
+  ul.content-list li::before { content: '·'; position: absolute; left: 2px; color: var(--orange); font-weight: 700; font-size: 18px; line-height: 1.2; }
+
+  .key-concept { background: var(--orange-light); border: 1px solid var(--orange-border); border-radius: 10px; padding: 14px 18px; margin-bottom: 16px; font-size: 13px; color: #7a3010; line-height: 1.7; }
+  .key-concept strong { color: var(--orange); font-weight: 600; }
+
+  .definition { background: var(--cream); border: 1px solid var(--border); border-left: 3px solid var(--orange); border-radius: 0 10px 10px 0; padding: 14px 18px; margin-bottom: 12px; }
+  .definition-term { font-size: 13px; font-weight: 600; color: var(--ink); margin-bottom: 4px; }
+  .definition-body { font-size: 13px; color: var(--ink-soft); line-height: 1.7; }
+
+  .callout { border-radius: 14px; padding: 18px 20px; margin-bottom: 16px; border: 1px solid; }
+  .callout-header { display: flex; align-items: center; gap: 8px; font-size: 11px; font-weight: 600; letter-spacing: 0.1em; margin-bottom: 8px; }
+  .callout-icon { width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; flex-shrink: 0; }
+  .callout-body { font-size: 13px; line-height: 1.7; }
+
+  .callout-note { background: var(--amber-light); border-color: #ffe680; }
+  .callout-note .callout-header { color: #a07c00; }
+  .callout-note .callout-icon { background: #ffe680; color: #a07c00; }
+  .callout-note .callout-body { color: #7a5c00; }
+
+  .callout-analogy { background: var(--green-light); border-color: var(--green-border); }
+  .callout-analogy .callout-header { color: var(--green); }
+  .callout-analogy .callout-icon { background: var(--green-border); color: var(--green); }
+  .callout-analogy .callout-body { color: #2a5c32; }
+
+  .callout-tip { background: var(--blue-light); border-color: var(--blue-border); }
+  .callout-tip .callout-header { color: var(--blue); }
+  .callout-tip .callout-icon { background: var(--blue-border); color: var(--blue); }
+  .callout-tip .callout-body { color: #153d7a; }
+
+  .callout-warn { background: var(--red-light); border-color: var(--red-border); }
+  .callout-warn .callout-header { color: var(--red); }
+  .callout-warn .callout-icon { background: var(--red-border); color: var(--red); }
+  .callout-warn .callout-body { color: #7a1f1f; }
+
+  .compare-table { width: 100%; border-collapse: collapse; font-size: 13px; margin-bottom: 20px; margin-top: 12px; }
+  .compare-table th { background: var(--ink); color: var(--cream); padding: 10px 14px; text-align: left; font-weight: 500; font-size: 11px; letter-spacing: 0.08em; }
+  .compare-table th:first-child { border-radius: 10px 0 0 0; }
+  .compare-table th:last-child  { border-radius: 0 10px 0 0; }
+  .compare-table td { padding: 10px 14px; border-bottom: 1px solid var(--border); color: var(--ink-soft); vertical-align: top; line-height: 1.6; }
+  .compare-table tr:nth-child(even) td { background: var(--cream-dark); }
+  .compare-table tr:last-child td:first-child { border-radius: 0 0 0 10px; }
+  .compare-table tr:last-child td:last-child  { border-radius: 0 0 10px 0; }
+
+  .img-placeholder { border: 2px dashed var(--orange-border); background: var(--orange-light); border-radius: 14px; padding: 28px 24px; margin: 20px 0; text-align: center; }
+  .img-placeholder-label { font-size: 11px; font-weight: 600; letter-spacing: 0.15em; color: var(--orange); margin-bottom: 6px; }
+  .img-placeholder-title { font-family: 'Fraunces', serif; font-size: 16px; color: var(--ink); margin-bottom: 12px; }
+  .img-placeholder-icon { font-size: 32px; margin-bottom: 10px; opacity: 0.5; }
+  .img-prompt-box { background: var(--cream); border: 1px solid var(--orange-border); border-radius: 8px; padding: 10px 14px; margin-top: 12px; text-align: left; }
+  .img-prompt-label { font-size: 10px; font-weight: 600; letter-spacing: 0.12em; color: var(--ink-muted); margin-bottom: 4px; }
+  .img-prompt-text { font-size: 12px; color: var(--ink-soft); line-height: 1.6; font-style: italic; }
+
+  .mnemonic { background: var(--purple-light); border: 1px solid var(--purple-border); border-radius: 14px; padding: 18px 20px; margin-bottom: 16px; }
+  .mnemonic-header { font-size: 11px; font-weight: 600; letter-spacing: 0.1em; color: var(--purple); margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+  .mnemonic-icon { width: 22px; height: 22px; border-radius: 50%; background: var(--purple-border); color: var(--purple); display: flex; align-items: center; justify-content: center; font-size: 12px; }
+  .mnemonic-body { font-size: 13px; color: #3a1f8a; line-height: 1.7; }
+  .mnemonic-body strong { font-weight: 700; }
+
+  .flow-diagram { display: flex; align-items: center; gap: 0; flex-wrap: wrap; margin: 16px 0; }
+  .flow-step { background: var(--ink); color: var(--cream); border-radius: 10px; padding: 10px 16px; font-size: 12px; font-weight: 500; text-align: center; min-width: 100px; line-height: 1.4; }
+  .flow-step span { display: block; font-size: 10px; color: var(--ink-muted); margin-top: 2px; }
+  .flow-arrow { color: var(--orange); font-size: 18px; padding: 0 8px; font-weight: 700; }
+
+  .sidebar-section { margin-bottom: 28px; }
+  .sidebar-label { font-size: 10px; letter-spacing: 0.18em; color: var(--ink-muted); margin-bottom: 10px; padding-bottom: 6px; border-bottom: 1px solid var(--border); }
+
+  .subtopic-list { list-style: none; display: flex; flex-direction: column; gap: 4px; }
+  .subtopic-list li { display: flex; align-items: flex-start; gap: 8px; font-size: 12px; color: var(--ink-soft); padding: 6px 0; border-bottom: 1px solid var(--border); line-height: 1.5; cursor: pointer; }
+  .subtopic-list li:last-child { border-bottom: none; }
+  .subtopic-check { width: 14px; height: 14px; border: 1px solid var(--border); border-radius: 3px; flex-shrink: 0; margin-top: 1px; transition: background 0.15s, border-color 0.15s; }
+  .subtopic-list li.done .subtopic-check { background: var(--green); border-color: var(--green); }
+  .subtopic-list li.done span { text-decoration: line-through; color: var(--ink-muted); }
+
+  .quick-ref { background: var(--ink); border-radius: 12px; padding: 14px 16px; margin-bottom: 10px; }
+  .quick-ref-term { font-size: 11px; font-weight: 600; color: var(--orange); letter-spacing: 0.06em; margin-bottom: 4px; }
+  .quick-ref-def  { font-size: 12px; color: #9a8070; line-height: 1.6; }
+
+  .sidebar-note { background: var(--amber-light); border: 1px solid #ffe680; border-radius: 10px; padding: 12px 14px; font-size: 12px; color: #7a5c00; line-height: 1.6; margin-bottom: 10px; font-style: italic; }
+
+  .blueprint-bar { background: var(--cream-dark); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; margin-bottom: 10px; }
+  .blueprint-domain { display: flex; align-items: center; justify-content: space-between; font-size: 12px; margin-bottom: 8px; }
+  .blueprint-domain-name { color: var(--ink-soft); }
+  .blueprint-domain-pct  { font-weight: 600; color: var(--orange); }
+  .blueprint-track { height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; }
+  .blueprint-fill { height: 100%; background: var(--orange); border-radius: 3px; }
+
+  footer { padding: 20px 60px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; background: var(--cream-dark); }
+  .footer-left { font-family: 'Fraunces', serif; font-size: 16px; font-weight: 700; }
+  .footer-left span { color: var(--orange); }
+  .footer-right { font-size: 11px; color: var(--ink-muted); letter-spacing: 0.06em; }
+
+  @media (max-width: 900px) {
+    header { padding: 24px 20px 20px; flex-direction: column; }
+    .header-right { align-items: flex-start; flex-direction: row; }
+    main { grid-template-columns: 1fr; }
+    .main-content { padding: 24px 20px 40px; border-right: none; }
+    .sidebar { padding: 24px 20px 40px; border-top: 1px solid var(--border); }
+    .section-nav { padding: 0 20px; }
+    footer { padding: 20px; flex-direction: column; gap: 8px; text-align: center; }
+    h1 { font-size: 32px; }
+    .flow-diagram { flex-direction: column; align-items: flex-start; }
+    .flow-arrow { transform: rotate(90deg); padding: 4px 0; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-left">
+    <div class="breadcrumb">
+      <a href="../../index.html">ZDTE Study Plan</a>
+      <span class="breadcrumb-sep">›</span>
+      <a href="index.html">Study Guides</a>
+      <span class="breadcrumb-sep">›</span>
+      <span>Day 08</span>
+    </div>
+    <div class="day-badge">
+      <div class="day-badge-dot"></div>
+      DAY 08 · SUNDAY 26 APRIL 2026
+    </div>
+    <h1>ZDX <em>Part 2</em> &amp;<br>Zero Trust <em>Automation</em></h1>
+    <div class="header-meta-row">
+      <span class="tag tag-zdx">ZDX</span>
+      <span class="tag tag-arch">ARCHITECTURE</span>
+      <span class="tag tag-weight">Blueprint: ~18%</span>
+      <span class="tag tag-weight">ZDX 8% + Automation 10%</span>
+    </div>
+  </div>
+  <div class="header-right">
+    <div class="progress-card">
+      <div class="big" id="prog-num">0<span style="font-size:18px;color:#7a6a55;">%</span></div>
+      <div class="lbl">SUBTOPICS DONE</div>
+    </div>
+  </div>
+</header>
+
+<nav class="section-nav">
+  <button class="nav-tab active" onclick="navTo('section-rbac', this)">RBAC IN ZDX</button>
+  <button class="nav-tab" onclick="navTo('section-inventory', this)">DEVICE &amp; PROCESS INVENTORY</button>
+  <button class="nav-tab" onclick="navTo('section-dashboards', this)">DASHBOARDS &amp; HOSTED MONITORING</button>
+  <button class="nav-tab" onclick="navTo('section-ai', this)">AI &amp; WORKFLOW AUTOMATION</button>
+  <button class="nav-tab" onclick="navTo('section-oneapi', this)">ONEAPI FRAMEWORK</button>
+  <button class="nav-tab" onclick="navTo('section-blueprint', this)">EXAM BLUEPRINT</button>
+  <button class="nav-tab" onclick="navTo('section-review', this)">QUICK REVIEW</button>
+</nav>
+
+<main>
+  <div class="main-content">
+
+    <!-- ══ PART A DIVIDER ══ -->
+    <div class="section-block" id="section-rbac">
+      <div class="section-label">HALF A — ZDX OPERATIONS</div>
+      <h2>Operating &amp; Controlling ZDX</h2>
+      <p>
+        In Day 07, we built ZDX from the ground up — metrics, probes, scoring, alerts, and diagnostics.
+        Today's first half focuses on <strong>who can see what</strong> (RBAC), <strong>what's happening on endpoints</strong>
+        (Device &amp; Process Inventory), and <strong>how the data is presented</strong> (Dashboards &amp; Hosted Monitoring).
+      </p>
+      <div class="key-concept">
+        <strong>Theme for Half A:</strong> ZDX is powerful — but raw access to all its data creates both security and operational risk.
+        RBAC, inventory controls, and dashboard structure exist to give the right people exactly the right view.
+      </div>
+
+      <div class="section-label" style="margin-top:28px;">SUBTOPIC 1</div>
+      <h2>RBAC in ZDX</h2>
+
+      <p>Role-Based Access Control in ZDX is built on three interlocking layers. Understanding each layer individually —
+        and knowing which symptom maps to which layer — is essential for the exam.</p>
+
+      <div class="img-placeholder" style="padding:0;background:none;border:none;">
+        <img src="../images/study-guides/day-08/ZDX-RBAC.png" alt="ZDX RBAC — Three Layers Model" style="width:100%;border-radius:14px;display:block;">
+        <div class="img-prompt-box" style="margin-top:8px;">
+          <div class="img-prompt-label">IMAGE PROMPT</div>
+          <div class="img-prompt-text">A cartoon bouncer standing at a velvet rope outside an exclusive nightclub. The bouncer wears a sash that says "Role: Admin". He holds a clipboard and is only letting in guests from a specific list — the rope sign says "APAC Region Only" (Scope). Behind him, inside the club, a second smaller bouncer at an inner VIP door holds a sign: "Deep Trace — Special Access Required" (Permissions). A long queue of cartoon characters waits outside — some get waved through, some get turned away based on which badge they wear. Warm neon-lit nightclub atmosphere, slightly humorous cartoon style.</div>
+        </div>
+      </div>
+
+      <h3>The Three Layers</h3>
+
+      <div class="definition">
+        <div class="definition-term">Role</div>
+        <div class="definition-body">A named collection of permissions bundled together. Examples: Full Access, View Only, Custom. The role determines what actions an admin can perform in ZDX — but not on whom or what.</div>
+      </div>
+
+      <div class="definition">
+        <div class="definition-term">Scope</div>
+        <div class="definition-body">Restricts which users, devices, or locations the role applies to. Scope is configured using Locations, Departments, or Device Groups. A View-Only role scoped to APAC can only see APAC user data.</div>
+      </div>
+
+      <div class="definition">
+        <div class="definition-term">Permissions (within a Role)</div>
+        <div class="definition-body">Granular feature-level toggles embedded inside the role definition. Even within a broad role, specific high-sensitivity features (like Process Inventory, Deep Tracing, Packet Capture) must be explicitly enabled. Without these toggles, the button is greyed out — even if the admin has the correct role and scope.</div>
+      </div>
+
+      <h3>ZDX Access Levels</h3>
+      <table class="compare-table">
+        <thead>
+          <tr><th>Access Level</th><th>What it allows</th><th>Typical Use</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Full</td><td>View + configure everything within scope</td><td>ZDX Administrators</td></tr>
+          <tr><td>View Only</td><td>Read-only access to dashboards and data</td><td>Help Desk, Auditors</td></tr>
+          <tr><td>Custom</td><td>Tailored combination of sections and permissions</td><td>Scoped engineers, regional teams</td></tr>
+          <tr><td>None</td><td>No ZDX access</td><td>Default for non-ZDX admins</td></tr>
+        </tbody>
+      </table>
+
+      <h3>Symptom → Cause Mapping</h3>
+      <p>The exam describes an admin who can't do something — you need to identify which RBAC layer is the cause.</p>
+      <table class="compare-table">
+        <thead>
+          <tr><th>Symptom</th><th>Most Likely Cause</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Admin sees APAC users but not EU users</td><td><strong>Scope</strong> — restricted to APAC locations only</td></tr>
+          <tr><td>Admin can see all users but "Run Deep Trace" is greyed out</td><td><strong>Permission</strong> — granular Deep Trace permission not enabled in the role</td></tr>
+          <tr><td>Admin sees empty dashboards — no users, no devices</td><td><strong>Scope</strong> — assigned to a location/group with no users</td></tr>
+          <tr><td>Admin sees no menu items at all</td><td><strong>Role</strong> — no view permissions enabled in the role definition</td></tr>
+        </tbody>
+      </table>
+
+      <div class="callout callout-warn">
+        <div class="callout-header"><div class="callout-icon">!</div>WATCH OUT — EXAM TRAP</div>
+        <div class="callout-body">
+          "Empty dashboards" could mean either Scope (location has no users) OR Role (no view permissions). Distinguish them: if the admin sees <em>some</em> dashboards but no <em>data</em> → likely Scope. If they see <em>nothing at all, not even menu items</em> → likely Role.
+        </div>
+      </div>
+
+      <div class="callout callout-note">
+        <div class="callout-header"><div class="callout-icon">★</div>SENSITIVE FEATURES THAT NEED EXPLICIT PERMISSION</div>
+        <div class="callout-body">
+          Process Inventory, Deep Tracing (Diagnostics), Packet Capture, and Bandwidth Tests all require their own granular permission toggle enabled within the role definition — on top of the base role. These expose detailed device and session data, so Zscaler gates them separately.
+        </div>
+      </div>
+
+      <div class="callout callout-analogy">
+        <div class="callout-header"><div class="callout-icon">⟳</div>ANALOGY — The Hotel Keycard</div>
+        <div class="callout-body">
+          <strong>Role</strong> = the type of keycard (guest, housekeeping, manager)<br>
+          <strong>Scope</strong> = which floors and rooms the card opens<br>
+          <strong>Permissions</strong> = whether you can just enter, or also adjust the thermostat and minibar settings
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ══ SECTION 2: INVENTORY ══ -->
+    <div class="section-block" id="section-inventory">
+      <div class="section-label">SUBTOPIC 2</div>
+      <h2>Device &amp; Process Inventory</h2>
+
+      <p>ZDX collects two types of endpoint inventory through the Zscaler Client Connector.
+        Each answers a different troubleshooting question and has different timing characteristics.</p>
+
+      <div class="img-placeholder" style="padding:0;background:none;border:none;">
+        <img src="../images/study-guides/day-08/Software-Process.png" alt="Device vs Process Inventory" style="width:100%;border-radius:14px;display:block;">
+        <div class="img-prompt-box" style="margin-top:8px;">
+          <div class="img-prompt-label">IMAGE PROMPT</div>
+          <div class="img-prompt-text">Two-panel cartoon at a mechanic's garage. Left panel: mechanic stands beside a shiny car, clipboard in hand, noting the make, model, licence plate, tyres. Label: "Device Inventory". Right panel: same mechanic has popped the hood — inside, tiny cartoon workers run around labelled "Chrome — 89% CPU", "Outlook — idle", "Antivirus scan". Mechanic peers in with wide eyes and a torch. Label: "Process Inventory". Same warm workshop lighting, playful cartoon style.</div>
+        </div>
+      </div>
+
+      <table class="compare-table">
+        <thead>
+          <tr><th>Feature</th><th>Device Inventory 🚗</th><th>Process Inventory 🔧</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>What it shows</td><td>The device itself — OS, version, hardware, hostname, ZCC version, location</td><td>What's running on the device — apps, CPU/memory usage per process</td></tr>
+          <tr><td>Question it answers</td><td>"What is this machine?"</td><td>"What is this machine <em>doing</em> right now?"</td></tr>
+          <tr><td>Update frequency</td><td>Periodic / session-based</td><td>Metrics updated every <strong>1 minute</strong></td></tr>
+          <tr><td>Display refresh</td><td>—</td><td>Top processes displayed every <strong>5 minutes</strong></td></tr>
+          <tr><td>Prerequisite</td><td>ZCC installed + minimum version</td><td>ZCC installed + minimum version + granular permission enabled</td></tr>
+          <tr><td>Sensitivity</td><td>Moderate</td><td>High — shows what apps/processes exist on a user's device</td></tr>
+        </tbody>
+      </table>
+
+      <div class="mnemonic">
+        <div class="mnemonic-header"><div class="mnemonic-icon">💡</div>MNEMONIC — Process Inventory Timing</div>
+        <div class="mnemonic-body">
+          <strong>"1 to update, 5 to show off"</strong><br>
+          The probe quietly updates metrics every <strong>1 minute</strong> (collecting data continuously), but only refreshes the "top processes" display every <strong>5 minutes</strong>. Like a chef tasting the soup every minute but only plating it for the food critic every 5. 🍲
+        </div>
+      </div>
+
+      <div class="callout callout-warn">
+        <div class="callout-header"><div class="callout-icon">!</div>WATCH OUT — ZCC IS ALWAYS THE PREREQUISITE</div>
+        <div class="callout-body">
+          No ZCC = no Device Inventory, no Process Inventory, no probes, no ZDX score. The user simply disappears from ZDX entirely. Some advanced features also require a <strong>minimum ZCC version</strong>. If a question describes an admin who can see basic ZDX data but not advanced features, check for an outdated ZCC — it might not be an RBAC issue at all.
+        </div>
+      </div>
+
+      <h3>Troubleshooting Pattern — The ZDX Drill-Down</h3>
+      <div class="flow-diagram">
+        <div class="flow-step">Device Score Drop<span>Check Device Inventory</span></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">High CPU / Memory<span>Symptom found</span></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">Process Inventory<span>Find the culprit</span></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">Runaway Process<span>Root cause confirmed</span></div>
+      </div>
+    </div>
+
+
+    <!-- ══ SECTION 3: DASHBOARDS & HOSTED MONITORING ══ -->
+    <div class="section-block" id="section-dashboards">
+      <div class="section-label">SUBTOPIC 3</div>
+      <h2>ZDX Dashboards &amp; Hosted Monitoring</h2>
+
+      <h3>The Three Diagnostic Lenses</h3>
+      <p>ZDX organises its data around three diagnostic viewpoints, each isolating a different potential layer of failure.</p>
+
+      <div class="img-placeholder" style="padding:0;background:none;border:none;">
+        <img src="../images/study-guides/day-08/dev-net-app.png" alt="ZDX Three Diagnostic Lenses" style="width:100%;border-radius:14px;display:block;">
+        <div class="img-prompt-box" style="margin-top:8px;">
+          <div class="img-prompt-label">IMAGE PROMPT</div>
+          <div class="img-prompt-text">A cartoon doctor's examination room with three separate examination tables side by side, each behind a curtain being pulled back. Left table (purple curtain): a sick-looking laptop lying on the table — doctor checking "pulse" with CPU bars and a health chart. Label: "Device". Centre table (blue curtain): a long winding road stretched out like a patient — doctor peering at individual "hops" with one section glowing red for packet loss. Label: "Network". Right table (green curtain): a web browser window lying flat — doctor tapping its "knee" with a reflex hammer, a clock measuring response time. Label: "Application". Playful, absurd medical cartoon style.</div>
+        </div>
+      </div>
+
+      <table class="compare-table">
+        <thead>
+          <tr><th>Lens</th><th>Question it answers</th><th>Key metrics</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>📱 <strong>Device</strong></td><td>"Is the user's machine the problem?"</td><td>CPU, memory, Wi-Fi signal, battery, ZDX device score</td></tr>
+          <tr><td>🌐 <strong>Network</strong> (Cloud Path)</td><td>"Is the path between user and app the problem?"</td><td>Hop count, latency, packet loss at each network hop</td></tr>
+          <tr><td>🖥️ <strong>Application</strong></td><td>"Is the app itself the problem?"</td><td>Page Fetch Time, DNS Time, Server Response Time (TTFB), Availability</td></tr>
+        </tbody>
+      </table>
+
+      <h3>Additional Dashboard Views</h3>
+      <ul class="content-list">
+        <li><strong>User Dashboard</strong> — focused on a single user and their experience across all apps and devices</li>
+        <li><strong>Geo / Locations View</strong> — where are problems concentrated geographically?</li>
+        <li><strong>Department View</strong> — which org units are most affected?</li>
+        <li><strong>Application Dashboard</strong> — all users of a specific app, showing average scores and trends over time</li>
+        <li><strong>Incidents Overview</strong> — uses AI/ML to categorise and prioritise incidents across WiFi, Last Mile ISP, Zscaler Data Centre, and Application</li>
+      </ul>
+
+      <h3>Hosted Monitoring</h3>
+      <p>Standard ZDX relies on ZCC running on real user endpoints. Hosted Monitoring runs probes from Zscaler-hosted synthetic endpoints in the cloud, completely independent of real users.</p>
+
+      <div class="img-placeholder" style="padding:0;background:none;border:none;">
+        <img src="../images/study-guides/day-08/ZCC-Hosted.png" alt="Standard ZDX vs Hosted Monitoring" style="width:100%;border-radius:14px;display:block;">
+        <div class="img-prompt-box" style="margin-top:8px;">
+          <div class="img-prompt-label">IMAGE PROMPT</div>
+          <div class="img-prompt-text">Whimsical split illustration. Left side: a tired real office worker in a busy coffee shop — laptop open, weak Wi-Fi bars, spinning loading wheel, dead battery icon. Name badge reads "Real User (ZCC)". Right side: a cheerful shiny silver robot sitting completely alone in the same coffee shop at 3am — chairs stacked, lights off, wall clock shows 3:00 AM — the robot is perfectly content, sipping tea and tapping a glowing laptop. Robot badge says "Hosted Monitoring". Warm playful cartoon illustration style.</div>
+        </div>
+      </div>
+
+      <table class="compare-table">
+        <thead>
+          <tr><th>Feature</th><th>Standard ZDX (ZCC-based)</th><th>Hosted Monitoring</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Probe source</td><td>Real user's device (via ZCC)</td><td>Zscaler cloud-hosted synthetic endpoint</td></tr>
+          <tr><td>Requires real users?</td><td>Yes — ZCC must be installed and running</td><td>No — runs independently 24/7</td></tr>
+          <tr><td>Measures last-mile?</td><td>Yes — full end-to-end from device</td><td>No — does not reflect user's last-mile experience</td></tr>
+          <tr><td>Best for</td><td>Real user experience troubleshooting</td><td>App availability, pre-deployment baselining, lights-out sites</td></tr>
+          <tr><td>Works at 3am?</td><td>Only if users are online</td><td>Yes — always running</td></tr>
+        </tbody>
+      </table>
+
+      <div class="callout callout-note">
+        <div class="callout-header"><div class="callout-icon">★</div>HOSTED MONITORING USE CASES</div>
+        <div class="callout-body">
+          <strong>1. 24/7 uptime monitoring</strong> — catch app outages at 3am when no users are online<br>
+          <strong>2. Lights-out branch offices</strong> — monitor sites before or during deployment<br>
+          <strong>3. Pre-deployment baselining</strong> — test a new SaaS app from multiple regions before rollout<br>
+          <strong>4. Geographic coverage gaps</strong> — measure performance from regions with few real users
+        </div>
+      </div>
+
+      <div class="callout callout-analogy">
+        <div class="callout-header"><div class="callout-icon">⟳</div>ANALOGY — Real User vs Hosted Monitoring</div>
+        <div class="callout-body">
+          Standard ZDX = a mystery shopper who actually uses the store and reports the real experience.<br>
+          Hosted Monitoring = a robot that periodically checks if the store's door opens and the lights are on — useful, but it can't tell you if the checkout is slow. 🤖🏪
+        </div>
+      </div>
+
+      <div class="mnemonic">
+        <div class="mnemonic-header"><div class="mnemonic-icon">💡</div>DECISION RULE — When to use which</div>
+        <div class="mnemonic-body">
+          <strong>Real users? → ZCC-based ZDX.</strong><br>
+          <strong>No users / synthetic / 24/7 / pre-deployment? → Hosted Monitoring.</strong>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ══ PART B DIVIDER ══ -->
+    <div class="section-block" id="section-ai">
+      <div class="section-label">HALF B — ZERO TRUST AUTOMATION</div>
+      <h2>Making Zscaler Talk &amp; Act</h2>
+      <p>The second half of Day 08 shifts from observing your environment to <strong>automating action within it</strong>.
+        Zero Trust Automation is about connecting Zscaler to the broader security ecosystem and enabling machine-speed responses — without waiting for a human to intervene.</p>
+      <div class="key-concept">
+        <strong>Theme for Half B:</strong> Zero Trust only works at scale if it operates at machine speed. Humans can't review thousands of events per day. AI and automation close the gap — detecting, deciding, and acting without manual intervention.
+      </div>
+
+      <div class="section-label" style="margin-top:28px;">SUBTOPIC 4</div>
+      <h2>AI Influence &amp; Workflow Automation</h2>
+
+      <h3>AI-Assisted vs AI-Automated</h3>
+      <p>The most important distinction in this section — a frequent exam scenario — is the difference between Zscaler <em>helping a human decide</em> versus Zscaler <em>acting on its own</em>.</p>
+
+      <table class="compare-table">
+        <thead>
+          <tr><th>Model</th><th>What happens</th><th>Human in the loop?</th><th>Response time</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>🤖 <strong>AI-Assisted</strong></td><td>Detects event, flags it, alerts admin, waits for human decision</td><td>✅ Yes</td><td>Minutes to hours</td></tr>
+          <tr><td>⚡ <strong>AI-Automated</strong></td><td>Detects event, triggers action (block, quarantine, ticket) immediately</td><td>❌ No</td><td>Seconds</td></tr>
+        </tbody>
+      </table>
+
+      <div class="callout callout-tip">
+        <div class="callout-header"><div class="callout-icon">→</div>EXAM SIGNAL PHRASES</div>
+        <div class="callout-body">
+          <strong>"Automatically triggered" / "without manual intervention"</strong> → AI-Automated<br>
+          <strong>"Notifies the administrator" / "recommends an action"</strong> → AI-Assisted<br><br>
+          In a live compromise or ransomware scenario, AI-Automated is always the right answer — the time window matters critically. 30 minutes of human response time = a major breach.
+        </div>
+      </div>
+
+      <h3>Key AI Features in Zscaler</h3>
+
+      <div class="definition">
+        <div class="definition-term">Zscaler AI Assistant 💬</div>
+        <div class="definition-body">A natural language interface built into the admin portal. Admins can ask "Why is this user's ZDX score low?" or "What policy is blocking this URL?" and receive AI-generated answers. Think: Google for your Zscaler deployment.</div>
+      </div>
+
+      <div class="definition">
+        <div class="definition-term">AI-Powered Policy Recommendations 📋</div>
+        <div class="definition-body">Analyses traffic patterns and suggests policy changes. Example: "47 users regularly access this app — consider adding it to your allowed list." The human still approves — this is AI-Assisted.</div>
+      </div>
+
+      <div class="definition">
+        <div class="definition-term">Smart Insights in ZDX 🔭</div>
+        <div class="definition-body">AI automatically surfaces the most likely root cause of a ZDX score drop. Instead of manually drilling through Device/Network/App dashboards, the system says "We think it's the Wi-Fi signal at the Sydney office." Automated first-level triage.</div>
+      </div>
+
+      <h3>Workflow Automation — Trigger → Action</h3>
+      <p>Workflow Automation connects Zscaler to the broader security ecosystem using a classic trigger-action model. Zscaler can sit on either side.</p>
+
+      <div class="img-placeholder" style="padding:0;background:none;border:none;">
+        <img src="../images/study-guides/day-08/ZWA.png" alt="Zscaler Workflow Automation — Trigger and Action" style="width:100%;border-radius:14px;display:block;">
+        <div class="img-prompt-box" style="margin-top:8px;">
+          <div class="img-prompt-label">IMAGE PROMPT</div>
+          <div class="img-prompt-text">Dramatic action-cartoon scene. A vintage red fire alarm box labelled "CrowdStrike Detects Threat" is being pulled. Giant cartoon alarm bells ring overhead. From the ringing bells, a chain of oversized dominoes tumbles in a dramatic curved arc — each domino has a label: "ZIA Alert", "ServiceNow Ticket Opens", "Slack Message Fires", "User Access Revoked". A small human admin is visible far in the background, coffee cup halfway to their mouth, looking startled — they had nothing to do with it. Bright energetic comic-book action style.</div>
+        </div>
+      </div>
+
+      <table class="compare-table">
+        <thead>
+          <tr><th>Zscaler Role</th><th>Example</th><th>Direction</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>🔴 <strong>Trigger (source)</strong></td><td>ZIA detects malware → automatically opens a ServiceNow incident</td><td>Zscaler → external system</td></tr>
+          <tr><td>🟢 <strong>Action (destination)</strong></td><td>CrowdStrike detects compromised device → tells Zscaler to revoke user access</td><td>External system → Zscaler</td></tr>
+          <tr><td>🔴 <strong>Trigger</strong></td><td>ZDX alert fires → forwards alert data into ServiceNow ticket automatically</td><td>Zscaler → external system</td></tr>
+          <tr><td>🟢 <strong>Action</strong></td><td>Okta detects account compromise → Zscaler immediately blocks that user's access</td><td>External system → Zscaler</td></tr>
+        </tbody>
+      </table>
+
+      <div class="callout callout-analogy">
+        <div class="callout-header"><div class="callout-icon">⟳</div>ANALOGY — The Security Ecosystem as a Nervous System</div>
+        <div class="callout-body">
+          CrowdStrike, Okta, ServiceNow, Splunk, and Zscaler are like organs in a body. Without workflow automation, each organ works independently. Workflow automation is the nervous system: when one organ detects danger, it instantly signals all the others to respond. 🧠⚡
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ══ SECTION 5: ONEAPI ══ -->
+    <div class="section-block" id="section-oneapi">
+      <div class="section-label">SUBTOPIC 5</div>
+      <h2>OneAPI Framework</h2>
+
+      <p>OneAPI is Zscaler's unified API gateway — a single standardised entry point for programmatic access
+        to all Zscaler services (ZIA, ZPA, ZDX) through one endpoint, one authentication flow, and one token.</p>
+
+      <div class="img-placeholder" style="padding:0;background:none;border:none;">
+        <img src="../images/study-guides/day-08/OneAPI-BeforeAfter.png" alt="Before OneAPI vs After OneAPI" style="width:100%;border-radius:14px;display:block;">
+        <div class="img-prompt-box" style="margin-top:8px;">
+          <div class="img-prompt-label">IMAGE PROMPT</div>
+          <div class="img-prompt-text">Comedic side-by-side cartoon. Left panel "Before OneAPI": an overwhelmed developer sinking waist-deep in a flood of iron skeleton keys — keys overflowing from pockets, tangled in hair, hanging off both ears. Three separate desks each with a different angry login screen. Developer looks cartoonishly panicked. Right panel "After OneAPI": the same developer, impossibly calm, sitting back with ONE gleaming golden master key held up between two fingers. All three monitors show big green checkmarks. Developer wears a serene smile. Flat warm cartoon illustration style.</div>
+        </div>
+      </div>
+
+      <h3>The Problem OneAPI Solves</h3>
+      <p>Before OneAPI, any integration required separate registration, separate authentication, separate tokens, and separate endpoints for each Zscaler product. Three integrations = three times the complexity and three times the attack surface.</p>
+
+      <div class="callout callout-analogy">
+        <div class="callout-header"><div class="callout-icon">⟳</div>ANALOGY — Universal Power Outlet</div>
+        <div class="callout-body">
+          Before international plug standards, every traveller needed a different adapter for every country. OneAPI is Zscaler agreeing on a universal plug standard — any tool that builds to the OneAPI spec can connect to any Zscaler product without custom wiring. 🔌🌍
+        </div>
+      </div>
+
+      <h3>OneAPI's Four Superpowers</h3>
+      <table class="compare-table">
+        <thead>
+          <tr><th>Superpower</th><th>What it means</th><th>Exam relevance</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>🌍 <strong>Globally Distributed</strong></td><td>API gateways distributed across global regions for low latency</td><td>Performance and availability of API calls</td></tr>
+          <tr><td>🗺️ <strong>Geographic Aware</strong></td><td>Requests automatically routed to the closest regional gateway</td><td>Optimises API performance without manual configuration</td></tr>
+          <tr><td>☁️ <strong>Zscaler Cloud Agnostic</strong></td><td>One single endpoint for ZIA, ZPA, and ZDX — no juggling multiple URLs</td><td>Simplifies integration code and reduces errors</td></tr>
+          <tr><td>🔑 <strong>Authenticate Once</strong></td><td>ZIdentity OAuth — one token grants access to all Zscaler services</td><td>Most-tested feature — 3 tokens before → 1 token after</td></tr>
+        </tbody>
+      </table>
+
+      <div class="key-concept">
+        <strong>The core value proposition:</strong> Before OneAPI: 3 products = 3 registrations, 3 auth flows, 3 tokens, 3 endpoints. After OneAPI: 3 products = 1 registration, 1 auth flow, 1 token, 1 endpoint.
+      </div>
+
+      <img src="../images/study-guides/day-08/OneAPI-Full.png" alt="OneAPI Full Architecture" style="width:100%;border-radius:14px;display:block;margin:20px 0;">
+
+      <h3>OneAPI Components</h3>
+
+      <div class="definition">
+        <div class="definition-term">Access Token 🎫</div>
+        <div class="definition-body">Short-lived credential used to authenticate API requests. Deliberately expires quickly to minimise the window of opportunity if stolen. Used directly in all API calls.</div>
+      </div>
+
+      <div class="definition">
+        <div class="definition-term">Refresh Token 🔄</div>
+        <div class="definition-body">Longer-lived credential used only to obtain a new Access Token when it expires — without requiring the user to re-authenticate. Kept securely and never used directly in API calls.</div>
+      </div>
+
+      <div class="definition">
+        <div class="definition-term">API Gateway 🏢</div>
+        <div class="definition-body">The central hub that receives all OneAPI calls, enforces authentication, applies rate limiting, logs all interactions, and routes requests to the correct Zscaler service (ZIA/ZPA/ZDX).</div>
+      </div>
+
+      <div class="callout callout-analogy">
+        <div class="callout-header"><div class="callout-icon">⟳</div>ANALOGY — Access Token vs Refresh Token</div>
+        <div class="callout-body">
+          <strong>Access Token</strong> = a daily visitor badge that expires at midnight. Used for everything during the day.<br>
+          <strong>Refresh Token</strong> = the HR file locked in a drawer that issues new badges each morning. Rarely touched, kept safe, never worn directly.
+        </div>
+      </div>
+
+      <div class="callout callout-note">
+        <div class="callout-header"><div class="callout-icon">★</div>WHY SHORT-LIVED ACCESS TOKENS?</div>
+        <div class="callout-body">
+          Even if an access token is stolen or leaked — in logs, code, or a breach — it becomes useless the moment it expires. The attack window is dramatically limited. This is why the Access Token is short-lived and the Refresh Token (which can generate new ones) is kept separately and never included in API calls directly.
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ══ SECTION 6: EXAM BLUEPRINT ══ -->
+    <div class="section-block" id="section-blueprint">
+      <div class="section-label">SUBTOPIC 6</div>
+      <h2>Exam Blueprint Alignment</h2>
+
+      <p>Day 08 covers two exam domains. Together they represent approximately <strong>18% of the exam</strong>.</p>
+
+      <div class="blueprint-bar">
+        <div class="blueprint-domain">
+          <span class="blueprint-domain-name">ZDX (Digital Experience) — Days 7 &amp; 8 combined</span>
+          <span class="blueprint-domain-pct">8%</span>
+        </div>
+        <div class="blueprint-track"><div class="blueprint-fill" style="width:8%"></div></div>
+      </div>
+
+      <div class="blueprint-bar">
+        <div class="blueprint-domain">
+          <span class="blueprint-domain-name">Zero Trust Automation (AI, Workflow, OneAPI)</span>
+          <span class="blueprint-domain-pct">10%</span>
+        </div>
+        <div class="blueprint-track"><div class="blueprint-fill" style="width:10%"></div></div>
+      </div>
+
+      <h3>High-Yield Exam Topics from Day 08</h3>
+      <ul class="content-list">
+        <li><strong>RBAC three layers</strong> — Role vs Scope vs Permission and which symptom maps to which layer</li>
+        <li><strong>Process Inventory timing</strong> — 1 min (metrics) / 5 min (top processes display) — very frequently tested</li>
+        <li><strong>Hosted Monitoring</strong> — when to use it, what it can't do (no last-mile)</li>
+        <li><strong>AI-Assisted vs AI-Automated</strong> — signal phrase recognition</li>
+        <li><strong>Workflow Automation direction</strong> — Zscaler as trigger vs Zscaler as action destination</li>
+        <li><strong>OneAPI "Authenticate Once"</strong> — 3 tokens before → 1 token after</li>
+        <li><strong>Access Token vs Refresh Token</strong> — why short-lived, what each is used for</li>
+      </ul>
+
+      <div class="callout callout-warn">
+        <div class="callout-header"><div class="callout-icon">!</div>COMMON EXAM TRAPS — DAY 08</div>
+        <div class="callout-body">
+          <strong>Trap 1:</strong> "Process Inventory shows CPU every minute" — yes, but the top-process <em>display</em> refreshes every 5. Both numbers are tested.<br>
+          <strong>Trap 2:</strong> Hosted Monitoring is not a replacement for real-user monitoring — it has no visibility into last-mile issues.<br>
+          <strong>Trap 3:</strong> Workflow Automation where Zscaler is the <em>action destination</em> (not the trigger) — external systems can instruct Zscaler to act.<br>
+          <strong>Trap 4:</strong> OneAPI authenticates with ZIdentity OAuth — not ZIA credentials, not API keys.
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ══ SECTION 7: QUICK REVIEW ══ -->
+    <div class="section-block" id="section-review">
+      <div class="section-label">SUBTOPIC 7</div>
+      <h2>Quick Review</h2>
+
+      <h3>Half A — ZDX Operations</h3>
+      <table class="compare-table">
+        <thead>
+          <tr><th>Concept</th><th>One-line answer</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>What are the three RBAC layers?</td><td>Role (what you can do) → Scope (who you can see) → Permission (which features are unlocked)</td></tr>
+          <tr><td>Deep Trace greyed out — which layer?</td><td>Permission — it needs its own explicit toggle in the role definition</td></tr>
+          <tr><td>Admin sees no menu items — which layer?</td><td>Role — no view permissions assigned at all</td></tr>
+          <tr><td>Process Inventory update interval?</td><td>Metrics every 1 min; top process display every 5 min</td></tr>
+          <tr><td>Hosted Monitoring vs standard ZDX?</td><td>Hosted = no ZCC needed, no last-mile; Standard = real user data, full path visibility</td></tr>
+          <tr><td>When to choose Hosted Monitoring?</td><td>24/7 uptime, pre-deployment, lights-out sites, regions with few users</td></tr>
+          <tr><td>Three diagnostic lenses?</td><td>Device → Network (Cloud Path) → Application</td></tr>
+        </tbody>
+      </table>
+
+      <h3>Half B — Zero Trust Automation</h3>
+      <table class="compare-table">
+        <thead>
+          <tr><th>Concept</th><th>One-line answer</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>AI-Assisted vs AI-Automated?</td><td>Assisted = human approves; Automated = machine acts without human</td></tr>
+          <tr><td>Signal phrase for AI-Automated?</td><td>"Automatically triggered" / "without manual intervention"</td></tr>
+          <tr><td>Zscaler as workflow trigger?</td><td>Zscaler detects event → tells external system (e.g. opens ServiceNow ticket)</td></tr>
+          <tr><td>Zscaler as workflow action?</td><td>External system detects event → tells Zscaler to act (e.g. CrowdStrike → revoke access)</td></tr>
+          <tr><td>OneAPI's main benefit?</td><td>One registration, one auth token, one endpoint for ZIA + ZPA + ZDX</td></tr>
+          <tr><td>Access Token vs Refresh Token?</td><td>Access = short-lived, used in API calls; Refresh = longer-lived, used only to get new Access Tokens</td></tr>
+          <tr><td>Why short-lived Access Tokens?</td><td>Limits blast radius if leaked — token expires and becomes worthless</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div><!-- end .main-content -->
+
+  <!-- ══ SIDEBAR ══ -->
+  <div class="sidebar">
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">SUBTOPICS</div>
+      <ul class="subtopic-list" id="subtopic-list">
+        <li onclick="toggleDone(this)"><div class="subtopic-check"></div><span>RBAC — three layers: Role, Scope, Permission</span></li>
+        <li onclick="toggleDone(this)"><div class="subtopic-check"></div><span>RBAC — symptom → cause mapping</span></li>
+        <li onclick="toggleDone(this)"><div class="subtopic-check"></div><span>Device vs Process Inventory comparison</span></li>
+        <li onclick="toggleDone(this)"><div class="subtopic-check"></div><span>Process Inventory timing: 1 min / 5 min</span></li>
+        <li onclick="toggleDone(this)"><div class="subtopic-check"></div><span>ZDX three diagnostic lenses</span></li>
+        <li onclick="toggleDone(this)"><div class="subtopic-check"></div><span>Hosted Monitoring — use cases and limits</span></li>
+        <li onclick="toggleDone(this)"><div class="subtopic-check"></div><span>AI-Assisted vs AI-Automated</span></li>
+        <li onclick="toggleDone(this)"><div class="subtopic-check"></div><span>Workflow Automation trigger/action model</span></li>
+        <li onclick="toggleDone(this)"><div class="subtopic-check"></div><span>OneAPI — four superpowers</span></li>
+        <li onclick="toggleDone(this)"><div class="subtopic-check"></div><span>Access Token vs Refresh Token</span></li>
+      </ul>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">QUICK REFERENCE</div>
+      <div class="quick-ref">
+        <div class="quick-ref-term">RBAC LAYERS</div>
+        <div class="quick-ref-def">Role → what you can do. Scope → who you can see. Permission → which specific features are unlocked within the role.</div>
+      </div>
+      <div class="quick-ref">
+        <div class="quick-ref-term">PROCESS INVENTORY</div>
+        <div class="quick-ref-def">Metrics update every 1 min. Top process display refreshes every 5 min.</div>
+      </div>
+      <div class="quick-ref">
+        <div class="quick-ref-term">HOSTED MONITORING</div>
+        <div class="quick-ref-def">No ZCC needed. Runs 24/7 from Zscaler cloud. Cannot measure last-mile experience.</div>
+      </div>
+      <div class="quick-ref">
+        <div class="quick-ref-term">AI-AUTOMATED</div>
+        <div class="quick-ref-def">No human in the loop. Machine detects → machine acts. Seconds not minutes.</div>
+      </div>
+      <div class="quick-ref">
+        <div class="quick-ref-term">ONEAPI</div>
+        <div class="quick-ref-def">1 endpoint, 1 token for ZIA + ZPA + ZDX. ZIdentity OAuth. Globally distributed + geographic aware.</div>
+      </div>
+      <div class="quick-ref">
+        <div class="quick-ref-term">ACCESS vs REFRESH TOKEN</div>
+        <div class="quick-ref-def">Access = short-lived, used in API calls. Refresh = long-lived, used only to renew Access Tokens.</div>
+      </div>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">MY NOTES</div>
+      <div class="sidebar-note">Greyed-out Deep Trace = Permission missing — not Role or Scope. Easy to confuse under exam pressure.</div>
+      <div class="sidebar-note">Hosted Monitoring ≠ real user monitoring. It tells you the app is up, not that users are having a good experience.</div>
+      <div class="sidebar-note">"Without manual intervention" → always AI-Automated. "Notifies admin" → always AI-Assisted.</div>
+      <div class="sidebar-note">OneAPI "authenticate once" = the single most tested feature. 3 tokens → 1 token is the headline.</div>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">BLUEPRINT WEIGHT</div>
+      <div class="blueprint-bar">
+        <div class="blueprint-domain">
+          <span class="blueprint-domain-name">ZDX (Days 7–8)</span>
+          <span class="blueprint-domain-pct">8%</span>
+        </div>
+        <div class="blueprint-track"><div class="blueprint-fill" style="width:8%"></div></div>
+      </div>
+      <div class="blueprint-bar">
+        <div class="blueprint-domain">
+          <span class="blueprint-domain-name">Zero Trust Automation</span>
+          <span class="blueprint-domain-pct">10%</span>
+        </div>
+        <div class="blueprint-track"><div class="blueprint-fill" style="width:10%"></div></div>
+      </div>
+    </div>
+
+  </div><!-- end .sidebar -->
+
+</main>
+
+<footer>
+  <div class="footer-left">ZDTE<span>.</span></div>
+  <div class="footer-right">Zscaler Digital Transformation Engineer · Day 08 Study Guide</div>
+</footer>
+
+<script>
+  function navTo(id, el) {
+    const target = document.getElementById(id);
+    if (!target) return;
+    const top = target.getBoundingClientRect().top + window.scrollY - 60;
+    window.scrollTo({ top, behavior: 'smooth' });
+    document.querySelectorAll('.nav-tab').forEach(b => b.classList.remove('active'));
+    if (el) el.classList.add('active');
+  }
+
+  function toggleDone(li) {
+    li.classList.toggle('done');
+    updateProgress();
+  }
+
+  function updateProgress() {
+    const items = document.querySelectorAll('#subtopic-list li');
+    const done = document.querySelectorAll('#subtopic-list li.done').length;
+    const pct = items.length ? Math.round((done / items.length) * 100) : 0;
+    const el = document.getElementById('prog-num');
+    if (el) el.innerHTML = pct + '<span style="font-size:18px;color:#7a6a55;">%</span>';
+  }
+</script>
+
+<script src="../../transitions.js"></script>
+</body>
+</html>

@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ZDTE Memory Palaces</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;0,700;1,400&family=Epilogue:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #fef9f0;
+    --cream-dark: #f5eddb;
+    --ink: #1a1209;
+    --ink-soft: #5a4a35;
+    --ink-muted: #8a7660;
+    --orange: #ff6b35;
+    --orange-light: #fff3ec;
+    --orange-border: #ffd5c0;
+    --amber-light: #fffbe6;
+    --green: #3a7d44;
+    --green-light: #edf7ee;
+    --green-border: #b2dfb4;
+    --purple: #5c35cc;
+    --purple-light: #ece8ff;
+    --purple-border: #c8bbff;
+    --blue-light: #e8f0fb;
+    --blue-border: #b3ccf0;
+    --blue: #1a6bcc;
+    --red-light: #fce8e8;
+    --red-border: #f7c1c1;
+    --red: #a32d2d;
+    --border: #ede5d8;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Epilogue', sans-serif;
+    background: var(--cream);
+    color: var(--ink);
+    min-height: 100vh;
+  }
+
+  header {
+    padding: 40px 60px 28px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 32px;
+    background: var(--cream);
+  }
+
+  .header-left { flex: 1; }
+
+  .breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+    color: var(--ink-muted);
+    letter-spacing: 0.08em;
+    margin-bottom: 12px;
+  }
+  .breadcrumb a { color: var(--orange); text-decoration: none; }
+  .breadcrumb-sep { color: var(--border); }
+
+  .page-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--ink);
+    color: var(--cream);
+    padding: 5px 14px;
+    border-radius: 20px;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    margin-bottom: 14px;
+  }
+  .page-badge-dot { width: 5px; height: 5px; background: var(--orange); border-radius: 50%; }
+
+  h1 {
+    font-family: 'Fraunces', serif;
+    font-size: 44px;
+    font-weight: 700;
+    line-height: 1.0;
+    color: var(--ink);
+    margin-bottom: 10px;
+  }
+  h1 em { font-style: italic; font-weight: 400; color: var(--orange); }
+
+  .header-sub {
+    font-size: 13px;
+    color: var(--ink-muted);
+    margin-top: 10px;
+    max-width: 440px;
+    line-height: 1.7;
+  }
+
+  .header-right {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: flex-end;
+    flex-shrink: 0;
+  }
+
+  .count-card {
+    background: var(--ink);
+    color: var(--cream);
+    padding: 14px 20px;
+    border-radius: 14px;
+    text-align: center;
+    min-width: 110px;
+  }
+  .count-card .big {
+    font-family: 'Fraunces', serif;
+    font-size: 36px;
+    font-weight: 700;
+    color: var(--orange);
+    line-height: 1;
+  }
+  .count-card .lbl { font-size: 10px; color: #7a6a55; letter-spacing: 0.1em; margin-top: 4px; }
+
+  .nav-hub { position: relative; }
+  .nav-hub-trigger {
+    background: var(--ink); color: var(--cream);
+    padding: 16px 24px; border-radius: 16px;
+    text-align: center; width: 200px;
+    cursor: pointer; user-select: none;
+    transition: transform 0.18s ease, box-shadow 0.18s ease;
+  }
+  .nav-hub-trigger .icon { font-size: 32px; line-height: 1; color: var(--orange); }
+  .nav-hub-trigger .label { font-size: 11px; color: #7a6a55; letter-spacing: 0.1em; margin-top: 4px; }
+  .nav-hub-trigger .hint { font-size: 11px; color: var(--cream); margin-top: 6px; font-weight: 300; opacity: 0.6; }
+  .nav-hub:hover .nav-hub-trigger {
+    transform: translateY(-4px) scale(1.03);
+    box-shadow: 0 8px 24px rgba(26,18,9,0.18);
+    border-radius: 16px 16px 0 0;
+  }
+  .nav-hub-dropdown {
+    position: absolute; top: 100%; left: 0; width: 200px;
+    background: var(--ink); border-radius: 0 0 16px 16px;
+    overflow: hidden; opacity: 0; pointer-events: none;
+    transform: translateY(-6px);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    z-index: 100; border-top: 1px solid rgba(255,255,255,0.08);
+  }
+  .nav-hub:hover .nav-hub-dropdown { opacity: 1; pointer-events: all; transform: translateY(0); }
+  .nav-hub-item {
+    display: flex; align-items: center; gap: 12px;
+    padding: 13px 20px; color: var(--cream);
+    font-size: 12px; letter-spacing: 0.08em; font-weight: 500;
+    text-decoration: none; border-bottom: 1px solid rgba(255,255,255,0.06);
+    transition: background 0.15s;
+  }
+  .nav-hub-item:last-child { border-bottom: none; }
+  .nav-hub-item:hover { background: rgba(255,107,53,0.15); color: var(--orange); }
+  .nav-hub-item .nav-icon { font-size: 18px; flex-shrink: 0; }
+
+  .main { max-width: 900px; margin: 0 auto; padding: 48px 60px 80px; }
+
+  .category-label {
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    color: var(--ink-muted);
+    margin-bottom: 16px;
+    margin-top: 40px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .category-label:first-child { margin-top: 0; }
+  .category-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+  .palaces-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 8px;
+  }
+
+  .palace-card {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 18px 22px;
+    background: var(--cream);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    text-decoration: none;
+    color: inherit;
+    transition: background 0.15s, border-color 0.15s, transform 0.1s;
+  }
+
+  .palace-card:hover {
+    background: var(--orange-light);
+    border-color: var(--orange-border);
+    transform: translateX(3px);
+  }
+
+  .palace-icon {
+    width: 52px;
+    height: 52px;
+    border-radius: 14px;
+    background: var(--ink);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    flex-shrink: 0;
+  }
+
+  .palace-body { flex: 1; }
+
+  .palace-title {
+    font-family: 'Fraunces', serif;
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 4px;
+    line-height: 1.3;
+  }
+
+  .palace-desc {
+    font-size: 12px;
+    color: var(--ink-muted);
+    line-height: 1.5;
+  }
+
+  .palace-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    align-items: flex-end;
+    flex-shrink: 0;
+  }
+
+  .palace-tags {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+  }
+
+  .tag {
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 10px;
+    font-weight: 500;
+    border: 1px solid;
+    white-space: nowrap;
+  }
+  .tag-zia    { background: var(--blue-light);   color: var(--blue);   border-color: var(--blue-border); }
+  .tag-zdx    { background: var(--purple-light); color: var(--purple); border-color: var(--purple-border); }
+  .tag-arch   { background: var(--amber-light);  color: #a07c00;       border-color: #ffe680; }
+  .tag-palace { background: var(--purple-light); color: var(--purple); border-color: var(--purple-border); }
+
+  .palace-room-count {
+    font-size: 10px;
+    color: var(--ink-muted);
+    letter-spacing: 0.06em;
+  }
+
+  .palace-arrow {
+    font-size: 16px;
+    color: var(--orange);
+    flex-shrink: 0;
+    opacity: 0.5;
+    transition: opacity 0.15s;
+  }
+  .palace-card:hover .palace-arrow { opacity: 1; }
+
+  /* What is a memory palace card */
+  .explainer {
+    background: var(--purple-light);
+    border: 1px solid var(--purple-border);
+    border-radius: 14px;
+    padding: 22px 26px;
+    margin-bottom: 40px;
+  }
+  .explainer h2 {
+    font-family: 'Fraunces', serif;
+    font-size: 18px;
+    color: var(--purple);
+    margin-bottom: 10px;
+  }
+  .explainer p {
+    font-size: 13px;
+    color: #3a1f8a;
+    line-height: 1.7;
+  }
+  .explainer p + p { margin-top: 8px; }
+
+  footer {
+    padding: 20px 60px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--cream-dark);
+  }
+  .footer-left { font-family: 'Fraunces', serif; font-size: 16px; font-weight: 700; }
+  .footer-left span { color: var(--orange); }
+  .footer-right { font-size: 11px; color: var(--ink-muted); letter-spacing: 0.06em; }
+
+  @media (max-width: 700px) {
+    header { padding: 20px 16px 16px; flex-direction: column; gap: 16px; }
+    .main { padding: 24px 16px 48px; }
+    h1 { font-size: 32px; }
+    .palace-card { flex-wrap: wrap; gap: 12px; padding: 14px 16px; }
+    .palace-meta { align-items: flex-start; }
+    .palace-tags { justify-content: flex-start; }
+    footer { padding: 16px; flex-direction: column; gap: 8px; text-align: center; }
+  }
+
+  @media (max-width: 480px) {
+    h1 { font-size: 26px; }
+    .palace-icon { width: 42px; height: 42px; font-size: 18px; }
+  }
+</style>
+<style>
+@keyframes pageEnter {
+  from { opacity: 0; transform: scale(1.05) translateY(-25px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+body { animation: pageEnter 0.6s cubic-bezier(0.15, 0.85, 0.2, 1.08) both; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-left">
+    <div class="breadcrumb">
+      <a href="../../index.html">Study Plan</a>
+      <span class="breadcrumb-sep">›</span>
+      <span>Memory Palaces</span>
+    </div>
+    <div class="page-badge">
+      <span class="page-badge-dot"></span>
+      ZDTE — MEMORY PALACES
+    </div>
+    <h1>Memory <em>Palaces</em></h1>
+    <p class="header-sub">Narrative-driven deep memory. Each palace locks a complex topic to vivid scenes — walk through it once, recall it for life. Your own images make each room unforgettable.</p>
+  </div>
+  <div class="header-right">
+    <div class="count-card">
+      <div class="big">5</div>
+      <div class="lbl">PALACES</div>
+    </div>
+    <div class="nav-hub">
+      <div class="nav-hub-trigger">
+        <div class="icon">📚</div>
+        <div class="label">STUDY MATERIALS</div>
+        <div class="hint">hover to explore</div>
+      </div>
+      <div class="nav-hub-dropdown">
+        <a class="nav-hub-item" href="../study-guides/index.html"><span class="nav-icon">📖</span> STUDY GUIDES</a>
+        <a class="nav-hub-item" href="index.html"><span class="nav-icon">🧠</span> MEMORY PALACES</a>
+        <a class="nav-hub-item" href="../study-bites/index.html"><span class="nav-icon">🍐</span> STUDY BITES</a>
+        <a class="nav-hub-item" href="../study-nibbles/index.html"><span class="nav-icon">🍔</span> STUDY NIBBLES</a>
+        <a class="nav-hub-item" href="../mock-exams/index.html"><span class="nav-icon">📋</span> MOCK EXAMS</a>
+        <a class="nav-hub-item" href="../lab-challenges/index.html"><span class="nav-icon">⚗️</span> LAB CHALLENGES</a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="main">
+
+  <div class="explainer">
+    <h2>How memory palaces work</h2>
+    <p>Each palace assigns one concept per room — a vivid scene anchors the fact. You generate an image for each room, upload it, and review the palace as a visual story. The narrative sticks where bullet points slip away.</p>
+    <p>Click any palace to open it. Expand the collapsible image prompts under each room to copy a prompt for your image generator, then upload your result.</p>
+  </div>
+
+  <div class="category-label">ZIA — POLICY FLOW</div>
+  <div class="palaces-grid">
+
+    <a href="memory-palace-get-post.html" class="palace-card">
+      <div class="palace-icon">🧒</div>
+      <div class="palace-body">
+        <div class="palace-title">The Boy's 14-Stage Journey — GET + POST</div>
+        <div class="palace-desc">Santa's naughty list → exhausted boy · 4 dark POST-only scenes · IPS, Malware, DLP, File Type anchored to vivid characters</div>
+      </div>
+      <div class="palace-meta">
+        <div class="palace-tags">
+          <span class="tag tag-zia">ZIA</span>
+          <span class="tag tag-palace">14 scenes</span>
+        </div>
+        <div class="palace-room-count">Policy enforcement order</div>
+      </div>
+      <div class="palace-arrow">→</div>
+    </a>
+
+    <a href="memory-palace-response-flow.html" class="palace-card">
+      <div class="palace-icon">🏠</div>
+      <div class="palace-body">
+        <div class="palace-title">The Younger Boy's 9-Stage Homecoming — Response Flow</div>
+        <div class="palace-desc">VIP snake echo → Allen Iverson AI/ML → sleepy boy · 4 echo scenes · 5 new response-only scenes · Sandbox detonation</div>
+      </div>
+      <div class="palace-meta">
+        <div class="palace-tags">
+          <span class="tag tag-zia">ZIA</span>
+          <span class="tag tag-palace">9 scenes</span>
+        </div>
+        <div class="palace-room-count">Response policy flow</div>
+      </div>
+      <div class="palace-arrow">→</div>
+    </a>
+
+  </div>
+
+  <div class="category-label">ZIA — DATA PROTECTION</div>
+  <div class="palaces-grid">
+
+    <a href="memory-palace-dlp.html" class="palace-card">
+      <div class="palace-icon">🏛️</div>
+      <div class="palace-body">
+        <div class="palace-title">The DLP Data Mansion</div>
+        <div class="palace-desc">Front door guard → cloud auditor → building inspector → employee's desk · 5 rooms · Inline vs API vs DSPM vs Endpoint · blur-to-reveal exam scenarios</div>
+      </div>
+      <div class="palace-meta">
+        <div class="palace-tags">
+          <span class="tag tag-zia">ZIA</span>
+          <span class="tag tag-palace">5 rooms</span>
+        </div>
+        <div class="palace-room-count">DLP methods compared</div>
+      </div>
+      <div class="palace-arrow">→</div>
+    </a>
+
+  </div>
+
+  <div class="category-label">ZIA / ZPA — IDENTITY SERVICES</div>
+  <div class="palaces-grid">
+
+    <a href="memory-palace-identity.html" class="palace-card">
+      <div class="palace-icon">✈️</div>
+      <div class="palace-body">
+        <div class="palace-title">The ZIdentity Airport</div>
+        <div class="palace-desc">6 rooms · Check-In Desk (SAML) · Upgrade Booth (Step-Up) · Departure Board (AL1–AL4) · MFA Scanner · Lounge Doors (SAML vs OIDC IdPs) · Blocked Side Door (Identity Proxy)</div>
+      </div>
+      <div class="palace-meta">
+        <div class="palace-tags">
+          <span class="tag tag-zia">ZIA</span>
+          <span class="tag tag-zpa">ZPA</span>
+          <span class="tag tag-palace">6 rooms</span>
+        </div>
+        <div class="palace-room-count">Blueprint: 10%</div>
+      </div>
+      <div class="palace-arrow">→</div>
+    </a>
+
+    <a href="memory-palace-itdr.html" class="palace-card">
+      <div class="palace-icon">🔍</div>
+      <div class="palace-body">
+        <div class="palace-title">The ITDR Six-Pillar Palace</div>
+        <div class="palace-desc">6 rooms · Osteo (Continuous Posture) · Turnstile Guard (Change Detection) · Boat (Attack Detection) · Home Desk (Credential Exposure) · Kitchen (Identity Risk Profile) · Bouncers (Adaptive Access)</div>
+      </div>
+      <div class="palace-meta">
+        <div class="palace-tags">
+          <span class="tag tag-zia">ZIA</span>
+          <span class="tag tag-zpa">ZPA</span>
+          <span class="tag tag-palace">6 rooms</span>
+        </div>
+        <div class="palace-room-count">Blueprint: 12%</div>
+      </div>
+      <div class="palace-arrow">→</div>
+    </a>
+
+  </div>
+
+  <div class="category-label">ZDX — DIGITAL EXPERIENCE</div>
+  <div class="palaces-grid">
+
+    <a href="memory-palace-zdx.html" class="palace-card">
+      <div class="palace-icon">🏥</div>
+      <div class="palace-body">
+        <div class="palace-title">The ZDX Hospital</div>
+        <div class="palace-desc">8 rooms · Score Desk (PFT + Avail) · Triage (worst app) · Lab (Web/Cloud Path/Autosense probes) · Deep Tracing · Alarm Tower · Inventory · RBAC · AI Wing</div>
+      </div>
+      <div class="palace-meta">
+        <div class="palace-tags">
+          <span class="tag tag-zdx">ZDX</span>
+          <span class="tag tag-palace">8 rooms</span>
+        </div>
+        <div class="palace-room-count">Blueprint: 8%</div>
+      </div>
+      <div class="palace-arrow">→</div>
+    </a>
+
+  </div>
+
+</div>
+
+<footer>
+  <div class="footer-left">ZDTE <span>Memory Palaces</span></div>
+  <div class="footer-right">Zscaler Digital Transformation Engineer · Study Plan 2026</div>
+</footer>
+
+<script src="../../transitions.js"></script>
+</body>
+</html>

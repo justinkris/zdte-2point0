@@ -1,0 +1,1021 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Study Bite — Zscaler OneAPI in Python</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;0,700;1,400&family=Epilogue:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="bite.css">
+<style>
+  /* ── MISSING LAYOUT VARS (bite.css uses cream/orange tokens) ── */
+  :root {
+    --surface:    var(--cream);
+    --surface-2:  var(--cream-dark);
+    --border-dim: #e8ddd0;
+    --text:       var(--ink);
+    --text-soft:  var(--ink-soft);
+    --text-muted: var(--ink-muted);
+    --blue-glow:  rgba(26,107,204,0.05);
+    --blue-dim:   var(--blue-border);
+  }
+
+  /* ── MAIN LAYOUT (sidebar grid — not in bite.css) ── */
+  main { display: grid; grid-template-columns: 1fr 320px; gap: 0; min-height: calc(100vh - 200px); }
+  .main-content { padding: 36px 48px 60px 60px; border-right: 1px solid var(--border); background: var(--cream); }
+  .sidebar { padding: 36px 28px 60px; background: var(--cream-dark); }
+  @media (max-width: 900px) {
+    main { grid-template-columns: 1fr; }
+    .main-content { border-right: none; }
+    .sidebar { border-top: 1px solid var(--border); display: none; }
+  }
+
+  /* ── CONTENT STRUCTURE ── */
+  .section-block { margin-bottom: 40px; }
+  .section-label {
+    font-size: 10px; letter-spacing: 0.2em; color: var(--ink-muted);
+    margin-bottom: 10px; display: flex; align-items: center; gap: 8px;
+  }
+  .section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+  h2 { font-family: 'Fraunces', serif; font-size: 24px; font-weight: 600; color: var(--ink); margin-bottom: 14px; line-height: 1.2; }
+  p  { font-size: 14px; color: var(--ink-soft); line-height: 1.8; margin-bottom: 12px; }
+
+  /* ── KEY CONCEPT ── */
+  .key-concept {
+    background: var(--orange-light); border: 1px solid var(--orange-border);
+    border-left: 3px solid var(--orange); border-radius: 0 10px 10px 0;
+    padding: 14px 18px; margin-bottom: 16px;
+    font-size: 13px; color: var(--ink-soft); line-height: 1.7;
+  }
+  .key-concept strong { color: var(--orange); font-weight: 600; }
+
+  /* ── CALLOUTS ── */
+  .callout { border-radius: 14px; padding: 18px 20px; margin-bottom: 16px; border: 1px solid; }
+  .callout-header { display: flex; align-items: center; gap: 8px; font-size: 11px; font-weight: 600; letter-spacing: 0.1em; margin-bottom: 8px; }
+  .callout-icon { width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; flex-shrink: 0; }
+  .callout-body { font-size: 13px; line-height: 1.7; }
+  .callout-warn { background: #fff7ed; border-color: #fed7aa; }
+  .callout-warn .callout-header { color: #ea580c; }
+  .callout-warn .callout-icon  { background: #fed7aa; color: #ea580c; }
+  .callout-warn .callout-body  { color: #7c2d12; }
+  .callout-note { background: var(--amber-light); border-color: #ffe680; }
+  .callout-note .callout-header { color: #a07c00; }
+  .callout-note .callout-icon  { background: #ffe680; color: #a07c00; }
+  .callout-note .callout-body  { color: #5a4000; }
+
+  /* ── SIDEBAR COMPONENTS ── */
+  .sidebar-section { margin-bottom: 28px; }
+  .sidebar-label {
+    font-size: 10px; letter-spacing: 0.18em; color: var(--ink-muted);
+    margin-bottom: 10px; padding-bottom: 6px; border-bottom: 1px solid var(--border);
+  }
+  .quick-ref { background: var(--ink); border-radius: 12px; padding: 14px 16px; margin-bottom: 10px; }
+  .quick-ref-term { font-size: 11px; font-weight: 600; color: var(--orange); letter-spacing: 0.06em; margin-bottom: 4px; }
+  .quick-ref-def  { font-size: 12px; color: #9a8070; line-height: 1.6; }
+  .quick-ref code { background: rgba(255,107,53,0.15); border-color: rgba(255,107,53,0.28); color: #ff9060; font-size: 11px; }
+  .subtopic-list { list-style: none; display: flex; flex-direction: column; gap: 4px; }
+  .subtopic-list li { display: flex; align-items: flex-start; gap: 8px; font-size: 12px; color: var(--ink-soft); padding: 6px 0; border-bottom: 1px solid var(--border); line-height: 1.5; }
+  .subtopic-list li:last-child { border-bottom: none; }
+
+  /* ── STATUS TABLE ── */
+  .status-table { width: 100%; border-collapse: collapse; font-size: 13px; border-radius: 12px; overflow: hidden; border: 1px solid var(--border); box-shadow: 0 1px 4px rgba(26,18,9,0.06); }
+  .status-table thead tr { background: var(--ink); }
+  .status-table th { padding: 10px 16px; text-align: left; color: rgba(255,255,255,0.55); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; font-weight: 600; border: none; }
+  .status-table td { padding: 11px 16px; border-bottom: 1px solid var(--border); color: var(--ink-soft); vertical-align: top; line-height: 1.55; }
+  .status-table td:first-child { font-weight: 700; white-space: nowrap; }
+  .status-table tbody tr:last-child td { border-bottom: none; }
+  .status-table tbody tr:nth-child(even) td { background: var(--cream-dark); }
+  .status-table .s-ok   { color: var(--green); }
+  .status-table .s-warn { color: #c27c00; }
+  .status-table .s-err  { color: var(--red); }
+
+  /* ── FOOTER ── */
+  footer { padding: 20px 60px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; background: var(--cream-dark); }
+  .footer-left { font-family: 'Fraunces', serif; font-size: 16px; font-weight: 700; color: var(--ink); }
+  .footer-left span { color: var(--orange); }
+  .footer-right { font-size: 11px; color: var(--ink-muted); letter-spacing: 0.06em; }
+  @media (max-width: 900px) { footer { padding: 20px; flex-direction: column; gap: 8px; text-align: center; } }
+
+  /* ── INLINE CODE ── */
+  code {
+    background: var(--orange-light); border: 1px solid var(--orange-border);
+    padding: 1px 6px; border-radius: 4px;
+    font-family: 'Courier New', monospace; font-size: 12px; color: #cc4a18;
+  }
+  ic { display: inline; font-style: normal; }
+
+  /* ── CODE BLOCKS (dark — intentional contrast on cream page) ── */
+  .code-block { background: #120d08; border-radius: 12px; overflow: hidden; margin: 0; border: 1px solid rgba(255,107,53,0.22); box-shadow: 0 2px 12px rgba(26,18,9,0.12); }
+  .code-block-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 10px 18px; background: rgba(255,107,53,0.07);
+    border-bottom: 1px solid rgba(255,107,53,0.18);
+  }
+  .code-lang { font-size: 10px; letter-spacing: 0.14em; font-weight: 700; color: #ff9060; text-transform: uppercase; }
+  .copy-btn {
+    font-size: 10px; font-family: 'Epilogue', sans-serif; font-weight: 600;
+    letter-spacing: 0.06em; padding: 3px 10px; border-radius: 6px; cursor: pointer;
+    background: rgba(255,107,53,0.14); color: #ff9060; border: 1px solid rgba(255,107,53,0.3);
+    transition: background 0.15s, color 0.15s;
+  }
+  .copy-btn:hover { background: rgba(255,107,53,0.28); color: #ffd0b8; }
+  .copy-btn.copied { background: rgba(134,239,172,0.15); color: #86efac; border-color: rgba(134,239,172,0.3); }
+  pre {
+    margin: 0; padding: 18px 20px; overflow-x: auto;
+    font-family: 'Courier New', 'Consolas', monospace;
+    font-size: 12.5px; line-height: 1.75; color: #e8ddd0;
+  }
+  /* Syntax tokens */
+  .t-comment { color: #7a6a55; font-style: italic; }
+  .t-keyword { color: #c084fc; }
+  .t-string  { color: #86efac; }
+  .t-number  { color: #fcd34d; }
+  .t-func    { color: #7dd3fc; }
+  .t-var     { color: #e8ddd0; }
+  .t-key     { color: #ffa07a; }
+  .t-op      { color: #f9a8d4; }
+  .t-url     { color: #fcd34d; text-decoration: underline; }
+  .t-hl      { background: rgba(255,107,53,0.12); border-radius: 3px; padding: 1px 3px; }
+  .t-warn    { color: #fb923c; font-weight: 700; }
+
+  /* ── FLOW DIAGRAM ── */
+  .flow-step { background: var(--cream-dark); border-radius: 10px; padding: 14px 16px; box-shadow: 0 1px 4px rgba(26,18,9,0.08), 0 0 0 1px rgba(26,18,9,0.04); }
+  .flow-step-num   { font-family: 'Fraunces', serif; font-size: 11px; font-weight: 700; color: var(--ink-muted); letter-spacing: 0.1em; margin-bottom: 5px; }
+  .flow-step-title { font-family: 'Fraunces', serif; font-size: 14px; font-weight: 600; color: var(--ink); margin-bottom: 4px; line-height: 1.2; }
+  .flow-step-desc  { font-size: 12px; color: var(--ink-muted); line-height: 1.5; }
+  .flow-arrow { display: flex; align-items: center; padding: 0 8px; font-size: 18px; color: var(--ink-muted); flex-shrink: 0; align-self: center; }
+  .flow-grid {
+    display: grid; grid-template-columns: 1fr 24px 1fr 24px 1fr 24px 1fr 24px 1fr;
+    gap: 0; align-items: center; margin-bottom: 0;
+  }
+  @media (max-width: 860px) {
+    .flow-grid { grid-template-columns: 1fr; }
+    .flow-arrow { transform: rotate(90deg); justify-content: center; padding: 4px 0; }
+  }
+
+  /* ── ANNOTATED LINES ── */
+  .annotated-block {
+    display: flex; flex-direction: column; gap: 0;
+    border: 1px solid var(--border); border-top: 3px solid var(--orange);
+    border-radius: 0 0 12px 12px; overflow: hidden;
+    box-shadow: 0 2px 8px rgba(26,18,9,0.06);
+  }
+  .anno-row { display: grid; grid-template-columns: 2fr 3fr; }
+  .anno-code {
+    background: #1a1209; padding: 13px 18px;
+    border-right: 2px solid rgba(255,107,53,0.18);
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+    font-family: 'Courier New', monospace; font-size: 12.5px; line-height: 1.75; color: #e8ddd0;
+  }
+  .anno-row:last-child .anno-code { border-bottom: none; }
+  .anno-note {
+    background: #fff; padding: 13px 18px;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px; color: var(--ink-soft); line-height: 1.65;
+    display: flex; align-items: flex-start; gap: 10px;
+  }
+  .anno-row:last-child .anno-note { border-bottom: none; }
+  .anno-note code { background: rgba(26,18,9,0.05); border-color: rgba(26,18,9,0.12); color: var(--ink-soft); }
+  .anno-note-icon { font-size: 15px; flex-shrink: 0; margin-top: 1px; }
+  @media (max-width: 700px) {
+    .anno-row { grid-template-columns: 1fr; }
+    .anno-code { border-right: none; border-bottom: 2px solid rgba(255,107,53,0.18); }
+  }
+
+  /* ── API CALL CARDS ── */
+  .api-card { border: 1px solid var(--border); border-radius: 12px; overflow: hidden; margin-bottom: 20px; }
+  .api-card-header {
+    display: flex; align-items: center; gap: 14px; padding: 16px 20px;
+    background: var(--cream-dark); border-bottom: 1px solid var(--border);
+    cursor: pointer; user-select: none; transition: background 0.15s;
+  }
+  .api-card-header:hover { background: var(--orange-light); }
+  .api-card.open .api-card-header { background: var(--ink); }
+  .api-card.open .api-card-header .api-endpoint { color: #ff9060; }
+  .api-card.open .api-card-header .api-title    { color: var(--cream); }
+  .api-card.open .api-card-header .api-meta     { color: #7a6a55; }
+  .api-card.open .api-card-header .expand-icon  { color: var(--orange); }
+  .api-method { font-size: 11px; font-weight: 800; letter-spacing: 0.08em; padding: 4px 10px; border-radius: 6px; flex-shrink: 0; font-family: 'Epilogue', sans-serif; }
+  .method-post { background: #fce7f3; color: #9d174d; border: 1px solid #f9a8d4; }
+  .method-get  { background: var(--green-light); color: var(--green); border: 1px solid var(--green-border); }
+  .api-card.open .method-post { background: rgba(249,168,212,0.2); color: #f9a8d4; border-color: rgba(249,168,212,0.3); }
+  .api-card.open .method-get  { background: rgba(134,239,172,0.15); color: #86efac; border-color: rgba(134,239,172,0.25); }
+  .api-title-block { flex: 1; min-width: 0; }
+  .api-title    { font-family: 'Fraunces', serif; font-size: 15px; font-weight: 600; color: var(--ink); }
+  .api-endpoint { font-family: 'Courier New', monospace; font-size: 11px; color: var(--ink-muted); margin-top: 3px; word-break: break-all; }
+  .api-meta     { font-size: 11px; color: var(--ink-muted); flex-shrink: 0; }
+  .expand-icon  { font-size: 14px; color: var(--border); transition: transform 0.2s, color 0.15s; flex-shrink: 0; }
+  .api-card.open .expand-icon { transform: rotate(180deg); }
+  .api-card-body { display: none; }
+  .api-card.open .api-card-body { display: block; }
+
+  /* ── CONCEPT CHIPS ── */
+  .chip-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px; }
+  .chip { display: inline-flex; align-items: center; gap: 6px; background: var(--cream-dark); border: 1px solid var(--border); border-radius: 20px; padding: 5px 12px; font-size: 12px; color: var(--ink-soft); }
+  .chip-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+
+  /* ── BITE SECTION DIVIDERS ── */
+  .bite-section { margin-bottom: 40px; }
+  .bite-section-label {
+    font-size: 9px; letter-spacing: 0.22em; font-weight: 700;
+    color: var(--ink-muted); text-transform: uppercase; margin-bottom: 14px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .bite-section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+  /* ── TWO-COL / INFO CARDS ── */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  @media (max-width: 700px) { .two-col { grid-template-columns: 1fr; } }
+  .info-card { background: var(--cream-dark); border: 1px solid var(--border); border-radius: 10px; padding: 16px 18px; }
+  .info-card-title { font-family: 'Fraunces', serif; font-size: 13px; font-weight: 700; color: var(--ink); margin-bottom: 8px; display: flex; align-items: center; gap: 7px; }
+  .info-card p { font-size: 12.5px; color: var(--ink-soft); line-height: 1.65; margin: 0; }
+
+  /* ── NUMBERED LIST ── */
+  .num-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 10px; }
+  .num-list li { display: flex; align-items: flex-start; gap: 12px; font-size: 13px; color: var(--ink-soft); line-height: 1.6; }
+  .num-badge { background: var(--ink); color: var(--orange); font-family: 'Fraunces', serif; font-size: 11px; font-weight: 700; min-width: 24px; height: 24px; border-radius: 6px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+
+  /* ── NAV HUB ── */
+  .nav-hub { position: relative; }
+  .nav-hub-trigger {
+    background: var(--ink); color: var(--cream);
+    padding: 16px 24px; border-radius: 16px;
+    text-align: center; width: 200px;
+    cursor: pointer; user-select: none;
+    transition: transform 0.18s ease, box-shadow 0.18s ease;
+  }
+  .nav-hub-trigger .icon  { font-size: 32px; line-height: 1; color: var(--orange); }
+  .nav-hub-trigger .label { font-size: 11px; color: #7a6a55; letter-spacing: 0.1em; margin-top: 4px; }
+  .nav-hub-trigger .hint  { font-size: 11px; color: var(--cream); margin-top: 6px; font-weight: 300; opacity: 0.6; }
+  .nav-hub:hover .nav-hub-trigger { transform: translateY(-4px) scale(1.03); box-shadow: 0 8px 24px rgba(26,18,9,0.18); border-radius: 16px 16px 0 0; }
+  .nav-hub-dropdown {
+    position: absolute; top: 100%; left: 0; width: 200px;
+    background: var(--ink); border-radius: 0 0 16px 16px;
+    overflow: hidden; opacity: 0; pointer-events: none;
+    transform: translateY(-6px); transition: opacity 0.2s ease, transform 0.2s ease;
+    z-index: 100; border-top: 1px solid rgba(255,255,255,0.08);
+  }
+  .nav-hub:hover .nav-hub-dropdown { opacity: 1; pointer-events: all; transform: translateY(0); }
+  .nav-hub-item {
+    display: flex; align-items: center; gap: 12px;
+    padding: 13px 20px; color: var(--cream);
+    font-size: 12px; letter-spacing: 0.08em; font-weight: 500;
+    text-decoration: none; border-bottom: 1px solid rgba(255,255,255,0.06);
+    transition: background 0.15s;
+  }
+  .nav-hub-item:last-child { border-bottom: none; }
+  .nav-hub-item:hover { background: rgba(255,107,53,0.15); color: var(--orange); }
+  .nav-hub-item .nav-icon { font-size: 18px; flex-shrink: 0; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-left">
+    <div class="breadcrumb">
+      <a href="../../index.html">Study Plan</a>
+      <span class="breadcrumb-sep">›</span>
+      <a href="index.html">Study Bites</a>
+      <span class="breadcrumb-sep">›</span>
+      <span>OneAPI in Python</span>
+    </div>
+    <div class="day-badge">
+      <span class="day-badge-dot"></span>
+      EDU-202 · LABS 15 &amp; 16.5 · ONEAPI
+    </div>
+    <h1>Zscaler OneAPI <em>in Python</em></h1>
+    <div class="header-meta-row">
+      <span class="tag tag-method">Study Bite</span>
+      <span class="tag tag-weight">Code + API Breakdown</span>
+      <span class="tag tag-core" style="background:var(--surface-2);border:1px solid var(--border);color:var(--text-muted);padding:4px 10px;border-radius:12px;font-size:11px;">Labs 15 &amp; 16.5</span>
+    </div>
+  </div>
+  <div class="header-right">
+    <div class="nav-hub">
+      <div class="nav-hub-trigger">
+        <div class="icon">📚</div>
+        <div class="label">STUDY MATERIALS</div>
+        <div class="hint">hover to explore</div>
+      </div>
+      <div class="nav-hub-dropdown">
+        <a class="nav-hub-item" href="../study-guides/index.html"><span class="nav-icon">📖</span> STUDY GUIDES</a>
+        <a class="nav-hub-item" href="../memory-palaces/index.html"><span class="nav-icon">🧠</span> MEMORY PALACES</a>
+        <a class="nav-hub-item" href="index.html"><span class="nav-icon">🍐</span> STUDY BITES</a>
+        <a class="nav-hub-item" href="../study-nibbles/index.html"><span class="nav-icon">🍔</span> STUDY NIBBLES</a>
+        <a class="nav-hub-item" href="../mock-exams/index.html"><span class="nav-icon">📋</span> MOCK EXAMS</a>
+        <a class="nav-hub-item" href="../lab-challenges/index.html"><span class="nav-icon">⚗️</span> LAB CHALLENGES</a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<nav class="section-nav">
+  <button class="nav-tab active" onclick="navTo('section-overview',this)">Overview</button>
+  <button class="nav-tab" onclick="navTo('section-oauth',this)">OAuth Flow</button>
+  <button class="nav-tab" onclick="navTo('section-structure',this)">Script Structure</button>
+  <button class="nav-tab" onclick="navTo('section-calls',this)">API Calls</button>
+  <button class="nav-tab" onclick="navTo('section-gotchas',this)">Gotchas</button>
+</nav>
+
+<main>
+<div class="main-content">
+
+
+  <!-- ═══════════════ OVERVIEW ═══════════════ -->
+  <div class="section-block" id="section-overview">
+    <div class="section-label">OVERVIEW</div>
+    <h2>What problem does this script solve?</h2>
+    <p>In Labs 15 and 16.5 you did this entirely through Postman — clicking through a GUI to build HTTP requests. The Python script replaces those same clicks with code. Same calls, same auth flow, same JSON bodies — just automated and repeatable.</p>
+
+    <div class="key-concept">
+      <strong>Core idea:</strong> ZIdentity issues you a short-lived Bearer token. Every API call includes that token in its <code>Authorization</code> header. If the token is valid, the call goes through. That's the entire security model.
+    </div>
+
+    <div class="bite-section" style="margin-top:28px;">
+      <div class="bite-section-label">What the script does — in order</div>
+      <div class="flow-grid">
+
+        <div class="flow-step">
+          <div class="flow-step-num">STEP 1</div>
+          <div class="flow-step-title">Get Token</div>
+          <div class="flow-step-desc">POST Client ID + Secret to ZIdentity → receive Bearer token</div>
+        </div>
+        <div class="flow-arrow">→</div>
+
+        <div class="flow-step">
+          <div class="flow-step-num">STEP 2</div>
+          <div class="flow-step-title">List Devices</div>
+          <div class="flow-step-desc">GET enrolled ZCC devices using the token</div>
+        </div>
+        <div class="flow-arrow">→</div>
+
+        <div class="flow-step">
+          <div class="flow-step-num">STEP 3</div>
+          <div class="flow-step-title">Get Cert ID</div>
+          <div class="flow-step-desc">GET the signing cert ID needed for the next call</div>
+        </div>
+        <div class="flow-arrow">→</div>
+
+        <div class="flow-step">
+          <div class="flow-step-num">STEP 4</div>
+          <div class="flow-step-title">Create Group</div>
+          <div class="flow-step-desc">POST a new App Connector Group to ZPA</div>
+        </div>
+        <div class="flow-arrow">→</div>
+
+        <div class="flow-step">
+          <div class="flow-step-num">STEP 5</div>
+          <div class="flow-step-title">Block Gambling</div>
+          <div class="flow-step-desc">POST a URL Filtering rule to ZIA — no portal click needed</div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="bite-section">
+      <div class="bite-section-label">Technology used</div>
+      <div class="chip-row">
+        <div class="chip"><div class="chip-dot" style="background:#c084fc;"></div>OAuth 2.0 — Client Credentials grant</div>
+        <div class="chip"><div class="chip-dot" style="background:#7dd3fc;"></div>Python <code>requests</code> library</div>
+        <div class="chip"><div class="chip-dot" style="background:#86efac;"></div>ZIdentity as the auth server</div>
+        <div class="chip"><div class="chip-dot" style="background:#fcd34d;"></div>ZPA &amp; ZIA OneAPI as resource servers</div>
+        <div class="chip"><div class="chip-dot" style="background:#f9a8d4;"></div>JSON request/response bodies</div>
+        <div class="chip"><div class="chip-dot" style="background:#fb923c;"></div><code>argparse</code> for CLI task selection</div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ═══════════════ OAUTH FLOW ═══════════════ -->
+  <div class="section-block" id="section-oauth">
+    <div class="section-label">OAUTH 2.0 FLOW</div>
+    <h2>How authentication works</h2>
+    <p>The script uses the <strong>Client Credentials</strong> OAuth 2.0 grant type. This is the correct grant for machine-to-machine API calls — there is no user login, no browser redirect, no consent screen. Your application proves its identity directly using a pre-issued Client ID and Secret.</p>
+
+    <div class="bite-section">
+      <div class="bite-section-label">The three parties</div>
+      <div class="two-col">
+        <div class="info-card">
+          <div class="info-card-title">🏛 Authorization Server</div>
+          <p><strong>ZIdentity</strong> — issues the access token after verifying your Client ID and Secret. Token endpoint: <code>&lt;zidentity_url&gt;/oauth2/v1/token</code></p>
+        </div>
+        <div class="info-card">
+          <div class="info-card-title">🗄 Resource Servers</div>
+          <p><strong>ZPA OneAPI</strong> and <strong>ZIA OneAPI</strong> — they hold the actual data and accept API calls. They trust tokens issued by ZIdentity.</p>
+        </div>
+        <div class="info-card">
+          <div class="info-card-title">💻 Client (your script)</div>
+          <p>The Python script. It has a <strong>Client ID</strong> (like a username) and a <strong>Client Secret</strong> (like a password) — created in ZIdentity → Integration → API Clients.</p>
+        </div>
+        <div class="info-card">
+          <div class="info-card-title">🎫 Access Token</div>
+          <p>A short-lived JWT (90 minutes by default). Included in every API call as <code>Authorization: Bearer &lt;token&gt;</code>. If it expires, request a new one.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="bite-section">
+      <div class="bite-section-label">The token request — annotated</div>
+      <div class="annotated-block">
+        <div class="anno-row">
+          <div class="anno-code"><span class="t-func">requests</span><span class="t-op">.</span><span class="t-func">post</span>(</div>
+          <div class="anno-note"><div class="anno-note-icon">📍</div>POST request — token endpoint only accepts POST, never GET</div>
+        </div>
+        <div class="anno-row">
+          <div class="anno-code">&nbsp;&nbsp;token_url,</div>
+          <div class="anno-note"><div class="anno-note-icon">🔗</div>Constructed as: <code>zidentity_base_url + /oauth2/v1/token</code></div>
+        </div>
+        <div class="anno-row">
+          <div class="anno-code">&nbsp;&nbsp;<span class="t-key">data</span><span class="t-op">=</span>{</div>
+          <div class="anno-note"><div class="anno-note-icon">📦</div><code>data=</code> sends the body as form-encoded — NOT JSON. This is required by the OAuth spec for token requests.</div>
+        </div>
+        <div class="anno-row">
+          <div class="anno-code">&nbsp;&nbsp;&nbsp;&nbsp;<span class="t-string">"grant_type"</span><span class="t-op">:</span> <span class="t-string">"client_credentials"</span>,</div>
+          <div class="anno-note"><div class="anno-note-icon">🔑</div>Tells ZIdentity this is a machine-to-machine auth. No user involved. No redirect URI needed.</div>
+        </div>
+        <div class="anno-row">
+          <div class="anno-code">&nbsp;&nbsp;&nbsp;&nbsp;<span class="t-string">"client_id"</span><span class="t-op">:</span>     CONFIG[<span class="t-string">"client_id"</span>],</div>
+          <div class="anno-note"><div class="anno-note-icon">🪪</div>The Client ID auto-generated by ZIdentity when you saved the API Client. Visible in Integration → API Clients.</div>
+        </div>
+        <div class="anno-row">
+          <div class="anno-code">&nbsp;&nbsp;&nbsp;&nbsp;<span class="t-string">"client_secret"</span><span class="t-op">:</span> CONFIG[<span class="t-string">"client_secret"</span>],</div>
+          <div class="anno-note"><div class="anno-note-icon">🔒</div>Shown <em>once only</em> at creation time. If lost, delete and regenerate. Treat like a password — never commit to source control.</div>
+        </div>
+        <div class="anno-row">
+          <div class="anno-code">&nbsp;&nbsp;},</div>
+          <div class="anno-note"><div class="anno-note-icon"></div></div>
+        </div>
+        <div class="anno-row">
+          <div class="anno-code">&nbsp;&nbsp;<span class="t-key">headers</span><span class="t-op">=</span>{<span class="t-string">"Content-Type"</span><span class="t-op">:</span> <span class="t-string">"application/x-www-form-urlencoded"</span>},</div>
+          <div class="anno-note"><div class="anno-note-icon">📋</div>This header tells the server the body is form-encoded, not JSON. Without it, the token request may fail.</div>
+        </div>
+        <div class="anno-row">
+          <div class="anno-code">)</div>
+          <div class="anno-note"><div class="anno-note-icon">↩</div>Response contains <code>access_token</code>, <code>token_type: Bearer</code>, and <code>expires_in</code> (seconds).</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="bite-section">
+      <div class="bite-section-label">How the token is used in every subsequent call</div>
+      <div class="code-block">
+        <div class="code-block-header">
+          <span class="code-lang">Python</span>
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        </div>
+        <pre><span class="t-comment"># The token goes in the Authorization header of every API call</span>
+<span class="t-comment"># after the initial token request. This is the same for ALL endpoints.</span>
+
+headers <span class="t-op">=</span> {
+    <span class="t-string">"Authorization"</span><span class="t-op">:</span> <span class="t-func">f</span><span class="t-string">"Bearer <span class="t-op">{</span>token<span class="t-op">}</span>"</span>,
+    <span class="t-string">"Content-Type"</span><span class="t-op">:</span>  <span class="t-string">"application/json"</span>,  <span class="t-comment"># only needed for POST/PUT</span>
+}
+
+<span class="t-comment"># ZIA or ZPA verifies the token with ZIdentity — if valid, the call proceeds</span>
+resp <span class="t-op">=</span> requests<span class="t-op">.</span><span class="t-func">get</span>(url, headers<span class="t-op">=</span>headers)</pre>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ═══════════════ SCRIPT STRUCTURE ═══════════════ -->
+  <div class="section-block" id="section-structure">
+    <div class="section-label">SCRIPT STRUCTURE</div>
+    <h2>How the code is organised</h2>
+    <p>The script is split into small, single-purpose functions — one per API action. Each function takes the token as its first argument, does exactly one thing, and prints what it did. This mirrors the single-request approach in Postman.</p>
+
+    <div class="bite-section">
+      <div class="bite-section-label">The CONFIG block — fill this in first</div>
+      <div class="code-block">
+        <div class="code-block-header">
+          <span class="code-lang">Python</span>
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        </div>
+        <pre>CONFIG <span class="t-op">=</span> {
+    <span class="t-string">"zidentity_base_url"</span><span class="t-op">:</span> <span class="t-string">"https://YOUR_TENANT.zslogin.net"</span>,  <span class="t-comment"># Landing page URL</span>
+    <span class="t-string">"client_id"</span><span class="t-op">:</span>          <span class="t-string">"YOUR_CLIENT_ID"</span>,                  <span class="t-comment"># From ZIdentity API Client</span>
+    <span class="t-string">"client_secret"</span><span class="t-op">:</span>      <span class="t-string">"YOUR_CLIENT_SECRET"</span>,              <span class="t-comment"># Copied once at creation</span>
+    <span class="t-string">"zpa_customer_id"</span><span class="t-op">:</span>    <span class="t-string">"YOUR_CUSTOMER_ID"</span>,                <span class="t-comment"># ZPA → Administration → Accounts</span>
+    <span class="t-string">"zpa_base_url"</span><span class="t-op">:</span>        <span class="t-string">"https://config.private.zscaler.com"</span>,
+    <span class="t-string">"zia_base_url"</span><span class="t-op">:</span>        <span class="t-string">"https://zsapi.zscaler.net"</span>,
+}</pre>
+      </div>
+      <div class="callout callout-warn" style="margin-top:12px;">
+        <div class="callout-header"><div class="callout-icon">!</div>CONFIG GUARD</div>
+        <div class="callout-body">The script calls <code>validate_config()</code> before any network requests. If any value still starts with <code>YOUR_</code>, it prints the offending keys and exits immediately — preventing accidental calls with placeholder credentials.</div>
+      </div>
+    </div>
+
+    <div class="bite-section">
+      <div class="bite-section-label">The helper functions</div>
+      <div class="annotated-block">
+        <div class="anno-row">
+          <div class="anno-code"><span class="t-keyword">def</span> <span class="t-func">check_response</span>(resp, success_codes):</div>
+          <div class="anno-note"><div class="anno-note-icon">🛡</div>Wraps every API response. Prints the status code, exits cleanly on unexpected errors with the body shown — so you always know <em>why</em> a call failed, not just that it did.</div>
+        </div>
+        <div class="anno-row">
+          <div class="anno-code"><span class="t-keyword">def</span> <span class="t-func">separator</span>(title):</div>
+          <div class="anno-note"><div class="anno-note-icon">📋</div>Prints a visual divider between steps in the terminal output. Makes it easy to read when running all tasks at once.</div>
+        </div>
+        <div class="anno-row">
+          <div class="anno-code"><span class="t-keyword">def</span> <span class="t-func">pretty</span>(data):</div>
+          <div class="anno-note"><div class="anno-note-icon">🖨</div>Calls <code>json.dumps(data, indent=2)</code> — prints any dict or list as formatted JSON. Used to show request bodies and sample API responses.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="bite-section">
+      <div class="bite-section-label">The CLI — run specific tasks with --task</div>
+      <div class="code-block">
+        <div class="code-block-header">
+          <span class="code-lang">Terminal</span>
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        </div>
+        <pre><span class="t-comment"># Run everything (default)</span>
+python3 zscaler_oneapi.py
+
+<span class="t-comment"># Just list enrolled ZCC devices</span>
+python3 zscaler_oneapi.py --task devices
+
+<span class="t-comment"># Just create the App Connector Group</span>
+python3 zscaler_oneapi.py --task connector_group
+
+<span class="t-comment"># Just create the URL filtering rule</span>
+python3 zscaler_oneapi.py --task url_filter
+
+<span class="t-comment"># See all options</span>
+python3 zscaler_oneapi.py --help</pre>
+      </div>
+      <p style="font-size:13px;color:var(--text-soft);margin-top:12px;line-height:1.6;">The token acquisition (Step 1) always runs first, because every task needs a valid token. <code>argparse</code> handles the <code>--task</code> flag and routes to the right function(s).</p>
+    </div>
+  </div>
+
+
+  <!-- ═══════════════ API CALLS ═══════════════ -->
+  <div class="section-block" id="section-calls">
+    <div class="section-label">API CALLS — ONE BY ONE</div>
+    <h2>What each call does, and why</h2>
+    <p>Five HTTP requests in total. Each one maps to a step in Postman from the lab. Click any card to see the code, the response shape, and where to verify the result in the portal.</p>
+
+    <!-- ── CALL 1 ── -->
+    <div class="api-card" id="api-1">
+      <div class="api-card-header" onclick="toggleApi('api-1')">
+        <span class="api-method method-post">POST</span>
+        <div class="api-title-block">
+          <div class="api-title">Acquire OAuth 2.0 Token</div>
+          <div class="api-endpoint">/oauth2/v1/token</div>
+        </div>
+        <span class="api-meta">ZIdentity</span>
+        <div class="expand-icon">▾</div>
+      </div>
+      <div class="api-card-body">
+        <div class="code-block" style="border-radius:0;">
+          <div class="code-block-header">
+            <span class="code-lang">Python — get_access_token()</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre>token_url <span class="t-op">=</span> <span class="t-func">f</span><span class="t-string">"<span class="t-op">{</span>CONFIG[<span class="t-string">'zidentity_base_url'</span>]<span class="t-op">}</span>/oauth2/v1/token"</span>
+
+resp <span class="t-op">=</span> requests<span class="t-op">.</span><span class="t-func">post</span>(
+    token_url,
+    <span class="t-key">data</span><span class="t-op">=</span>{                                     <span class="t-comment"># form-encoded body — NOT json=</span>
+        <span class="t-string">"grant_type"</span><span class="t-op">:</span>    <span class="t-string">"client_credentials"</span>,
+        <span class="t-string">"client_id"</span><span class="t-op">:</span>     CONFIG[<span class="t-string">"client_id"</span>],
+        <span class="t-string">"client_secret"</span><span class="t-op">:</span> CONFIG[<span class="t-string">"client_secret"</span>],
+    },
+    <span class="t-key">headers</span><span class="t-op">=</span>{<span class="t-string">"Content-Type"</span><span class="t-op">:</span> <span class="t-string">"application/x-www-form-urlencoded"</span>},
+)
+
+token <span class="t-op">=</span> resp<span class="t-op">.</span><span class="t-func">json</span>()<span class="t-op">.</span><span class="t-func">get</span>(<span class="t-string">"access_token"</span>)   <span class="t-comment"># extract just the token string</span></pre>
+        </div>
+        <div style="padding:18px 20px;background:var(--surface-2);border-top:1px solid var(--border-dim);">
+          <div class="bite-section-label">Response shape</div>
+          <div class="code-block">
+            <div class="code-block-header"><span class="code-lang">JSON Response — 200 OK</span></div>
+            <pre>{
+  <span class="t-key">"access_token"</span><span class="t-op">:</span> <span class="t-string">"eyJhbGciOiJSUzI1NiIsIn..."</span>,  <span class="t-comment">// the JWT — keep this</span>
+  <span class="t-key">"token_type"</span><span class="t-op">:</span>   <span class="t-string">"Bearer"</span>,
+  <span class="t-key">"expires_in"</span><span class="t-op">:</span>   <span class="t-number">5400</span>                           <span class="t-comment">// 90 minutes in seconds</span>
+}</pre>
+          </div>
+          <p style="font-size:13px;color:var(--text-soft);margin-top:12px;line-height:1.6;">The <code>access_token</code> is a JWT (JSON Web Token). It's a signed string that encodes who you are and what you're allowed to do. You pass it as-is — no decoding needed. ZPA and ZIA verify its signature against ZIdentity's public key.</p>
+          <div style="margin-top:12px;">
+            <strong style="font-size:12px;color:var(--text-muted);letter-spacing:0.06em;">VERIFY IN PORTAL</strong>
+            <p style="font-size:13px;color:var(--text-soft);margin-top:4px;">ZIdentity → Integration → Tokens — active tokens for your API Client are listed here.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── CALL 2 ── -->
+    <div class="api-card" id="api-2">
+      <div class="api-card-header" onclick="toggleApi('api-2')">
+        <span class="api-method method-get">GET</span>
+        <div class="api-title-block">
+          <div class="api-title">List Enrolled ZCC Devices</div>
+          <div class="api-endpoint">/zcc/papi/public/v1/getDevices</div>
+        </div>
+        <span class="api-meta">ZCC</span>
+        <div class="expand-icon">▾</div>
+      </div>
+      <div class="api-card-body">
+        <div class="code-block" style="border-radius:0;">
+          <div class="code-block-header">
+            <span class="code-lang">Python — get_enrolled_devices(token)</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre>url <span class="t-op">=</span> <span class="t-func">f</span><span class="t-string">"<span class="t-op">{</span>CONFIG[<span class="t-string">'zidentity_base_url'</span>]<span class="t-op">}</span>/zcc/papi/public/v1/getDevices"</span>
+
+resp <span class="t-op">=</span> requests<span class="t-op">.</span><span class="t-func">get</span>(
+    url,
+    <span class="t-key">headers</span><span class="t-op">=</span>{<span class="t-string">"Authorization"</span><span class="t-op">:</span> <span class="t-func">f</span><span class="t-string">"Bearer <span class="t-op">{</span>token<span class="t-op">}</span>"</span>},   <span class="t-comment"># no body for GET</span>
+)
+
+data <span class="t-op">=</span> resp<span class="t-op">.</span><span class="t-func">json</span>()
+<span class="t-comment"># data is a list of device objects</span>
+<span class="t-comment"># each item has: deviceName, userName, osType, zappVersion, lastSeen...</span></pre>
+        </div>
+        <div style="padding:18px 20px;background:var(--surface-2);border-top:1px solid var(--border-dim);">
+          <div class="bite-section-label">What each device object looks like</div>
+          <div class="code-block">
+            <div class="code-block-header"><span class="code-lang">JSON — sample device</span></div>
+            <pre>{
+  <span class="t-key">"deviceName"</span><span class="t-op">:</span>   <span class="t-string">"CORP-CLIENT-PC"</span>,
+  <span class="t-key">"userName"</span><span class="t-op">:</span>     <span class="t-string">"student@zs9901.safemarch.com"</span>,
+  <span class="t-key">"osType"</span><span class="t-op">:</span>       <span class="t-string">"WINDOWS"</span>,
+  <span class="t-key">"zappVersion"</span><span class="t-op">:</span>  <span class="t-string">"4.x.x.x"</span>,
+  <span class="t-key">"lastSeen"</span><span class="t-op">:</span>     <span class="t-string">"2026-04-28T10:22:00Z"</span>
+}</pre>
+          </div>
+          <p style="font-size:13px;color:var(--text-soft);margin-top:12px;line-height:1.6;">A GET request has no body. The only credential is the Bearer token in the header. The ZCC endpoint is hosted on the ZIdentity base URL — not the ZPA or ZIA base URL. This trips people up.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── CALL 3 ── -->
+    <div class="api-card" id="api-3">
+      <div class="api-card-header" onclick="toggleApi('api-3')">
+        <span class="api-method method-get">GET</span>
+        <div class="api-title-block">
+          <div class="api-title">Get Enrollment Certificate ID</div>
+          <div class="api-endpoint">/mgmtconfig/v1/admin/customers/:id/enrollmentCert</div>
+        </div>
+        <span class="api-meta">ZPA</span>
+        <div class="expand-icon">▾</div>
+      </div>
+      <div class="api-card-body">
+        <div class="code-block" style="border-radius:0;">
+          <div class="code-block-header">
+            <span class="code-lang">Python — get_signing_cert_id(token)</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre>customer_id <span class="t-op">=</span> CONFIG[<span class="t-string">"zpa_customer_id"</span>]
+url <span class="t-op">=</span> (
+    <span class="t-func">f</span><span class="t-string">"<span class="t-op">{</span>CONFIG[<span class="t-string">'zpa_base_url'</span>]<span class="t-op">}</span>"</span>
+    <span class="t-func">f</span><span class="t-string">"/mgmtconfig/v1/admin/customers/<span class="t-op">{</span>customer_id<span class="t-op">}</span>/enrollmentCert"</span>
+)
+
+resp  <span class="t-op">=</span> requests<span class="t-op">.</span><span class="t-func">get</span>(url, headers<span class="t-op">=</span>{<span class="t-string">"Authorization"</span><span class="t-op">:</span> <span class="t-func">f</span><span class="t-string">"Bearer <span class="t-op">{</span>token<span class="t-op">}</span>"</span>})
+certs <span class="t-op">=</span> resp<span class="t-op">.</span><span class="t-func">json</span>()<span class="t-op">.</span><span class="t-func">get</span>(<span class="t-string">"list"</span>, [])
+cert_id <span class="t-op">=</span> certs[<span class="t-number">0</span>][<span class="t-string">"id"</span>]                     <span class="t-comment"># this is the signingCertId</span></pre>
+        </div>
+        <div style="padding:18px 20px;background:var(--surface-2);border-top:1px solid var(--border-dim);">
+          <p style="font-size:13px;color:var(--text-soft);line-height:1.6;">This call exists <em>only</em> to get the <code>id</code> value that the next call needs. In Postman you looked at the response body and manually copied the number into the next request. The script does that lookup programmatically — the two functions are chained in <code>main()</code> so the cert ID flows directly into the group creation call.</p>
+          <div style="margin-top:12px;" class="callout callout-note">
+            <div class="callout-header"><div class="callout-icon">★</div>WHY IS THIS NEEDED?</div>
+            <div class="callout-body">ZPA requires every App Connector Group to reference a signing certificate. The certificate is what the Group uses to authenticate new App Connectors enrolling against it. You can't create the Group without telling ZPA which cert to use.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── CALL 4 ── -->
+    <div class="api-card" id="api-4">
+      <div class="api-card-header" onclick="toggleApi('api-4')">
+        <span class="api-method method-post">POST</span>
+        <div class="api-title-block">
+          <div class="api-title">Create App Connector Group</div>
+          <div class="api-endpoint">/mgmtconfig/v1/admin/customers/:id/appConnectorGroup</div>
+        </div>
+        <span class="api-meta">ZPA</span>
+        <div class="expand-icon">▾</div>
+      </div>
+      <div class="api-card-body">
+        <div class="code-block" style="border-radius:0;">
+          <div class="code-block-header">
+            <span class="code-lang">Python — create_app_connector_group(token, signing_cert_id)</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre>payload <span class="t-op">=</span> {
+    <span class="t-string">"name"</span><span class="t-op">:</span>              <span class="t-string">"ZPALAB APPC Group"</span>,
+    <span class="t-string">"description"</span><span class="t-op">:</span>      <span class="t-string">"App Connector training Lab at San Jose"</span>,
+    <span class="t-string">"upgradeTimeInSecs"</span><span class="t-op">:</span> <span class="t-string">"66600"</span>,          <span class="t-comment"># scheduled upgrade time</span>
+    <span class="t-string">"latitude"</span><span class="t-op">:</span>          <span class="t-string">"37.3382032"</span>,     <span class="t-comment"># San Jose, CA</span>
+    <span class="t-string">"longitude"</span><span class="t-op">:</span>         <span class="t-string">"-121.886286"</span>,
+    <span class="t-string">"location"</span><span class="t-op">:</span>          <span class="t-string">"San Jose, CA, USA"</span>,
+    <span class="t-string">"signingCertId"</span><span class="t-op">:</span>     signing_cert_id,  <span class="t-comment"># fetched in the previous call</span>
+}
+
+resp <span class="t-op">=</span> requests<span class="t-op">.</span><span class="t-func">post</span>(
+    url,
+    <span class="t-key">json</span><span class="t-op">=</span>payload,                            <span class="t-comment"># json= sends body as JSON + sets Content-Type</span>
+    <span class="t-key">headers</span><span class="t-op">=</span>{<span class="t-string">"Authorization"</span><span class="t-op">:</span> <span class="t-func">f</span><span class="t-string">"Bearer <span class="t-op">{</span>token<span class="t-op">}</span>"</span>},
+)
+<span class="t-comment"># success → 201 Created, response body contains the new group's "id"</span></pre>
+        </div>
+        <div style="padding:18px 20px;background:var(--surface-2);border-top:1px solid var(--border-dim);">
+          <div class="bite-section-label">data= vs json= — a critical Python difference</div>
+          <div class="two-col">
+            <div class="info-card">
+              <div class="info-card-title">📋 data= (form-encoded)</div>
+              <p>Used for the <strong>token request only</strong>. Sends the body as <code>key=value&key=value</code> pairs. OAuth 2.0 token endpoints require this format by spec.</p>
+            </div>
+            <div class="info-card">
+              <div class="info-card-title">📦 json= (JSON body)</div>
+              <p>Used for all ZPA and ZIA API calls. Automatically serialises your dict to JSON <em>and</em> sets <code>Content-Type: application/json</code>. Saves you one header line.</p>
+            </div>
+          </div>
+          <div style="margin-top:12px;">
+            <strong style="font-size:12px;color:var(--text-muted);letter-spacing:0.06em;">VERIFY IN PORTAL</strong>
+            <p style="font-size:13px;color:var(--text-soft);margin-top:4px;">ZPA → Configuration &amp; Control → Private Infrastructure → App Connector Management → App Connector Groups. The new group appears immediately after a 201 response.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── CALL 5 ── -->
+    <div class="api-card" id="api-5">
+      <div class="api-card-header" onclick="toggleApi('api-5')">
+        <span class="api-method method-post">POST</span>
+        <div class="api-title-block">
+          <div class="api-title">Create URL Filtering Rule — Block Gambling</div>
+          <div class="api-endpoint">/api/v1/urlFilteringRules</div>
+        </div>
+        <span class="api-meta">ZIA · Lab 16.5</span>
+        <div class="expand-icon">▾</div>
+      </div>
+      <div class="api-card-body">
+        <div class="code-block" style="border-radius:0;">
+          <div class="code-block-header">
+            <span class="code-lang">Python — create_url_filtering_rule(token)</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre>payload <span class="t-op">=</span> {
+    <span class="t-string">"name"</span><span class="t-op">:</span>           <span class="t-string">"Block Gambling Sites"</span>,
+    <span class="t-string">"order"</span><span class="t-op">:</span>          <span class="t-number">1</span>,
+    <span class="t-string">"state"</span><span class="t-op">:</span>          <span class="t-string">"ENABLED"</span>,
+    <span class="t-string">"action"</span><span class="t-op">:</span>         <span class="t-string">"BLOCK"</span>,
+    <span class="t-string">"protocols"</span><span class="t-op">:</span>      [<span class="t-string"><span class="t-warn">"ANY_RULE"</span></span>],       <span class="t-comment"># ← critical — see gotcha below</span>
+    <span class="t-string">"urlCategories"</span><span class="t-op">:</span>  [<span class="t-string">"GAMBLING"</span>],        <span class="t-comment"># ZIA predefined category</span>
+    <span class="t-string">"requestMethods"</span><span class="t-op">:</span> [<span class="t-string">"GET"</span>, <span class="t-string">"POST"</span>, <span class="t-string">"PUT"</span>, <span class="t-string">"DELETE"</span>,
+                       <span class="t-string">"HEAD"</span>, <span class="t-string">"OPTIONS"</span>, <span class="t-string">"CONNECT"</span>],
+    <span class="t-string">"blockOverride"</span><span class="t-op">:</span>   <span class="t-keyword">False</span>,
+}
+
+resp <span class="t-op">=</span> requests<span class="t-op">.</span><span class="t-func">post</span>(
+    <span class="t-func">f</span><span class="t-string">"<span class="t-op">{</span>CONFIG[<span class="t-string">'zia_base_url'</span>]<span class="t-op">}</span>/api/v1/urlFilteringRules"</span>,
+    <span class="t-key">json</span><span class="t-op">=</span>payload,
+    <span class="t-key">headers</span><span class="t-op">=</span>{<span class="t-string">"Authorization"</span><span class="t-op">:</span> <span class="t-func">f</span><span class="t-string">"Bearer <span class="t-op">{</span>token<span class="t-op">}</span>"</span>},
+)
+<span class="t-comment"># success → 200 or 201, response contains the new rule's "id"</span>
+<span class="t-comment"># test: browse to https://www.888.com → should be blocked by Zscaler</span></pre>
+        </div>
+        <div style="padding:18px 20px;background:var(--surface-2);border-top:1px solid var(--border-dim);">
+          <div class="bite-section-label">Why each field exists</div>
+          <div class="annotated-block">
+            <div class="anno-row">
+              <div class="anno-code"><span class="t-string">"order"</span><span class="t-op">:</span> <span class="t-number">1</span></div>
+              <div class="anno-note"><div class="anno-note-icon">📋</div>ZIA evaluates URL filtering rules top-down. Order 1 = evaluated first. If this matches, lower-priority rules never run.</div>
+            </div>
+            <div class="anno-row">
+              <div class="anno-code"><span class="t-string">"state"</span><span class="t-op">:</span> <span class="t-string">"ENABLED"</span></div>
+              <div class="anno-note"><div class="anno-note-icon">✅</div>Rules can be created in a disabled state. <code>ENABLED</code> makes it active immediately — same as ticking the Enable checkbox in the portal.</div>
+            </div>
+            <div class="anno-row">
+              <div class="anno-code"><span class="t-string">"protocols"</span><span class="t-op">:</span> [<span class="t-string">"ANY_RULE"</span>]</div>
+              <div class="anno-note"><div class="anno-note-icon">⚡</div><strong>The lab's key gotcha.</strong> Without this, the rule is created but won't enforce — it has no protocol scope to match against. <code>ANY_RULE</code> means apply to all protocols (HTTP, HTTPS, FTP…).</div>
+            </div>
+            <div class="anno-row">
+              <div class="anno-code"><span class="t-string">"urlCategories"</span><span class="t-op">:</span> [<span class="t-string">"GAMBLING"</span>]</div>
+              <div class="anno-note"><div class="anno-note-icon">🎰</div>References a ZIA predefined category. The string must match exactly. Find category IDs in ZIA → Administration → URL Categories.</div>
+            </div>
+            <div class="anno-row">
+              <div class="anno-code"><span class="t-string">"blockOverride"</span><span class="t-op">:</span> <span class="t-keyword">False</span></div>
+              <div class="anno-note"><div class="anno-note-icon">🔒</div>If <code>True</code>, users could override the block with a justification. <code>False</code> = hard block, no bypass possible.</div>
+            </div>
+          </div>
+          <div style="margin-top:12px;">
+            <strong style="font-size:12px;color:var(--text-muted);letter-spacing:0.06em;">VERIFY IN PORTAL</strong>
+            <p style="font-size:13px;color:var(--text-soft);margin-top:4px;">ZIA → Policy → URL &amp; Cloud App Control → URL Filtering Policy. The rule appears immediately. Then browse to <code>https://www.888.com</code> — Zscaler should block it.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- end API Calls section -->
+
+
+  <!-- ═══════════════ GOTCHAS ═══════════════ -->
+  <div class="section-block" id="section-gotchas">
+    <div class="section-label">GOTCHAS &amp; EXAM TRAPS</div>
+    <h2>The things most likely to catch you out</h2>
+
+    <div class="bite-section">
+      <div class="bite-section-label">The four things to get right</div>
+      <ul class="num-list">
+        <li>
+          <div class="num-badge">1</div>
+          <div>
+            <strong>Token request uses <code>data=</code> not <code>json=</code>.</strong> The OAuth spec requires the token request body to be form-encoded (<code>application/x-www-form-urlencoded</code>). If you use <code>json=</code> instead, ZIdentity will return a 400 or 401 with a confusing error. Every other call in this script uses <code>json=</code> — only the token request is different.
+          </div>
+        </li>
+        <li>
+          <div class="num-badge">2</div>
+          <div>
+            <strong><code>"protocols": ["ANY_RULE"]</code> is mandatory for URL filtering rules.</strong> The lab guide flags this explicitly. Without it, the API returns a success response (200/201), the rule appears in the portal, but it will never match any traffic — there's no protocol scope to evaluate against. Silent failure — the worst kind.
+          </div>
+        </li>
+        <li>
+          <div class="num-badge">3</div>
+          <div>
+            <strong>The Client Secret is shown exactly once.</strong> At the moment you click Add in ZIdentity → Integration → API Clients. If you navigate away without copying it, it's gone. You must delete the secret and create a new one. Maximum two secrets per client at any time.
+          </div>
+        </li>
+        <li>
+          <div class="num-badge">4</div>
+          <div>
+            <strong>The <code>signingCertId</code> must be fetched — it's not the Customer ID.</strong> They're different numbers. The Customer ID identifies your ZPA tenant. The <code>signingCertId</code> is the ID of a specific enrollment certificate. You get it by calling the <code>/enrollmentCert</code> endpoint first, then pass the returned <code>id</code> field into the App Connector Group POST body.
+          </div>
+        </li>
+      </ul>
+    </div>
+
+    <div class="bite-section">
+      <div class="bite-section-label">Quick mental model — the whole flow in one view</div>
+      <div class="code-block">
+        <div class="code-block-header">
+          <span class="code-lang">Pseudocode</span>
+        </div>
+        <pre><span class="t-comment"># 1. Prove who you are → get a short-lived pass</span>
+token <span class="t-op">=</span> POST /oauth2/v1/token  <span class="t-op">{</span>client_id, client_secret, grant_type<span class="t-op">}</span>
+
+<span class="t-comment"># 2. Use the pass to read data</span>
+devices  <span class="t-op">=</span> GET  /zcc/papi/public/v1/getDevices     <span class="t-op">{</span>Bearer token<span class="t-op">}</span>
+cert_id  <span class="t-op">=</span> GET  /zpa/.../enrollmentCert           <span class="t-op">{</span>Bearer token<span class="t-op">}</span>
+
+<span class="t-comment"># 3. Use the pass to create things</span>
+group    <span class="t-op">=</span> POST /zpa/.../appConnectorGroup        <span class="t-op">{</span>Bearer token, json body<span class="t-op">}</span>
+rule     <span class="t-op">=</span> POST /zia/.../urlFilteringRules        <span class="t-op">{</span>Bearer token, json body<span class="t-op">}</span>
+
+<span class="t-comment"># The token is the only thread connecting all five calls</span>
+<span class="t-comment"># Expire the token → all calls fail until you request a new one</span></pre>
+      </div>
+    </div>
+
+    <div class="bite-section">
+      <div class="bite-section-label">HTTP status codes you'll see</div>
+      <table class="status-table">
+        <thead>
+          <tr>
+            <th>Code</th>
+            <th>Meaning</th>
+            <th>What to do</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td class="s-ok">200 OK</td><td>Success — resource returned or updated</td><td>Parse the JSON body</td></tr>
+          <tr><td class="s-ok">201 Created</td><td>Resource created successfully</td><td>New object's <code>id</code> is in the response body</td></tr>
+          <tr><td class="s-warn">400 Bad Request</td><td>Malformed body or missing required field</td><td>Check JSON body — often a missing field like <code>protocols</code></td></tr>
+          <tr><td class="s-err">401 Unauthorized</td><td>Token missing, expired, or invalid</td><td>Re-run get_access_token() to get a fresh token</td></tr>
+          <tr><td class="s-err">403 Forbidden</td><td>Token valid but insufficient scope/permission</td><td>Check API Client has the correct ZIA/ZPA resource scope in ZIdentity</td></tr>
+          <tr><td class="s-err">404 Not Found</td><td>Wrong URL or Customer ID</td><td>Double-check the base URL and customer ID in CONFIG</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+
+</div><!-- end .main-content -->
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+
+  <div class="sidebar-section">
+    <div class="sidebar-label">QUICK REFERENCE</div>
+
+    <div class="quick-ref">
+      <div class="quick-ref-term">Token endpoint</div>
+      <div class="quick-ref-def"><code style="font-family:monospace;font-size:11px;">&lt;zidentity_url&gt;/oauth2/v1/token</code> — always POST, always form-encoded body.</div>
+    </div>
+    <div class="quick-ref">
+      <div class="quick-ref-term">Grant type</div>
+      <div class="quick-ref-def"><code style="font-family:monospace;font-size:11px;">client_credentials</code> — machine-to-machine. No user, no browser, no redirect.</div>
+    </div>
+    <div class="quick-ref">
+      <div class="quick-ref-term">Using the token</div>
+      <div class="quick-ref-def"><code style="font-family:monospace;font-size:11px;">Authorization: Bearer &lt;token&gt;</code> header on every call after the token request.</div>
+    </div>
+    <div class="quick-ref">
+      <div class="quick-ref-term">data= vs json=</div>
+      <div class="quick-ref-def">Token request: <code>data=</code> (form-encoded). All ZPA/ZIA API calls: <code>json=</code> (JSON body).</div>
+    </div>
+    <div class="quick-ref">
+      <div class="quick-ref-term">protocols gotcha</div>
+      <div class="quick-ref-def">URL filtering rule must include <code style="font-family:monospace;font-size:11px;">"protocols": ["ANY_RULE"]</code> — without it the rule creates but never matches.</div>
+    </div>
+    <div class="quick-ref">
+      <div class="quick-ref-term">signingCertId</div>
+      <div class="quick-ref-def">Fetched via GET <code>/enrollmentCert</code> — the <code>id</code> field from the response. Different from the Customer ID.</div>
+    </div>
+    <div class="quick-ref">
+      <div class="quick-ref-term">Token lifetime</div>
+      <div class="quick-ref-def">90 minutes (5400 seconds) by default. Configurable at creation time. After expiry, call the token endpoint again.</div>
+    </div>
+  </div>
+
+  <div class="sidebar-section">
+    <div class="sidebar-label">SCRIPT COMMANDS</div>
+    <div style="background:var(--ink);border-radius:10px;padding:14px 16px;font-family:'Courier New',monospace;font-size:11px;line-height:2;color:#e8ddd0;">
+      <div style="color:#7a6a55;"># install dependency</div>
+      <div>pip install <span style="color:#86efac;">requests</span></div>
+      <div style="color:#7a6a55;margin-top:6px;"># run all tasks</div>
+      <div>python3 <span style="color:#ff9060;">zscaler_oneapi.py</span></div>
+      <div style="color:#7a6a55;margin-top:6px;"># specific tasks</div>
+      <div>python3 zscaler_oneapi.py \</div>
+      <div>&nbsp;&nbsp;--task <span style="color:#fcd34d;">devices</span></div>
+      <div>&nbsp;&nbsp;--task <span style="color:#fcd34d;">connector_group</span></div>
+      <div>&nbsp;&nbsp;--task <span style="color:#fcd34d;">url_filter</span></div>
+    </div>
+  </div>
+
+  <div class="sidebar-section">
+    <div class="sidebar-label">PORTAL VERIFICATION PATHS</div>
+    <ul class="subtopic-list">
+      <li style="cursor:default;flex-direction:column;align-items:flex-start;gap:2px;">
+        <strong style="font-size:12px;color:var(--text);">Token</strong>
+        <span style="font-size:11px;color:var(--text-muted);">ZIdentity → Integration → Tokens</span>
+      </li>
+      <li style="cursor:default;flex-direction:column;align-items:flex-start;gap:2px;">
+        <strong style="font-size:12px;color:var(--text);">App Connector Group</strong>
+        <span style="font-size:11px;color:var(--text-muted);">ZPA → Private Infrastructure → App Connector Groups</span>
+      </li>
+      <li style="cursor:default;flex-direction:column;align-items:flex-start;gap:2px;">
+        <strong style="font-size:12px;color:var(--text);">URL Filtering Rule</strong>
+        <span style="font-size:11px;color:var(--text-muted);">ZIA → Policy → URL &amp; Cloud App Control → URL Filtering</span>
+      </li>
+      <li style="cursor:default;flex-direction:column;align-items:flex-start;gap:2px;">
+        <strong style="font-size:12px;color:var(--text);">Test the rule</strong>
+        <span style="font-size:11px;color:var(--text-muted);">Browse to https://www.888.com → should be blocked</span>
+      </li>
+    </ul>
+  </div>
+
+</div>
+
+</main>
+
+<footer>
+  <div class="footer-left">ZDTE<span>.</span></div>
+  <div class="footer-right">Study Bite · Zscaler OneAPI in Python · EDU-202 Labs 15 &amp; 16.5</div>
+</footer>
+
+<script>
+  function navTo(id, el) {
+    document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+    el.classList.add('active');
+    const target = document.getElementById(id);
+    if (target) {
+      const offset = document.querySelector('.section-nav').offsetHeight + 16;
+      window.scrollTo({ top: target.getBoundingClientRect().top + window.scrollY - offset, behavior: 'smooth' });
+    }
+  }
+
+  function toggleApi(id) {
+    document.getElementById(id).classList.toggle('open');
+  }
+
+  function copyCode(btn) {
+    const pre = btn.closest('.code-block').querySelector('pre');
+    const text = pre.innerText || pre.textContent;
+    navigator.clipboard.writeText(text).then(() => {
+      btn.textContent = 'Copied!';
+      btn.classList.add('copied');
+      setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 1800);
+    });
+  }
+
+  window.addEventListener('scroll', () => {
+    const sections = ['section-overview','section-oauth','section-structure','section-calls','section-gotchas'];
+    const tabs = document.querySelectorAll('.nav-tab');
+    const offset = document.querySelector('.section-nav').offsetHeight + 32;
+    let active = 0;
+    sections.forEach((id, i) => {
+      const el = document.getElementById(id);
+      if (el && el.getBoundingClientRect().top < offset + 40) active = i;
+    });
+    tabs.forEach((t, i) => t.classList.toggle('active', i === active));
+  });
+</script>
+
+<script src="../../transitions.js"></script>
+</body>
+</html>

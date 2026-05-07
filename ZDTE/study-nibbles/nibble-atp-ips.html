@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ZDTE Study Nibble — ATP vs IPS</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;0,700;1,400&family=Epilogue:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="nibble.css">
+</head>
+<body>
+
+<header>
+  <div class="breadcrumb">
+    <a href="../../index.html">Study Plan</a>
+    <span class="breadcrumb-sep">›</span>
+    <a href="index.html">Study Nibbles</a>
+    <span class="breadcrumb-sep">›</span>
+    <span>ATP vs IPS</span>
+  </div>
+
+  <div class="nibble-badge">
+    <span class="nibble-badge-dot"></span>
+    STUDY NIBBLE
+  </div>
+
+  <h1>ATP <em>vs</em> IPS</h1>
+
+  <div class="header-meta-row">
+    <span class="tag tag-zia">ZIA</span>
+    <span class="tag tag-weight">Cyberthreat Protection · 12%</span>
+    <span class="tag tag-arch">Threat Engines</span>
+  </div>
+</header>
+
+<main>
+
+  <!-- ══ HERO ══ -->
+  <div class="section-block">
+    <div class="hero">
+      <div class="hero-title">Both engines inspect inline — they're asking different questions</div>
+      <div class="hero-body">
+        Traffic flows through Zscaler and hits both ATP and IPS. But they're not doing the same thing.
+        <strong>ATP is asking: "Is this file or destination known bad?"</strong>
+        <strong>IPS is asking: "Is this conversation behaving like an attack?"</strong>
+        One looks at <em>what</em> is moving. The other looks at <em>how</em> it's moving. You need both — because a clean file delivered suspiciously is still suspicious.
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ SIDE BY SIDE ══ -->
+  <div class="section-block">
+    <div class="section-label">AT A GLANCE</div>
+    <h2>The two engines, side by side</h2>
+
+    <div class="versus">
+
+      <div class="vcard vcard-atp">
+        <div class="vcard-label">ATP</div>
+        <div class="vcard-title">Is this thing known bad?</div>
+        <div class="vcard-tagline">
+          "Check the file, check the URL, check the destination against what we know."
+        </div>
+        <ul>
+          <li>Threat intel DB → heuristics → ML → sandbox</li>
+          <li>Catches malware downloads, phishing URLs, C2 domains</li>
+          <li>Covers both outbound requests and inbound file responses</li>
+          <li>Flags based on reputation and content analysis</li>
+          <li>Blind without SSL inspection</li>
+        </ul>
+      </div>
+
+      <div class="vcard vcard-ips">
+        <div class="vcard-label">IPS</div>
+        <div class="vcard-title">Is this traffic acting like an attack?</div>
+        <div class="vcard-tagline">
+          "Doesn't matter if the domain is clean — the packet stream looks wrong."
+        </div>
+        <ul>
+          <li>Deep packet inspection against signature database</li>
+          <li>Catches XSS payloads, exploit kits, malicious redirects, C2 patterns</li>
+          <li>Primarily inbound response traffic to users</li>
+          <li>Flags based on how traffic behaves, not what it is</li>
+          <li>Blind without SSL inspection</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══ WORKED SCENARIO ══ -->
+  <div class="section-block">
+    <div class="section-label">WORKED SCENARIO</div>
+    <h2>The clean file that isn't clean</h2>
+
+    <div class="scenario">
+      <div class="scenario-label">THE SETUP</div>
+      <div class="scenario-title">A user downloads a file from a reputable domain — but something is wrong with how it arrived</div>
+      <div class="scenario-body">
+        A user at an org visits a site they use regularly. The domain has a clean reputation. The file download passes ATP's threat intel check, clears heuristics, and the ML engine gives it a pass. ATP has no objection — nothing here matches a known bad signature.
+        <br><br>
+        But as the response packets arrive, IPS starts watching the pattern. The payload structure matches a known exploit kit delivery profile. There are timing anomalies. Unexpected callbacks embedded in what should be a static file download. The conversation itself looks like an attack.
+      </div>
+
+      <div class="result-row">
+        <div class="result result-miss">
+          <div class="result-label">ATP'S VIEW</div>
+          <div class="result-verdict">Passes ⚠️</div>
+          Domain reputation: clean. File hash: unknown but no match. Heuristics: marginal. ATP doesn't have enough signal to block — it would need the sandbox to catch this, and sandbox runs asynchronously after delivery.
+        </div>
+        <div class="result result-catches">
+          <div class="result-label">IPS'S VIEW</div>
+          <div class="result-verdict">Blocked ✓</div>
+          IPS doesn't care what the file is — it sees the packet stream and matches a known exploit kit delivery signature. The conversation pattern alone is enough to block the session before the payload completes delivery.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ COMPARE TABLE ══ -->
+  <div class="section-block">
+    <div class="section-label">DIFFERENCES AT A GLANCE</div>
+    <h2>How they differ on every dimension</h2>
+
+    <table class="compare-table">
+      <thead>
+        <tr>
+          <th>Dimension</th>
+          <th>ATP</th>
+          <th>IPS</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Core question</td>
+          <td>Is this known malicious?</td>
+          <td>Is this behaving like an attack?</td>
+        </tr>
+        <tr>
+          <td>Detection method</td>
+          <td>Threat intel DB → heuristics → ML → sandbox</td>
+          <td>Deep packet inspection against signature DB</td>
+        </tr>
+        <tr>
+          <td>What it catches</td>
+          <td>Malware, phishing URLs, C2 domains, malicious files</td>
+          <td>XSS, exploit kits, malicious redirects, C2 patterns</td>
+        </tr>
+        <tr>
+          <td>Traffic direction</td>
+          <td>Outbound requests + inbound file responses</td>
+          <td>Primarily inbound response traffic</td>
+        </tr>
+        <tr>
+          <td>C2 traffic</td>
+          <td>Catches it via domain/IP reputation</td>
+          <td>Catches it via communication pattern signatures</td>
+        </tr>
+        <tr>
+          <td>SSL inspection needed?</td>
+          <td>Yes — blind without it</td>
+          <td>Yes — blind without it</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ══ MENTAL NOTES & TRAPS ══ -->
+  <div class="section-block">
+    <div class="section-label">WORTH REMEMBERING</div>
+
+    <div class="callout callout-note">
+      <div class="callout-header">
+        <div class="callout-icon">★</div>
+        ONE-LINE MODEL
+      </div>
+      <div class="callout-body">
+        <strong>ATP = the what. IPS = the how.</strong> If you can name a bad file, URL, or domain — that's ATP territory. If the scenario describes suspicious behaviour, packet patterns, or exploits in the stream — that's IPS territory. Both require SSL inspection to see inside encrypted traffic.
+      </div>
+    </div>
+
+    <div class="callout callout-note">
+      <div class="callout-header">
+        <div class="callout-icon">★</div>
+        C2 OVERLAP
+      </div>
+      <div class="callout-body">
+        C2 (command-and-control) traffic sits in both engines' scope — ATP flags known C2 domains by reputation, IPS flags C2 communication patterns by behaviour. The same threat, seen from two different angles. This is intentional — not a conflict.
+      </div>
+    </div>
+
+    <div class="callout callout-warn">
+      <div class="callout-header">
+        <div class="callout-icon">!</div>
+        EXAM TRAP — SSL INSPECTION
+      </div>
+      <div class="callout-body">
+        When the exam asks what happens if SSL inspection is disabled, the answer is the same for both: <strong>ATP and IPS both go blind.</strong> Don't assume one is more affected than the other. Neither can inspect inside HTTPS traffic without SSL inspection being on.
+      </div>
+    </div>
+
+    <div class="callout callout-tip">
+      <div class="callout-header">
+        <div class="callout-icon">→</div>
+        EXAM TIP — SCENARIO ROUTING
+      </div>
+      <div class="callout-body">
+        When a question describes a scenario and asks which engine is responsible:
+        <strong>File download, known bad URL, or C2 domain?</strong> → ATP.
+        <strong>XSS, exploit kit patterns, malicious redirect, or suspicious traffic behaviour?</strong> → IPS.
+        If both are plausible — the question will have a clue in whether it's about reputation or behaviour.
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  <div class="footer-left">ZDTE<span>.</span></div>
+  <div class="footer-right">Zscaler Digital Transformation Engineer · Study Nibble</div>
+</footer>
+
+<script src="../../transitions.js"></script>
+</body>
+</html>

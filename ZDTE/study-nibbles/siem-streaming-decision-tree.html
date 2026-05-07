@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ZDTE Study Nibble — SIEM Streaming Decision Tree</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;0,700;1,400&family=Epilogue:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="nibble.css">
+</head>
+<body>
+
+<header>
+  <div class="breadcrumb">
+    <a href="../../index.html">Study Plan</a>
+    <span class="breadcrumb-sep">›</span>
+    <a href="index.html">Study Nibbles</a>
+    <span class="breadcrumb-sep">›</span>
+    <span>SIEM Streaming Decision Tree</span>
+  </div>
+
+  <div class="nibble-badge">
+    <span class="nibble-badge-dot"></span>
+    STUDY NIBBLE
+  </div>
+
+  <h1>SIEM Streaming<br><em>Decision Tree</em></h1>
+
+  <div class="header-meta-row">
+    <span class="tag tag-zia">ZIA</span>
+    <span class="tag tag-zpa">ZPA</span>
+    <span class="tag tag-arch">Analytics &amp; Reporting</span>
+  </div>
+</header>
+
+<main>
+
+  <!-- ══ THE MNEMONIC ══ -->
+  <div class="section-block">
+    <div class="section-label">THE MNEMONIC</div>
+
+    <div class="mnemonic-hero">
+      <div class="mnemonic-hero-label">REMEMBER THIS</div>
+      <div class="mnemonic-hero-text">
+        Follow <em>the destination</em>.
+      </div>
+    </div>
+
+    <p>
+      When picking a log streaming method, don't start by asking <em>"what am I streaming?"</em>
+      — start by asking <em>"where does the SIEM live?"</em> The destination dictates the method.
+    </p>
+  </div>
+
+  <!-- ══ THE DECISION TREE ══ -->
+  <div class="section-block">
+    <div class="section-label">THE DECISION TREE</div>
+    <h2>Where does your SIEM live?</h2>
+
+    <div class="tree">
+      <div style="text-align:center;">
+        <div class="tree-root">Where is the SIEM?</div>
+      </div>
+
+      <div class="tree-branches">
+
+        <!-- LEFT BRANCH: ON-PREM -->
+        <div class="tree-branch">
+          <div class="tree-branch-q">IF ON-PREM</div>
+          <div class="tree-branch-h">Bridge into the customer network</div>
+
+          <div class="leaf">
+            <span class="leaf-product zia">ZIA LOGS</span>
+            <div class="leaf-answer">NSS</div>
+            <div class="leaf-detail">
+              Nanolog Streaming Service — customer-deployed VM makes outbound TLS to
+              the Nanolog cluster, forwards to the local SIEM.
+            </div>
+          </div>
+
+          <div class="leaf">
+            <span class="leaf-product zpa">ZPA LOGS</span>
+            <div class="leaf-answer">LSS</div>
+            <div class="leaf-detail">
+              Log Streaming Service — piggybacks on the existing App Connector
+              infrastructure to reach the on-prem SIEM.
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT BRANCH: CLOUD -->
+        <div class="tree-branch">
+          <div class="tree-branch-q">IF CLOUD</div>
+          <div class="tree-branch-h">Wire the two clouds together</div>
+
+          <div class="leaf">
+            <span class="leaf-product both">ZIA OR ZPA</span>
+            <div class="leaf-answer">Cloud-to-Cloud Log Streaming</div>
+            <div class="leaf-detail">
+              Direct HTTPS from the Zscaler cloud to the SIEM cloud — no customer VM,
+              no App Connector. Works with Splunk Cloud, Sumo Logic, Devo, and any
+              SIEM that accepts a customisable HTTPS outbound connector.
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ SUMMARY TABLE ══ -->
+  <div class="section-block">
+    <div class="section-label">QUICK SUMMARY</div>
+    <h2>Match the scenario</h2>
+
+    <table class="compare-table">
+      <thead>
+        <tr>
+          <th>SIEM Location</th>
+          <th>Product</th>
+          <th>Streaming Method</th>
+          <th>Transport</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>On-prem</td>
+          <td>ZIA</td>
+          <td style="font-weight:600;color:var(--orange);">NSS</td>
+          <td>Customer-deployed VM in the DC</td>
+        </tr>
+        <tr>
+          <td>On-prem</td>
+          <td>ZPA</td>
+          <td style="font-weight:600;color:var(--orange);">LSS</td>
+          <td>Via existing App Connectors</td>
+        </tr>
+        <tr>
+          <td>Cloud</td>
+          <td>ZIA or ZPA</td>
+          <td style="font-weight:600;color:var(--orange);">Cloud-to-Cloud</td>
+          <td>Direct HTTPS — no infra needed</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ══ MENTAL NOTES ══ -->
+  <div class="section-block">
+    <div class="section-label">WORTH REMEMBERING</div>
+
+    <div class="callout callout-note">
+      <div class="callout-header">
+        <div class="callout-icon">★</div>
+        MENTAL NOTE
+      </div>
+      <div class="callout-body">
+        <strong>NSS is customer-managed.</strong> Zscaler provides the VM image, but the
+        customer owns patching, monitoring, and lifecycle. It's a normal Linux VM with
+        a Zscaler agent — not a fully managed appliance like a PSE.
+      </div>
+    </div>
+
+    <div class="callout callout-note">
+      <div class="callout-header">
+        <div class="callout-icon">★</div>
+        MENTAL NOTE
+      </div>
+      <div class="callout-body">
+        <strong>Both NSS and LSS use outbound-only connections.</strong> No inbound
+        firewall rules needed on the customer side — same design principle as App
+        Connectors. This is Zscaler's signature architectural pattern.
+      </div>
+    </div>
+
+    <div class="callout callout-tip">
+      <div class="callout-header">
+        <div class="callout-icon">→</div>
+        EXAM TIP
+      </div>
+      <div class="callout-body">
+        Watch for distractors that swap NSS ↔ LSS. The exam frequently tests
+        "<em>which service streams ZPA logs to the customer's on-prem Splunk?</em>"
+        — the answer is <strong>LSS</strong>, not NSS.
+      </div>
+    </div>
+
+    <div class="callout callout-tip">
+      <div class="callout-header">
+        <div class="callout-icon">→</div>
+        EXAM TIP
+      </div>
+      <div class="callout-body">
+        Cloud-to-Cloud is <strong>not limited to Splunk Cloud, Sumo, and Devo</strong>
+        — it supports any SIEM reachable via a customisable HTTPS outbound connector.
+        Don't fall for the "only three vendors" distractor.
+      </div>
+    </div>
+
+    <div class="callout callout-note">
+      <div class="callout-header">
+        <div class="callout-icon">★</div>
+        MENTAL NOTE
+      </div>
+      <div class="callout-body">
+        NSS can <strong>buffer up to 1 hour of logs</strong> during connectivity
+        issues with the Nanolog cluster — useful for scenario questions about
+        temporary network outages.
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  <div class="footer-left">ZDTE<span>.</span></div>
+  <div class="footer-right">Zscaler Digital Transformation Engineer · Study Nibble</div>
+</footer>
+
+<script src="../../transitions.js"></script>
+</body>
+</html>

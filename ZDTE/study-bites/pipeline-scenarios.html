@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ZDTE Study Bite — 3 Pipeline Scenarios</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;0,700;1,400&family=Epilogue:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="bite.css">
+</head>
+<body>
+
+<header>
+  <div class="header-left">
+    <div class="breadcrumb">
+      <a href="../../index.html">Study Plan</a>
+      <span class="breadcrumb-sep">›</span>
+      <a href="index.html">Study Bites</a>
+      <span class="breadcrumb-sep">›</span>
+      <span>3 Pipeline Scenarios</span>
+    </div>
+    <div class="day-badge"><div class="day-badge-dot"></div>STUDY BITE</div>
+    <h1>3 pipeline outcomes,<br><em>side by side</em></h1>
+    <div class="header-meta-row">
+      <span class="tag tag-zia">ZIA</span>
+      <span class="tag tag-compare">Side-by-side</span>
+      <span class="tag tag-bite">Study Bite</span>
+    </div>
+    <ul class="subtopic-list" id="subtopic-list">
+      <li onclick="toggleDone(this)"><div class="subtopic-check"></div>Scenario 1: Gambling site blocked at URL Filtering (step 3)</li>
+      <li onclick="toggleDone(this)"><div class="subtopic-check"></div>Scenario 2: Cascading forces URL Filtering after CAC allows</li>
+      <li onclick="toggleDone(this)"><div class="subtopic-check"></div>Scenario 3: Unknown file survives inline checks → Sandbox detonation</li>
+      <li onclick="toggleDone(this)"><div class="subtopic-check"></div>Summary: blocking engine, time to verdict, what changes each outcome</li>
+    </ul>
+  </div>
+  <div class="header-right">
+    <div class="progress-card">
+      <div class="big" id="prog-num">0<span style="font-size:18px;color:#7a6a55;">%</span></div>
+      <div class="lbl">REVIEWED</div>
+    </div>
+  </div>
+</header>
+
+<nav class="section-nav">
+  <button class="nav-tab active" onclick="navTo('section-intro', this)">INTRO</button>
+  <button class="nav-tab" onclick="navTo('section-scenarios', this)">3 SCENARIOS</button>
+  <button class="nav-tab" onclick="navTo('section-summary', this)">SUMMARY</button>
+</nav>
+
+<main class="full-width">
+
+  <!-- INTRO -->
+  <div class="section-block" id="section-intro">
+    <p class="intro">
+      Three transactions — three very different stopping points in the ZIA policy pipeline. Read each column in order and compare horizontally. Watch how the same pipeline produces wildly different outcomes depending on which engine matches first, which settings are enabled, and whether the file is known.
+    </p>
+  </div>
+
+  <!-- 3-COLUMN GRID -->
+  <div class="section-block" id="section-scenarios">
+
+    <div class="compare-grid">
+
+      <!-- COLUMN 1 — BLOCKED EARLY -->
+      <div class="col">
+        <div class="col-header early">
+          <div class="col-label">SCENARIO 1</div>
+          <div class="col-title">Gambling site blocked</div>
+          <div class="col-sub">URL Filtering catches it at step 3 — everything downstream never runs</div>
+          <span class="col-outcome">BLOCKED EARLY</span>
+        </div>
+        <div class="col-body">
+          <div class="setup-line">
+            <strong>Setup:</strong> Admin has URL Filtering rule blocking "Gambling" category for all users.
+          </div>
+
+          <div class="req-mini">
+<span class="k">GET</span> <span class="v">/live-betting</span>
+<span class="k">Host:</span> <span class="v">bet-on-everything.com</span>
+          </div>
+
+          <ol class="steps-mini">
+            <li class="setup"><span><strong>Firewall → SSL → SSMA active</strong></span></li>
+            <li class="pass"><span><strong>Custom Malicious URLs:</strong> clean ✓</span></li>
+            <li class="pass"><span><strong>Cloud App Control:</strong> no match ✓</span></li>
+            <li class="block"><span><strong>URL Filtering:</strong> category = Gambling → Block rule matches ⛔</span></li>
+            <li class="skip"><span>Steps 4–14: never evaluated</span></li>
+          </ol>
+
+          <div class="log-mini">
+            <span class="log-label">WEB INSIGHTS</span>
+<span class="kk">Action:</span> <span class="bb">BLOCKED</span>
+<span class="kk">By:</span> <span class="vv">URL Filtering</span>
+<span class="kk">Category:</span> <span class="vv">Gambling</span>
+<span class="kk">ATP/Sandbox:</span> <span class="vv">N/A (skipped)</span>
+          </div>
+
+          <div class="lesson-mini">
+            <strong>Lesson</strong>
+            Early termination saves the entire downstream pipeline from running. Log shows <em>only</em> URL Filtering as the blocking policy — ATP and malware engines never got a chance to weigh in. Most bad traffic is caught this cheaply.
+          </div>
+        </div>
+      </div>
+
+      <!-- COLUMN 2 — POLICY INTERACTION -->
+      <div class="col">
+        <div class="col-header policy">
+          <div class="col-label">SCENARIO 2</div>
+          <div class="col-title">Cascading inverts the default</div>
+          <div class="col-sub">CAC allows Facebook, but URL Filtering still blocks because cascading is ON</div>
+          <span class="col-outcome">POLICY INTERACTION</span>
+        </div>
+        <div class="col-body">
+          <div class="setup-line">
+            <strong>Setup:</strong> CAC <em>allows</em> Facebook. URL Filtering <em>blocks</em> facebook.com. "Allow Cascading to URL Filtering" is <strong>ENABLED</strong>.
+          </div>
+
+          <div class="req-mini">
+<span class="k">GET</span> <span class="v">/</span>
+<span class="k">Host:</span> <span class="v">www.facebook.com</span>
+          </div>
+
+          <ol class="steps-mini">
+            <li class="setup"><span><strong>Firewall → SSL → SSMA active</strong></span></li>
+            <li class="pass"><span><strong>Custom Malicious URLs:</strong> clean ✓</span></li>
+            <li class="trigger"><span><strong>CAC:</strong> Facebook → Allow rule matches. <em>Normally skips URL Filtering</em>...</span></li>
+            <li class="block"><span><strong>URL Filtering:</strong> cascading is ON → still runs → facebook.com Block rule matches ⛔</span></li>
+            <li class="skip"><span>Steps 4–14: never evaluated</span></li>
+          </ol>
+
+          <div class="log-mini">
+            <span class="log-label">WEB INSIGHTS</span>
+<span class="kk">Action:</span> <span class="bb">BLOCKED</span>
+<span class="kk">By:</span> <span class="vv">URL Filtering</span>
+<span class="kk">Rule:</span> <span class="vv">"Block facebook.com"</span>
+<span class="kk">Note:</span> <span class="vv">CAC allowed; cascading forced URL eval</span>
+          </div>
+
+          <div class="lesson-mini">
+            <strong>Lesson</strong>
+            Default behaviour: if CAC explicitly allows, URL Filtering is <em>skipped</em>. Cascading reverses this — both engines evaluate. Zscaler recommends leaving cascading OFF. Also: if CAC had <em>blocked</em>, that decision sticks regardless of cascading.
+          </div>
+        </div>
+      </div>
+
+      <!-- COLUMN 3 — SANDBOX ESCALATION -->
+      <div class="col">
+        <div class="col-header sandbox">
+          <div class="col-label">SCENARIO 3</div>
+          <div class="col-title">Unknown file → Sandbox detonation</div>
+          <div class="col-sub">All inline checks pass. Sandbox breaks out-of-band and catches it.</div>
+          <span class="col-outcome">SANDBOX CAUGHT</span>
+        </div>
+        <div class="col-body">
+          <div class="setup-line">
+            <strong>Setup:</strong> User downloads <code>installer.msi</code> from a 3-day-old domain. File hash unknown globally. Policy = <em>hold-until-verdict</em>.
+          </div>
+
+          <div class="req-mini">
+<span class="c"># Response:</span>
+<span class="k">Content-Type:</span> <span class="v">application/x-msi</span>
+<span class="v">MZ</span>... <span class="c"># Windows exe</span>
+          </div>
+
+          <ol class="steps-mini">
+            <li class="pass"><span><strong>GET checks (1–14):</strong> all pass — new domain, no signatures ✓</span></li>
+            <li class="pass"><span><strong>Response: Security Ex, IPS, Page Risk:</strong> all pass ⚠</span></li>
+            <li class="pass"><span><strong>Sandbox hash check:</strong> not known (bad or good) ⚠</span></li>
+            <li class="pass"><span><strong>Malware + File Type:</strong> no AV match, MSI allowed ⚠</span></li>
+            <li class="sandbox"><span><strong>Sandbox detonation:</strong> VM runs file → DLL drop + registry persistence + C2 beacon observed → <em>malicious</em></span></li>
+            <li class="block"><span><strong>⛔ Delivery blocked</strong> (~42s hold). Cloud Effect publishes hash globally.</span></li>
+          </ol>
+
+          <div class="log-mini">
+            <span class="log-label">WEB INSIGHTS</span>
+<span class="kk">Action:</span> <span class="bb">BLOCKED</span>
+<span class="kk">By:</span> <span class="vv">Cloud Sandbox</span>
+<span class="kk">Verdict:</span> <span class="vv">Malicious (behavioural)</span>
+<span class="kk">Time to verdict:</span> <span class="vv">~42s</span>
+<span class="kk">Mode:</span> <span class="vv">Hold-until-verdict</span>
+          </div>
+
+          <div class="lesson-mini">
+            <strong>Lesson</strong>
+            Sandbox is the <em>only</em> engine that breaks from millisecond latency. Inline checks couldn't give a verdict — too novel. Detonation took 42s; user waited. Finding published via Cloud Effect → next customer blocked at reputation without re-detonating.
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- SUMMARY TABLE -->
+  <div class="section-block" id="section-summary">
+    <div class="comparison-summary">
+      <h3>The same pipeline, three very different behaviours</h3>
+      <table class="summary-table">
+        <thead>
+          <tr>
+            <th>Comparison</th>
+            <th>Scenario 1 — Gambling</th>
+            <th>Scenario 2 — Cascading</th>
+            <th>Scenario 3 — Sandbox</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Blocking engine</td>
+            <td>URL Filtering (step 3)</td>
+            <td>URL Filtering (step 3)</td>
+            <td>Cloud Sandbox (step 7, Response)</td>
+          </tr>
+          <tr>
+            <td>Time to verdict</td>
+            <td>Microseconds</td>
+            <td>Microseconds</td>
+            <td>~42 seconds (out-of-band)</td>
+          </tr>
+          <tr>
+            <td>What would change it</td>
+            <td>Admin removes the Gambling block rule</td>
+            <td>Admin disables cascading → CAC's allow would stick</td>
+            <td>If hash was already known-bad → blocked instantly at Sandbox step 4 (hash lookup), no detonation</td>
+          </tr>
+          <tr>
+            <td>Key takeaway</td>
+            <td>Cheap early engines catch most "bad" traffic with zero downstream cost</td>
+            <td>Policy ordering + settings together determine behaviour — not rules alone</td>
+            <td>Sandbox is last-resort; its findings feed Cloud Effect to make every customer smarter</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  <div class="footer-left">ZDTE<span>.</span></div>
+  <div class="footer-right">Zscaler Digital Transformation Engineer · Study Bite — 3 Pipeline Scenarios</div>
+</footer>
+
+<script>
+  function navTo(id, el) {
+    const target = document.getElementById(id);
+    if (!target) return;
+    const top = target.getBoundingClientRect().top + window.scrollY - 60;
+    window.scrollTo({ top, behavior: 'smooth' });
+    document.querySelectorAll('nav.section-nav button').forEach(b => b.classList.remove('active'));
+    if (el) el.classList.add('active');
+  }
+
+  function toggleDone(li) {
+    li.classList.toggle('done');
+    updateProgress();
+  }
+
+  function updateProgress() {
+    const items = document.querySelectorAll('#subtopic-list li');
+    const done = document.querySelectorAll('#subtopic-list li.done').length;
+    const pct = items.length ? Math.round((done / items.length) * 100) : 0;
+    const el = document.getElementById('prog-num');
+    if (el) el.innerHTML = pct + '<span style="font-size:18px;color:#7a6a55;">%</span>';
+  }
+</script>
+
+<script src="../../transitions.js"></script>
+</body>
+</html>

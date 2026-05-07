@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ZDTE Memory Palace — ITDR</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;0,700;1,400&family=Epilogue:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #fef9f0;
+    --cream-dark: #f5eddb;
+    --ink: #1a1209;
+    --ink-soft: #5a4a35;
+    --ink-muted: #8a7660;
+    --orange: #ff6b35;
+    --orange-light: #fff3ec;
+    --orange-border: #ffd5c0;
+    --amber-light: #fffbe6;
+    --green: #3a7d44;
+    --green-light: #edf7ee;
+    --green-border: #b2dfb4;
+    --purple: #5c35cc;
+    --purple-light: #ece8ff;
+    --purple-border: #c8bbff;
+    --blue-light: #e8f0fb;
+    --blue-border: #b3ccf0;
+    --blue: #1a6bcc;
+    --red-light: #fce8e8;
+    --red-border: #f7c1c1;
+    --red: #a32d2d;
+    --border: #ede5d8;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Epilogue', sans-serif; background: var(--cream); color: var(--ink); min-height: 100vh; }
+
+  /* ── HEADER ── */
+  header {
+    padding: 40px 60px 28px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 32px;
+    background: var(--cream);
+  }
+  .header-left { flex: 1; }
+  .breadcrumb {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 11px; color: var(--ink-muted); letter-spacing: 0.08em; margin-bottom: 12px;
+  }
+  .breadcrumb a { color: var(--orange); text-decoration: none; cursor: pointer; }
+  .breadcrumb-sep { color: var(--border); }
+  .day-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: var(--ink); color: var(--cream);
+    padding: 5px 14px; border-radius: 20px;
+    font-size: 11px; letter-spacing: 0.1em; margin-bottom: 14px;
+  }
+  .day-badge-dot { width: 5px; height: 5px; background: var(--orange); border-radius: 50%; }
+  h1 { font-family: 'Fraunces', serif; font-size: 44px; font-weight: 700; line-height: 1.0; color: var(--ink); margin-bottom: 10px; }
+  h1 em { font-style: italic; font-weight: 400; color: var(--orange); }
+  .header-meta-row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-top: 14px; }
+  .tag { padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 500; border: 1px solid; display: inline-block; }
+  .tag-zia   { background: var(--blue-light);   color: var(--blue);   border-color: var(--blue-border); }
+  .tag-zpa   { background: var(--green-light);  color: var(--green);  border-color: var(--green-border); }
+  .tag-weight { background: var(--orange-light); color: #cc4a18; border-color: var(--orange-border); }
+  .tag-palace { background: var(--purple-light); color: var(--purple); border-color: var(--purple-border); }
+  .header-right { display: flex; flex-direction: column; gap: 10px; align-items: flex-end; flex-shrink: 0; }
+  .progress-card { background: var(--ink); color: var(--cream); padding: 14px 20px; border-radius: 14px; text-align: center; min-width: 110px; }
+  .progress-card .big { font-family: 'Fraunces', serif; font-size: 32px; font-weight: 700; color: var(--orange); line-height: 1; }
+  .progress-card .lbl { font-size: 10px; color: #7a6a55; letter-spacing: 0.1em; margin-top: 4px; }
+
+  /* ── NAV TABS ── */
+  .section-nav {
+    display: flex; padding: 0 60px;
+    border-bottom: 1px solid var(--border);
+    background: var(--cream-dark);
+    overflow-x: auto;
+    position: sticky; top: 0; z-index: 50;
+  }
+  .nav-tab {
+    padding: 14px 20px; font-size: 12px; font-weight: 500;
+    color: var(--ink-muted); letter-spacing: 0.06em; cursor: pointer;
+    border-bottom: 2px solid transparent; white-space: nowrap;
+    transition: color 0.15s, border-color 0.15s;
+    background: none; border-top: none; border-left: none; border-right: none;
+    font-family: 'Epilogue', sans-serif;
+  }
+  .nav-tab:hover { color: var(--ink); }
+  .nav-tab.active { color: var(--orange); border-bottom-color: var(--orange); }
+
+  /* ── MAIN LAYOUT ── */
+  main { display: grid; grid-template-columns: 1fr 300px; min-height: calc(100vh - 200px); }
+  .main-content { padding: 36px 48px 60px 60px; border-right: 1px solid var(--border); }
+  .sidebar { padding: 36px 28px 60px; background: var(--cream-dark); }
+
+  /* ── SECTION BLOCKS ── */
+  .section-block { margin-bottom: 40px; }
+  .section-label {
+    font-size: 10px; letter-spacing: 0.2em; color: var(--ink-muted);
+    margin-bottom: 14px; display: flex; align-items: center; gap: 8px;
+  }
+  .section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+  h2 { font-family: 'Fraunces', serif; font-size: 24px; font-weight: 600; color: var(--ink); margin-bottom: 20px; line-height: 1.2; }
+  p { font-size: 14px; color: var(--ink-soft); line-height: 1.8; margin-bottom: 12px; }
+
+  /* ── PALACE GRID ── */
+  .palace-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 8px; }
+  .palace-card {
+    background: var(--cream); border: 1px solid var(--border); border-radius: 14px;
+    padding: 22px 20px; position: relative; overflow: hidden;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .card-num {
+    font-family: 'Fraunces', serif; font-size: 56px; font-weight: 700;
+    color: rgba(26,18,9,0.05); position: absolute; top: 8px; right: 14px;
+    line-height: 1; user-select: none;
+  }
+  .card-scene { font-size: 12px; color: var(--ink-muted); line-height: 1.7; margin-bottom: 16px; font-style: italic; position: relative; z-index: 1; }
+  .card-divider { width: 28px; height: 2px; background: var(--orange-border); margin-bottom: 14px; border-radius: 2px; }
+  .card-caption { font-size: 11px; font-weight: 600; letter-spacing: 0.14em; color: var(--ink-muted); margin-bottom: 10px; position: relative; z-index: 1; }
+  .card-answer {
+    position: relative; z-index: 1;
+    background: var(--orange-light); border: 2px solid var(--orange-border);
+    border-radius: 12px; padding: 20px 20px; height: 150px;
+    display: flex; flex-direction: column; justify-content: center; overflow: hidden;
+    transition: background 0.2s, border-color 0.2s, box-shadow 0.2s;
+  }
+  .card-answer:hover { background: #fff3ec; border-color: var(--orange); cursor: pointer; box-shadow: 0 0 0 3px rgba(255,107,53,0.15); }
+  .answer-label {
+    font-size: 11px; letter-spacing: 0.14em; color: var(--orange); font-weight: 700;
+    margin-bottom: 8px; transition: opacity 0.2s;
+  }
+  .card-answer:hover .answer-label { opacity: 0; }
+  .answer-main {
+    font-family: 'Fraunces', serif; font-size: 24px; font-weight: 700;
+    color: var(--orange); line-height: 1.2; filter: blur(8px);
+    transition: filter 0.3s ease; user-select: none;
+  }
+  .card-answer:hover .answer-main { filter: blur(0); }
+  .answer-detail {
+    font-size: 12px; color: var(--ink-soft); margin-top: 6px; filter: blur(6px);
+    transition: filter 0.3s ease 0.05s; user-select: none; line-height: 1.5;
+  }
+  .card-answer:hover .answer-detail { filter: blur(0); }
+
+  /* ── IMAGE SLOT ── */
+  .img-slot { border-radius: 10px; overflow: hidden; margin-top: 14px; width: 100%; }
+  .img-slot img { width: 100%; height: auto; display: block; }
+
+  /* ── CALLOUT CARDS ── */
+  .callout { border-radius: 14px; padding: 18px 20px; margin-bottom: 16px; border: 1px solid; }
+  .callout-header { display: flex; align-items: center; gap: 8px; font-size: 11px; font-weight: 600; letter-spacing: 0.1em; margin-bottom: 8px; }
+  .callout-icon { width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; flex-shrink: 0; }
+  .callout-body { font-size: 13px; line-height: 1.7; }
+  .callout-note { background: var(--amber-light); border-color: #ffe680; }
+  .callout-note .callout-header { color: #a07c00; }
+  .callout-note .callout-icon { background: #ffe680; color: #a07c00; }
+  .callout-note .callout-body { color: #7a5c00; }
+  .callout-tip { background: var(--blue-light); border-color: var(--blue-border); }
+  .callout-tip .callout-header { color: var(--blue); }
+  .callout-tip .callout-icon { background: var(--blue-border); color: var(--blue); }
+  .callout-tip .callout-body { color: #153d7a; }
+
+  /* ── PILLAR LIST ── */
+  .pillar-list { display: flex; flex-direction: column; border: 1px solid var(--border); border-radius: 14px; overflow: hidden; margin-top: 4px; }
+  .pillar-row { display: flex; gap: 20px; padding: 18px 22px; border-bottom: 1px solid var(--border); align-items: flex-start; transition: background 0.15s; }
+  .pillar-row:hover { background: var(--orange-light); }
+  .pillar-row-last { border-bottom: none; }
+  .pillar-num { font-family: 'Fraunces', serif; font-size: 28px; font-weight: 700; color: var(--orange-border); line-height: 1; flex-shrink: 0; min-width: 36px; padding-top: 2px; }
+  .pillar-row:hover .pillar-num { color: var(--orange); }
+  .pillar-name { font-size: 13px; font-weight: 700; color: var(--ink); margin-bottom: 5px; letter-spacing: 0.01em; }
+  .pillar-desc { font-size: 12px; color: var(--ink-soft); line-height: 1.7; margin: 0; }
+
+  /* ── IMAGE PROMPT (collapsed) ── */
+  details.img-prompt { background: var(--ink); border-radius: 8px; margin-top: 8px; overflow: hidden; }
+  details.img-prompt summary { list-style: none; display: flex; align-items: center; justify-content: space-between; padding: 7px 12px; cursor: pointer; user-select: none; border-bottom: 1px solid transparent; }
+  details.img-prompt[open] summary { border-bottom-color: rgba(255,255,255,0.08); }
+  details.img-prompt summary::-webkit-details-marker { display: none; }
+  .img-prompt-label { font-size: 10px; letter-spacing: 0.12em; color: var(--orange); font-weight: 600; }
+  .img-prompt-chevron { font-size: 11px; color: #7a5a3a; transition: transform 0.2s; }
+  details.img-prompt[open] .img-prompt-chevron { transform: rotate(90deg); }
+  .img-prompt-text { padding: 10px 12px; font-size: 11px; color: #9a8070; line-height: 1.6; font-style: italic; }
+
+  /* ── SIDEBAR ── */
+  .sidebar-section { margin-bottom: 28px; }
+  .sidebar-label { font-size: 10px; letter-spacing: 0.18em; color: var(--ink-muted); margin-bottom: 10px; padding-bottom: 6px; border-bottom: 1px solid var(--border); }
+  .subtopic-list { list-style: none; display: flex; flex-direction: column; gap: 4px; }
+  .subtopic-list li { display: flex; align-items: flex-start; gap: 8px; font-size: 12px; color: var(--ink-soft); padding: 6px 0; border-bottom: 1px solid var(--border); line-height: 1.5; cursor: pointer; }
+  .subtopic-list li:last-child { border-bottom: none; }
+  .subtopic-check { width: 14px; height: 14px; border: 1px solid var(--border); border-radius: 3px; flex-shrink: 0; margin-top: 1px; transition: background 0.15s, border-color 0.15s; }
+  .subtopic-list li.done .subtopic-check { background: var(--green); border-color: var(--green); }
+  .subtopic-list li.done span { text-decoration: line-through; color: var(--ink-muted); }
+  .quick-ref { background: var(--ink); border-radius: 12px; padding: 14px 16px; margin-bottom: 10px; }
+  .quick-ref-term { font-size: 11px; font-weight: 600; color: var(--orange); letter-spacing: 0.06em; margin-bottom: 4px; }
+  .quick-ref-def { font-size: 12px; color: #9a8070; line-height: 1.6; }
+  .sidebar-note { background: var(--amber-light); border: 1px solid #ffe680; border-radius: 10px; padding: 12px 14px; font-size: 12px; color: #7a5c00; line-height: 1.6; margin-bottom: 10px; font-style: italic; }
+  .recall-list { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+  .recall-list li { font-size: 12px; color: var(--ink-soft); padding: 8px 12px; background: var(--cream); border: 1px solid var(--border); border-radius: 8px; line-height: 1.5; display: flex; gap: 8px; align-items: flex-start; }
+  .recall-arrow { color: var(--orange); font-weight: 700; flex-shrink: 0; margin-top: 1px; }
+
+  /* ── FOOTER ── */
+  footer { padding: 20px 60px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; background: var(--cream-dark); }
+  .footer-left { font-family: 'Fraunces', serif; font-size: 16px; font-weight: 700; }
+  .footer-left span { color: var(--orange); }
+  .footer-right { font-size: 11px; color: var(--ink-muted); letter-spacing: 0.06em; }
+
+  @media (max-width: 900px) {
+    header { padding: 24px 20px 20px; flex-direction: column; }
+    main { grid-template-columns: 1fr; }
+    .main-content { padding: 24px 20px 40px; border-right: none; }
+    .sidebar { padding: 24px 20px 40px; border-top: 1px solid var(--border); }
+    .section-nav { padding: 0 20px; }
+    footer { padding: 20px; flex-direction: column; gap: 8px; text-align: center; }
+    .palace-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="header-left">
+    <div class="breadcrumb">
+      <a href="../../index.html">Study Plan</a>
+      <span class="breadcrumb-sep">›</span>
+      <a href="index.html">Memory Palaces</a>
+      <span class="breadcrumb-sep">›</span>
+      <span>ITDR Memory Palace</span>
+    </div>
+    <div class="day-badge">
+      <span class="day-badge-dot"></span>
+      MEMORY PALACE
+    </div>
+    <h1>ITDR<br><em>Memory Palace</em></h1>
+    <div class="header-meta-row">
+      <span class="tag tag-zia">ZIA</span>
+      <span class="tag tag-zpa">ZPA</span>
+      <span class="tag tag-palace">Memory Palace</span>
+      <span class="tag tag-weight">Blueprint: 12%</span>
+    </div>
+  </div>
+  <div class="header-right">
+    <div class="progress-card">
+      <div class="big">6<span style="font-size:18px;color:#7a6a55;"> rooms</span></div>
+      <div class="lbl">TO MEMORISE</div>
+    </div>
+  </div>
+</header>
+
+<!-- NAV TABS -->
+<nav class="section-nav">
+  <button class="nav-tab active" onclick="navTo('section-palace', this)">Memory Palace</button>
+  <button class="nav-tab" onclick="navTo('section-pillars', this)">Pillar Guide</button>
+  <button class="nav-tab" onclick="navTo('section-recall', this)">Rapid Recall</button>
+  <button class="nav-tab" onclick="navTo('section-exam', this)">Exam Tips</button>
+</nav>
+
+<main>
+
+  <!-- MAIN CONTENT -->
+  <div class="main-content">
+
+    <!-- Intro -->
+    <div class="section-block" id="section-palace">
+      <div class="section-label">HOW TO USE</div>
+      <h2>Six Rooms, One Character</h2>
+      <p>Walk through each room in order. Read the scene — picture it vividly. Then hover over the answer panel to reveal which ITDR pillar that scene encodes. Don't peek until you've guessed.</p>
+    </div>
+
+    <!-- Palace Cards -->
+    <div class="section-block">
+      <div class="section-label">THE SIX PILLARS</div>
+
+      <div class="palace-grid">
+
+        <!-- Room 1 -->
+        <div class="palace-card">
+          <span class="card-num">01</span>
+          <p class="card-scene">A man with a giant ID badge lies on an osteopath's table. Every Monday on the wall calendar is circled in red — forever. The osteo prods his spine: <em>"Still crooked."</em></p>
+          <div class="card-divider"></div>
+          <p class="card-caption">WHAT IS THIS?!</p>
+          <div class="card-answer">
+            <p class="answer-label">HOVER TO REVEAL →</p>
+            <p class="answer-main">Continuous Identity<br>Posture Assessment</p>
+            <p class="answer-detail">AD + Entra ID — non-stop vulnerability scanning</p>
+          </div>
+          <div class="img-slot">
+            <img src="../images/memory-palaces/itdr/osteo-posture.png" alt="Room 1 — Continuous Identity Posture Assessment">
+          </div>
+          <details class="img-prompt">
+            <summary><span class="img-prompt-label">IMAGE PROMPT</span><span class="img-prompt-chevron">▸</span></summary>
+            <div class="img-prompt-text">Man with ID badge on chiropractic table. Osteopath pressing spine disapprovingly. Wall calendar with every Monday circled in red. Looping clock. Flat cartoon, bold outlines.</div>
+          </details>
+        </div>
+
+        <!-- Room 2 -->
+        <div class="palace-card">
+          <span class="card-num">02</span>
+          <p class="card-scene">Same man, now a security guard at a turnstile. Hundreds of people in yellow banana costumes file through. One walks in wearing an orange suit. His smartwatch explodes with alerts. He grabs his clipboard: <em>WATCHLIST.</em></p>
+          <div class="card-divider"></div>
+          <p class="card-caption">WHAT IS THIS?!</p>
+          <div class="card-answer">
+            <p class="answer-label">HOVER TO REVEAL →</p>
+            <p class="answer-main">Change Detection</p>
+            <p class="answer-detail">Configurable watchlists — 24/7 identity monitoring</p>
+          </div>
+          <div class="img-slot">
+            <img src="../images/memory-palaces/itdr/guard-watchlist.png" alt="Room 2 — Change Detection">
+          </div>
+          <details class="img-prompt">
+            <summary><span class="img-prompt-label">IMAGE PROMPT</span><span class="img-prompt-chevron">▸</span></summary>
+            <div class="img-prompt-text">Guard at turnstile. Long queue of yellow banana suits. One orange jumpsuit stands out wildly. Smartwatch flashing red. Clipboard labelled WATCHLIST. Flat cartoon, comic crowd energy.</div>
+          </details>
+        </div>
+
+        <!-- Room 3 -->
+        <div class="palace-card">
+          <span class="card-num">03</span>
+          <p class="card-scene">Finally on holiday — boxing gloves on, roasting a Kirby-shaped chicken on a boat. Sirens wail. Dead ahead: an iceberg labelled <em>DC SYNC</em>. His shadow on the deck spells <em>D–C.</em></p>
+          <div class="card-divider"></div>
+          <p class="card-caption">WHAT IS THIS?!</p>
+          <div class="card-answer">
+            <p class="answer-label">HOVER TO REVEAL →</p>
+            <p class="answer-main">Attack Detection<br>& Alerts</p>
+            <p class="answer-detail">Kerberoasting · DCSync · DCShadow</p>
+          </div>
+          <div class="img-slot">
+            <img src="../images/memory-palaces/itdr/boat-dcsync.png" alt="Room 3 — Attack Detection and Alerts">
+          </div>
+          <details class="img-prompt">
+            <summary><span class="img-prompt-label">IMAGE PROMPT</span><span class="img-prompt-chevron">▸</span></summary>
+            <div class="img-prompt-text">Man in Hawaiian shirt and boxing gloves roasting Kirby-shaped chicken on boat deck. Massive iceberg ahead labelled DC SYNC. Deck shadow spells D-C. Sirens blaring. Flat cartoon panic, wide landscape framing.</div>
+          </details>
+        </div>
+
+        <!-- Room 4 -->
+        <div class="palace-card">
+          <span class="card-num">04</span>
+          <p class="card-scene">Man at his home desk — his endpoint. A neon sticky note on the monitor reads <em>P@ssw0rd</em> in giant letters. His manager appears in the doorway. Arms crossed. Furious.</p>
+          <div class="card-divider"></div>
+          <p class="card-caption">WHAT IS THIS?!</p>
+          <div class="card-answer">
+            <p class="answer-label">HOVER TO REVEAL →</p>
+            <p class="answer-main">Endpoint Credential<br>Exposure Management</p>
+            <p class="answer-detail">Flags insecurely stored credentials → reduces lateral movement</p>
+          </div>
+          <div class="img-slot">
+            <img src="../images/memory-palaces/itdr/desk-password.png" alt="Room 4 — Endpoint Credential Exposure Management">
+          </div>
+          <details class="img-prompt">
+            <summary><span class="img-prompt-label">IMAGE PROMPT</span><span class="img-prompt-chevron">▸</span></summary>
+            <div class="img-prompt-text">Man relaxed at cluttered home desk. Monitor covered in sticky notes — biggest reads P@ssw0rd in neon yellow. Manager in sharp suit stands arms-crossed in doorway, furious. Red warning triangle glowing above. Flat cartoon, wide shot showing both characters.</div>
+          </details>
+        </div>
+
+        <!-- Room 5 -->
+        <div class="palace-card">
+          <span class="card-num">05</span>
+          <p class="card-scene">Man in a kitchen holding an oversized whisk (<em>risk</em>). Before the oven opens he must scan his ID at a panel with three readouts: <em>ZIA · ZPA · Okta.</em> All three go green. A risk score appears on the oven door.</p>
+          <div class="card-divider"></div>
+          <p class="card-caption">WHAT IS THIS?!</p>
+          <div class="card-answer">
+            <p class="answer-label">HOVER TO REVEAL →</p>
+            <p class="answer-main">Identity Risk Profile</p>
+            <p class="answer-detail">ZIA + ZPA + Okta → correlated risk score per identity</p>
+          </div>
+          <div class="img-slot">
+            <img src="../images/memory-palaces/itdr/kitchen-risk.png" alt="Room 5 — Identity Risk Profile">
+          </div>
+          <details class="img-prompt">
+            <summary><span class="img-prompt-label">IMAGE PROMPT</span><span class="img-prompt-chevron">▸</span></summary>
+            <div class="img-prompt-text">Man in apron holding a comically oversized whisk. Scanning ID badge at a high-tech wall panel beside a steel oven. Panel has three screens: ZIA, ZPA, Okta — all flashing green ticks. Oven padlock clicking open. Risk score on oven door reads 72. Flat cartoon kitchen, wide framing.</div>
+          </details>
+        </div>
+
+        <!-- Room 6 -->
+        <div class="palace-card">
+          <span class="card-num">06</span>
+          <p class="card-scene">Risk score maxed. Two massive bouncers — <em>ZIA</em> and <em>ZPA</em> shirts — drag the man into a side room. A cheerful robot stamped <em>OK</em> holds up a sign: <em>"Prove yourself or stay locked out."</em> An obstacle course waits behind it.</p>
+          <div class="card-divider"></div>
+          <p class="card-caption">WHAT IS THIS?!</p>
+          <div class="card-answer">
+            <p class="answer-label">HOVER TO REVEAL →</p>
+            <p class="answer-main">Response & Adaptive<br>Access Control</p>
+            <p class="answer-detail">ZIA/ZPA isolate identity · Okta AI enforces step-up auth</p>
+          </div>
+          <div class="img-slot">
+            <img src="../images/memory-palaces/itdr/bouncers-isolation.png" alt="Room 6 — Response and Adaptive Access Control">
+          </div>
+          <details class="img-prompt">
+            <summary><span class="img-prompt-label">IMAGE PROMPT</span><span class="img-prompt-chevron">▸</span></summary>
+            <div class="img-prompt-text">Two enormous bouncers in tight black t-shirts labelled ZIA and ZPA frogmarching a panicked man through a door marked ISOLATION ROOM. Inside: a small cheerful robot stamped OK holding a laminated sign: "Prove yourself or stay locked out." Obstacle course with hurdles behind it. Risk meter on wall pinned deep in the red. Flat cartoon, wide scene, exaggerated size contrast.</div>
+          </details>
+        </div>
+
+      </div><!-- end palace-grid -->
+    </div>
+
+    <!-- Exam Tips -->
+    <div class="section-block" id="section-exam">
+      <div class="section-label">EXAM TIPS</div>
+      <h2>When ITDR is the answer</h2>
+
+      <div class="callout callout-tip">
+        <div class="callout-header"><div class="callout-icon">→</div>EXAM TIP</div>
+        <div class="callout-body">If the scenario mentions <strong>privilege escalation, compromised AD accounts, or suspicious identity behaviour</strong> — ITDR is almost always the answer, not ZIA ATP or Sandbox.</div>
+      </div>
+
+      <div class="callout callout-tip">
+        <div class="callout-header"><div class="callout-icon">→</div>EXAM TIP</div>
+        <div class="callout-body">Questions about <strong>correlating risk signals across ZIA, ZPA, and Okta into a single view</strong> point directly to Identity Risk Profile — ITDR's cross-product signal correlation pillar.</div>
+      </div>
+
+      <div class="callout callout-note">
+        <div class="callout-header"><div class="callout-icon">★</div>MENTAL NOTE</div>
+        <div class="callout-body">ITDR vs Deception: Deception = attacker <em>touches the tripwire</em>. ITDR = attacker's behaviour <em>shifts the risk signal</em>. One is a trap; the other is a monitor.</div>
+      </div>
+    </div>
+
+    <!-- Pillar Guide -->
+    <div class="section-block" id="section-pillars">
+      <div class="section-label">PILLAR GUIDE</div>
+      <h2>What each pillar does</h2>
+      <p>ITDR (Identity Threat Detection & Response) covers six capabilities — each one a different layer of identity defence. Know these cold before exam day.</p>
+
+      <div class="pillar-list">
+
+        <div class="pillar-row">
+          <div class="pillar-num">01</div>
+          <div class="pillar-body">
+            <div class="pillar-name">Continuous Identity Posture Assessment</div>
+            <div class="pillar-desc">Non-stop vulnerability scanning of Active Directory and Entra ID. Constantly checks for misconfigurations, weak permissions, and risky account states — not a one-time audit, but an always-on monitor.</div>
+          </div>
+        </div>
+
+        <div class="pillar-row">
+          <div class="pillar-num">02</div>
+          <div class="pillar-body">
+            <div class="pillar-name">Change Detection</div>
+            <div class="pillar-desc">Configurable watchlists that alert on identity changes 24/7. If a user's group membership, admin rights, or login behaviour shifts unexpectedly, ITDR flags it immediately rather than waiting for a scheduled review.</div>
+          </div>
+        </div>
+
+        <div class="pillar-row">
+          <div class="pillar-num">03</div>
+          <div class="pillar-body">
+            <div class="pillar-name">Attack Detection & Alerts</div>
+            <div class="pillar-desc">Detects active AD attack techniques in real time: <strong>Kerberoasting</strong> (cracking service account hashes offline), <strong>DCSync</strong> (attacker impersonates a DC to pull password hashes), and <strong>DCShadow</strong> (injecting malicious changes through AD replication).</div>
+          </div>
+        </div>
+
+        <div class="pillar-row">
+          <div class="pillar-num">04</div>
+          <div class="pillar-body">
+            <div class="pillar-name">Endpoint Credential Exposure Management</div>
+            <div class="pillar-desc">Scans endpoints for credentials stored insecurely — in plain text files, browser caches, or environment variables. Flagging and removing these cuts off the lateral movement paths attackers rely on after initial access.</div>
+          </div>
+        </div>
+
+        <div class="pillar-row">
+          <div class="pillar-num">05</div>
+          <div class="pillar-body">
+            <div class="pillar-name">Identity Risk Profile</div>
+            <div class="pillar-desc">Correlates signals from ZIA, ZPA, and Okta into a single risk score per identity. Unusual web traffic in ZIA + anomalous app access in ZPA + suspicious login in Okta = elevated risk score for that user, visible in one place.</div>
+          </div>
+        </div>
+
+        <div class="pillar-row pillar-row-last">
+          <div class="pillar-num">06</div>
+          <div class="pillar-body">
+            <div class="pillar-name">Response & Adaptive Access Control</div>
+            <div class="pillar-desc">When risk spikes, ZIA and ZPA isolate the identity from the network while Okta AI enforces step-up authentication (MFA re-challenge). The user is contained and forced to re-verify — without a full lockout that could disrupt legitimate work.</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Rapid Recall -->
+    <div class="section-block" id="section-recall">
+      <div class="section-label">RAPID RECALL</div>
+      <h2>Six scenes, six pillars</h2>
+      <p>Cover the right column. Say each answer out loud as you read the scene cue. Anything that stumps you — go back and re-visualise that room before moving on.</p>
+    </div>
+
+  </div><!-- end main-content -->
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">SIX PILLARS — TICK WHEN MEMORISED</div>
+      <ul class="subtopic-list" id="subtopic-list">
+        <li onclick="toggleDone(this)"><div class="subtopic-check"></div><span>Continuous Identity Posture Assessment</span></li>
+        <li onclick="toggleDone(this)"><div class="subtopic-check"></div><span>Change Detection</span></li>
+        <li onclick="toggleDone(this)"><div class="subtopic-check"></div><span>Attack Detection & Alerts</span></li>
+        <li onclick="toggleDone(this)"><div class="subtopic-check"></div><span>Endpoint Credential Exposure</span></li>
+        <li onclick="toggleDone(this)"><div class="subtopic-check"></div><span>Identity Risk Profile</span></li>
+        <li onclick="toggleDone(this)"><div class="subtopic-check"></div><span>Response & Adaptive Access Control</span></li>
+      </ul>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">RAPID RECALL</div>
+      <ul class="recall-list">
+        <li><span class="recall-arrow">01</span><span>Osteo every Monday → Continuous posture</span></li>
+        <li><span class="recall-arrow">02</span><span>Orange suit in the crowd → Change detection</span></li>
+        <li><span class="recall-arrow">03</span><span>Roast · Sink · Shadow → Kerb · DCSync · DCShadow</span></li>
+        <li><span class="recall-arrow">04</span><span>Password on monitor → Endpoint exposure</span></li>
+        <li><span class="recall-arrow">05</span><span>Whisk + 3 panels → Identity risk profile</span></li>
+        <li><span class="recall-arrow">06</span><span>Two bouncers + OK robot → Isolate + step-up auth</span></li>
+      </ul>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">QUICK REFERENCE</div>
+      <div class="quick-ref">
+        <div class="quick-ref-term">KERBEROASTING</div>
+        <div class="quick-ref-def">Exploits weak service account passwords in AD to extract hashed credentials offline.</div>
+      </div>
+      <div class="quick-ref">
+        <div class="quick-ref-term">DCSYNC</div>
+        <div class="quick-ref-def">Attacker impersonates a domain controller to pull password hashes from AD replication.</div>
+      </div>
+      <div class="quick-ref">
+        <div class="quick-ref-term">DCSHADOW</div>
+        <div class="quick-ref-def">Attacker injects malicious changes into AD by manipulating the replication process itself.</div>
+      </div>
+      <div class="quick-ref">
+        <div class="quick-ref-term">STEP-UP AUTH</div>
+        <div class="quick-ref-def">Adaptive response that demands re-verification (e.g. MFA challenge) when risk score spikes.</div>
+      </div>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">RELATED DAYS</div>
+      <ul class="subtopic-list">
+        <li style="cursor:default;"><div style="width:14px;height:14px;background:var(--orange-light);border:1px solid var(--orange-border);border-radius:3px;flex-shrink:0;"></div><span>Day 05 — Zscaler Deception</span></li>
+        <li style="cursor:default;"><div style="width:14px;height:14px;background:var(--orange-light);border:1px solid var(--orange-border);border-radius:3px;flex-shrink:0;"></div><span>Day 05 — Advanced Threat Protection</span></li>
+        <li style="cursor:default;"><div style="width:14px;height:14px;background:var(--orange-light);border:1px solid var(--orange-border);border-radius:3px;flex-shrink:0;"></div><span>Day 07 — Risk360 & ITDR Posture</span></li>
+      </ul>
+    </div>
+
+  </div><!-- end sidebar -->
+
+</main>
+
+<footer>
+  <div class="footer-left">ZDTE<span>.</span></div>
+  <div class="footer-right">Zscaler Digital Transformation Engineer · Memory Palace — ITDR</div>
+</footer>
+
+<script>
+  function navTo(sectionId, el) {
+    document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+    el.classList.add('active');
+    const target = document.getElementById(sectionId);
+    if (target) {
+      const nav = document.querySelector('.section-nav');
+      const offset = (nav ? nav.offsetHeight : 0) + 16;
+      window.scrollTo({ top: target.getBoundingClientRect().top + window.scrollY - offset, behavior: 'smooth' });
+    }
+  }
+
+  function toggleDone(li) {
+    li.classList.toggle('done');
+    const items = document.querySelectorAll('#subtopic-list li[onclick]');
+    const done  = document.querySelectorAll('#subtopic-list li[onclick].done');
+    const big = document.querySelector('.progress-card .big');
+    if (big) big.innerHTML = (items.length - done.length) + '<span style="font-size:18px;color:#7a6a55;"> rooms</span>';
+  }
+</script>
+
+<script src="../../transitions.js"></script>
+</body>
+</html>

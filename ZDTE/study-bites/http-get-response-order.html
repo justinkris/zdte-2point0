@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ZDTE Study Bite — Policy Enforcement Order (Reference)</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;0,700;1,400&family=Epilogue:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="bite.css">
+</head>
+<body>
+
+<header>
+  <div class="header-left">
+    <div class="breadcrumb">
+      <a href="../../index.html">ZDTE</a>
+      <span class="breadcrumb-sep">›</span>
+      <a href="index.html">Study Bites</a>
+      <span class="breadcrumb-sep">›</span>
+      <span>Policy Enforcement Order</span>
+    </div>
+    <div class="day-badge"><div class="day-badge-dot"></div>STUDY BITE — REFERENCE</div>
+    <h1>Policy Enforcement<br><em>Order (authoritative)</em></h1>
+    <div class="header-meta-row">
+      <span class="tag tag-zia">ZIA</span>
+      <span class="tag tag-reference">Authoritative Reference</span>
+      <span class="tag tag-weight">12% Blueprint Weight</span>
+      <span class="tag tag-bite">Study Bite</span>
+    </div>
+
+    <ul class="subtopic-list" id="subtopic-list">
+      <li onclick="toggleDone(this)"><div class="subtopic-check"></div>Two-phase model: SSMA inspection vs ordered enforcement</li>
+      <li onclick="toggleDone(this)"><div class="subtopic-check"></div>GET request — 10-step enforcement order</li>
+      <li onclick="toggleDone(this)"><div class="subtopic-check"></div>POST request — 14-step enforcement order (4 POST-only extras)</li>
+      <li onclick="toggleDone(this)"><div class="subtopic-check"></div>GET response — 9-step enforcement order</li>
+      <li onclick="toggleDone(this)"><div class="subtopic-check"></div>SSL/CONNECT — pre-decryption policy subset</li>
+      <li onclick="toggleDone(this)"><div class="subtopic-check"></div>CAC fires before URL Filtering; Security Exceptions placement</li>
+      <li onclick="toggleDone(this)"><div class="subtopic-check"></div>ATP is distributed — not a single step</li>
+      <li onclick="toggleDone(this)"><div class="subtopic-check"></div>Sandbox and AI/ML Categorization are response-only</li>
+      <li onclick="toggleDone(this)"><div class="subtopic-check"></div>Non-web traffic → Firewall module only</li>
+      <li onclick="toggleDone(this)"><div class="subtopic-check"></div>Exam tips and scenario reading</li>
+    </ul>
+  </div>
+  <div class="header-right">
+    <div class="progress-card">
+      <div class="big" id="prog-num">0<span style="font-size:18px;color:#7a6a55;">%</span></div>
+      <div class="lbl">REVIEWED</div>
+    </div>
+  </div>
+</header>
+
+<nav class="section-nav">
+  <button class="nav-tab active" onclick="navTo('section-overview', this)">OVERVIEW</button>
+  <button class="nav-tab" onclick="navTo('section-orders', this)">ENFORCEMENT ORDERS</button>
+  <button class="nav-tab" onclick="navTo('section-ssl', this)">SSL / CONNECT</button>
+  <button class="nav-tab" onclick="navTo('section-facts', this)">KEY FACTS</button>
+  <button class="nav-tab" onclick="navTo('section-tips', this)">EXAM TIPS</button>
+</nav>
+
+<main class="full-width">
+
+  <!-- INTRO -->
+  <div class="section-block" id="section-overview">
+    <div class="section-label">OVERVIEW</div>
+    <h2>Two phases: SSMA inspection, then ordered enforcement</h2>
+    <p>
+      The ZIA Service Edge handles every transaction in two distinct phases. Understanding the distinction is the single most important thing to know about policy enforcement — and it's where most people get confused.
+    </p>
+
+    <div class="ssma-card">
+      <div class="ssma-label">THE TWO-PHASE MODEL</div>
+      <div class="ssma-title">SSMA inspects in parallel. Policy enforces in order.</div>
+
+      <div class="ssma-split">
+        <div class="ssma-phase">
+          <div class="ssma-phase-label">PHASE 1 — INSPECTION</div>
+          <div class="ssma-phase-title">SSMA</div>
+          <div class="ssma-phase-body">
+            Packets placed in shared memory. <em>All engines inspect simultaneously</em> using dedicated CPUs. One scan, many actions. This is where all the verdicts are generated.
+          </div>
+        </div>
+        <div class="ssma-phase">
+          <div class="ssma-phase-label">PHASE 2 — ENFORCEMENT</div>
+          <div class="ssma-phase-title">Ordered precedence</div>
+          <div class="ssma-phase-body">
+            After SSMA finishes inspecting, policies are <em>applied in a specific order</em> that depends on the HTTP method. First match blocks → downstream policies are skipped.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <p>
+      The enforcement order is <strong>different for GET, POST, and Response</strong>. Below are all three sequences side by side. POST adds 4 extra steps on top of GET — they appear in <strong>purple</strong> in the POST column. ATP's individual checks are spread across each sequence — ATP is not a single step.
+    </p>
+
+    <div class="legend">
+      <div class="legend-item"><div class="legend-dot" style="background:var(--red);"></div>ATP check</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--blue);"></div>Access policy</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#d4a500;"></div>Security Exceptions</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--green);"></div>Browser Control</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--purple);"></div>Data / File</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--orange);"></div>Sandbox</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--ink-muted);"></div>Bandwidth</div>
+    </div>
+  </div>
+
+  <!-- ENFORCEMENT ORDERS -->
+  <div class="section-block" id="section-orders">
+    <div class="section-label">THE ENFORCEMENT ORDERS</div>
+    <h2>GET · POST · Response — side by side</h2>
+
+    <div class="order-grid">
+
+      <!-- GET COLUMN -->
+      <div class="order-column">
+        <div class="order-header get">
+          <div class="order-count">10</div>
+          <div class="order-method">HTTP GET</div>
+          <div class="order-title">Request — user fetches a resource</div>
+          <div class="order-sub">10 policy checks in order</div>
+        </div>
+        <ol class="order-list">
+          <li class="atp">
+            <div>
+              <strong>Custom Malicious URLs</strong>
+              Checks requested URL against the org's custom ATP denylist.
+              <span class="engine-tag engine-atp">ATP</span>
+            </div>
+          </li>
+          <li class="policy">
+            <div>
+              <strong>Cloud App Control</strong>
+              Evaluates SaaS app policy. Takes precedence over URL Filtering by default.
+              <span class="engine-tag engine-policy">ACCESS POLICY</span>
+            </div>
+          </li>
+          <li class="policy">
+            <div>
+              <strong>URL Filtering</strong>
+              Evaluates URL category rules. Skipped if Cloud App Control already allowed (unless cascading enabled).
+              <span class="engine-tag engine-policy">ACCESS POLICY</span>
+            </div>
+          </li>
+          <li class="exc">
+            <div>
+              <strong>Security Exceptions</strong>
+              If URL is on allowlist → <em>skips Malware, ATP, and Sandbox</em> downstream.
+              <span class="engine-tag engine-exc">ALLOWLIST</span>
+            </div>
+          </li>
+          <li class="browser">
+            <div>
+              <strong>Browser Control</strong>
+              Checks browser + plugins against Browser Control policy.
+              <span class="engine-tag engine-browser">BROWSER</span>
+            </div>
+          </li>
+          <li class="atp">
+            <div>
+              <strong>Country-Based Blocking</strong>
+              Checks if destination server is in a blocked country.
+              <span class="engine-tag engine-atp">ATP</span>
+            </div>
+          </li>
+          <li class="atp">
+            <div>
+              <strong>IPS Signature Detection</strong>
+              Signature-based checks — botnets, XSS, phishing, malicious active content.
+              <span class="engine-tag engine-atp">ATP</span>
+            </div>
+          </li>
+          <li class="atp">
+            <div>
+              <strong>Suspicious Content Protection</strong>
+              Calculates <em>Page Risk</em> score. Blocks if score exceeds threshold.
+              <span class="engine-tag engine-atp">ATP</span>
+            </div>
+          </li>
+          <li class="atp">
+            <div>
+              <strong>P2P Control</strong>
+              Checks for prohibited P2P file sharing, anonymizers, or P2P VoIP apps.
+              <span class="engine-tag engine-atp">ATP</span>
+            </div>
+          </li>
+          <li class="bw">
+            <div>
+              <strong>Bandwidth Control</strong>
+              Allocates full or reduced bandwidth based on policy and current usage.
+              <span class="engine-tag engine-bw">BANDWIDTH</span>
+            </div>
+          </li>
+        </ol>
+      </div>
+
+      <!-- POST COLUMN -->
+      <div class="order-column">
+        <div class="order-header post">
+          <div class="order-count">14</div>
+          <div class="order-method">HTTP POST</div>
+          <div class="order-title">Request — user submits data</div>
+          <div class="order-sub">14 checks · 4 POST-only extras highlighted</div>
+        </div>
+        <ol class="order-list">
+          <li class="atp">
+            <div>
+              <strong>Custom Malicious URLs</strong>
+              Checks URL against org's custom ATP denylist.
+              <span class="engine-tag engine-atp">ATP</span>
+            </div>
+          </li>
+          <li class="policy">
+            <div>
+              <strong>Cloud App Control</strong>
+              Evaluates SaaS app policy.
+              <span class="engine-tag engine-policy">ACCESS POLICY</span>
+            </div>
+          </li>
+          <li class="policy">
+            <div>
+              <strong>URL Filtering</strong>
+              Evaluates URL category rules.
+              <span class="engine-tag engine-policy">ACCESS POLICY</span>
+            </div>
+          </li>
+          <li class="exc">
+            <div>
+              <strong>Security Exceptions</strong>
+              Allowlist → skips Malware, ATP, Sandbox downstream.
+              <span class="engine-tag engine-exc">ALLOWLIST</span>
+            </div>
+          </li>
+          <li class="browser">
+            <div>
+              <strong>Browser Control</strong>
+              Checks browser + plugins.
+              <span class="engine-tag engine-browser">BROWSER</span>
+            </div>
+          </li>
+          <li class="atp">
+            <div>
+              <strong>Country-Based Blocking</strong>
+              Checks destination server country.
+              <span class="engine-tag engine-atp">ATP</span>
+            </div>
+          </li>
+          <li class="atp post-only">
+            <div>
+              <strong>Malicious URL Block <span class="post-only-badge">POST ONLY</span></strong>
+              Blocks known malicious POST endpoints. Does not fire on GET.
+              <span class="engine-tag engine-atp">ATP</span>
+            </div>
+          </li>
+          <li class="atp">
+            <div>
+              <strong>IPS Signature Detection</strong>
+              Signature-based checks on request payload.
+              <span class="engine-tag engine-atp">ATP</span>
+            </div>
+          </li>
+          <li class="atp">
+            <div>
+              <strong>Suspicious Content Protection</strong>
+              Page Risk score on request content.
+              <span class="engine-tag engine-atp">ATP</span>
+            </div>
+          </li>
+          <li class="data post-only">
+            <div>
+              <strong>Malware Protection <span class="post-only-badge">POST ONLY</span></strong>
+              AV scan of uploaded files in request body.
+              <span class="engine-tag engine-data">MALWARE</span>
+            </div>
+          </li>
+          <li class="data post-only">
+            <div>
+              <strong>File Type Control <span class="post-only-badge">POST ONLY</span></strong>
+              Checks uploaded file types against policy.
+              <span class="engine-tag engine-data">FILE TYPE</span>
+            </div>
+          </li>
+          <li class="data post-only">
+            <div>
+              <strong>DLP <span class="post-only-badge">POST ONLY</span></strong>
+              Data Loss Prevention scan on outbound content.
+              <span class="engine-tag engine-data">DLP</span>
+            </div>
+          </li>
+          <li class="atp">
+            <div>
+              <strong>P2P Control</strong>
+              Checks for prohibited P2P / anonymizer traffic.
+              <span class="engine-tag engine-atp">ATP</span>
+            </div>
+          </li>
+          <li class="bw">
+            <div>
+              <strong>Bandwidth Control</strong>
+              Allocates bandwidth based on policy.
+              <span class="engine-tag engine-bw">BANDWIDTH</span>
+            </div>
+          </li>
+        </ol>
+      </div>
+
+      <!-- RESPONSE COLUMN -->
+      <div class="order-column">
+        <div class="order-header response">
+          <div class="order-count">9</div>
+          <div class="order-method">GET RESPONSE</div>
+          <div class="order-title">Response — data coming back</div>
+          <div class="order-sub">9 policy checks in order</div>
+        </div>
+        <ol class="order-list">
+          <li class="exc">
+            <div>
+              <strong>Security Exceptions</strong>
+              If responding URL is on allowlist → skips Malware, ATP, Sandbox.
+              <span class="engine-tag engine-exc">ALLOWLIST</span>
+            </div>
+          </li>
+          <li class="atp">
+            <div>
+              <strong>IPS Signature Detection</strong>
+              Signature-based response-side threat detection.
+              <span class="engine-tag engine-atp">ATP</span>
+            </div>
+          </li>
+          <li class="atp">
+            <div>
+              <strong>Suspicious Content Protection</strong>
+              Page Risk scoring on returned content.
+              <span class="engine-tag engine-atp">ATP</span>
+            </div>
+          </li>
+          <li class="sandbox">
+            <div>
+              <strong>Sandbox — known malicious files</strong>
+              Checks response for files previously identified as malicious by Sandbox.
+              <span class="engine-tag engine-sandbox">SANDBOX</span>
+            </div>
+          </li>
+          <li class="data">
+            <div>
+              <strong>Malware Protection</strong>
+              AV scan of files in response. Dedicated threads for large files.
+              <span class="engine-tag engine-data">MALWARE</span>
+            </div>
+          </li>
+          <li class="data">
+            <div>
+              <strong>File Type Control</strong>
+              Checks if response files violate file type policy.
+              <span class="engine-tag engine-data">FILE TYPE</span>
+            </div>
+          </li>
+          <li class="sandbox">
+            <div>
+              <strong>Sandbox — unknown files</strong>
+              Behavioural analysis of files not previously seen. Full detonation.
+              <span class="engine-tag engine-sandbox">SANDBOX</span>
+            </div>
+          </li>
+          <li class="ml">
+            <div>
+              <strong>AI/ML-based Content Categorization</strong>
+              Categorises uncategorised sites based on content, then re-applies URL filtering.
+              <span class="engine-tag engine-ml">ML</span>
+            </div>
+          </li>
+          <li class="bw">
+            <div>
+              <strong>Bandwidth Control</strong>
+              Bandwidth allocation.
+              <span class="engine-tag engine-bw">BANDWIDTH</span>
+            </div>
+          </li>
+        </ol>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- SSL / CONNECT -->
+  <div class="section-block" id="section-ssl">
+    <div class="section-label">SSL / CONNECT — THE EARLIER GATE</div>
+    <h2>For HTTPS, policy evaluation runs twice</h2>
+
+    <div class="ssl-section">
+      <div class="ssl-title">Stage 1 — CONNECT request or SSL Client Hello (SNI)</div>
+      <p style="margin-bottom:10px;">
+        Before SSL Inspection decrypts anything, only the destination domain is known — not the full URL. So a <strong>subset</strong> of policies runs based only on the host header or SNI. These are the only checks that can happen pre-decryption.
+      </p>
+      <div class="ssl-subset">
+        <div class="ssl-subset-label">POLICIES AVAILABLE AT CONNECT / SNI</div>
+        <ul class="ssl-subset-list">
+          <li><strong>Known Malicious URLs</strong> (ATP)</li>
+          <li><strong>Cloud App Control</strong></li>
+          <li><strong>URL Filtering</strong></li>
+          <li><strong>Bandwidth Control</strong></li>
+        </ul>
+      </div>
+      <p style="margin-top:14px;">
+        The SSL Inspection policy itself is evaluated on the CONNECT request. If the destination is exempted → <em>bridge the traffic, no inspection, no downstream policy</em>. If blocked → 403 (explicit proxy) or connection reset (transparent). If allowed and decrypted → the full GET / Response order runs on the decrypted HTTP transaction.
+      </p>
+    </div>
+
+    <div class="callout callout-warn">
+      <div class="callout-header"><div class="callout-icon">!</div>IMPORTANT — ADVANCED THREAT BLOCKS ARE HARDER</div>
+      <div class="callout-body">
+        When the destination is <strong>known to contain an advanced threat</strong>, the connection terminates immediately — even if SSL Inspection is disabled or EUN-for-blocked is enabled. If the block happens on CONNECT host header → 403 error. If the block happens on SNI → connection reset.
+      </div>
+    </div>
+  </div>
+
+  <!-- KEY FACTS -->
+  <div class="section-block" id="section-facts">
+    <div class="section-label">KEY FACTS TO LOCK IN</div>
+    <h2>Patterns across the three flows</h2>
+
+    <table class="facts-table">
+      <thead>
+        <tr>
+          <th>Pattern</th>
+          <th>What it tells you</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Custom Malicious URLs is always step 1 on GET</td>
+          <td>Admin-defined ATP denylists override everything. It's the first gate after Firewall + SSL.</td>
+        </tr>
+        <tr>
+          <td>Cloud App Control fires before URL Filtering</td>
+          <td>If CAC explicitly allows, URL Filtering is <em>skipped by default</em>. Cascading must be enabled to change this.</td>
+        </tr>
+        <tr>
+          <td>Security Exceptions always appear after URL Filtering</td>
+          <td>The allowlist only kicks in after access policies. It bypasses Malware, ATP, and Sandbox downstream.</td>
+        </tr>
+        <tr>
+          <td>POST adds 4 extra steps GET doesn't have</td>
+          <td>Malicious URL Block (step 7), Malware Protection (step 10), File Type Control (step 11), DLP (step 12) — all POST-only.</td>
+        </tr>
+        <tr>
+          <td>Sandbox only exists on the Response flow</td>
+          <td>Makes sense — there's no file to detonate until data comes back from the server.</td>
+        </tr>
+        <tr>
+          <td>IPS Signature Detection fires on GET, POST, and Response</td>
+          <td>Request-side (URL/headers/payload) AND response-side (content) — IPS is the most pervasive check.</td>
+        </tr>
+        <tr>
+          <td>ATP checks are distributed, not clustered</td>
+          <td>ATP isn't "one step." It's multiple separate checks spread across the sequence: Custom URLs, Country-Based, IPS, Page Risk, P2P.</td>
+        </tr>
+        <tr>
+          <td>AI/ML Categorization only fires on Response</td>
+          <td>It categorises <em>after</em> seeing content, then loops back into URL Filtering — which is why it can't run upstream.</td>
+        </tr>
+        <tr>
+          <td>Bandwidth Control is always last</td>
+          <td>Once everything else has decided "allow," bandwidth determines throttling. It's the final gate.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- EXAM TIPS + MISCONCEPTIONS -->
+  <div class="section-block" id="section-tips">
+    <div class="section-label">COMMON MISCONCEPTIONS CLEARED UP</div>
+
+    <div class="callout callout-warn">
+      <div class="callout-header"><div class="callout-icon">!</div>MYTH 1 — "ATP is a single step"</div>
+      <div class="callout-body">
+        Wrong. ATP is a <strong>collection of checks</strong>: Custom Malicious URLs, Country-Based Blocking, Malicious URL Block, IPS Signature Detection, Suspicious Content Protection (Page Risk), and P2P Control. These are spread throughout the enforcement order — not grouped together.
+      </div>
+    </div>
+
+    <div class="callout callout-warn">
+      <div class="callout-header"><div class="callout-icon">!</div>MYTH 2 — "URL Filtering fires before ATP"</div>
+      <div class="callout-body">
+        Partially wrong. <strong>Custom Malicious URLs (ATP) is the first check</strong>, before URL Filtering. But the rest of ATP (IPS, Page Risk, P2P) fires <em>after</em> URL Filtering. ATP is distributed across the order.
+      </div>
+    </div>
+
+    <div class="callout callout-note">
+      <div class="callout-header"><div class="callout-icon">★</div>MENTAL MODEL — CAC vs URL Filtering</div>
+      <div class="callout-body">
+        If a Cloud App Control rule <strong>explicitly allows</strong> a SaaS app, URL Filtering is <em>skipped</em> for that transaction by default. But if CAC <strong>blocks</strong>, the block applies regardless. The "Cascading to URL Filtering" setting changes this — allowing URL Filtering to still evaluate even after CAC allowed.
+      </div>
+    </div>
+
+    <div class="callout callout-tip">
+      <div class="callout-header"><div class="callout-icon">→</div>EXAM TIP — HOW TO READ SCENARIO QUESTIONS</div>
+      <div class="callout-body">
+        When a scenario asks "which policy blocks this traffic" — trace the GET or Response list in order. Whichever engine matches a block rule <em>first</em> wins, and everything downstream is skipped.
+      </div>
+    </div>
+
+    <div class="callout callout-note">
+      <div class="callout-header"><div class="callout-icon">★</div>NON-WEB TRAFFIC (SSH, RDP, raw TCP)</div>
+      <div class="callout-body">
+        Outbound non-web traffic going to ports other than 80/443 is sent <strong>directly to the Firewall module</strong> — the web module and its entire GET / Response order do <em>not</em> apply. If no firewall policy is enabled at the location, Zscaler neither scans nor applies policy to non-web traffic.
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  <div class="footer-left">ZDTE<span>.</span></div>
+  <div class="footer-right">Zscaler Digital Transformation Engineer · Study Bite — Policy Enforcement Reference</div>
+</footer>
+
+<script>
+  function navTo(id, el) {
+    const target = document.getElementById(id);
+    if (!target) return;
+    const top = target.getBoundingClientRect().top + window.scrollY - 60;
+    window.scrollTo({ top, behavior: 'smooth' });
+    document.querySelectorAll('nav.section-nav button').forEach(b => b.classList.remove('active'));
+    if (el) el.classList.add('active');
+  }
+
+  function toggleDone(li) {
+    li.classList.toggle('done');
+    updateProgress();
+  }
+
+  function updateProgress() {
+    const items = document.querySelectorAll('#subtopic-list li');
+    const done = document.querySelectorAll('#subtopic-list li.done').length;
+    const pct = items.length ? Math.round((done / items.length) * 100) : 0;
+    const el = document.getElementById('prog-num');
+    if (el) el.innerHTML = pct + '<span style="font-size:18px;color:#7a6a55;">%</span>';
+  }
+</script>
+
+<script src="../../transitions.js"></script>
+</body>
+</html>

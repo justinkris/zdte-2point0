@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ZDTE NotebookLM Prompts</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;0,700;1,400&family=Epilogue:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #fef9f0; --cream-dark: #f5eddb;
+    --ink: #1a1209; --ink-soft: #5a4a35; --ink-muted: #8a7660;
+    --orange: #ff6b35; --orange-light: #fff3ec; --orange-border: #ffd5c0;
+    --green: #3a7d44; --green-light: #edf7ee; --green-border: #b2dfb4;
+    --border: #ede5d8;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Epilogue', sans-serif; background: var(--cream); color: var(--ink); min-height: 100vh; }
+
+  header { padding: 40px 60px 28px; border-bottom: 1px solid var(--border); display: flex; align-items: flex-start; justify-content: space-between; gap: 32px; }
+  .header-left { flex: 1; }
+  .breadcrumb { display: flex; align-items: center; gap: 8px; font-size: 11px; color: var(--ink-muted); letter-spacing: 0.08em; margin-bottom: 12px; }
+  .breadcrumb a { color: var(--orange); text-decoration: none; }
+  .breadcrumb-sep { color: var(--border); }
+  .page-badge { display: inline-flex; align-items: center; gap: 6px; background: var(--ink); color: var(--cream); padding: 5px 14px; border-radius: 20px; font-size: 11px; letter-spacing: 0.1em; margin-bottom: 14px; }
+  .page-badge-dot { width: 5px; height: 5px; background: var(--orange); border-radius: 50%; }
+  h1 { font-family: 'Fraunces', serif; font-size: 44px; font-weight: 700; line-height: 1.0; color: var(--ink); margin-bottom: 10px; }
+  h1 em { font-style: italic; font-weight: 400; color: var(--orange); }
+  .header-sub { font-size: 13px; color: var(--ink-muted); margin-top: 10px; max-width: 480px; line-height: 1.7; }
+
+  .main { max-width: 860px; margin: 0 auto; padding: 48px 60px 80px; }
+
+  .intro { background: var(--ink); border-radius: 14px; padding: 20px 24px; margin-bottom: 40px; }
+  .intro p { font-size: 13px; color: #9a8070; line-height: 1.7; margin: 0; }
+  .intro strong { color: var(--orange); font-style: normal; }
+
+  .episode-list { display: flex; flex-direction: column; gap: 16px; }
+
+  .episode-card { background: var(--cream); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; }
+  .episode-header { display: flex; align-items: center; gap: 16px; padding: 20px 24px; background: var(--ink); cursor: pointer; user-select: none; transition: opacity 0.15s; }
+  .episode-header:hover { opacity: 0.9; }
+  .episode-num { font-family: 'Fraunces', serif; font-size: 28px; font-weight: 700; color: var(--orange); line-height: 1; min-width: 32px; }
+  .episode-meta { flex: 1; }
+  .episode-days { font-size: 10px; letter-spacing: 0.15em; color: #7a6a55; margin-bottom: 4px; text-transform: uppercase; }
+  .episode-title { font-family: 'Fraunces', serif; font-size: 17px; font-weight: 600; color: #fff; line-height: 1.2; }
+  .episode-chevron { font-size: 14px; color: #7a6a55; transition: transform 0.2s; flex-shrink: 0; }
+  .episode-card.open .episode-chevron { transform: rotate(90deg); }
+
+  .toggle-all-btn { background: transparent; color: var(--orange); border: 1px solid rgba(255,107,53,0.4); padding: 7px 18px; border-radius: 20px; font-size: 11px; letter-spacing: 0.06em; font-weight: 600; cursor: pointer; font-family: 'Epilogue', sans-serif; transition: background 0.15s, color 0.15s; }
+  .toggle-all-btn:hover { background: var(--orange); color: #fff; }
+  .episode-list-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+  .episode-list-label { font-size: 10px; letter-spacing: 0.18em; color: var(--ink-muted); font-weight: 600; }
+
+  .episode-body { display: none; padding: 24px; }
+  .episode-card.open .episode-body { display: block; }
+
+  .prompt-label { font-size: 10px; letter-spacing: 0.15em; color: var(--ink-muted); font-weight: 600; text-transform: uppercase; margin-bottom: 10px; }
+  .prompt-text { font-size: 13px; color: var(--ink-soft); line-height: 1.75; background: var(--cream-dark); border: 1px solid var(--border); border-radius: 10px; padding: 16px 18px; font-style: italic; margin-bottom: 14px; }
+  .prompt-text strong { font-style: normal; color: var(--ink); font-weight: 600; }
+
+  .copy-btn { display: inline-flex; align-items: center; gap: 6px; background: transparent; color: var(--orange); border: 1px solid rgba(255,107,53,0.4); padding: 7px 16px; border-radius: 20px; font-size: 11px; letter-spacing: 0.06em; cursor: pointer; font-family: 'Epilogue', sans-serif; transition: background 0.15s, color 0.15s; }
+  .copy-btn:hover { background: var(--orange); color: #fff; }
+  .copy-btn.copied { background: var(--green); color: #fff; border-color: var(--green); }
+
+  footer { padding: 20px 60px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; background: var(--cream-dark); }
+  .footer-left { font-family: 'Fraunces', serif; font-size: 16px; font-weight: 700; }
+  .footer-left span { color: var(--orange); }
+  .footer-right { font-size: 11px; color: var(--ink-muted); letter-spacing: 0.06em; }
+
+  /* Nav hub */
+  .nav-hub { position: relative; }
+  .nav-hub-trigger { background: var(--ink); color: var(--cream); padding: 16px 24px; border-radius: 16px; text-align: center; width: 200px; cursor: pointer; user-select: none; transition: transform 0.18s ease, box-shadow 0.18s ease; }
+  .nav-hub-trigger .icon { font-size: 32px; line-height: 1; color: var(--orange); }
+  .nav-hub-trigger .label { font-size: 11px; color: #7a6a55; letter-spacing: 0.1em; margin-top: 4px; }
+  .nav-hub-trigger .hint { font-size: 11px; color: var(--cream); margin-top: 6px; font-weight: 300; opacity: 0.6; }
+  .nav-hub:hover .nav-hub-trigger { transform: translateY(-4px) scale(1.03); box-shadow: 0 8px 24px rgba(26,18,9,0.18); border-radius: 16px 16px 0 0; }
+  .nav-hub-dropdown { position: absolute; top: 100%; left: 0; width: 200px; background: var(--ink); border-radius: 0 0 16px 16px; overflow: hidden; opacity: 0; pointer-events: none; transform: translateY(-6px); transition: opacity 0.2s ease, transform 0.2s ease; z-index: 100; border-top: 1px solid rgba(255,255,255,0.08); }
+  .nav-hub:hover .nav-hub-dropdown { opacity: 1; pointer-events: all; transform: translateY(0); }
+  .nav-hub-item { display: flex; align-items: center; gap: 12px; padding: 13px 20px; color: var(--cream); font-size: 12px; letter-spacing: 0.08em; font-weight: 500; text-decoration: none; border-bottom: 1px solid rgba(255,255,255,0.06); transition: background 0.15s; }
+  .nav-hub-item:last-child { border-bottom: none; }
+  .nav-hub-item:hover { background: rgba(255,107,53,0.15); color: var(--orange); }
+  .nav-hub-item .nav-icon { font-size: 18px; flex-shrink: 0; }
+
+  @media (max-width: 700px) {
+    header { padding: 24px 20px; flex-direction: column; }
+    .main { padding: 28px 20px 60px; }
+    footer { padding: 16px; flex-direction: column; gap: 8px; text-align: center; }
+  }
+</style>
+<style>
+@keyframes pageEnter {
+  from { opacity: 0; transform: scale(1.05) translateY(-25px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+body { animation: pageEnter 0.6s cubic-bezier(0.15, 0.85, 0.2, 1.08) both; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-left">
+    <div class="breadcrumb">
+      <a href="../../index.html">Study Plan</a>
+      <span class="breadcrumb-sep">›</span>
+      <span>NotebookLM</span>
+    </div>
+    <div class="page-badge"><span class="page-badge-dot"></span>NOTEBOOKLM</div>
+    <h1>Podcast <em>Prompts</em></h1>
+    <p class="header-sub">Six AI podcast scripts covering all 10 ZDTE exam domains. Paste each prompt into NotebookLM to generate a conversational audio episode.</p>
+  </div>
+  <div class="header-right">
+    <div class="nav-hub">
+      <div class="nav-hub-trigger">
+        <div class="icon">📚</div>
+        <div class="label">STUDY MATERIALS</div>
+        <div class="hint">hover to explore</div>
+      </div>
+      <div class="nav-hub-dropdown">
+        <a class="nav-hub-item" href="../study-guides/index.html"><span class="nav-icon">📖</span> STUDY GUIDES</a>
+        <a class="nav-hub-item" href="../memory-palaces/index.html"><span class="nav-icon">🧠</span> MEMORY PALACES</a>
+        <a class="nav-hub-item" href="../study-bites/index.html"><span class="nav-icon">🍐</span> STUDY BITES</a>
+        <a class="nav-hub-item" href="../study-nibbles/index.html"><span class="nav-icon">🍔</span> STUDY NIBBLES</a>
+        <a class="nav-hub-item" href="../mock-exams/index.html"><span class="nav-icon">📋</span> MOCK EXAMS</a>
+        <a class="nav-hub-item" href="../lab-challenges/index.html"><span class="nav-icon">⚗️</span> LAB CHALLENGES</a>
+        <a class="nav-hub-item" href="index.html"><span class="nav-icon">🎙️</span> NOTEBOOKLM</a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="main">
+
+  <div class="intro">
+    <p><strong>How to use:</strong> Open a NotebookLM notebook with your ZDTE study sources uploaded. Click any episode below to expand it, then copy the prompt and paste it into the NotebookLM chat. It will generate a conversational podcast script you can listen to or use as a study audio track.</p>
+  </div>
+
+  <div class="episode-list-header">
+    <div class="episode-list-label">6 EPISODES</div>
+    <button class="toggle-all-btn" id="toggleAllBtn" onclick="toggleAll()">Collapse All</button>
+  </div>
+
+  <div class="episode-list">
+
+    <div class="episode-card open" id="ep1">
+      <div class="episode-header" onclick="toggleEp('ep1')">
+        <div class="episode-num">1</div>
+        <div class="episode-meta">
+          <div class="episode-days">DAYS 1 &amp; 2</div>
+          <div class="episode-title">Zscaler Architecture &amp; Identity Services</div>
+        </div>
+        <div class="episode-chevron">▸</div>
+      </div>
+      <div class="episode-body">
+        <div class="prompt-label">NotebookLM Prompt</div>
+        <div class="prompt-text" id="pod1">
+          "Create an engaging, conversational audio podcast script (~15–20 minutes) covering: (1) Zscaler's multi-tenant cloud architecture, Zero Trust Network Access principles, and API infrastructure; (2) Zidentity architecture, the SAML authentication workflow, step-up authentication, and configuring external identity providers. Use a host-and-expert dialogue format. Include real-world analogies, exam-relevant key terms, and end with a 5-question rapid-fire quiz. Tone: confident, clear, slightly informal."
+        </div>
+        <button class="copy-btn" onclick="copyPod('pod1', this)">⎘ Copy prompt</button>
+      </div>
+    </div>
+
+    <div class="episode-card open" id="ep2">
+      <div class="episode-header" onclick="toggleEp('ep2')">
+        <div class="episode-num">2</div>
+        <div class="episode-meta">
+          <div class="episode-days">DAYS 3 &amp; 4</div>
+          <div class="episode-title">Connectivity, Platform Services &amp; Access Control</div>
+        </div>
+        <div class="episode-chevron">▸</div>
+      </div>
+      <div class="episode-body">
+        <div class="prompt-label">NotebookLM Prompt</div>
+        <div class="prompt-text" id="pod2">
+          "Create a 15–20 minute conversational podcast covering: (1) Zscaler Client Connector, Branch Connector, Browser Access, and SD-WAN integration; (2) Private Service Edges (ZPA PSE and ZIA PISE), the Policy Framework hierarchy, Firewall and DNS Control, Tenant Restrictions, and Conditional Access. Use a dialogue format between a host and a Zscaler engineer. Include configuration gotchas, exam tips, and end with a rapid-fire 5-question quiz."
+        </div>
+        <button class="copy-btn" onclick="copyPod('pod2', this)">⎘ Copy prompt</button>
+      </div>
+    </div>
+
+    <div class="episode-card open" id="ep3">
+      <div class="episode-header" onclick="toggleEp('ep3')">
+        <div class="episode-num">3</div>
+        <div class="episode-meta">
+          <div class="episode-days">DAYS 5 &amp; 6</div>
+          <div class="episode-title">Cyberthreat &amp; Data Protection</div>
+        </div>
+        <div class="episode-chevron">▸</div>
+      </div>
+      <div class="episode-body">
+        <div class="prompt-label">NotebookLM Prompt</div>
+        <div class="prompt-text" id="pod3">
+          "Create a 15–20 minute podcast on: (1) Zscaler's cyberthreat protection stack — ATP, Cloud Sandbox, IPS, Browser Isolation, Deception, ITDR, and Private Access AppProtection; (2) Data protection — SSL inspection, inline DLP, CASB inline vs API, BYOD SaaS access, and incident management. Use a host-and-expert format. Highlight what distinguishes each technology and when to use it. End with 5 exam-style scenario questions."
+        </div>
+        <button class="copy-btn" onclick="copyPod('pod3', this)">⎘ Copy prompt</button>
+      </div>
+    </div>
+
+    <div class="episode-card open" id="ep4">
+      <div class="episode-header" onclick="toggleEp('ep4')">
+        <div class="episode-num">4</div>
+        <div class="episode-meta">
+          <div class="episode-days">DAYS 7 &amp; 8</div>
+          <div class="episode-title">Risk Management, ZDX &amp; Zero Trust Automation</div>
+        </div>
+        <div class="episode-chevron">▸</div>
+      </div>
+      <div class="episode-body">
+        <div class="prompt-label">NotebookLM Prompt</div>
+        <div class="prompt-text" id="pod4">
+          "Create a 15–20 minute podcast covering: (1) Zscaler Risk Management — Risk360, Unified Vulnerability Management, Deception posture, EASM, and Breach Predictor; (2) ZDX — metrics, probes, diagnostics, alerts, RBAC, ZDX Dashboard, hosted monitoring, AI influence; (3) Zero Trust Automation with OneAPI — framework architecture, capabilities, and configuration. Use a host-and-expert dialogue, real-world troubleshooting scenarios, and end with 5 exam-style questions."
+        </div>
+        <button class="copy-btn" onclick="copyPod('pod4', this)">⎘ Copy prompt</button>
+      </div>
+    </div>
+
+    <div class="episode-card open" id="ep5">
+      <div class="episode-header" onclick="toggleEp('ep5')">
+        <div class="episode-num">5</div>
+        <div class="episode-meta">
+          <div class="episode-days">DAYS 9 &amp; 10</div>
+          <div class="episode-title">ZIA, ZPA &amp; ZDX Deep Dive Review</div>
+        </div>
+        <div class="episode-chevron">▸</div>
+      </div>
+      <div class="episode-body">
+        <div class="prompt-label">NotebookLM Prompt</div>
+        <div class="prompt-text" id="pod5">
+          "Create a 20-minute exam-prep podcast reviewing: (1) ZIA — SSL inspection, URL filtering, DLP, Cloud App Control, Firewall, and malware protection; (2) ZPA — App Connectors, App Segments, access and inspection policies, Privileged Remote Access; (3) ZDX — end-to-end troubleshooting from device to application. Focus on distinguishing concepts that are commonly confused. Use scenario-based questions throughout and end with a 10-question rapid-fire quiz covering all three."
+        </div>
+        <button class="copy-btn" onclick="copyPod('pod5', this)">⎘ Copy prompt</button>
+      </div>
+    </div>
+
+    <div class="episode-card open" id="ep6">
+      <div class="episode-header" onclick="toggleEp('ep6')">
+        <div class="episode-num">6</div>
+        <div class="episode-meta">
+          <div class="episode-days">DAYS 11 &amp; 12</div>
+          <div class="episode-title">Final Exam Cram &amp; Confidence Boost</div>
+        </div>
+        <div class="episode-chevron">▸</div>
+      </div>
+      <div class="episode-body">
+        <div class="prompt-label">NotebookLM Prompt</div>
+        <div class="prompt-text" id="pod6">
+          "Create a 15-minute exam-eve podcast that: (1) Rapidly reviews the most exam-critical concepts across all 10 ZDTE domains; (2) Highlights the top 5 commonly confused concept pairs (e.g. ZIA vs ZPA traffic flows, inline CASB vs API CASB, PSE vs standard enforcement); (3) Gives exam-taking strategy tips for 60-question, 90-minute proctored exams; (4) Ends with an encouraging, motivating close. Tone: calm, confident, supportive."
+        </div>
+        <button class="copy-btn" onclick="copyPod('pod6', this)">⎘ Copy prompt</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<footer>
+  <div class="footer-left">ZDTE<span>.</span></div>
+  <div class="footer-right">Zscaler Digital Transformation Engineer · NotebookLM Prompts</div>
+</footer>
+
+<script>
+  function toggleEp(id) {
+    const card = document.getElementById(id);
+    card.classList.toggle('open');
+    syncToggleBtn();
+  }
+
+  function toggleAll() {
+    const cards = document.querySelectorAll('.episode-card');
+    const allOpen = [...cards].every(c => c.classList.contains('open'));
+    cards.forEach(c => c.classList.toggle('open', !allOpen));
+    syncToggleBtn();
+  }
+
+  function syncToggleBtn() {
+    const cards = document.querySelectorAll('.episode-card');
+    const allOpen = [...cards].every(c => c.classList.contains('open'));
+    const btn = document.getElementById('toggleAllBtn');
+    if (btn) btn.textContent = allOpen ? 'Collapse All' : 'Expand All';
+  }
+
+  function copyPod(id, btn) {
+    const el = document.getElementById(id);
+    navigator.clipboard.writeText(el.textContent.trim()).then(() => {
+      btn.textContent = '✓ Copied';
+      btn.classList.add('copied');
+      setTimeout(() => { btn.textContent = '⎘ Copy prompt'; btn.classList.remove('copied'); }, 2000);
+    });
+  }
+</script>
+
+<script src="../../transitions.js"></script>
+</body>
+</html>

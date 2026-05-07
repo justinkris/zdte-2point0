@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ZDTE — Page Title Here</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;0,700;1,400&family=Epilogue:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<!--
+  CHOOSE ONE of the following CSS links for each page type, then delete this block:
+    Study Guide:    <link rel="stylesheet" href="study-guide.css">
+    Study Bite:     <link rel="stylesheet" href="../study-bites/bite.css">
+    Memory Palace:  <link rel="stylesheet" href="palace.css">
+    Study Nibble:   <link rel="stylesheet" href="nibble.css">
+  Or use this standalone template CSS (covers all component types):
+-->
+<link rel="stylesheet" href="page-template.css">
+
+<!--
+  Page-specific overrides only (non-standard layouts, one-off components).
+  Do not modify the shared CSS file — add inline overrides here instead.
+-->
+<style>
+  /* page-specific styles go here */
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════════
+     HEADER
+     Two-column: header-left (breadcrumb + title) + header-right (progress + nav hub)
+     Study nibbles use a single-column header — remove header-right and the flex wrapper.
+     ═══════════════════════════════════════════════════════ -->
+<header>
+  <div class="header-left">
+
+    <a href="../../index.html" class="home-link">Home — Study Plan</a>
+
+    <!--
+      BADGE — pick one variant and delete the others:
+        day-badge   = dark ink pill  → study guides, memory palaces, mock exams
+        bite-badge  = purple pill    → study bites, memory palaces (alternate)
+        nibble-badge = orange pill   → study nibbles
+    -->
+    <div class="day-badge">
+      <span class="day-badge-dot"></span>
+      DAY 00 — TOPIC NAME
+    </div>
+    <!-- <div class="bite-badge"><span class="bite-badge-dot"></span>STUDY BITE</div> -->
+    <!-- <div class="nibble-badge"><span class="nibble-badge-dot"></span>STUDY NIBBLE</div> -->
+
+    <!-- Title: use <em> for the italic/orange accent word -->
+    <h1>Main Title<br><em>Subtitle in Italic Orange</em></h1>
+
+    <!-- Optional subtitle line (study bites / memory palaces) -->
+    <!-- <div class="header-sub">Short descriptor sentence for the page topic.</div> -->
+
+    <!-- Domain tags — pick relevant ones -->
+    <div class="header-meta-row">
+      <span class="tag tag-zia">ZIA</span>
+      <span class="tag tag-zpa">ZPA</span>
+      <!-- <span class="tag tag-zdx">ZDX</span> -->
+      <!-- <span class="tag tag-arch">Architecture</span> -->
+      <!-- <span class="tag tag-palace">🏛 Memory Palace</span> -->
+      <!-- <span class="tag tag-bite">Study Bite</span> -->
+      <!-- <span class="tag tag-compare">Comparison</span> -->
+      <!-- <span class="tag tag-reference">Reference</span> -->
+      <span class="tag tag-weight">Blueprint: 10%</span>
+    </div>
+
+  </div><!-- /header-left -->
+</header>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     SECTION NAV (sticky tab bar)
+     Must use navTo() — never use setTab() or scrollTo().
+     STUDY NIBBLES: delete this entire nav block (no tabs needed).
+     ═══════════════════════════════════════════════════════ -->
+<nav class="section-nav">
+  <button class="nav-tab active" onclick="navTo('section-overview', this)">Overview</button>
+  <button class="nav-tab" onclick="navTo('section-concepts', this)">Core Concepts</button>
+  <button class="nav-tab" onclick="navTo('section-notes', this)">Mental Notes</button>
+  <button class="nav-tab" onclick="navTo('section-exam', this)">Exam Tips</button>
+  <!-- Add more tabs as needed — each must match a section-block id below -->
+</nav>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     MAIN LAYOUT
+     Default: two-column grid (main-content + sidebar).
+     Study nibbles: remove the grid — use <main> with max-width/margin:auto (nibble.css default).
+     Full-width pages: add class="full-width" to <main>.
+     ═══════════════════════════════════════════════════════ -->
+<main>
+  <div class="main-content">
+
+    <!-- ── SECTION: OVERVIEW ── -->
+    <!-- Every section-block MUST have id="section-<name>" to match navTo() calls -->
+    <div class="section-block" id="section-overview">
+      <div class="section-label">OVERVIEW</div>
+      <h2>Section heading in Fraunces</h2>
+      <p>Body text in Epilogue at 14px. Use ink-soft colour for readability. Keep paragraphs focused — one concept per paragraph. Link to <a href="#">related pages</a> inline.</p>
+      <p>Second paragraph. Describe the context or motivation before diving into details.</p>
+
+      <!-- Key Concept box (orange accent) -->
+      <div class="key-concept">
+        <strong>Core insight:</strong> State the single most important takeaway from this section. Bold the key term or phrase.
+      </div>
+
+      <!-- Definition blocks (orange left-border) -->
+      <div class="definition">
+        <div class="definition-term">Term Name</div>
+        <div class="definition-body">Clear, precise definition of the term. One to three sentences maximum.</div>
+      </div>
+
+      <div class="definition">
+        <div class="definition-term">Second Term</div>
+        <div class="definition-body">Definition text here. Keep consistent with exam wording.</div>
+      </div>
+
+      <!-- Bullet list -->
+      <ul class="content-list">
+        <li>First bullet point — each item is one standalone fact or rule.</li>
+        <li>Second bullet point.</li>
+        <li>Third bullet point.</li>
+      </ul>
+    </div><!-- /section-overview -->
+
+
+    <!-- ── SECTION: CORE CONCEPTS ── -->
+    <div class="section-block" id="section-concepts">
+      <div class="section-label">CORE CONCEPTS</div>
+      <h2>Heading for this section</h2>
+
+      <h3>Sub-heading (Fraunces, smaller)</h3>
+      <p>Content under the sub-heading.</p>
+
+      <!-- Comparison table -->
+      <table class="compare-table">
+        <thead>
+          <tr>
+            <th style="width:22%;">Dimension</th>
+            <th>Option A</th>
+            <th>Option B</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Row label</td>
+            <td>Option A value</td>
+            <td>Option B value</td>
+          </tr>
+          <tr>
+            <td>Row label</td>
+            <td>Option A value</td>
+            <td>Option B value</td>
+          </tr>
+          <tr>
+            <td>Row label</td>
+            <td>Option A value</td>
+            <td>Option B value</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- Hero block (study nibbles — orange gradient) -->
+      <!-- <div class="hero">
+        <div class="hero-title">Hero Title</div>
+        <div class="hero-body">Hero body text. Use <strong>strong for key terms</strong>.</div>
+      </div> -->
+
+      <!-- Versus cards (two-up, study nibbles) -->
+      <!-- <div class="versus">
+        <div class="vcard vcard-v1">
+          <div class="vcard-label">OLD / WRONG</div>
+          <div class="vcard-title">Old Approach</div>
+          <div class="vcard-tagline">Italic tagline summarising the downside.</div>
+          <ul><li>Bullet point</li><li>Bullet point</li></ul>
+        </div>
+        <div class="vcard vcard-v2">
+          <div class="vcard-label">NEW / CORRECT</div>
+          <div class="vcard-title">New Approach</div>
+          <div class="vcard-tagline">Italic tagline summarising the benefit.</div>
+          <ul><li>Bullet point</li><li>Bullet point</li></ul>
+        </div>
+      </div> -->
+
+      <!-- Flow steps (numbered sequence with connecting line) -->
+      <!-- <div class="flow-steps">
+        <div class="flow-step">
+          <div class="flow-num">1</div>
+          <div class="flow-text"><strong>Step name</strong> — description of what happens at this step.</div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-num">2</div>
+          <div class="flow-text"><strong>Step name</strong> — description of what happens at this step.</div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-num">3</div>
+          <div class="flow-text"><strong>Step name</strong> — description.</div>
+        </div>
+      </div> -->
+
+    </div><!-- /section-concepts -->
+
+
+    <!-- ── SECTION: MENTAL NOTES ── -->
+    <div class="section-block" id="section-notes">
+      <div class="section-label">MENTAL NOTES</div>
+      <h2>Things to remember</h2>
+
+      <!-- Callout: Note / Amber (★ observations and key mental models) -->
+      <div class="callout callout-note">
+        <div class="callout-header">
+          <div class="callout-icon">★</div>MENTAL NOTE
+        </div>
+        <div class="callout-body">State the mental model or observation. Bold the <strong>key contrast or principle</strong>. Keep to 2–3 sentences.</div>
+      </div>
+
+      <!-- Callout: Analogy / Green (⟳ metaphors and real-world comparisons) -->
+      <div class="callout callout-analogy">
+        <div class="callout-header">
+          <div class="callout-icon">⟳</div>ANALOGY NAME
+        </div>
+        <div class="callout-body">Analogy text. Explain how the real-world metaphor maps to the technical concept. Close by naming the mapping explicitly.</div>
+      </div>
+
+      <!-- Callout: Tip / Blue (→ exam strategies and decision rules) -->
+      <div class="callout callout-tip">
+        <div class="callout-header">
+          <div class="callout-icon">→</div>EXAM TIP
+        </div>
+        <div class="callout-body">Exam-specific advice. Name the pattern to watch for in questions. State the decision rule explicitly.</div>
+      </div>
+
+      <!-- Callout: Warning / Red or Orange (! misconceptions and traps) -->
+      <div class="callout callout-warn">
+        <div class="callout-header">
+          <div class="callout-icon">!</div>WATCH OUT
+        </div>
+        <div class="callout-body">Describe the common mistake or trap. State clearly what the correct understanding is.</div>
+      </div>
+
+      <!-- Callout: Scene (amber, memory palaces) -->
+      <!-- <div class="callout callout-scene">
+        <div class="callout-header"><div class="callout-icon">🏛</div>THE SCENE</div>
+        <div class="callout-body">Visual scene description for memory encoding.</div>
+      </div> -->
+
+      <!-- Callout: Meaning (green, memory palaces) -->
+      <!-- <div class="callout callout-meaning">
+        <div class="callout-header"><div class="callout-icon">💡</div>WHAT IT MEANS</div>
+        <div class="callout-body">Technical meaning of the visual metaphor.</div>
+      </div> -->
+
+    </div><!-- /section-notes -->
+
+
+    <!-- ── SECTION: EXAM TIPS ── -->
+    <div class="section-block" id="section-exam">
+      <div class="section-label">EXAM TIPS</div>
+      <h2>What the exam tests</h2>
+
+      <div class="callout callout-tip">
+        <div class="callout-header">
+          <div class="callout-icon">→</div>EXAM TIP
+        </div>
+        <div class="callout-body">Exam tip text. Describe the question pattern and the expected answer logic.</div>
+      </div>
+
+      <ul class="content-list">
+        <li>Exam fact 1 — stated as a testable assertion.</li>
+        <li>Exam fact 2 — use the same wording the exam uses.</li>
+        <li>Exam fact 3 — highlight contrasts that generate wrong-answer traps.</li>
+      </ul>
+    </div><!-- /section-exam -->
+
+
+  </div><!-- /main-content -->
+
+
+  <!-- ═══════════════════════════════════════════════════════
+       SIDEBAR
+       STUDY NIBBLES: there is no sidebar — delete this entire block.
+       ═══════════════════════════════════════════════════════ -->
+  <div class="sidebar">
+
+    <!-- Quick reference cards (dark background, orange term) -->
+    <div class="sidebar-section">
+      <div class="sidebar-label">QUICK REFERENCE</div>
+
+      <div class="quick-ref">
+        <div class="quick-ref-term">TERM ONE</div>
+        <div class="quick-ref-def">Short definition. One or two sentences. Matches exam wording.</div>
+      </div>
+
+      <div class="quick-ref">
+        <div class="quick-ref-term">TERM TWO</div>
+        <div class="quick-ref-def">Short definition for term two.</div>
+      </div>
+
+      <div class="quick-ref">
+        <div class="quick-ref-term">TERM THREE</div>
+        <div class="quick-ref-def">Short definition for term three.</div>
+      </div>
+    </div>
+
+    <!-- Personal study notes (amber background) -->
+    <div class="sidebar-section">
+      <div class="sidebar-label">MY NOTES</div>
+      <div class="sidebar-note">Personal note about what clicked during the study session. Use first-person, conversational tone.</div>
+      <div class="sidebar-note">Second personal note on a different aspect of the topic.</div>
+    </div>
+
+    <!-- Related content links (memory palaces and study guides) -->
+    <div class="sidebar-section">
+      <div class="sidebar-label">RELATED BITES</div>
+
+      <a class="related-bite" href="../study-bites/example-bite.html">
+        <div class="related-bite-icon">🍐</div>
+        <div class="related-bite-body">
+          <div class="related-bite-title">Related Bite Title</div>
+          <div class="related-bite-sub">Short descriptor · Domain tag</div>
+        </div>
+        <div class="related-bite-arrow">›</div>
+      </a>
+
+      <a class="related-bite" href="../study-nibbles/nibble-example.html">
+        <div class="related-bite-icon">🍔</div>
+        <div class="related-bite-body">
+          <div class="related-bite-title">Related Nibble Title</div>
+          <div class="related-bite-sub">Short descriptor · Domain tag</div>
+        </div>
+        <div class="related-bite-arrow">›</div>
+      </a>
+    </div>
+
+    <!-- Related days / pages (study guides) -->
+    <!-- <div class="sidebar-section">
+      <div class="sidebar-label">RELATED DAYS</div>
+      <ul class="subtopic-list">
+        <li style="cursor:default;">
+          <div style="width:14px;height:14px;background:var(--orange-light);border:1px solid var(--orange-border);border-radius:3px;flex-shrink:0;"></div>
+          <span>Day 02 — Next Topic</span>
+        </li>
+      </ul>
+    </div> -->
+
+  </div><!-- /sidebar -->
+
+</main>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     FOOTER
+     ═══════════════════════════════════════════════════════ -->
+<footer>
+  <div class="footer-left">ZDTE<span>.</span></div>
+  <div class="footer-right">Zscaler Digital Transformation Engineer · Page Type · Topic Name</div>
+</footer>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     JAVASCRIPT
+     navTo: required on all pages with section-nav tabs.
+     toggleDone + updateProgress: required when sidebar has subtopic-list with onclick.
+     ═══════════════════════════════════════════════════════ -->
+<script>
+  function navTo(sectionId, el) {
+    document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+    el.classList.add('active');
+    const section = document.getElementById(sectionId);
+    if (section) {
+      const navHeight = document.querySelector('.section-nav').offsetHeight + 16;
+      window.scrollTo({ top: section.getBoundingClientRect().top + window.scrollY - navHeight, behavior: 'smooth' });
+    }
+  }
+
+  function toggleDone(li) {
+    li.classList.toggle('done');
+    updateProgress();
+  }
+
+  function updateProgress() {
+    const items = document.querySelectorAll('.subtopic-list li[onclick]');
+    const done  = document.querySelectorAll('.subtopic-list li[onclick].done');
+    const pct   = items.length ? Math.round((done.length / items.length) * 100) : 0;
+    const big   = document.querySelector('.progress-card .big');
+    if (big) big.innerHTML = pct + '<span style="font-size:18px;color:#7a6a55;">%</span>';
+  }
+</script>
+
+<script src="../../transitions.js"></script>
+</body>
+</html>

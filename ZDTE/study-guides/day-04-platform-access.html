@@ -1,0 +1,969 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ZDTE Study Guide — Day 4: Platform &amp; Access Control Services</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;0,700;1,400&family=Epilogue:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="study-guide.css">
+</head>
+<body>
+
+<header>
+  <div class="header-left">
+
+    <div class="breadcrumb">
+      <a href="../../index.html">Study Plan</a>
+      <span class="breadcrumb-sep">›</span>
+      <a href="index.html">Study Guides</a>
+      <span class="breadcrumb-sep">›</span>
+      <span>Day 4 — Platform &amp; Access Control Services</span>
+    </div>
+
+    <div class="day-badge">
+      <span class="day-badge-dot"></span>
+      DAY 04 — WEDNESDAY, 22 APRIL 2026
+    </div>
+
+    <h1>Platform &amp; Access Control<br><em>Services</em></h1>
+
+    <div class="header-meta-row">
+      <span class="tag tag-zia">ZIA</span>
+      <span class="tag tag-zpa">ZPA</span>
+      <span class="tag tag-arch">Architecture</span>
+      <span class="tag tag-weight">Blueprint: 19%</span>
+    </div>
+
+  </div>
+
+  <div class="header-right">
+    <div class="progress-card">
+      <div class="big" id="prog-num">0<span style="font-size:18px;color:#7a6a55;">%</span></div>
+      <div class="lbl">COMPLETE</div>
+    </div>
+  </div>
+</header>
+
+<nav class="section-nav">
+  <button class="nav-tab active" onclick="navTo('overview', this)">Overview</button>
+  <button class="nav-tab" onclick="navTo('pse', this)">PSE</button>
+  <button class="nav-tab" onclick="navTo('analytics', this)">Analytics</button>
+  <button class="nav-tab" onclick="navTo('policy', this)">Policy Framework</button>
+  <button class="nav-tab" onclick="navTo('fw-dns', this)">Firewall &amp; DNS</button>
+  <button class="nav-tab" onclick="navTo('tenant-restrictions', this)">Tenant Restrictions</button>
+  <button class="nav-tab" onclick="navTo('segmentation', this)">Segmentation</button>
+  <button class="nav-tab" onclick="navTo('exam', this)">Exam Tips</button>
+</nav>
+
+<main>
+
+  <div class="main-content">
+
+    <!-- ══ OVERVIEW ══ -->
+    <div class="section-block anchor" id="overview">
+      <div class="section-label">OVERVIEW</div>
+      <h2>What Day 4 covers</h2>
+      <p>
+        Day 4 covers two exam domains that together represent <strong>19% of the blueprint</strong>:
+        <em>Platform Services</em> (9%) and <em>Access Control Services</em> (10%). These topics
+        describe the chassis of the Zero Trust Exchange — the hardware and virtual infrastructure
+        that extends Zscaler into your environment, the analytics that make it observable, and the
+        policy framework that enforces every access decision.
+      </p>
+      <p>
+        Everything here is foundational to the rest of the ZDTE exam: understanding policy
+        evaluation order, PSE architecture, and the Tenant Restrictions / Conditional Access model
+        underpins almost every scenario question you'll see in ZIA, ZPA, and ZDX domains.
+      </p>
+
+      <div class="key-concept">
+        <strong>Day 4 in one line:</strong> Private Service Edges extend the Zero Trust Exchange
+        into your DC; Analytics and SIEM streaming make it observable; the Policy Framework,
+        Firewall/DNS, Tenant Restrictions, Segmentation and Conditional Access are the layered
+        controls that enforce Zero Trust on every request.
+      </div>
+    </div>
+
+    <!-- ══ SUB-TOPIC 1: PSE ══ -->
+    <div class="section-block anchor" id="pse">
+      <div class="section-label">SUB-TOPIC 1 · PRIVATE SERVICE EDGE</div>
+      <h2>Zscaler Private Service Edge (PSE)</h2>
+      <p>
+        A Private Service Edge is a <strong>Zscaler-managed extension of the Zero Trust Exchange
+        running on customer infrastructure</strong> — either on a Zscaler-shipped appliance or as a
+        virtual machine. It delivers the same inspection and brokering capabilities as a Public
+        Service Edge, but locally.
+      </p>
+
+      <h3>Why PSE exists — the three drivers</h3>
+      <ul class="content-list">
+        <li><strong>Data sovereignty / geopolitical:</strong> Certain regulations require that
+          traffic be inspected and logged in-country, on infrastructure the customer controls.</li>
+        <li><strong>Latency / hairpin avoidance:</strong> Keeps local traffic local — e.g., users
+          in a Sydney DC accessing Sydney-hosted apps don't hairpin through a distant Public
+          Service Edge.</li>
+        <li><strong>Source IP preservation:</strong> Egressing traffic through the customer's
+          public IP block so that partner IP allowlists, licensing-bound SaaS, and geo-restricted
+          services continue to work.</li>
+      </ul>
+
+      <h3>Two types — ZIA PSE vs ZPA PSE</h3>
+      <div class="definition">
+        <div class="definition-term">ZIA Private Service Edge</div>
+        <div class="definition-body">Inspects <strong>internet-bound traffic</strong>. Same
+          proxy/firewall/DLP/sandbox capabilities as a ZIA Public Service Edge. Communicates
+          back to the ZIA Central Authority, cloud routers, and Nanolog clusters.</div>
+      </div>
+      <div class="definition">
+        <div class="definition-term">ZPA Private Service Edge</div>
+        <div class="definition-body">Brokers <strong>private application connections</strong>.
+          Manages sessions between Zscaler Client Connector and App Connectors. Enforces ZPA
+          access policies, caches path selection, and provides Universal ZTNA for on-prem users.</div>
+      </div>
+      <p>
+        A single Service Edge plays one role — ZIA or ZPA. Not both. If an organisation needs both,
+        they deploy both.
+      </p>
+
+      <h3>PSE as an extension of the Zero Trust Exchange</h3>
+      <p>
+        A PSE is not a standalone box — it's a remote node of the Zscaler cloud. It communicates
+        with three key cloud components:
+      </p>
+      <ul class="content-list">
+        <li><strong>Central Authority (CA)</strong> — control plane; sends policy and authenticates
+          users.</li>
+        <li><strong>Nanolog clusters</strong> — logging plane; stores compressed transaction logs.</li>
+        <li><strong>Cloud routers</strong> — route logs to the right tenant's Nanolog cluster.
+          (Not traffic routers — log-pipeline routers.)</li>
+      </ul>
+      <p>
+        These three map to the <strong>three-plane architecture</strong> — data (Service Edges),
+        control (CA), and logging (routers + Nanolog) — scaling independently so no single plane
+        becomes a bottleneck.
+      </p>
+
+      <h3>Trust &amp; enrollment</h3>
+      <p>
+        A PSE authenticates to the cloud via a <strong>provisioning key</strong> (secure random
+        token tied to a tenant and group) and an <strong>enrollment certificate</strong>. On
+        boot-up, the PSE presents its key, receives a signed cert from the cloud, and thereafter
+        every communication is mutually authenticated via certificates.
+      </p>
+
+      <h3>Physical hardware models</h3>
+      <table class="compare-table">
+        <thead>
+          <tr>
+            <th>Model</th>
+            <th>Service Edges</th>
+            <th>LB</th>
+            <th>NIC</th>
+            <th>Max Download</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>PSE 3</strong> (Integrated LB)</td>
+            <td>3 instances</td>
+            <td>1 integrated</td>
+            <td>1GE</td>
+            <td>~1 Gbps</td>
+          </tr>
+          <tr>
+            <td><strong>PSE 5</strong> (Integrated LB)</td>
+            <td>5 instances</td>
+            <td>1 integrated</td>
+            <td>10GE</td>
+            <td>~2 Gbps</td>
+          </tr>
+          <tr>
+            <td><strong>PSE 5</strong> (Dedicated LB)</td>
+            <td>6 instances per node</td>
+            <td>Up to 4 dedicated</td>
+            <td>10GE</td>
+            <td>&gt;5 Gbps</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="key-concept">
+        <strong>The &gt;5 Gbps Rule:</strong> Any deployment requiring more than 5 Gbps of
+        <em>total</em> throughput (upload + download combined) must use the Dedicated LB
+        architecture. At high throughput, the integrated LB fights the Service Edge instances
+        for CPU, and TLS decryption (the most expensive operation) degrades first.
+      </div>
+
+      <p>
+        Redundancy: <strong>minimum two PSEs per cluster</strong> — Zscaler doesn't support
+        standalone deployments. Dedicated LBs also deploy in pairs.
+      </p>
+      <p>
+        Both the PSE hardware <em>and</em> the Dedicated LB are Zscaler-shipped, Zscaler-managed
+        appliances. The customer does not supply their own load balancer.
+      </p>
+
+      <h3>Virtual PSE</h3>
+      <p>
+        PSE software also runs as a VM on VMware ESX/ESXi, Microsoft Hyper-V, AWS, Azure, GCP,
+        and Enterprise Linux (RPM). ZPA PSE additionally supports Docker. Virtual deployment:
+      </p>
+      <ul class="content-list">
+        <li>Eliminates hardware lead time (no shipping).</li>
+        <li>Leverages existing hypervisor infrastructure.</li>
+        <li>Unlocks deployment locations physical can't reach — notably <strong>inside public
+          cloud regions</strong> (e.g., inspect Azure workloads in the same Azure region).</li>
+        <li>Lower peak throughput than physical (hypervisor overhead).</li>
+        <li>No Dedicated LB option — that's physical-only.</li>
+      </ul>
+
+      <h3>Deployment topologies</h3>
+      <table class="compare-table">
+        <thead>
+          <tr>
+            <th>Topology</th>
+            <th>Firewall impact</th>
+            <th>Zscaler's stance</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Inside DMZ</strong></td>
+            <td>Session doubling — every user transaction traverses the firewall twice, risking port and session table exhaustion</td>
+            <td>Acceptable if security posture requires DMZ isolation</td>
+          </tr>
+          <tr>
+            <td><strong>Outside corporate firewall</strong> (GRE/IPSec tunnel from firewall to PSE)</td>
+            <td>One tunnel session on the firewall regardless of user volume</td>
+            <td><strong>Recommended</strong> — collapses N transactions into 1 session</td>
+          </tr>
+          <tr>
+            <td><strong>Behind the firewall</strong></td>
+            <td>Firewall still in critical path; PSE-originated sessions still tracked</td>
+            <td>Option, but not ideal</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="callout callout-analogy">
+        <div class="callout-header">
+          <div class="callout-icon">⟳</div>
+          ANALOGY
+        </div>
+        <div class="callout-body">
+          <strong>Session doubling</strong> is the hotel front desk tracking every guest twice
+          when they go out the side entrance. The tunnelled topology is like putting the whole
+          department on a single shuttle bus through one checkpoint — one session to track, not
+          thousands.
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ SUB-TOPIC 2: ANALYTICS & REPORTING ══ -->
+    <div class="section-block anchor" id="analytics">
+      <div class="section-label">SUB-TOPIC 2 · ANALYTICS &amp; REPORTING</div>
+      <h2>Analytics &amp; Reporting</h2>
+
+      <h3>The logging pipeline</h3>
+      <div class="pipeline-box">       <span class="hl">USER TRANSACTIONS</span>
+              ↓
+  <span class="dim">[</span>Service Edge / PSE<span class="dim"> — generates logs]</span>
+              ↓
+         compressed + tokenised at source
+              ↓
+       <span class="dim">[</span>Cloud Routers<span class="dim"> — route by tenant]</span>
+              ↓
+     <span class="dim">[</span>Nanolog Cluster<span class="dim"> — tenant-specific storage]</span>
+              ↓
+       ┌──────┴──────┬──────────────┐
+       ↓             ↓              ↓
+  <span class="hl">[UI Server]</span>   <span class="hl">[Data Lake]</span>   <span class="hl">[Streaming]</span>
+  live queries    long-term         │
+                  analytics   ┌─────┴─────┬─────────────┐
+                              ↓           ↓             ↓
+                            <span class="hl">NSS</span>         <span class="hl">LSS</span>      <span class="hl">Cloud-to-Cloud</span>
+                           (ZIA)       (ZPA)         (either)</div>
+
+      <h3>Efficient logging</h3>
+      <ul class="content-list">
+        <li><strong>Tokenisation &amp; compression</strong> — payload reduction happens at the point
+          of log creation, not in the cloud. NSS achieves up to <strong>50:1 compression</strong>.</li>
+        <li><strong>Log routers</strong> ensure each tenant's logs land in the correct Nanolog cluster.</li>
+        <li><strong>Nanolog clusters</strong> provide the searchable store behind the admin UI.</li>
+        <li><strong>Data lake</strong> enables long-term retention and analytics workloads
+          beyond real-time use cases.</li>
+      </ul>
+
+      <h3>SIEM streaming options</h3>
+      <table class="compare-table">
+        <thead>
+          <tr>
+            <th>SIEM location</th>
+            <th>Product</th>
+            <th>Method</th>
+            <th>Transport</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>On-prem SIEM</strong></td>
+            <td>ZIA</td>
+            <td>NSS (Nanolog Streaming Service)</td>
+            <td>Customer-deployed VM in the DC, outbound TLS to Nanolog</td>
+          </tr>
+          <tr>
+            <td><strong>On-prem SIEM</strong></td>
+            <td>ZPA</td>
+            <td>LSS (Log Streaming Service)</td>
+            <td>Via existing App Connector infrastructure</td>
+          </tr>
+          <tr>
+            <td><strong>Cloud SIEM</strong></td>
+            <td>ZIA or ZPA</td>
+            <td>Cloud-to-Cloud Log Streaming</td>
+            <td>Direct HTTPS outbound connector — no customer VM required</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="key-concept">
+        <strong>Follow the destination.</strong> When choosing a streaming method, don't start by
+        asking what you're streaming — ask where the SIEM lives. On-prem SIEM = you need a bridge
+        into the customer network. Cloud SIEM = wire the two clouds together directly.
+      </div>
+
+      <p>
+        NSS specifics: <strong>customer-managed VM</strong> (Zscaler provides the image, customer
+        patches and monitors it); <strong>outbound-only TLS</strong> to Nanolog cluster IPs;
+        <strong>1-hour buffer</strong> during connectivity issues; decompresses and reformats logs
+        for the SIEM (syslog, JSON, CEF, LEEF). NSS and LSS follow the same design pattern as App
+        Connectors — outbound connections only, no inbound firewall rules required.
+      </p>
+    </div>
+
+    <!-- ══ SUB-TOPIC 3: POLICY FRAMEWORK ══ -->
+    <div class="section-block anchor" id="policy">
+      <div class="section-label">SUB-TOPIC 3 · POLICY FRAMEWORK</div>
+      <h2>Policy Framework — structure &amp; hierarchy</h2>
+
+      <p>
+        Every policy in Zscaler — URL filtering, firewall rules, DLP, sandbox, tenant
+        restrictions, ZPA access policies — follows the same underlying structure. Understanding
+        the framework saves you memorising each policy type individually.
+      </p>
+
+      <h3>Universal rule anatomy</h3>
+      <div class="pipeline-box">    <span class="hl">IF</span>   [criteria about the user / device / source]
+   <span class="hl">AND</span>  [criteria about the destination / object]
+  <span class="hl">THEN</span>  [action]</div>
+
+      <p>Every rule decomposes into three building blocks:</p>
+      <ul class="content-list">
+        <li><strong>Subject criteria (who/where/how):</strong> user, group, department, location,
+          device trust level, network, time window.</li>
+        <li><strong>Object criteria (what they're accessing):</strong> URL category, cloud app,
+          application segment, file type, threat category, content type.</li>
+        <li><strong>Action:</strong> Allow, Block, Caution, Isolate, Quarantine, step-up
+          authentication, etc.</li>
+      </ul>
+
+      <h3>First-match-wins evaluation</h3>
+      <p>
+        Rules are evaluated <strong>top-to-bottom</strong>. The first rule whose criteria all
+        match fires — that rule's action is applied and no further rules are considered.
+      </p>
+
+      <div class="key-concept">
+        <strong>Design rule:</strong> Specific rules go on top. General rules go on the bottom.
+        Exception first, general last. If a rule says "Allow CEO → anything" positioned below a
+        "Block Social Networking" rule, the CEO still gets blocked from Facebook — the block rule
+        matches first.
+      </div>
+
+      <h3>The pipeline model — layered evaluation</h3>
+      <div class="pipeline-box"> <span class="dim">[Request arrives]</span>
+        ↓
+ <span class="hl">Authentication</span>          <span class="dim">who are you?</span>
+        ↓
+ <span class="hl">URL Filtering</span>           <span class="dim">is this site allowed?</span>
+        ↓
+ <span class="hl">Cloud App Control</span>       <span class="dim">is this SaaS app allowed?</span>
+        ↓
+ <span class="hl">SSL Inspection</span>          <span class="dim">decrypt (required for deeper layers)</span>
+        ↓
+ <span class="hl">File Type Control</span>       <span class="dim">is this file type allowed?</span>
+        ↓
+ <span class="hl">IPS / ATP</span>               <span class="dim">quick signature matching</span>
+        ↓
+ <span class="hl">Malware</span>                 <span class="dim">full content scan</span>
+        ↓
+ <span class="hl">Sandbox</span>                 <span class="dim">detonation of unknown files</span>
+        ↓
+ <span class="hl">DLP</span>                     <span class="dim">is sensitive data leaving?</span>
+        ↓
+ <span class="hl">Bandwidth Control</span>       <span class="dim">QoS / shaping</span>
+        ↓
+  <span class="dim">[Response returned]</span></div>
+
+      <p>
+        A deny at any stage terminates the pipeline. A permissive "Allow CEO" URL rule does
+        <em>not</em> bypass malware scanning — security inspection runs on <em>allowed</em>
+        traffic, regardless of access policy outcome.
+      </p>
+
+      <div class="callout callout-analogy">
+        <div class="callout-header">
+          <div class="callout-icon">⟳</div>
+          ANALOGY
+        </div>
+        <div class="callout-body">
+          <strong>Airport security:</strong> Authentication = check-in, URL Filter = ticket check,
+          Cloud App Control = gate agent, Malware = bag X-ray, Sandbox = bomb squad room, DLP =
+          customs on exit. Cheap checks early, expensive checks late. Each stage can stop the
+          journey.
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ SUB-TOPIC 4: FIREWALL & DNS ══ -->
+    <div class="section-block anchor" id="fw-dns">
+      <div class="section-label">SUB-TOPIC 4 · FIREWALL &amp; DNS CONTROL</div>
+      <h2>Cloud Firewall &amp; DNS Control</h2>
+
+      <h3>Cloud Firewall</h3>
+      <p>
+        ZIA's Cloud Firewall handles <strong>non-web traffic</strong> — SSH, RDP, DNS, custom
+        TCP/UDP apps, anything that isn't HTTP/HTTPS. It runs in parallel with the proxy stack:
+        at the Service Edge, a protocol classifier routes traffic to either the proxy pipeline
+        (web) or the firewall pipeline (non-web).
+      </p>
+
+      <table class="compare-table">
+        <thead>
+          <tr><th>Tier</th><th>Capabilities</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Standard Cloud Firewall</strong></td>
+            <td>L3/L4 only — source/destination IP, port, protocol. Basic allow/block. No user or
+              application awareness. Limited logging.</td>
+          </tr>
+          <tr>
+            <td><strong>Advanced Cloud Firewall</strong></td>
+            <td>L7 application awareness, user/group/location-aware rules, IPS integration, full
+              logging, NAT controls. Requires separate licensing.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p>
+        Same framework as everything else: first-match-wins, specific-above-general. Cloud
+        Firewall is always present on a ZIA deployment — licensing unlocks capabilities, not the
+        module itself.
+      </p>
+
+      <h3>DNS Control</h3>
+      <p>
+        Policy-based control over DNS resolution. ZIA intercepts DNS queries and can
+        <strong>allow, block, redirect, or inspect</strong> them. DNS is often the earliest signal
+        in an attack (malware beaconing, C2 rendezvous, phishing kit domains), so blocking at DNS
+        stops attacks before the TCP handshake.
+      </p>
+
+      <p>
+        Key features: <strong>DNS Gateways</strong> (defined endpoints for resolution),
+        <strong>DNS filter rules</strong>, and <strong>DNS over HTTPS (DoH) inspection</strong>.
+        Browsers and OSes increasingly default to DoH to hide queries in HTTPS; Zscaler detects
+        and enforces policy on DoH traffic.
+      </p>
+
+      <div class="key-concept">
+        <strong>Order matters:</strong> DNS resolution happens before any TCP connection. So for
+        non-web traffic, DNS Control evaluates first, then Cloud Firewall. For web traffic, DNS
+        Control → proxy pipeline.
+      </div>
+    </div>
+
+    <!-- ══ SUB-TOPIC 5: TENANT RESTRICTIONS ══ -->
+    <div class="section-block anchor" id="tenant-restrictions">
+      <div class="section-label">SUB-TOPIC 5 · TENANT RESTRICTIONS</div>
+      <h2>Tenant Restrictions (v1 &amp; v2)</h2>
+
+      <p>
+        Tenant Restrictions solves a gap URL filtering can't: the destination
+        <code>outlook.office.com</code> is the same whether Bob signs into ACME's corporate M365
+        tenant or his personal Hotmail account. URL filter can't tell the difference.
+      </p>
+
+      <h3>Mechanism — HTTP header injection</h3>
+      <p>
+        Zscaler's proxy decrypts the HTTPS session (SSL inspection <strong>must be enabled</strong>),
+        injects Tenant Restriction headers, and re-encrypts. Microsoft reads the headers at their
+        endpoints and enforces the policy. <strong>Zscaler injects; Microsoft enforces.</strong>
+      </p>
+
+      <h3>v1 vs v2 — the core difference</h3>
+      <table class="compare-table">
+        <thead>
+          <tr>
+            <th>Dimension</th>
+            <th>TRv1</th>
+            <th>TRv2</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>What it controls</td>
+            <td>Sign-in only</td>
+            <td>Sign-in <strong>+ resource access</strong></td>
+          </tr>
+          <tr>
+            <td>Where policy lives</td>
+            <td>Inside the injected header (allowlist)</td>
+            <td>In Entra ID admin portal</td>
+          </tr>
+          <tr>
+            <td>Header format</td>
+            <td>Plaintext tenant allowlist</td>
+            <td>Signed JWT referencing tenant GUID</td>
+          </tr>
+          <tr>
+            <td>Anonymous access protection</td>
+            <td>❌ None</td>
+            <td>✅ Yes</td>
+          </tr>
+          <tr>
+            <td>Per-user / per-group rules</td>
+            <td>❌ No — tenant-wide only</td>
+            <td>✅ Yes</td>
+          </tr>
+          <tr>
+            <td>Per-application rules</td>
+            <td>❌ No</td>
+            <td>✅ Yes</td>
+          </tr>
+          <tr>
+            <td>To change allowed tenants</td>
+            <td>Change Zscaler config</td>
+            <td>Change Entra policy</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="key-concept">
+        <strong>One-line mental model:</strong> v1 is a bouncer at the club door. v2 is a bouncer
+        at the door AND inside every room. v1 protects sign-in endpoints only; v2 protects
+        sign-in AND resource endpoints (Graph, SharePoint, OneDrive, Teams, Exchange).
+      </div>
+
+      <h3>Scenario decision pattern</h3>
+      <p>For any Tenant Restrictions exam question, ask two things in order:</p>
+      <ul class="content-list">
+        <li><strong>Is this a sign-in or a resource access?</strong> Sign-in = both versions
+          protect it. Resource access = only v2.</li>
+        <li><strong>Where does the policy live and what does it say?</strong> v1: check the header
+          allowlist. v2: check the Entra policy.</li>
+      </ul>
+    </div>
+
+    <!-- ══ SUB-TOPIC 6: SEGMENTATION & CONDITIONAL ACCESS ══ -->
+    <div class="section-block anchor" id="segmentation">
+      <div class="section-label">SUB-TOPIC 6 · SEGMENTATION &amp; CONDITIONAL ACCESS</div>
+      <h2>Segmentation &amp; Conditional Access</h2>
+
+      <h3>Segmentation — "what can you reach?"</h3>
+      <p>
+        Segmentation in ZPA is <strong>application-level</strong>, not network-level — users don't
+        get an IP address on the corporate LAN; they get brokered access to specific apps.
+      </p>
+
+      <ul class="content-list">
+        <li><strong>Application Segments</strong> — logical groupings of FQDNs / IPs / ports that
+          make up one application.</li>
+        <li><strong>Segment Groups</strong> — collections of Application Segments for easier
+          policy targeting.</li>
+        <li><strong>Server Groups</strong> — which App Connectors can reach which apps.</li>
+        <li><strong>Access Policies</strong> — rules matching users/groups to Application
+          Segments.</li>
+      </ul>
+
+      <p>Everything is default-deny. Unauthorised users don't just get "access denied" — the app is invisible to them.</p>
+
+      <h3>Conditional Access — "under what circumstances?"</h3>
+      <p>
+        Conditional Access layers context-aware conditions on top of segmentation. The policy
+        engine evaluates:
+      </p>
+      <ul class="content-list">
+        <li><strong>Identity</strong> — user, group, role</li>
+        <li><strong>Device posture</strong> — managed vs BYOD, Device Trust Level, compliance</li>
+        <li><strong>Location</strong> — trusted network, country, IP</li>
+        <li><strong>Time</strong> — business hours, unusual access times</li>
+        <li><strong>Risk signals</strong> — ZDX score, threat score, behavioural anomalies</li>
+      </ul>
+
+      <div class="key-concept">
+        <strong>Segmentation + Conditional Access:</strong> Segmentation decides what rooms you
+        can enter. Conditional Access decides when, where, and how you can enter them. Together
+        they form the core of Zero Trust access control.
+      </div>
+    </div>
+
+    <!-- ══ MENTAL NOTES ══ -->
+    <div class="section-block anchor" id="mental">
+      <div class="section-label">MENTAL NOTES</div>
+      <h2>Things to remember</h2>
+
+      <div class="callout callout-note">
+        <div class="callout-header">
+          <div class="callout-icon">★</div>
+          PSE IS AN EXTENSION
+        </div>
+        <div class="callout-body">
+          A Private Service Edge is a franchise location of the Zscaler chain. Customer provides
+          the real estate (hardware/VM, rack, power, network); Zscaler provides the software,
+          management, and policy. Cut its link to the cloud and it becomes stale — no policy
+          updates, no auth refreshes, no logging.
+        </div>
+      </div>
+
+      <div class="callout callout-note">
+        <div class="callout-header">
+          <div class="callout-icon">★</div>
+          THE THREE PLANES
+        </div>
+        <div class="callout-body">
+          Data (Service Edges) · Control (Central Authority) · Logging (Cloud Routers + Nanolog).
+          Each scales independently. Great way to reason about failure modes: "What breaks if
+          X plane loses connectivity?"
+        </div>
+      </div>
+
+      <div class="callout callout-note">
+        <div class="callout-header">
+          <div class="callout-icon">★</div>
+          FIRST MATCH WINS
+        </div>
+        <div class="callout-body">
+          Every Zscaler policy list evaluates top-to-bottom and stops on the first match. Specific
+          rules (exceptions) go above general rules. Getting the order wrong causes the CEO to be
+          blocked from Facebook even though "Allow CEO → anything" exists further down.
+        </div>
+      </div>
+
+      <div class="callout callout-note">
+        <div class="callout-header">
+          <div class="callout-icon">★</div>
+          PIPELINE, NOT SINGLE RULE
+        </div>
+        <div class="callout-body">
+          URL Filter allowing traffic does NOT bypass malware scanning. Each layer is independent,
+          runs sequentially, and can terminate the request. "Allow" means different things at
+          different layers.
+        </div>
+      </div>
+
+      <div class="callout callout-note">
+        <div class="callout-header">
+          <div class="callout-icon">★</div>
+          ZSCALER INJECTS, MICROSOFT ENFORCES
+        </div>
+        <div class="callout-body">
+          For Tenant Restrictions, Zscaler's job is purely to inject the correct HTTP header on
+          Microsoft-bound traffic. Microsoft's servers read the header and enforce the policy.
+          Zscaler does not make the allow/block decision for tenant restrictions.
+        </div>
+      </div>
+
+      <div class="callout callout-note">
+        <div class="callout-header">
+          <div class="callout-icon">★</div>
+          "FOLLOW THE DESTINATION"
+        </div>
+        <div class="callout-body">
+          For PSE type selection: public internet = ZIA PSE; private app = ZPA PSE.
+          For SIEM streaming: on-prem SIEM = NSS (ZIA) or LSS (ZPA); cloud SIEM = Cloud-to-Cloud.
+          Always let the destination drive the choice.
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ ANALOGIES ══ -->
+    <div class="section-block anchor" id="analogies">
+      <div class="section-label">ANALOGIES</div>
+      <h2>Ways to think about it</h2>
+
+      <div class="callout callout-analogy">
+        <div class="callout-header">
+          <div class="callout-icon">⟳</div>
+          FRANCHISE RESTAURANT
+        </div>
+        <div class="callout-body">
+          PSE = a franchise restaurant on the customer's real estate. HQ (Zscaler cloud) sets the
+          menu, recipes, policies, and branding. The provisioning key + enrollment cert = the
+          franchise agreement. Daily sales reports to HQ = logs streamed to Nanolog.
+        </div>
+      </div>
+
+      <div class="callout callout-analogy">
+        <div class="callout-header">
+          <div class="callout-icon">⟳</div>
+          KITCHEN AT DINNER RUSH
+        </div>
+        <div class="callout-body">
+          At low traffic, the greeter (LB) and chefs (Service Edges) can share a single kitchen.
+          At high throughput, they compete for space and the chefs (who do the expensive TLS
+          decryption) suffer first. Dedicated LB = moving the greeter out to a dedicated host
+          stand. Same principle, better scaling.
+        </div>
+      </div>
+
+      <div class="callout callout-analogy">
+        <div class="callout-header">
+          <div class="callout-icon">⟳</div>
+          SHUTTLE BUS THROUGH CHECKPOINT
+        </div>
+        <div class="callout-body">
+          DMZ PSE = every employee individually badges through security. Tunnelled (outside-firewall)
+          PSE = the whole department rides one shuttle through one checkpoint. One session tracked
+          vs. thousands. This is why the tunnelled topology is recommended.
+        </div>
+      </div>
+
+      <div class="callout callout-analogy">
+        <div class="callout-header">
+          <div class="callout-icon">⟳</div>
+          AIRPORT SECURITY
+        </div>
+        <div class="callout-body">
+          Zscaler's policy pipeline is an airport: Authentication = check-in, URL Filter = ticket
+          check, Cloud App Control = gate agent, File Type = bag type, Malware = bag X-ray,
+          Sandbox = bomb squad room, DLP = customs on exit. Cheap checks early, expensive checks
+          late, each stage can stop the journey.
+        </div>
+      </div>
+
+      <div class="callout callout-analogy">
+        <div class="callout-header">
+          <div class="callout-icon">⟳</div>
+          BOUNCER AT A NIGHTCLUB
+        </div>
+        <div class="callout-body">
+          Tenant Restrictions = the bouncer checking IDs. TRv1 = bouncer has a printed list of
+          allowed clubs on a clipboard — checks at the door only. TRv2 = bouncer's walkie-talkie
+          calls head office (Entra) for dynamic rules, AND there's a bouncer inside every room
+          (resource endpoint).
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ EXAM TIPS ══ -->
+    <div class="section-block anchor" id="exam">
+      <div class="section-label">EXAM TIPS</div>
+      <h2>What the exam tests</h2>
+
+      <div class="callout callout-tip">
+        <div class="callout-header">
+          <div class="callout-icon">→</div>
+          PSE MODEL SIZING
+        </div>
+        <div class="callout-body">
+          Expect throughput sizing questions. Memorise: PSE 3 ≈ 1 Gbps, PSE 5 Integrated ≈ 2 Gbps,
+          PSE 5 Dedicated LB &gt; 5 Gbps. The magic threshold is <strong>&gt;5 Gbps total throughput
+          requires Dedicated LB</strong>. Also: minimum 2 PSEs per cluster (no standalone).
+        </div>
+      </div>
+
+      <div class="callout callout-tip">
+        <div class="callout-header">
+          <div class="callout-icon">→</div>
+          STREAMING SERVICE IDENTIFICATION
+        </div>
+        <div class="callout-body">
+          Classic distractor: swapping NSS ↔ LSS. Remember — NSS streams <strong>ZIA</strong>
+          logs via a customer-deployed VM; LSS streams <strong>ZPA</strong> logs via existing App
+          Connectors. Cloud-to-Cloud is not limited to three named vendors — any SIEM reachable
+          via HTTPS works.
+        </div>
+      </div>
+
+      <div class="callout callout-tip">
+        <div class="callout-header">
+          <div class="callout-icon">→</div>
+          RULE ORDERING
+        </div>
+        <div class="callout-body">
+          If the exam shows you a list of rules and asks what happens, trace evaluation top-to-bottom
+          and stop on the first match. Specific → general. Exception → default. The CEO in the
+          wrong position gets blocked with everyone else.
+        </div>
+      </div>
+
+      <div class="callout callout-tip">
+        <div class="callout-header">
+          <div class="callout-icon">→</div>
+          SSL INSPECTION PREREQUISITE
+        </div>
+        <div class="callout-body">
+          Tenant Restrictions, DLP, and Advanced Cloud Firewall inspection of encrypted flows all
+          require SSL inspection to be enabled. No SSL inspection = these features silently fail
+          to enforce. Expect at least one trick question about this.
+        </div>
+      </div>
+
+      <div class="callout callout-tip">
+        <div class="callout-header">
+          <div class="callout-icon">→</div>
+          TRv1 vs TRv2 SCENARIOS
+        </div>
+        <div class="callout-body">
+          Anonymous public links, Microsoft Graph calls, and cross-tenant resource access are all
+          <strong>v2-only</strong> protections. v1 missed them entirely. The question "can this be
+          expressed per-user or per-application?" is always answered by <strong>v2</strong>.
+          If a question describes sign-in being blocked but anonymous file access succeeding —
+          that's v1's blind spot.
+        </div>
+      </div>
+
+      <div class="callout callout-tip">
+        <div class="callout-header">
+          <div class="callout-icon">→</div>
+          VIRTUAL vs PHYSICAL PSE
+        </div>
+        <div class="callout-body">
+          Virtual PSE can deploy inside cloud regions (AWS, Azure, GCP) — physical cannot.
+          Dedicated LB is physical-only. If a question describes a cloud region with no hardware
+          allowed, virtual PSE is always the answer. If it asks about &gt;5 Gbps on-prem,
+          Dedicated LB physical is the answer.
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /main-content -->
+
+  <!-- ══ SIDEBAR ══ -->
+  <aside class="sidebar">
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">SUBTOPICS</div>
+      <ul class="subtopic-list" id="subtopic-list">
+        <li onclick="toggleDone(this)">
+          <div class="subtopic-check"></div>
+          <span>Private Service Edge — why, types, enrollment</span>
+        </li>
+        <li onclick="toggleDone(this)">
+          <div class="subtopic-check"></div>
+          <span>PSE hardware models &amp; sizing thresholds</span>
+        </li>
+        <li onclick="toggleDone(this)">
+          <div class="subtopic-check"></div>
+          <span>Virtual PSE — platforms, use cases, limits</span>
+        </li>
+        <li onclick="toggleDone(this)">
+          <div class="subtopic-check"></div>
+          <span>PSE deployment topologies (DMZ, outside, behind)</span>
+        </li>
+        <li onclick="toggleDone(this)">
+          <div class="subtopic-check"></div>
+          <span>Analytics pipeline — Nanolog, Data Lake, routers</span>
+        </li>
+        <li onclick="toggleDone(this)">
+          <div class="subtopic-check"></div>
+          <span>SIEM streaming — NSS vs LSS vs Cloud-to-Cloud</span>
+        </li>
+        <li onclick="toggleDone(this)">
+          <div class="subtopic-check"></div>
+          <span>Policy Framework — rule anatomy, first-match-wins</span>
+        </li>
+        <li onclick="toggleDone(this)">
+          <div class="subtopic-check"></div>
+          <span>Inspection pipeline — layered evaluation order</span>
+        </li>
+        <li onclick="toggleDone(this)">
+          <div class="subtopic-check"></div>
+          <span>Cloud Firewall — Standard vs Advanced</span>
+        </li>
+        <li onclick="toggleDone(this)">
+          <div class="subtopic-check"></div>
+          <span>DNS Control &amp; DoH inspection</span>
+        </li>
+        <li onclick="toggleDone(this)">
+          <div class="subtopic-check"></div>
+          <span>Tenant Restrictions v1 vs v2</span>
+        </li>
+        <li onclick="toggleDone(this)">
+          <div class="subtopic-check"></div>
+          <span>Segmentation &amp; Conditional Access</span>
+        </li>
+      </ul>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">QUICK REFERENCE</div>
+
+      <div class="quick-ref">
+        <div class="quick-ref-term">PSE SIZING</div>
+        <div class="quick-ref-def">PSE 3 ≈ 1 Gbps · PSE 5 Integrated ≈ 2 Gbps · PSE 5 Dedicated LB &gt; 5 Gbps · Min 2 per cluster</div>
+      </div>
+
+      <div class="quick-ref">
+        <div class="quick-ref-term">SIEM DECISION</div>
+        <div class="quick-ref-def">On-prem + ZIA → NSS · On-prem + ZPA → LSS · Cloud SIEM → Cloud-to-Cloud</div>
+      </div>
+
+      <div class="quick-ref">
+        <div class="quick-ref-term">TR HEADERS</div>
+        <div class="quick-ref-def">v1: Restrict-Access-To-Tenants (plaintext list) · v2: sec-tenant-restriction (signed JWT)</div>
+      </div>
+
+      <div class="quick-ref">
+        <div class="quick-ref-term">THREE PLANES</div>
+        <div class="quick-ref-def">Data: Service Edges · Control: Central Authority · Logging: Routers + Nanolog</div>
+      </div>
+
+      <div class="quick-ref">
+        <div class="quick-ref-term">POLICY RULE</div>
+        <div class="quick-ref-def">IF [who/where] AND [what] THEN [action] · First match wins · Specific → General</div>
+      </div>
+    </div>
+
+    <div class="sidebar-note">
+      Study Nibbles for this day: <strong>PSE Franchise Analogy</strong>, <strong>SIEM Streaming Decision Tree</strong>, <strong>Tenant Restrictions v1 vs v2</strong>
+    </div>
+
+  </aside>
+
+</main>
+
+<footer>
+  <div class="footer-left">ZDTE <span>Day 04</span></div>
+  <div class="footer-right">Zscaler Digital Transformation Engineer · Study Plan 2026</div>
+</footer>
+
+<script>
+  function navTo(id, el) {
+    const target = document.getElementById(id);
+    if (target) {
+      window.scrollTo({ top: target.getBoundingClientRect().top + window.scrollY - 60, behavior: 'smooth' });
+    }
+    document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+    if (el) el.classList.add('active');
+  }
+
+  function toggleDone(li) {
+    li.classList.toggle('done');
+    updateProgress();
+  }
+
+  function updateProgress() {
+    const items = document.querySelectorAll('#subtopic-list li');
+    const done = document.querySelectorAll('#subtopic-list li.done').length;
+    const pct = Math.round((done / items.length) * 100);
+    const el = document.getElementById('prog-num');
+    if (el) el.innerHTML = pct + '<span style="font-size:18px;color:#7a6a55;">%</span>';
+  }
+</script>
+
+<script src="../../transitions.js"></script>
+</body>
+</html>

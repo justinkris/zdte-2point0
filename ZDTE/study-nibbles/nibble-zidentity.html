@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nibble — ZIdentity</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;0,700;1,400&family=Epilogue:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --cream: #fef9f0;
+  --cream-dark: #f5eddb;
+  --ink: #1a1209;
+  --ink-soft: #5a4a35;
+  --ink-muted: #8a7660;
+  --orange: #ff6b35;
+  --orange-light: #fff3ec;
+  --orange-border: #ffd5c0;
+  --border: #ede5d8;
+  --green: #3a7d44;
+  --green-light: #edf7ee;
+  --green-border: #b2dfb4;
+  --purple: #5c35cc;
+  --purple-light: #ece8ff;
+  --purple-border: #c8bbff;
+  --blue: #1a6bcc;
+  --blue-light: #e8f0fb;
+  --blue-border: #b3ccf0;
+  --red: #a32d2d;
+  --red-light: #fce8e8;
+  --red-border: #f7c1c1;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Epilogue', sans-serif;
+  background: var(--cream);
+  color: var(--ink);
+  min-height: 100vh;
+  padding: 48px 60px;
+  max-width: 860px;
+  margin: 0 auto;
+}
+
+/* ── HEADER ── */
+.nibble-label {
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  color: var(--ink-muted);
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.nibble-label::before {
+  content: '';
+  display: inline-block;
+  width: 6px; height: 6px;
+  background: var(--orange);
+  border-radius: 50%;
+}
+
+h1 {
+  font-family: 'Fraunces', serif;
+  font-size: 38px;
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1.1;
+  margin-bottom: 6px;
+}
+h1 em { font-style: italic; font-weight: 400; color: var(--orange); }
+
+.subtitle {
+  font-size: 13px;
+  color: var(--ink-muted);
+  margin-bottom: 32px;
+  padding-bottom: 28px;
+  border-bottom: 1px solid var(--border);
+}
+
+/* ── IMAGE PLACEHOLDER ── */
+.img-placeholder {
+  background: var(--cream-dark);
+  border: 1.5px dashed var(--orange-border);
+  border-radius: 16px;
+  padding: 28px 24px;
+  margin-bottom: 32px;
+  text-align: center;
+}
+.img-placeholder .img-tag {
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  color: var(--orange);
+  margin-bottom: 10px;
+}
+.img-placeholder .img-title {
+  font-family: 'Fraunces', serif;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 12px;
+}
+.img-placeholder .img-prompt {
+  font-size: 12px;
+  color: var(--ink-muted);
+  line-height: 1.7;
+  font-style: italic;
+  max-width: 560px;
+  margin: 0 auto;
+}
+
+/* ── ONE-LINE DEFINITION ── */
+.definition-block {
+  background: var(--ink);
+  color: var(--cream);
+  border-radius: 14px;
+  padding: 20px 28px;
+  margin-bottom: 28px;
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+}
+.def-label {
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  color: var(--orange);
+  margin-bottom: 6px;
+  white-space: nowrap;
+}
+.def-text {
+  font-family: 'Fraunces', serif;
+  font-size: 16px;
+  font-style: italic;
+  font-weight: 400;
+  color: var(--cream);
+  line-height: 1.6;
+}
+
+/* ── ANALOGY CARD ── */
+.analogy-card {
+  background: var(--orange-light);
+  border: 1px solid var(--orange-border);
+  border-radius: 14px;
+  padding: 18px 24px;
+  margin-bottom: 28px;
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+}
+.analogy-icon { font-size: 22px; flex-shrink: 0; margin-top: 2px; }
+.analogy-content {}
+.analogy-label {
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  color: var(--orange);
+  margin-bottom: 5px;
+}
+.analogy-text {
+  font-size: 13px;
+  color: var(--ink-soft);
+  line-height: 1.7;
+}
+.analogy-text strong { color: var(--ink); }
+
+/* ── SECTION LABEL ── */
+.section-label {
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  color: var(--ink-muted);
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.section-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+/* ── IDENTITY TYPES TABLE ── */
+.identity-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 28px;
+}
+.identity-card {
+  border-radius: 12px;
+  padding: 16px 18px;
+  border: 1px solid;
+}
+.identity-card.users {
+  background: var(--blue-light);
+  border-color: var(--blue-border);
+}
+.identity-card.admins {
+  background: var(--purple-light);
+  border-color: var(--purple-border);
+}
+.identity-card.machines {
+  background: var(--green-light);
+  border-color: var(--green-border);
+}
+.identity-card .ic-icon { font-size: 20px; margin-bottom: 8px; }
+.identity-card .ic-type {
+  font-size: 9px;
+  letter-spacing: 0.16em;
+  color: var(--ink-muted);
+  margin-bottom: 4px;
+}
+.identity-card .ic-name {
+  font-family: 'Fraunces', serif;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 6px;
+}
+.identity-card .ic-desc {
+  font-size: 11.5px;
+  color: var(--ink-soft);
+  line-height: 1.6;
+}
+
+/* ── KEY FACTS TABLE ── */
+.facts-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 28px;
+  font-size: 13px;
+}
+.facts-table th {
+  text-align: left;
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  color: var(--ink-muted);
+  padding: 0 16px 10px;
+  border-bottom: 1px solid var(--border);
+  font-weight: 500;
+}
+.facts-table td {
+  padding: 11px 16px;
+  border-bottom: 1px solid var(--border);
+  color: var(--ink-soft);
+  vertical-align: top;
+  line-height: 1.6;
+}
+.facts-table td:first-child {
+  font-weight: 600;
+  color: var(--ink);
+  white-space: nowrap;
+  width: 180px;
+}
+.facts-table tr:last-child td { border-bottom: none; }
+
+/* ── EXAM TRAPS ── */
+.traps-block {
+  background: var(--red-light);
+  border: 1px solid var(--red-border);
+  border-radius: 14px;
+  overflow: hidden;
+  margin-bottom: 28px;
+}
+.traps-label {
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  color: var(--red);
+  padding: 14px 20px 12px;
+  border-bottom: 1px solid var(--red-border);
+  background: rgba(163,45,45,0.06);
+}
+.trap-item {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  padding: 12px 20px;
+  border-bottom: 1px solid var(--red-border);
+  font-size: 12.5px;
+  color: var(--ink-soft);
+  line-height: 1.65;
+}
+.trap-item:last-child { border-bottom: none; }
+.trap-icon {
+  color: var(--red);
+  font-size: 12px;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+/* ── FLASH QUESTIONS ── */
+.flash-block {
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  overflow: hidden;
+  margin-bottom: 12px;
+}
+.flash-q {
+  padding: 14px 20px;
+  background: var(--cream-dark);
+  font-size: 13px;
+  color: var(--ink);
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  user-select: none;
+}
+.flash-q .toggle {
+  font-size: 16px;
+  color: var(--orange);
+  transition: transform 0.2s;
+}
+.flash-q.open .toggle { transform: rotate(45deg); }
+.flash-a {
+  padding: 0 20px;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease, padding 0.2s;
+  font-size: 13px;
+  color: var(--ink-soft);
+  line-height: 1.7;
+  background: white;
+}
+.flash-a.open {
+  max-height: 200px;
+  padding: 14px 20px;
+}
+
+/* ── BREADCRUMB ── */
+.breadcrumb {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 11px; color: var(--ink-muted); letter-spacing: 0.08em;
+  margin-bottom: 20px;
+}
+.breadcrumb a { color: var(--orange); text-decoration: none; }
+.breadcrumb a:hover { text-decoration: underline; }
+.breadcrumb-sep { color: var(--border); }
+
+/* ── FOOTER ── */
+.footer-strip {
+  margin-top: 40px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 11px;
+  color: var(--ink-muted);
+}
+.footer-strip .domain-tags { display: flex; gap: 8px; }
+.domain-tag {
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  border: 1px solid;
+}
+.domain-tag.arch { background: #fffbe6; color: #a07c00; border-color: #ffe680; }
+.domain-tag.zia  { background: var(--blue-light); color: var(--blue); border-color: var(--blue-border); }
+.domain-tag.zpa  { background: var(--green-light); color: var(--green); border-color: var(--green-border); }
+.domain-tag.zdx  { background: var(--purple-light); color: var(--purple); border-color: var(--purple-border); }
+</style>
+</head>
+<body>
+
+<div class="breadcrumb">
+  <a href="../../index.html">Study Plan</a>
+  <span class="breadcrumb-sep">›</span>
+  <a href="index.html">Study Nibbles</a>
+  <span class="breadcrumb-sep">›</span>
+  <span>ZIdentity</span>
+</div>
+
+<div class="nibble-label">STUDY NIBBLE · ZERO TRUST AUTOMATION</div>
+<h1>Z<em>Identity</em></h1>
+<p class="subtitle">Unified identity platform · Authentication · API Client Management</p>
+
+<img src="../images/study-nibbles/zidentity/hotel-central-reception.png" alt="The Hotel Central Reception — ZIdentity analogy" style="width:100%;border-radius:14px;margin-bottom:24px;display:block;">
+
+<!-- DEFINITION -->
+<div class="definition-block">
+  <div>
+    <div class="def-label">ONE-LINE DEFINITION</div>
+    <div class="def-text">ZIdentity is Zscaler's centralised identity platform — the single source of truth for <em>who you are</em>, <em>what you're allowed to do</em>, and <em>how you prove it</em> across all Zscaler products.</div>
+  </div>
+</div>
+
+<!-- ANALOGY -->
+<div class="analogy-card">
+  <div class="analogy-icon">🏨</div>
+  <div class="analogy-content">
+    <div class="analogy-label">THE ANALOGY</div>
+    <div class="analogy-text">Before ZIdentity, each Zscaler product had its own reception desk, key system, and guest list. <strong>ZIdentity is the central reception</strong> — one check-in, one keycard, access to whichever floors your booking permits.</div>
+  </div>
+</div>
+
+<!-- THREE IDENTITY TYPES -->
+<div class="section-label">THREE IDENTITY TYPES MANAGED</div>
+<div class="identity-grid">
+  <div class="identity-card users">
+    <div class="ic-icon">👤</div>
+    <div class="ic-type">TYPE 01</div>
+    <div class="ic-name">End Users</div>
+    <div class="ic-desc">Employees accessing apps through ZIA, ZPA, or ZDX</div>
+  </div>
+  <div class="identity-card admins">
+    <div class="ic-icon">🛡️</div>
+    <div class="ic-type">TYPE 02</div>
+    <div class="ic-name">Administrators</div>
+    <div class="ic-desc">People managing Zscaler portals and configuration</div>
+  </div>
+  <div class="identity-card machines">
+    <div class="ic-icon">🤖</div>
+    <div class="ic-type">TYPE 03</div>
+    <div class="ic-name">API Clients</div>
+    <div class="ic-desc">Automated systems and scripts calling OneAPI</div>
+  </div>
+</div>
+
+<!-- KEY FACTS TABLE -->
+<div class="section-label">KEY FACTS</div>
+<table class="facts-table">
+  <thead>
+    <tr>
+      <th>PROPERTY</th>
+      <th>DETAIL</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Position in stack</td>
+      <td>Sits <strong>above</strong> ZIA, ZPA, and ZDX — all products defer to ZIdentity for auth decisions</td>
+    </tr>
+    <tr>
+      <td>API auth method</td>
+      <td>OAuth 2.0 — Client Credentials flow → short-lived Bearer Token (JWT)</td>
+    </tr>
+    <tr>
+      <td>API client management</td>
+      <td>Created and managed in the <strong>ZIdentity portal</strong> — issues Client ID + Client Secret</td>
+    </tr>
+    <tr>
+      <td>Token lifecycle</td>
+      <td>Client ID + Secret → Token Endpoint → Bearer Token → expires → re-request</td>
+    </tr>
+    <tr>
+      <td>Why unified?</td>
+      <td>Before ZIdentity, each product had separate auth. ZIdentity eliminates fragmented identity silos.</td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- EXAM TRAPS -->
+<div class="traps-block">
+  <div class="traps-label">⚠ COMMON EXAM TRAPS</div>
+  <div class="trap-item"><span class="trap-icon">⚠</span>ZIdentity is not just for end users — it governs admins <em>and</em> API clients (machines) equally.</div>
+  <div class="trap-item"><span class="trap-icon">⚠</span>OneAPI uses OAuth 2.0, not a static permanent API key. The Bearer Token is temporary and scoped.</div>
+  <div class="trap-item"><span class="trap-icon">⚠</span>ZIdentity sits <em>above</em> ZIA/ZPA/ZDX — it does not belong to any single product.</div>
+  <div class="trap-item"><span class="trap-icon">⚠</span>Scoped tokens = least privilege for machines, just as access policies = least privilege for users.</div>
+</div>
+
+<!-- FLASH QUESTIONS -->
+<div class="section-label">FLASH RECALL</div>
+
+<div class="flash-block">
+  <div class="flash-q" onclick="toggle(this)">
+    What are the three identity types ZIdentity manages?
+    <span class="toggle">+</span>
+  </div>
+  <div class="flash-a">End Users (employees), Administrators (portal managers), and API Clients (machines / automated systems calling OneAPI).</div>
+</div>
+
+<div class="flash-block">
+  <div class="flash-q" onclick="toggle(this)">
+    Where in the Zscaler stack does ZIdentity sit, and why does that matter?
+    <span class="toggle">+</span>
+  </div>
+  <div class="flash-a">Above ZIA, ZPA, and ZDX. It means all products defer to ZIdentity for authentication — no more fragmented identity silos per product.</div>
+</div>
+
+<div class="flash-block">
+  <div class="flash-q" onclick="toggle(this)">
+    Why is a short-lived Bearer Token more secure than a permanent API key?
+    <span class="toggle">+</span>
+  </div>
+  <div class="flash-a">A Bearer Token is time-limited and scoped — if compromised it expires automatically and only grants access to permitted operations. A permanent key is unlimited and doesn't expire.</div>
+</div>
+
+<!-- FOOTER -->
+<div class="footer-strip">
+  <span>ZDTE · Study Nibble</span>
+  <div class="domain-tags">
+    <span class="domain-tag arch">Architecture</span>
+    <span class="domain-tag zia">ZIA</span>
+    <span class="domain-tag zpa">ZPA</span>
+    <span class="domain-tag zdx">ZDX</span>
+  </div>
+</div>
+
+<script>
+function toggle(el) {
+  el.classList.toggle('open');
+  const answer = el.nextElementSibling;
+  answer.classList.toggle('open');
+}
+</script>
+
+</body>
+</html>
