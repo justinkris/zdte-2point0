@@ -19,6 +19,9 @@
     --green: #3a7d44;
     --green-light: #edf7ee;
     --green-border: #b2dfb4;
+    --red: #cc2020;
+    --red-light: #fef0ef;
+    --red-border: #f5c0bc;
     --border: #ede5d8;
   }
 
@@ -135,6 +138,7 @@
     transform: translateY(-28px) scale(1.06) rotate(-0.5deg);
     box-shadow: 0 50px 100px -20px rgba(26,18,9,0.45), 0 20px 40px -10px rgba(26,18,9,0.15);
     background: #fff;
+    z-index: 10;
   }
   .cert-card:hover::before { left: 130%; }
 
@@ -151,6 +155,11 @@
   .cert-card.status-soon:hover { border-color: #1a6bcc; }
   .cert-card.status-soon:hover::after {
     box-shadow: 0 0 0 6px rgba(138,118,96,0.15), 0 0 80px 20px rgba(138,118,96,0.28);
+  }
+
+  .cert-card.status-fortinet:hover { border-color: var(--red); }
+  .cert-card.status-fortinet:hover::after {
+    box-shadow: 0 0 0 6px rgba(204,32,32,0.18), 0 0 80px 20px rgba(204,32,32,0.38);
   }
 
   /* ── CARD CONTENT ── */
@@ -172,9 +181,11 @@
   .cert-card.status-complete .cert-code { color: var(--ink); }
   .cert-card.status-progress .cert-code { color: var(--ink); }
   .cert-card.status-soon     .cert-code { color: #000; }
+  .cert-card.status-fortinet .cert-code { color: var(--ink); }
   .cert-card:hover .cert-code { color: var(--orange); }
   .cert-card.status-complete:hover .cert-code { color: var(--green); }
   .cert-card.status-soon:hover .cert-code { color: #1a6bcc; }
+  .cert-card.status-fortinet:hover .cert-code { color: var(--red); }
 
   .cert-edu {
     font-size: 11px; letter-spacing: 0.12em;
@@ -201,7 +212,7 @@
   }
 
   /* Prefix expand on hover */
-  .status-complete:hover .cert-prefix, .status-progress:hover .cert-prefix {
+  .status-complete:hover .cert-prefix, .status-progress:hover .cert-prefix, .status-fortinet:hover .cert-prefix {
     max-width: 400px;
     transition: max-width 1.8s steps(34, end) 0.3s;
   }
@@ -215,6 +226,7 @@
   .status-complete:hover .cert-suffix { color: var(--green); }
   .status-progress:hover .cert-suffix { color: var(--orange); }
   .status-soon:hover     .cert-suffix { color: #1a6bcc; }
+  .status-fortinet:hover .cert-suffix { color: var(--red); }
 
   /* ── DETAILS — hidden by default, revealed on hover ── */
   .card-details {
@@ -288,6 +300,13 @@
 
   .status-soon .status-badge { background: #f3ece0; color: var(--ink-muted); border-color: var(--border); }
   .status-soon .status-dot   { background: var(--ink-muted); }
+
+  .status-fortinet .status-badge { background: var(--red-light); color: var(--red); border-color: var(--red-border); }
+  .status-fortinet .status-dot   { background: var(--red); animation: pulse-red 1.8s ease-in-out infinite; }
+  @keyframes pulse-red {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(204,32,32,0.55); }
+    50%      { box-shadow: 0 0 0 6px rgba(204,32,32,0); }
+  }
 
   /* ── EXAM DATE ── */
   .exam-date {
@@ -372,6 +391,65 @@
     border-color: #1a6bcc;
     color: #fff;
     box-shadow: 0 8px 24px rgba(26,107,204,0.4);
+  }
+  .status-fortinet .cert-icon {
+    background: var(--red-light);
+    border: 1.5px solid var(--red-border);
+    color: var(--red);
+  }
+  .status-fortinet:hover .cert-icon {
+    background: var(--red);
+    border-color: var(--red);
+    color: #fff;
+    box-shadow: 0 8px 24px rgba(204,32,32,0.45);
+  }
+
+  /* ── SECTION DIVIDER ── */
+  .section-divider {
+    display: flex; align-items: center; gap: 18px;
+    width: 100%; max-width: 1500px;
+    margin: 52px 0 28px;
+    font-size: 10px; letter-spacing: 0.18em;
+    color: var(--ink-muted); text-transform: uppercase; font-weight: 500;
+    cursor: pointer; user-select: none;
+    transition: color 0.2s ease;
+    position: relative; z-index: 1;
+  }
+  .section-divider:hover { color: var(--ink); }
+  .section-divider::before, .section-divider::after {
+    content: ''; flex: 1; height: 1px; background: var(--border);
+    transition: background 0.2s ease;
+  }
+  .section-divider:hover::before, .section-divider:hover::after { background: var(--ink-muted); }
+
+  .section-toggle { display: flex; align-items: center; gap: 7px; white-space: nowrap; }
+  .section-chevron { transition: transform 0.38s cubic-bezier(0.15, 0.85, 0.2, 1); flex-shrink: 0; }
+  .section-divider.open .section-chevron { transform: rotate(180deg); }
+
+  /* ── COLLAPSIBLE PANEL ── */
+  .collapsible-section {
+    width: 100%; max-width: 1500px;
+    overflow: hidden;
+    max-height: 0;
+    opacity: 0;
+    transition: max-height 0.55s cubic-bezier(0.15, 0.85, 0.2, 1), opacity 0.4s ease;
+  }
+  .collapsible-section.open {
+    max-height: 700px;
+    opacity: 1;
+    overflow: visible;
+  }
+
+  /* ── SOLO CARD GRID (centred single card) ── */
+  .card-grid-solo {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .card-grid-solo .cert-card {
+    grid-column: 2;
+  }
+  @media (max-width: 900px) {
+    .card-grid-solo { grid-template-columns: 1fr; }
+    .card-grid-solo .cert-card { grid-column: 1; }
   }
 
   /* ── FOOTER ── */
@@ -499,10 +577,59 @@ body { animation: pageEnter 0.6s cubic-bezier(0.15, 0.85, 0.2, 1.08) both; }
 
   </div>
 
+  <div class="section-divider" id="other-certs-toggle">
+    <span class="section-toggle">
+      Other Certifications
+      <svg class="section-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="6 9 12 15 18 9"/>
+      </svg>
+    </span>
+  </div>
+
+  <div class="collapsible-section" id="other-certs-panel">
+  <div class="card-grid card-grid-solo" style="padding-bottom: 4px;">
+
+    <!-- ═══════════════ CARD 4 — NSE7 (IN PROGRESS) ═══════════════ -->
+    <div class="cert-card status-fortinet">
+      <div class="corner-flag" style="color:var(--red);">▲ ACTIVE</div>
+      <div class="card-content">
+        <div class="cert-code-row">
+          <div class="cert-code">NSE7</div>
+          <div class="cert-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+              <rect x="3" y="3"    width="18" height="3.5" rx="0.6"/>
+              <rect x="3" y="3"    width="3.5" height="17" rx="0.6"/>
+              <rect x="3" y="10"   width="13" height="3.5" rx="0.6"/>
+              <rect x="3" y="17.5" width="8"  height="3.5" rx="0.6"/>
+            </svg>
+          </div>
+        </div>
+        <div class="cert-edu">NSE 7</div>
+        <div class="cert-name"><span class="cert-prefix">Fortinet&nbsp;</span><span class="cert-suffix">'Enterprise Firewall'</span></div>
+        <div class="card-details">
+          <div class="status-badge"><span class="status-dot"></span>In Progress</div>
+          <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;">
+            <div class="exam-date">Exam <strong>TBD</strong></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  </div>
+
   <footer>
-    Three certs<span>.</span> One mission<span>.</span>
+    Four certs<span>.</span> One mission<span>.</span>
   </footer>
 
+<script>
+  const toggle = document.getElementById('other-certs-toggle');
+  const panel  = document.getElementById('other-certs-panel');
+  toggle.addEventListener('click', () => {
+    toggle.classList.toggle('open');
+    panel.classList.toggle('open');
+  });
+</script>
 <script src="transitions.js"></script>
 </body>
 </html>
