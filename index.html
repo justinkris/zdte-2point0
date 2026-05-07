@@ -374,7 +374,13 @@
       box-shadow 0.4s ease;
   }
   .cert-card:hover .cert-icon {
-    transform: scale(1.18) rotate(-6deg);
+    animation: icon-spin 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  }
+  @keyframes icon-spin {
+    0%   { transform: scale(1)    rotate(0deg); }
+    60%  { transform: scale(1.26) rotate(760deg); }
+    80%  { transform: scale(1.16) rotate(712deg); }
+    100% { transform: scale(1.18) rotate(720deg); }
   }
   .status-complete .cert-icon {
     background: var(--green-light);
@@ -469,6 +475,48 @@
     .card-grid-solo .cert-card { grid-column: 1; }
   }
 
+  /* ── VENDOR FILTERS ── */
+  .vendor-filters {
+    display: flex; gap: 10px; justify-content: center;
+    margin-top: 22px;
+  }
+  .vendor-btn {
+    padding: 6px 20px; border-radius: 20px;
+    font-size: 11px; font-weight: 600; letter-spacing: 0.12em;
+    text-transform: uppercase; font-family: 'Epilogue', sans-serif;
+    border: 1.5px solid var(--border);
+    background: transparent; color: var(--ink-muted);
+    cursor: pointer;
+    transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease, transform 0.15s ease;
+  }
+  .vendor-btn:hover { border-color: var(--ink-muted); color: var(--ink); transform: translateY(-1px); }
+  .vendor-btn.active[data-vendor="zscaler"] { background: #1a6bcc; border-color: #1a6bcc; color: #fff; }
+  .vendor-btn.active[data-vendor="fortinet"] { background: var(--red); border-color: var(--red); color: #fff; }
+  .vendor-btn.active[data-vendor="all"]     { background: var(--ink); border-color: var(--ink); color: var(--cream); }
+  .vendor-btn.active:hover { transform: none; }
+
+  @keyframes sectionFadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .section-fade { animation: sectionFadeIn 0.4s ease forwards; }
+
+  /* When filtering to Fortinet only — override collapsible layout */
+  body.fortinet-filtered #other-certs-toggle { display: none; }
+  body.fortinet-filtered .collapsible-section {
+    max-height: none !important;
+    opacity: 1 !important;
+    overflow: visible !important;
+    margin-top: 0;
+  }
+  body.fortinet-filtered .card-grid-solo {
+    grid-template-columns: repeat(3, 1fr);
+    max-width: 1500px;
+  }
+  body.fortinet-filtered .card-grid-solo .cert-card {
+    grid-column: 2 !important;
+  }
+
   /* ── FOOTER ── */
   footer {
     margin-top: 80px;
@@ -503,9 +551,14 @@ body { animation: pageEnter 0.6s cubic-bezier(0.15, 0.85, 0.2, 1.08) both; }
     </div>
     <h1>Certification <em>Schedule</em></h1>
     <div class="subtitle">the road to Zscaler mastery</div>
+    <div class="vendor-filters">
+      <button class="vendor-btn" data-vendor="zscaler">Zscaler</button>
+      <button class="vendor-btn" data-vendor="fortinet">Fortinet</button>
+      <button class="vendor-btn" data-vendor="all">All</button>
+    </div>
   </div>
 
-  <div class="card-grid">
+  <div class="card-grid" id="zscaler-section">
 
     <!-- ═══════════════ CARD 1 — ZDTA (COMPLETE) ═══════════════ -->
     <a href="https://www.credly.com/badges/f9eaa0d2-4277-47ce-8eb2-014a187dbed6/public_url"
@@ -569,8 +622,8 @@ body { animation: pageEnter 0.6s cubic-bezier(0.15, 0.85, 0.2, 1.08) both; }
       </div>
     </a>
 
-    <!-- ═══════════════ CARD 3 — ZDDC (COMING SOON) ═══════════════ -->
-    <div class="cert-card status-soon">
+    <!-- ═══════════════ CARD 3 — ZDDC (IN PROGRESS) ═══════════════ -->
+    <div class="cert-card status-progress">
       <div class="card-content">
         <div class="cert-code-row">
           <div class="cert-code">ZDDC</div>
@@ -584,8 +637,9 @@ body { animation: pageEnter 0.6s cubic-bezier(0.15, 0.85, 0.2, 1.08) both; }
         </div>
         <div class="cert-edu">EDU-302</div>
         <div class="cert-name"><span class="cert-prefix">Zscaler Digital Delivery&nbsp;-&nbsp;</span><span class="cert-suffix">Consultant</span></div>
+        <div class="corner-flag">▲ ACTIVE</div>
         <div class="card-details">
-          <div class="status-badge"><span class="status-dot"></span>Coming Soon</div>
+          <div class="status-badge"><span class="status-dot"></span>In Progress</div>
           <div class="exam-date" style="margin-bottom:6px;">Study Starts: <strong>Star Wars Day — May 4th</strong> 🌟</div>
           <div class="exam-date">Lab Days <strong>25th &amp; 26th May</strong></div>
         </div>
@@ -594,6 +648,7 @@ body { animation: pageEnter 0.6s cubic-bezier(0.15, 0.85, 0.2, 1.08) both; }
 
   </div>
 
+  <div id="fortinet-section">
   <div class="section-divider" id="other-certs-toggle">
     <span class="section-toggle">
       Other Certifications
@@ -634,18 +689,62 @@ body { animation: pageEnter 0.6s cubic-bezier(0.15, 0.85, 0.2, 1.08) both; }
 
   </div>
   </div>
+  </div>
 
   <footer>
     Four certs<span>.</span> One mission<span>.</span>
   </footer>
 
 <script>
+  // ── Collapsible "Other Certifications" panel ──
   const toggle = document.getElementById('other-certs-toggle');
   const panel  = document.getElementById('other-certs-panel');
   toggle.addEventListener('click', () => {
     toggle.classList.toggle('open');
     panel.classList.toggle('open');
   });
+
+  // ── Vendor filter ──
+  const zscalerSection  = document.getElementById('zscaler-section');
+  const fortinetSection = document.getElementById('fortinet-section');
+  const vendorBtns      = document.querySelectorAll('.vendor-btn');
+
+  function fade(el) {
+    el.classList.remove('section-fade');
+    void el.offsetWidth;
+    el.classList.add('section-fade');
+  }
+
+  function setFilter(vendor) {
+    vendorBtns.forEach(b => b.classList.remove('active'));
+    document.body.classList.remove('fortinet-filtered');
+
+    if (vendor === 'zscaler') {
+      document.querySelector('[data-vendor="zscaler"]').classList.add('active');
+      zscalerSection.style.display  = '';
+      fortinetSection.style.display = 'none';
+      fade(zscalerSection);
+    } else if (vendor === 'fortinet') {
+      document.querySelector('[data-vendor="fortinet"]').classList.add('active');
+      document.body.classList.add('fortinet-filtered');
+      zscalerSection.style.display  = 'none';
+      fortinetSection.style.display = '';
+      fade(fortinetSection);
+    } else {
+      // All
+      document.querySelector('[data-vendor="all"]').classList.add('active');
+      zscalerSection.style.display  = '';
+      fortinetSection.style.display = '';
+      fade(zscalerSection);
+    }
+  }
+
+  vendorBtns.forEach(btn => {
+    btn.addEventListener('click', () => setFilter(btn.dataset.vendor));
+  });
+
+  // Default: Zscaler only
+  setFilter('zscaler');
 </script>
 <script src="transitions.js"></script>
 </body>
