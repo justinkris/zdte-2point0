@@ -785,7 +785,8 @@ const SESSIONS = [
       "Workspace mode and revision rollback",
       "CLI scripts vs Tcl scripts vs Jinja2 templates — when to use each"
     ],
-    opener: "If 50 branches share one policy package but use different LAN subnets, how does that work?" },
+    opener: "If 50 branches share one policy package but use different LAN subnets, how does that work?",
+    url: "enterprise-firewall-socratic-session-03.html" },
 
   { n: 4, lessonId: "L03", lesson: "03 · VLANs and VDOMs",
     title: "VLANs in depth",
@@ -1079,6 +1080,10 @@ function renderMain() {
             <span class="session-opener-label">Opener</span>${escapeHtml(s.opener)}
           </div>
           <div class="session-card-footer">
+            ${s.url ? `<a class="copy-btn" href="${s.url}" style="text-decoration:none;background:#1a4a22;margin-right:8px;">
+              <span class="copy-btn-icon">↗</span>
+              <span class="copy-btn-label">Open Study Guide</span>
+            </a>` : ''}
             <button class="copy-btn" id="copy-btn-${s.n}" onclick="copySession(${s.n})">
               <span class="copy-btn-icon">⎘</span>
               <span class="copy-btn-label">Copy prompt</span>
