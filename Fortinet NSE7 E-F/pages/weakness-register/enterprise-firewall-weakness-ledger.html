@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Weakness Ledger — NSE7 Enterprise Firewall</title>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;0,700;1,400&family=Epilogue:wght@300;400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../assets/template.css">
+<link rel="stylesheet" href="../../assets/template.css">
 <style>
   body {
     min-height: 100vh;
@@ -170,9 +170,9 @@
 <div class="ledger-header">
   <div>
     <div class="breadcrumb" style="margin-bottom:14px;">
-      <a href="../../index.html">Home</a>
+      <a href="../../../index.html">Home</a>
       <span class="breadcrumb-sep">/</span>
-      <a href="../index.html">NSE7</a>
+      <a href="../../index.html">NSE7</a>
       <span class="breadcrumb-sep">/</span>
       <span>Weakness Ledger</span>
     </div>
@@ -184,7 +184,7 @@
     <p class="ledger-sub">A running log of concepts that needed prompting, wrong answers, and terminology gaps — tracked by session so nothing slips through the cracks.</p>
     <div class="ledger-meta">
       <div class="meta-stat">
-        <div class="num">1</div>
+        <div class="num">3</div>
         <div class="lbl">Entries</div>
       </div>
       <div class="meta-stat">
@@ -192,7 +192,7 @@
         <div class="lbl">Categories</div>
       </div>
       <div class="meta-stat">
-        <div class="num">1</div>
+        <div class="num">2</div>
         <div class="lbl">Sessions</div>
       </div>
     </div>
@@ -206,7 +206,7 @@
     <div class="category-header">
       <span class="category-tag" style="background:#8b6500;">FortiManager</span>
       <span class="category-title">Central Management</span>
-      <span class="category-label">1 entry · Minor · Session 2</span>
+      <span class="category-label">3 entries · Sessions 2–3</span>
     </div>
 
     <div class="weakness-entry minor">
@@ -222,6 +222,34 @@
         <div class="correction-text">The correct FortiManager term is <strong>Retrieve</strong> — not import. The exam expects this specific word. Low priority but noted — one mark is still one mark.</div>
       </div>
     </div>
+
+    <div class="weakness-entry">
+      <div class="weakness-top">
+        <div class="weakness-icon">!</div>
+        <div>
+          <div class="weakness-label">Medium — Install Workflow: Install vs Reinstall Policy</div>
+          <div class="weakness-text">Confused by first-time vs repeat framing. Framed the distinction as "new vs existing" rather than the actual mechanical difference between the two operations.</div>
+        </div>
+      </div>
+      <div class="correction">
+        <div class="correction-label">▸ Correct Understanding</div>
+        <div class="correction-text"><strong>Install Policy Package</strong> = full wizard — select the package, select the target devices, step through the preview. Used when you need to choose or confirm scope.<br><strong>Reinstall Policy</strong> = skips the wizard entirely and goes straight to the preview using the same package and devices as last time. The key signal: wizard steps vs bypass.</div>
+      </div>
+    </div>
+
+    <div class="weakness-entry">
+      <div class="weakness-top">
+        <div class="weakness-icon">!</div>
+        <div>
+          <div class="weakness-label">Medium — Script Type Selection: CLI vs Tcl</div>
+          <div class="weakness-text">Selected CLI script for a conditional logic scenario. Missed the if/then/else signal that forces the type choice.</div>
+        </div>
+      </div>
+      <div class="correction">
+        <div class="correction-label">▸ Correct Understanding</div>
+        <div class="correction-text"><strong>Tcl</strong> = any scenario with if/then/else, loops, or decision logic. If the requirement has conditions, the answer is always Tcl.<br><strong>CLI</strong> = flat command list only — no branching, no logic, just sequential commands. When in doubt: does it need to decide anything? Tcl. Does it just run commands? CLI.</div>
+      </div>
+    </div>
   </div>
 
 </div>
@@ -232,6 +260,6 @@
   <div class="footer-right">Weakness Ledger · Enterprise Firewall 7.6</div>
 </footer>
 
-<script src="../assets/transitions.js"></script>
+<script src="../../assets/transitions.js"></script>
 </body>
 </html>
