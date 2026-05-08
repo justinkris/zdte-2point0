@@ -395,23 +395,6 @@ footer { padding: 20px 60px; border-top: 1px solid var(--border); display: flex;
       <div class="big" id="prog-num">0<span style="font-size:18px;color:#7a6a55;">%</span></div>
       <div class="lbl">REVIEWED</div>
     </div>
-    <div class="nav-hub">
-      <div class="nav-hub-trigger">
-        <div class="icon">📚</div>
-        <div class="label">STUDY MATERIALS</div>
-        <div class="hint">hover to explore</div>
-      </div>
-      <div class="nav-hub-dropdown">
-        <a class="nav-hub-item" href="../../index.html"><span class="nav-icon">🏠</span> HOME</a>
-        <a class="nav-hub-item" href="../study-guides/enterprise-firewall-study-guides-hub.html"><span class="nav-icon">📖</span> STUDY GUIDES</a>
-        <a class="nav-hub-item" href="../memory-techniques/enterprise-firewall-memory-palace-hub.html"><span class="nav-icon">🧠</span> MEMORY TECHNIQUES</a>
-        <a class="nav-hub-item" href="../study-bites/enterprise-firewall-study-bites-hub.html"><span class="nav-icon">🍐</span> STUDY BITES</a>
-        <a class="nav-hub-item" href="../study-nibbles/enterprise-firewall-study-nibbles-hub.html"><span class="nav-icon">🍔</span> STUDY NIBBLES</a>
-        <a class="nav-hub-item" href="../mock-exams/enterprise-firewall-mock-exams-hub.html"><span class="nav-icon">📋</span> MOCK EXAMS</a>
-        <a class="nav-hub-item" href="../lab/enterprise-firewall-lab-hub.html"><span class="nav-icon">⚗️</span> LAB CHALLENGES</a>
-        <a class="nav-hub-item" href="../notebooklm/enterprise-firewall-notebooklm-hub.html"><span class="nav-icon">🎙️</span> NOTEBOOKLM</a>
-      </div>
-    </div>
   </div>
 </header>
 
@@ -757,25 +740,6 @@ footer { padding: 20px 60px; border-top: 1px solid var(--border); display: flex;
 </footer>
 
 <script>
-  (function() {
-    const style = document.createElement('style');
-    style.textContent = `
-      .nav-hub { position: relative; }
-      .nav-hub-trigger { background: var(--ink); color: var(--cream); padding: 16px 24px; border-radius: 16px; text-align: center; width: 200px; cursor: pointer; user-select: none; transition: transform 0.18s ease, box-shadow 0.18s ease; }
-      .nav-hub-trigger .icon { font-size: 32px; line-height: 1; color: var(--orange); }
-      .nav-hub-trigger .label { font-size: 11px; color: #7a6a55; letter-spacing: 0.1em; margin-top: 4px; }
-      .nav-hub-trigger .hint { font-size: 11px; color: var(--cream); margin-top: 6px; font-weight: 300; opacity: 0.6; }
-      .nav-hub:hover .nav-hub-trigger { transform: translateY(-4px) scale(1.03); box-shadow: 0 8px 24px rgba(26,18,9,0.18); border-radius: 16px 16px 0 0; }
-      .nav-hub-dropdown { position: absolute; top: 100%; right: 0; width: 200px; background: var(--ink); border-radius: 0 0 16px 16px; overflow: hidden; opacity: 0; pointer-events: none; transform: translateY(-6px); transition: opacity 0.2s ease, transform 0.2s ease; z-index: 100; border-top: 1px solid rgba(255,255,255,0.08); }
-      .nav-hub:hover .nav-hub-dropdown { opacity: 1; pointer-events: all; transform: translateY(0); }
-      .nav-hub-item { display: flex; align-items: center; gap: 12px; padding: 13px 20px; color: var(--cream); font-size: 12px; letter-spacing: 0.08em; font-weight: 500; text-decoration: none; border-bottom: 1px solid rgba(255,255,255,0.06); transition: background 0.15s; }
-      .nav-hub-item:last-child { border-bottom: none; }
-      .nav-hub-item:hover { background: rgba(204,32,32,0.15); color: var(--orange); }
-      .nav-hub-item .nav-icon { font-size: 18px; flex-shrink: 0; }
-    `;
-    document.head.appendChild(style);
-  })();
-
   function navTo(sectionId, el) {
     document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
     el.classList.add('active');
