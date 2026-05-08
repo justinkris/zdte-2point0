@@ -1,17 +1,12 @@
-document.addEventListener('DOMContentLoaded', function () {
-  document.querySelectorAll('a[href]').forEach(function (link) {
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('a[href]').forEach(link => {
     const href = link.getAttribute('href');
-    if (!href || href.startsWith('http') || href.startsWith('mailto') || href.startsWith('#')) return;
-    if (link.getAttribute('target') === '_blank') return;
-
-    link.addEventListener('click', function (e) {
+    if (!href || /^(https?:|mailto:|#)/.test(href) || link.target === '_blank') return;
+    link.addEventListener('click', e => {
       e.preventDefault();
-      e.stopPropagation();
-      const target = this.href;
-      document.body.style.transition = 'opacity 0.45s cubic-bezier(0.4,0,1,1), transform 0.45s cubic-bezier(0.4,0,1,1)';
-      document.body.style.opacity = '0';
-      document.body.style.transform = 'scale(0.92) translateY(30px)';
-      setTimeout(function () { window.location.href = target; }, 470);
+      document.body.style.cssText =
+        'transition: opacity 0.25s ease, transform 0.25s ease; opacity: 0; transform: scale(0.97)';
+      setTimeout(() => { window.location.href = link.href; }, 260);
     });
   });
 });
