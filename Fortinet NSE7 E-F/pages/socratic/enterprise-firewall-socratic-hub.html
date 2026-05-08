@@ -3,7 +3,7 @@
 <head><script>if(sessionStorage.getItem('pt')){document.documentElement.classList.add('pt-init')}</script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Enterprise Firewall 7.6 — Socratic Sessions</title>
+<title>Socratic — NSE7 Enterprise Firewall</title>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;0,700;1,400&family=Epilogue:wght@300;400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../../assets/template.css">
 <style>
@@ -14,7 +14,7 @@
     align-items: center;
     justify-content: center;
     background: var(--cream);
-    padding: 40px 20px 80px;
+    padding: 40px 20px 100px;
   }
 
   .breadcrumb-wrap {
@@ -25,31 +25,31 @@
 
   .page-title {
     text-align: center;
-    margin-bottom: 48px;
+    margin-bottom: 52px;
   }
   .page-title .day-badge { display: inline-flex; margin-bottom: 14px; }
-  .page-title .day-badge-dot { background: #8b4513; }
-  .page-title h1 { font-size: 48px; }
+  .page-title .day-badge-dot { background: #2c4a80; }
+  .page-title h1 { font-size: 52px; }
   .page-title p {
     font-size: 13px;
     color: var(--ink-muted);
     margin-top: 10px;
-    line-height: 1.6;
-    max-width: 520px;
+    line-height: 1.65;
+    max-width: 480px;
     margin-left: auto;
     margin-right: auto;
   }
 
+  /* ── CARD ROW — 2 wide cards ── */
   .card-row {
     display: flex;
-    gap: 28px;
+    gap: 32px;
     flex-wrap: wrap;
     justify-content: center;
   }
 
-  /* ── HUB CARD BASE ── */
   .hub-card {
-    width: 300px;
+    width: 340px;
     background: var(--cream);
     border: 1px solid var(--border);
     border-radius: 20px;
@@ -63,8 +63,8 @@
                 border-color 0.3s ease;
   }
 
-  /* shine sweep — only on active cards */
-  .hub-card.type-active::before {
+  /* shine sweep */
+  .hub-card::before {
     content: '';
     position: absolute;
     top: 0; left: -80%;
@@ -74,40 +74,40 @@
     pointer-events: none;
     z-index: 2;
   }
-  .hub-card.type-active:hover::before { animation: card-shine 0.55s ease forwards; }
+  .hub-card:hover::before { animation: card-shine 0.55s ease forwards; }
   @keyframes card-shine { to { left: 160%; } }
 
-  /* ── SESSION 01 HOVER ── */
-  .hub-card.type-active:hover {
+  /* ── LIBRARY card (warm brown) ── */
+  .hub-card.c-library:hover {
     transform: translateY(-22px) scale(1.05) rotate(-1.5deg);
     box-shadow: 0 32px 64px rgba(139,69,19,0.28), 0 0 0 2px #e8c090;
     border-color: #e8c090;
   }
+  .hub-card.c-library .card-img { background: #fdf0e0; border-bottom-color: #e8c090; }
+  .hub-card.c-library:hover .card-img { background: #f5dfc0; }
+  .hub-card.c-library .card-label { color: #8b4513; }
+  .hub-card.c-library .card-arrow { color: #8b4513; }
 
-  /* ── COMING SOON CARDS ── */
-  .hub-card.type-coming {
-    opacity: 0.5;
-    cursor: default;
-    pointer-events: none;
+  /* ── SESSIONS card (navy) ── */
+  .hub-card.c-sessions:hover {
+    transform: translateY(-22px) scale(1.05) rotate(1.5deg);
+    box-shadow: 0 32px 64px rgba(44,74,128,0.28), 0 0 0 2px #b0c0e6;
+    border-color: #b0c0e6;
   }
+  .hub-card.c-sessions .card-img { background: #e8edf7; border-bottom-color: #b0c0e6; }
+  .hub-card.c-sessions:hover .card-img { background: #ccd4ec; }
+  .hub-card.c-sessions .card-label { color: #2c4a80; }
+  .hub-card.c-sessions .card-arrow { color: #2c4a80; }
 
-  /* image tints on hover */
-  .hub-card .card-img { transition: background 0.3s ease; overflow: hidden; }
-  .hub-card.type-active:hover .card-img { background: #f5dfc0; }
+  /* icon animation */
+  .hub-card:hover .card-icon { animation: icon-rise 0.5s cubic-bezier(0.34,1.56,0.64,1) forwards; }
+  @keyframes icon-rise { to { transform: translateY(-5px) scale(1.05); } }
 
   /* arrow nudge */
-  .hub-card.type-active:hover .card-arrow svg {
-    animation: arrow-nudge 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) 0.1s both;
-  }
+  .hub-card:hover .card-arrow svg { animation: arrow-nudge 0.35s cubic-bezier(0.34,1.56,0.64,1) 0.1s both; }
   @keyframes arrow-nudge { to { transform: translateX(5px); } }
 
-  /* ── SVG ICON ANIMATION ── */
-  .hub-card.type-active:hover .session-icon {
-    animation: icon-rise 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
-  }
-  @keyframes icon-rise { to { transform: translateY(-5px) scale(1.04); } }
-
-  /* ── CARD IMAGE AREA ── */
+  /* ── CARD IMAGE ── */
   .card-img {
     width: 100%;
     aspect-ratio: 4 / 3;
@@ -115,14 +115,13 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    transition: background 0.3s ease;
   }
-  .hub-card.type-active  .card-img { background: #fdf0e0; border-bottom-color: #e8c090; }
-  .hub-card.type-coming  .card-img { background: var(--cream-dark); border-bottom-color: var(--border); }
-  .card-img svg { width: 80px; height: 80px; }
+  .card-img svg { width: 96px; height: 96px; }
 
   /* ── CARD BODY ── */
   .card-body {
-    padding: 20px 22px 24px;
+    padding: 22px 24px 26px;
     flex: 1;
     display: flex;
     flex-direction: column;
@@ -131,19 +130,17 @@
   .card-label {
     font-size: 10px;
     letter-spacing: 0.16em;
+    text-transform: uppercase;
   }
-  .hub-card.type-active .card-label { color: #8b4513; }
-  .hub-card.type-coming .card-label { color: var(--ink-muted); }
-
   .card-name {
     font-family: 'Fraunces', serif;
-    font-size: 20px;
+    font-size: 22px;
     font-weight: 700;
     color: var(--ink);
-    line-height: 1.25;
+    line-height: 1.2;
   }
   .card-desc {
-    font-size: 12px;
+    font-size: 12.5px;
     color: var(--ink-muted);
     line-height: 1.65;
     max-height: 0;
@@ -152,67 +149,36 @@
     margin-top: 0;
     transition: max-height 0.35s ease, opacity 0.25s ease, margin-top 0.3s ease;
   }
-  .hub-card.type-active:hover .card-desc {
-    max-height: 120px;
-    opacity: 1;
-    margin-top: 4px;
-  }
-  .card-meta {
-    display: flex;
-    gap: 6px;
-    flex-wrap: wrap;
-    max-height: 0;
-    overflow: hidden;
-    opacity: 0;
-    margin-top: 0;
-    transition: max-height 0.3s ease, opacity 0.25s ease, margin-top 0.3s ease;
-  }
-  .hub-card.type-active:hover .card-meta {
-    max-height: 60px;
-    opacity: 1;
-    margin-top: 8px;
-  }
-  .card-pill {
-    font-size: 10px;
-    padding: 2px 9px;
-    border-radius: 20px;
-    letter-spacing: 0.06em;
-    border: 1px solid var(--border);
-    color: var(--ink-muted);
-    background: var(--cream-dark);
-  }
-  .card-arrow {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 11px;
-    font-weight: 600;
-    letter-spacing: 0.08em;
-    max-height: 0;
-    overflow: hidden;
-    opacity: 0;
-    margin-top: 0;
-    transition: max-height 0.3s ease, opacity 0.25s ease, margin-top 0.3s ease;
-  }
-  .hub-card.type-active:hover .card-arrow {
-    max-height: 40px;
-    opacity: 1;
-    margin-top: 8px;
-  }
-  .hub-card.type-active .card-arrow { color: #8b4513; }
+  .hub-card:hover .card-desc { max-height: 120px; opacity: 1; margin-top: 4px; }
 
-  .coming-badge {
-    display: inline-block;
-    font-size: 10px;
-    font-weight: 600;
-    letter-spacing: 0.1em;
-    color: var(--ink-muted);
-    background: var(--cream-dark);
-    border: 1px solid var(--border);
-    border-radius: 20px;
-    padding: 3px 10px;
-    margin-top: 8px;
+  .card-meta {
+    display: flex; gap: 6px; flex-wrap: wrap;
+    max-height: 0; overflow: hidden; opacity: 0; margin-top: 0;
+    transition: max-height 0.3s ease, opacity 0.25s ease, margin-top 0.3s ease;
   }
+  .hub-card:hover .card-meta { max-height: 60px; opacity: 1; margin-top: 8px; }
+  .card-pill {
+    font-size: 10px; padding: 2px 9px; border-radius: 20px;
+    border: 1px solid var(--border); color: var(--ink-muted); background: var(--cream-dark);
+  }
+
+  .card-arrow {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 11px; font-weight: 600; letter-spacing: 0.08em;
+    max-height: 0; overflow: hidden; opacity: 0; margin-top: 0;
+    transition: max-height 0.3s ease, opacity 0.25s ease, margin-top 0.3s ease;
+  }
+  .hub-card:hover .card-arrow { max-height: 40px; opacity: 1; margin-top: 8px; }
+
+  /* ── FOOTER ── */
+  footer {
+    position: fixed; bottom: 0; left: 0; right: 0;
+    padding: 16px 40px;
+    border-top: 1px solid var(--border);
+    background: var(--cream-dark);
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .footer-left { font-family: 'Fraunces', serif; font-size: 16px; font-weight: 700; }
 </style>
 </head>
 <body>
@@ -223,125 +189,112 @@
     <span class="breadcrumb-sep">/</span>
     <a href="../../index.html">NSE7</a>
     <span class="breadcrumb-sep">/</span>
-    <span>Enterprise Firewall 7.6</span>
-    <span class="breadcrumb-sep">/</span>
-    <span>Socratic Sessions</span>
+    <span>Socratic</span>
   </div>
 </div>
 
 <div class="page-title">
   <div class="day-badge">
     <span class="day-badge-dot"></span>
-    SOCRATIC SESSIONS · ENTERPRISE FIREWALL 7.6
+    SOCRATIC · ENTERPRISE FIREWALL 7.6
   </div>
-  <h1>Socratic <em>Sessions</em></h1>
-  <p>Question-led study sessions — work through core concepts by answering, not reading. Each session records your score and surfaces the gaps worth revisiting.</p>
+  <h1>Socratic <em>Hub</em></h1>
+  <p>Two ways to study. Open the Library to read session guides, or open Sessions to run the full 24-session Socratic tracker.</p>
 </div>
 
 <div class="card-row">
 
-  <!-- Session 01 — Enterprise Firewall Foundations -->
-  <a class="hub-card type-active" href="../socratic/enterprise-firewall-socratic-session-01.html">
+  <!-- Socratic Library -->
+  <a class="hub-card c-library" href="enterprise-firewall-socratic-library.html">
     <div class="card-img">
-      <svg viewBox="0 0 72 72" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <g class="session-icon">
-          <!-- Open book with dialogue marks -->
-          <path d="M36 58 L10 51 L10 16 L36 23 Z" fill="#8b4513" fill-opacity="0.12" stroke="#8b4513" stroke-width="2.2" stroke-linejoin="round"/>
-          <path d="M36 58 L62 51 L62 16 L36 23 Z" fill="#8b4513" fill-opacity="0.12" stroke="#8b4513" stroke-width="2.2" stroke-linejoin="round"/>
-          <line x1="36" y1="23" x2="36" y2="58" stroke="#8b4513" stroke-width="2.5"/>
-          <!-- Left page lines -->
-          <rect x="15" y="28" width="16" height="3" rx="1" fill="#8b4513" fill-opacity="0.35"/>
-          <rect x="15" y="34" width="13" height="2.5" rx="1" fill="#8b4513" fill-opacity="0.25"/>
-          <rect x="15" y="39" width="15" height="2.5" rx="1" fill="#8b4513" fill-opacity="0.2"/>
-          <!-- Right page lines -->
-          <rect x="41" y="28" width="16" height="3" rx="1" fill="#8b4513" fill-opacity="0.35"/>
-          <rect x="41" y="34" width="11" height="2.5" rx="1" fill="#8b4513" fill-opacity="0.25"/>
-          <rect x="41" y="39" width="14" height="2.5" rx="1" fill="#8b4513" fill-opacity="0.2"/>
-          <!-- Question mark accent -->
-          <text x="23" y="22" font-family="serif" font-size="11" font-weight="700" fill="#8b4513" fill-opacity="0.7">?</text>
-          <text x="46" y="22" font-family="serif" font-size="11" font-weight="700" fill="#8b4513" fill-opacity="0.5">?</text>
-          <!-- Score badge -->
-          <rect x="42" y="44" width="18" height="12" rx="3" fill="#8b4513" fill-opacity="0.85"/>
-          <text x="46" y="53" font-family="sans-serif" font-size="7" font-weight="700" fill="#fef9f0">9/10</text>
+      <svg viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <g class="card-icon">
+          <!-- Back pages (stacked) -->
+          <rect x="16" y="28" width="52" height="44" rx="5" fill="#8b4513" fill-opacity="0.07" stroke="#8b4513" stroke-width="1.8" transform="rotate(5 42 50)"/>
+          <rect x="16" y="26" width="52" height="44" rx="5" fill="#8b4513" fill-opacity="0.09" stroke="#8b4513" stroke-width="1.8" transform="rotate(-3 42 48)"/>
+          <!-- Main document -->
+          <rect x="14" y="20" width="54" height="44" rx="5" fill="#fdf0e0" stroke="#8b4513" stroke-width="2.2"/>
+          <!-- Header bar -->
+          <rect x="14" y="20" width="54" height="11" rx="5" fill="#8b4513" fill-opacity="0.2"/>
+          <rect x="22" y="25" width="26" height="4" rx="1.5" fill="#8b4513" fill-opacity="0.5"/>
+          <!-- Text lines -->
+          <rect x="22" y="39" width="38" height="3.5" rx="1.5" fill="#8b4513" fill-opacity="0.3"/>
+          <rect x="22" y="46" width="30" height="3" rx="1.5" fill="#8b4513" fill-opacity="0.2"/>
+          <rect x="22" y="52" width="34" height="3" rx="1.5" fill="#8b4513" fill-opacity="0.18"/>
+          <!-- Session count badge -->
+          <rect x="44" y="56" width="22" height="13" rx="3" fill="#8b4513" fill-opacity="0.88"/>
+          <text x="48" y="66" font-family="sans-serif" font-size="8.5" font-weight="700" fill="#fef9f0">3 SES</text>
+          <!-- Small question marks -->
+          <text x="64" y="30" font-family="serif" font-size="14" font-weight="700" fill="#8b4513" fill-opacity="0.55">?</text>
+          <!-- Spine line -->
+          <line x1="68" y1="20" x2="68" y2="64" stroke="#8b4513" stroke-width="1.2" opacity="0.2"/>
         </g>
       </svg>
     </div>
     <div class="card-body">
-      <div class="card-label">SESSION 01 · FOUNDATIONS</div>
-      <div class="card-name">Enterprise Firewall Foundations</div>
-      <div class="card-desc">Zero trust principles, NGFW vs traditional firewall, FortiGuard services, north-south vs east-west traffic, and Fortinet deployment families.</div>
+      <div class="card-label">SOCRATIC LIBRARY</div>
+      <div class="card-name">Session Guides</div>
+      <div class="card-desc">Structured study guides for completed sessions — full notes, comparison tables, exam callouts, and scenario Q&amp;As.</div>
       <div class="card-meta">
-        <span class="card-pill">9/10 scored</span>
-        <span class="card-pill">4 sections</span>
-        <span class="card-pill">Domain 1</span>
+        <span class="card-pill">3 sessions</span>
+        <span class="card-pill">Sessions 01–03</span>
       </div>
       <div class="card-arrow">
-        Open Session 01
+        Open Library
         <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h8M7 3l4 4-4 4"/></svg>
       </div>
     </div>
   </a>
 
-  <!-- Session 02 — FortiManager & ADOMs -->
-  <a class="hub-card type-active" href="enterprise-firewall-socratic-session-02.html">
+  <!-- Socratic Sessions -->
+  <a class="hub-card c-sessions" href="enterprise-firewall-socratic-sessions.html">
     <div class="card-img">
-      <svg viewBox="0 0 72 72" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <g class="session-icon">
-          <!-- FortiManager hierarchy icon -->
-          <rect x="24" y="10" width="24" height="14" rx="3" fill="#8b4513" fill-opacity="0.18" stroke="#8b4513" stroke-width="2"/>
-          <rect x="24" y="11" width="24" height="6" rx="2" fill="#8b4513" fill-opacity="0.3"/>
-          <rect x="14" y="34" width="18" height="12" rx="3" fill="#8b4513" fill-opacity="0.15" stroke="#8b4513" stroke-width="1.8"/>
-          <rect x="40" y="34" width="18" height="12" rx="3" fill="#8b4513" fill-opacity="0.15" stroke="#8b4513" stroke-width="1.8"/>
-          <line x1="36" y1="24" x2="36" y2="30" stroke="#8b4513" stroke-width="1.8"/>
-          <line x1="36" y1="30" x2="23" y2="34" stroke="#8b4513" stroke-width="1.8"/>
-          <line x1="36" y1="30" x2="49" y2="34" stroke="#8b4513" stroke-width="1.8"/>
-          <!-- g_ prefix label -->
-          <rect x="26" y="52" width="20" height="10" rx="2" fill="#8b4513" fill-opacity="0.85"/>
-          <text x="29" y="60" font-family="monospace" font-size="7" font-weight="700" fill="#fef9f0">g_obj</text>
-          <!-- Score badge -->
-          <rect x="46" y="52" width="18" height="10" rx="2" fill="#8b4513" fill-opacity="0.85"/>
-          <text x="49" y="60" font-family="sans-serif" font-size="7" font-weight="700" fill="#fef9f0">8/8</text>
+      <svg viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <g class="card-icon">
+          <!-- Checklist rows -->
+          <rect x="14" y="18" width="68" height="60" rx="6" fill="#e8edf7" stroke="#2c4a80" stroke-width="2"/>
+          <!-- Header -->
+          <rect x="14" y="18" width="68" height="12" rx="6" fill="#2c4a80" fill-opacity="0.2"/>
+          <rect x="22" y="22" width="32" height="4" rx="1.5" fill="#2c4a80" fill-opacity="0.5"/>
+          <!-- Row 1 — checked -->
+          <rect x="22" y="38" width="12" height="8" rx="2" fill="#2c4a80" fill-opacity="0.85"/>
+          <path d="M25 42 l2.5 2.5 4.5-4.5" stroke="#e8edf7" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          <rect x="38" y="40" width="30" height="4" rx="1.5" fill="#2c4a80" fill-opacity="0.35"/>
+          <!-- Row 2 — checked -->
+          <rect x="22" y="51" width="12" height="8" rx="2" fill="#2c4a80" fill-opacity="0.85"/>
+          <path d="M25 55 l2.5 2.5 4.5-4.5" stroke="#e8edf7" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          <rect x="38" y="53" width="36" height="4" rx="1.5" fill="#2c4a80" fill-opacity="0.35"/>
+          <!-- Row 3 — unchecked -->
+          <rect x="22" y="64" width="12" height="8" rx="2" fill="none" stroke="#2c4a80" stroke-width="1.5" opacity="0.4"/>
+          <rect x="38" y="66" width="26" height="4" rx="1.5" fill="#2c4a80" fill-opacity="0.2"/>
+          <!-- Progress badge -->
+          <rect x="56" y="60" width="22" height="13" rx="3" fill="#2c4a80" fill-opacity="0.88"/>
+          <text x="60" y="70" font-family="sans-serif" font-size="8.5" font-weight="700" fill="#e8edf7">2/24</text>
         </g>
       </svg>
     </div>
     <div class="card-body">
-      <div class="card-label">SESSION 02 · CENTRAL MANAGEMENT</div>
-      <div class="card-name">FortiManager &amp; ADOMs</div>
-      <div class="card-desc">ADOM isolation, Global ADOM header/footer policies, g_ objects, device registration checks, retrieve before push, and dynamic interface mappings.</div>
+      <div class="card-label">SOCRATIC SESSIONS</div>
+      <div class="card-name">Session Tracker</div>
+      <div class="card-desc">Full 24-session Socratic practice plan — tick topics, mark sessions done, track progress, and copy prompts for deep-dive conversations.</div>
       <div class="card-meta">
-        <span class="card-pill">8/8 topics</span>
-        <span class="card-pill">5 sections</span>
-        <span class="card-pill">Domain 2</span>
+        <span class="card-pill">24 sessions</span>
+        <span class="card-pill">~10 hours</span>
+        <span class="card-pill">All domains</span>
       </div>
       <div class="card-arrow">
-        Open Session 02
+        Open Sessions
         <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h8M7 3l4 4-4 4"/></svg>
       </div>
     </div>
   </a>
-
-  <!-- Session 03 — Coming Soon -->
-  <div class="hub-card type-coming">
-    <div class="card-img">
-      <svg viewBox="0 0 72 72" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <rect x="16" y="20" width="40" height="32" rx="5" fill="#8a7660" fill-opacity="0.1" stroke="#8a7660" stroke-width="1.5" stroke-dasharray="4 3"/>
-        <circle cx="36" cy="36" r="8" fill="#8a7660" fill-opacity="0.12" stroke="#8a7660" stroke-width="1.5"/>
-        <text x="32" y="40" font-family="sans-serif" font-size="11" fill="#8a7660" fill-opacity="0.5">+</text>
-      </svg>
-    </div>
-    <div class="card-body">
-      <div class="card-label">SESSION 03 · COMING SOON</div>
-      <div class="card-name">Security Profiles</div>
-      <div class="coming-badge">Not yet available</div>
-    </div>
-  </div>
 
 </div>
 
-<footer style="position:fixed;bottom:0;left:0;right:0;padding:16px 40px;border-top:1px solid var(--border);background:var(--cream-dark);display:flex;justify-content:space-between;align-items:center;">
+<footer>
   <div class="footer-left">NSE7<span style="color:var(--orange)">.</span></div>
   <span style="font-family:'Fraunces',serif;font-size:13px;font-style:italic;color:var(--ink-muted);">The questions you can answer are the concepts you truly own.</span>
-  <div class="footer-right" style="font-size:11px;color:var(--ink-muted);letter-spacing:0.06em;">Socratic Sessions · Enterprise Firewall 7.6</div>
+  <div style="font-size:11px;color:var(--ink-muted);letter-spacing:0.06em;">Socratic Hub · Enterprise Firewall 7.6</div>
 </footer>
 
 <script src="../../assets/transitions.js"></script>
