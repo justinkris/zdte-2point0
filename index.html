@@ -245,53 +245,13 @@
   .status-soon:hover     .cert-suffix { color: #1a6bcc; }
   .status-fortinet:hover .cert-suffix { color: var(--red); }
 
-  /* ── DETAILS — hidden by default, revealed on hover ── */
+  /* ── DETAILS — always visible ── */
   .card-details {
-    overflow: hidden;
-    max-height: 0;
-    opacity: 0;
-    transform: translateY(10px);
-    transition:
-      max-height 0.5s cubic-bezier(0.15, 0.85, 0.2, 1),
-      opacity 0.4s ease 0.08s,
-      transform 0.45s cubic-bezier(0.15, 0.85, 0.2, 1) 0.05s,
-      margin-top 0.4s ease;
-    margin-top: 0;
-  }
-  .cert-card:hover .card-details {
-    max-height: 160px;
+    overflow: visible;
+    max-height: none;
     opacity: 1;
-    transform: translateY(0);
-    margin-top: 24px;
-    transition:
-      max-height 0.7s cubic-bezier(0.15, 0.85, 0.2, 1),
-      opacity 0.7s ease 0.3s,
-      transform 0.65s cubic-bezier(0.15, 0.85, 0.2, 1) 0.25s,
-      margin-top 0.5s ease;
-  }
-
-  /* ZDTA — date and credly fade in extra slowly */
-  .status-complete .card-details .exam-date,
-  .status-complete .card-details .credly-link,
-  .status-progress .card-details .exam-date,
-  .status-progress .card-details .credly-link,
-  .status-soon .card-details .exam-date {
-    opacity: 0;
-    transform: translateX(-20px);
-    transition: opacity 0.1s ease, transform 0.1s ease;
-  }
-  .status-complete:hover .card-details .exam-date,
-  .status-progress:hover .card-details .exam-date,
-  .status-soon:hover .card-details .exam-date {
-    opacity: 1;
-    transform: translateX(0);
-    transition: opacity 1.0s ease 0.65s, transform 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) 0.6s;
-  }
-  .status-complete:hover .card-details .credly-link,
-  .status-progress:hover .card-details .credly-link {
-    opacity: 1;
-    transform: translateX(0);
-    transition: opacity 1.0s ease 0.95s, transform 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) 0.9s;
+    transform: none;
+    margin-top: 16px;
   }
 
   /* ── STATUS BADGE ── */
@@ -517,7 +477,7 @@ body { animation: pageEnter 0.6s cubic-bezier(0.15, 0.85, 0.2, 1.08) both; }
       JUSTIN FRANCISCO
     </div>
     <h1>Certification <em>Schedule</em></h1>
-    <div class="subtitle">the road to Zscaler mastery</div>
+    <div class="subtitle">The Study Road</div>
     <div class="vendor-filters">
       <button class="vendor-btn" data-vendor="zscaler">Zscaler</button>
       <button class="vendor-btn" data-vendor="fortinet">Fortinet</button>
@@ -610,9 +570,7 @@ body { animation: pageEnter 0.6s cubic-bezier(0.15, 0.85, 0.2, 1.08) both; }
   </div>
 
   <div id="fortinet-section">
-  <div class="section-divider">Other Certifications</div>
-
-  <div class="card-grid card-grid-fortinet" style="padding-bottom: 4px;">
+<div class="card-grid card-grid-fortinet" style="padding-bottom: 4px;">
 
     <!-- ═══════════════ CARD 4 — NSE7 (IN PROGRESS) ═══════════════ -->
     <a href="Fortinet NSE7 E-F/index.html" class="cert-card status-fortinet">
