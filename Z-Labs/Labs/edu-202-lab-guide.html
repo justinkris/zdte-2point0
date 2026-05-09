@@ -1,0 +1,2777 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EDU-202 — Hands-on Lab Guide (Engineer)</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;0,700;1,400&family=Epilogue:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   ZDTE Lab Guide — Embedded Stylesheet (template-based)
+   ============================================================ */
+:root {
+  --cream: #fef9f0;
+  --cream-dark: #f5eddb;
+  --ink: #1a1209;
+  --ink-soft: #5a4a35;
+  --ink-muted: #8a7660;
+  --orange: #ff6b35;
+  --orange-light: #fff3ec;
+  --orange-border: #ffd5c0;
+  --amber-light: #fffbe6;
+  --green: #3a7d44;
+  --green-light: #edf7ee;
+  --green-border: #b2dfb4;
+  --purple: #5c35cc;
+  --purple-light: #ece8ff;
+  --purple-border: #c8bbff;
+  --blue-light: #e8f0fb;
+  --blue-border: #b3ccf0;
+  --blue: #1a6bcc;
+  --red-light: #fce8e8;
+  --red-border: #f7c1c1;
+  --red: #a32d2d;
+  --border: #ede5d8;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Epilogue', sans-serif; background: var(--cream); color: var(--ink); min-height: 100vh; }
+header { padding: 40px 60px 28px; border-bottom: 1px solid var(--border); display: flex; align-items: flex-start; justify-content: space-between; gap: 32px; background: var(--cream); }
+.header-left { flex: 1; }
+.day-badge { display: inline-flex; align-items: center; gap: 6px; background: var(--ink); color: var(--cream); padding: 5px 14px; border-radius: 20px; font-size: 11px; letter-spacing: 0.1em; margin-bottom: 14px; }
+.day-badge-dot { width: 5px; height: 5px; background: var(--orange); border-radius: 50%; }
+h1 { font-family: 'Fraunces', serif; font-size: 42px; font-weight: 700; line-height: 1.0; color: var(--ink); margin-bottom: 10px; }
+h1 em { font-style: italic; font-weight: 400; color: var(--orange); }
+.header-meta-row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-top: 14px; }
+.tag { padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 500; border: 1px solid; display: inline-block; }
+.tag-zia    { background: var(--blue-light);   color: var(--blue);   border-color: var(--blue-border); }
+.tag-zpa    { background: var(--green-light);  color: var(--green);  border-color: var(--green-border); }
+.tag-zdx    { background: var(--purple-light); color: var(--purple); border-color: var(--purple-border); }
+.tag-arch   { background: var(--amber-light);  color: #a07c00;       border-color: #ffe680; }
+.tag-weight { background: var(--orange-light); color: #cc4a18;       border-color: var(--orange-border); }
+
+/* CONFIG PANEL */
+.config-panel { background: var(--ink); color: var(--cream); padding: 18px 60px; position: sticky; top: 0; z-index: 200; border-bottom: 2px solid var(--orange); box-shadow: 0 4px 12px rgba(26,18,9,0.18); }
+.config-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; align-items: end; }
+.config-field { display: flex; flex-direction: column; gap: 6px; }
+.config-field label { font-size: 10px; letter-spacing: 0.14em; color: var(--orange); font-weight: 600; text-transform: uppercase; }
+.config-field input { background: #2a2010; color: var(--cream); border: 1px solid #3a3020; border-radius: 8px; padding: 9px 12px; font-size: 13px; font-family: 'JetBrains Mono', monospace; transition: border-color 0.15s, background 0.15s; }
+.config-field input:focus { outline: none; border-color: var(--orange); background: #1f1608; }
+.config-field input::placeholder { color: #7a6a55; font-style: italic; }
+.config-derived { display: flex; flex-wrap: wrap; gap: 16px; margin-top: 12px; padding-top: 12px; border-top: 1px solid #2a2010; font-size: 11px; color: #b8a18a; }
+.config-derived span { display: inline-flex; gap: 6px; align-items: center; }
+.config-derived strong { color: var(--orange); font-weight: 500; letter-spacing: 0.04em; }
+.config-derived code { background: #2a2010; color: var(--cream); padding: 2px 8px; border-radius: 4px; font-family: 'JetBrains Mono', monospace; font-size: 11px; }
+.config-field-row { display: flex; gap: 6px; align-items: center; }
+.config-field-row input { flex: 1; min-width: 0; }
+.config-copy-btn { flex-shrink: 0; background: #2a2010; border: 1px solid #5a4a35; color: #7a6a55; border-radius: 6px; padding: 0 9px; font-size: 11px; cursor: pointer; font-family: 'JetBrains Mono', monospace; height: 38px; transition: color 0.15s, border-color 0.15s, background 0.15s; }
+.config-copy-btn:hover { color: var(--orange); border-color: var(--orange); background: #3a3020; }
+.config-copy-btn.copied { background: var(--green); color: #fff !important; border-color: var(--green); }
+.config-actions { display: flex; gap: 8px; }
+.config-btn { background: var(--orange); color: var(--ink); border: none; border-radius: 8px; padding: 9px 14px; font-size: 11px; font-weight: 600; letter-spacing: 0.06em; cursor: pointer; font-family: 'Epilogue', sans-serif; transition: background 0.15s; }
+.config-btn:hover { background: #ff8a5c; }
+.config-btn.secondary { background: #3a3020; color: var(--cream); }
+.config-btn.secondary:hover { background: #4a4030; }
+
+/* VARIABLES */
+.var { background: var(--orange-light); color: #cc4a18; border: 1px dashed var(--orange-border); padding: 1px 6px; border-radius: 4px; font-family: 'JetBrains Mono', monospace; font-size: 0.92em; font-weight: 500; }
+.var.filled { background: var(--green-light); color: var(--green); border: 1px solid var(--green-border); }
+
+/* LAB NAV */
+.lab-nav { padding: 12px 60px; background: var(--cream-dark); border-bottom: 1px solid var(--border); display: flex; gap: 6px; overflow-x: auto; position: sticky; top: 0; z-index: 100; }
+.lab-nav-tab { padding: 8px 14px; font-size: 11px; font-weight: 600; color: var(--ink-soft); letter-spacing: 0.06em; border-radius: 16px; cursor: pointer; white-space: nowrap; background: var(--cream); border: 1px solid var(--border); text-decoration: none; transition: all 0.15s; }
+.lab-nav-tab:hover { background: var(--orange-light); border-color: var(--orange-border); color: var(--orange); }
+.lab-nav-tab.capstone { background: var(--ink); color: var(--orange); border-color: var(--orange); }
+
+main { padding: 36px 60px 60px; max-width: 1200px; margin: 0 auto; }
+
+/* INTRO BLOCK */
+.intro-block { background: var(--cream-dark); border: 1px solid var(--border); border-radius: 14px; padding: 22px 26px; margin-bottom: 28px; }
+.intro-block h2 { font-family: 'Fraunces', serif; font-size: 22px; margin-bottom: 12px; color: var(--ink); }
+.intro-block p { font-size: 13px; color: var(--ink-soft); line-height: 1.7; margin-bottom: 8px; }
+
+/* CREDS TABLE */
+.creds-table { width: 100%; border-collapse: collapse; font-size: 12px; margin: 12px 0 4px; background: var(--cream); border-radius: 10px; overflow: hidden; }
+.creds-table th { background: var(--ink); color: var(--cream); padding: 8px 12px; text-align: left; font-weight: 500; font-size: 10px; letter-spacing: 0.08em; }
+.creds-table td { padding: 8px 12px; border-bottom: 1px solid var(--border); color: var(--ink-soft); }
+.creds-table tr:last-child td { border-bottom: none; }
+.creds-table code { font-size: 11px; }
+
+/* LAB */
+.lab { background: var(--cream); border: 1px solid var(--border); border-radius: 14px; margin-bottom: 14px; overflow: hidden; }
+.lab > summary { list-style: none; padding: 18px 24px; cursor: pointer; display: flex; align-items: center; gap: 16px; background: var(--cream); transition: background 0.15s; }
+.lab > summary::-webkit-details-marker { display: none; }
+.lab > summary:hover { background: var(--orange-light); }
+.lab[open] > summary { background: var(--ink); color: var(--cream); border-bottom: 1px solid var(--border); }
+.lab-num { flex-shrink: 0; width: 44px; height: 44px; border-radius: 10px; background: var(--ink); color: var(--orange); display: flex; align-items: center; justify-content: center; font-family: 'Fraunces', serif; font-weight: 700; font-size: 17px; }
+.lab[open] > summary .lab-num { background: var(--orange); color: var(--ink); }
+.lab.capstone-lab .lab-num { background: var(--orange); color: var(--ink); }
+.lab.capstone-lab[open] > summary .lab-num { background: var(--ink); color: var(--orange); }
+.lab-title { flex: 1; }
+.lab-title-name { font-family: 'Fraunces', serif; font-size: 18px; font-weight: 600; color: inherit; line-height: 1.3; }
+.lab-title-meta { font-size: 11px; color: var(--ink-muted); letter-spacing: 0.06em; margin-top: 3px; }
+.lab[open] > summary .lab-title-meta { color: #b8a18a; }
+.lab-chevron { flex-shrink: 0; font-size: 14px; color: var(--ink-muted); transition: transform 0.2s; }
+.lab[open] > summary .lab-chevron { transform: rotate(90deg); color: var(--orange); }
+.lab-body { padding: 22px 26px 26px; }
+
+/* SCENARIO BLOCK */
+.scenario-block { background: var(--orange-light); border-left: 3px solid var(--orange); padding: 14px 18px; border-radius: 0 10px 10px 0; margin-bottom: 16px; }
+.scenario-block-label { font-size: 10px; font-weight: 700; letter-spacing: 0.14em; color: var(--orange); margin-bottom: 6px; }
+.scenario-block-text { font-size: 13px; color: #7a3010; line-height: 1.7; }
+
+/* OBJECTIVES */
+.objectives { margin-bottom: 16px; }
+.objectives-label { font-size: 10px; font-weight: 700; letter-spacing: 0.14em; color: var(--ink-muted); margin-bottom: 8px; }
+.objectives ul { list-style: none; padding-left: 0; }
+.objectives li { font-size: 13px; color: var(--ink-soft); padding: 4px 0 4px 22px; position: relative; line-height: 1.6; }
+.objectives li::before { content: '✓'; position: absolute; left: 0; color: var(--green); font-weight: 700; }
+.lab-time { display: inline-block; background: var(--cream-dark); color: var(--ink-soft); font-size: 11px; padding: 4px 10px; border-radius: 12px; margin-bottom: 18px; border: 1px solid var(--border); }
+.lab-time::before { content: '⏱'; margin-right: 5px; }
+
+/* TASK */
+.task { background: #fff; border: 1px solid var(--border); border-radius: 10px; margin-bottom: 10px; overflow: hidden; }
+.task > summary { list-style: none; padding: 12px 16px; cursor: pointer; display: flex; align-items: center; gap: 12px; transition: background 0.15s; }
+.task > summary::-webkit-details-marker { display: none; }
+.task > summary:hover { background: var(--cream-dark); }
+.task[open] > summary { background: var(--cream-dark); border-bottom: 1px solid var(--border); }
+.task-num { flex-shrink: 0; font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 600; color: var(--orange); background: var(--orange-light); padding: 3px 8px; border-radius: 5px; border: 1px solid var(--orange-border); }
+.task-title { flex: 1; font-size: 14px; font-weight: 500; color: var(--ink); }
+.task-chevron { flex-shrink: 0; font-size: 12px; color: var(--ink-muted); transition: transform 0.2s; }
+.task[open] > summary .task-chevron { transform: rotate(90deg); color: var(--orange); }
+.task-body { padding: 16px 18px 18px; }
+.task-desc { font-size: 13px; color: var(--ink-soft); line-height: 1.7; margin-bottom: 12px; font-style: italic; }
+
+/* STEPS */
+.steps { list-style: none; counter-reset: step; }
+.steps > li { counter-increment: step; position: relative; padding: 10px 0 10px 38px; font-size: 13px; color: var(--ink); line-height: 1.7; border-bottom: 1px dashed var(--border); }
+.steps > li:last-child { border-bottom: none; }
+.steps > li::before { content: counter(step); position: absolute; left: 0; top: 10px; width: 26px; height: 26px; border-radius: 50%; background: var(--ink); color: var(--orange); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; font-family: 'JetBrains Mono', monospace; }
+.steps ul, .steps ol { margin-top: 6px; padding-left: 22px; list-style: disc; color: var(--ink-soft); }
+.steps ul ul, .steps ol ul { list-style: circle; }
+.steps li li { padding: 3px 0; font-size: 13px; border: none; }
+.steps li li::before { content: none; }
+.steps strong { color: var(--ink); font-weight: 600; }
+.substeps { list-style: disc; padding-left: 22px; margin-top: 6px; color: var(--ink-soft); }
+.substeps li { font-size: 13px; padding: 3px 0; line-height: 1.6; }
+.substeps ul { list-style: circle; padding-left: 22px; margin-top: 4px; }
+
+/* INLINE CODE */
+code { background: var(--cream-dark); padding: 1px 6px; border-radius: 4px; font-family: 'JetBrains Mono', monospace; font-size: 0.88em; color: var(--ink); border: 1px solid var(--border); }
+.path { font-family: 'JetBrains Mono', monospace; font-size: 0.9em; color: var(--blue); background: var(--blue-light); padding: 1px 6px; border-radius: 4px; border: 1px solid var(--blue-border); }
+
+/* COMMAND BOX */
+.cmd { background: var(--ink); color: #d9cfbf; border-radius: 8px; padding: 10px 14px; font-family: 'JetBrains Mono', monospace; font-size: 12px; line-height: 1.7; margin: 8px 0; display: block; border-left: 3px solid var(--orange); overflow-x: auto; }
+.cmd::before { content: '$'; color: var(--orange); margin-right: 8px; font-weight: 700; }
+.cmd.no-prompt::before { content: ''; margin: 0; }
+
+/* CALLOUTS */
+.callout { border-radius: 10px; padding: 12px 16px; margin: 10px 0; border: 1px solid; font-size: 12px; line-height: 1.7; }
+.callout-header { display: flex; align-items: center; gap: 6px; font-size: 10px; font-weight: 700; letter-spacing: 0.12em; margin-bottom: 6px; }
+.callout-icon { width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; flex-shrink: 0; }
+.callout-note { background: var(--amber-light); border-color: #ffe680; color: #7a5c00; }
+.callout-note .callout-header { color: #a07c00; }
+.callout-note .callout-icon  { background: #ffe680; color: #a07c00; }
+.callout-tip { background: var(--blue-light); border-color: var(--blue-border); color: #153d7a; }
+.callout-tip .callout-header { color: var(--blue); }
+.callout-tip .callout-icon  { background: var(--blue-border); color: var(--blue); }
+.callout-warn { background: var(--red-light); border-color: var(--red-border); color: #7a1f1f; }
+.callout-warn .callout-header { color: var(--red); }
+.callout-warn .callout-icon  { background: var(--red-border); color: var(--red); }
+
+/* COMPARE TABLE */
+.compare-table { width: 100%; border-collapse: collapse; font-size: 12px; margin: 10px 0; }
+.compare-table th { background: var(--ink); color: var(--cream); padding: 8px 12px; text-align: left; font-weight: 500; font-size: 10px; letter-spacing: 0.08em; }
+.compare-table th:first-child { border-radius: 8px 0 0 0; }
+.compare-table th:last-child { border-radius: 0 8px 0 0; }
+.compare-table td { padding: 8px 12px; border-bottom: 1px solid var(--border); color: var(--ink-soft); vertical-align: top; line-height: 1.6; }
+.compare-table tr:nth-child(even) td { background: var(--cream-dark); }
+
+/* JSON BLOCK */
+.json-block { background: #1a1209; color: #d9cfbf; padding: 12px 16px; border-radius: 8px; font-family: 'JetBrains Mono', monospace; font-size: 12px; line-height: 1.6; margin: 8px 0; border-left: 3px solid var(--orange); white-space: pre; overflow-x: auto; }
+.json-block .k { color: #ffb38a; }
+.json-block .s { color: #a8d99e; }
+
+/* CAPSTONE BLOCK */
+.capstone-section { background: var(--orange-light); border: 1px solid var(--orange-border); border-radius: 10px; padding: 14px 18px; margin-bottom: 12px; }
+.capstone-section-label { font-size: 10px; font-weight: 700; letter-spacing: 0.14em; color: var(--orange); margin-bottom: 6px; }
+.capstone-section ul { list-style: disc; padding-left: 22px; }
+.capstone-section li { font-size: 13px; color: #7a3010; line-height: 1.6; padding: 2px 0; }
+.capstone-section a { color: var(--blue); text-decoration: underline; word-break: break-all; }
+
+/* EXPAND ALL CONTROLS */
+/* TAKEAWAY */
+.lab-takeaway { margin-top: 18px; padding: 12px 18px; background: var(--cream-dark); border-radius: 8px; border-left: 3px solid var(--ink-muted); }
+.lab-takeaway-label { font-size: 10px; font-weight: 700; letter-spacing: 0.14em; color: var(--ink-muted); margin-bottom: 6px; }
+.lab-takeaway-text { font-size: 13px; color: var(--ink-soft); line-height: 1.7; }
+
+/* LAB NOTES */
+.lab-notes { margin-bottom: 16px; }
+.lab-notes-label { font-size: 10px; font-weight: 700; letter-spacing: 0.14em; color: var(--ink-muted); margin-bottom: 6px; }
+.lab-notes-input { width: 100%; min-height: 62px; border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; font-family: 'Epilogue', sans-serif; font-size: 13px; color: var(--ink-soft); background: var(--cream); resize: vertical; line-height: 1.6; transition: border-color 0.15s; }
+.lab-notes-input:focus { outline: none; border-color: var(--orange); }
+.lab-notes-input::placeholder { color: var(--ink-muted); font-style: italic; }
+
+/* LAB QUESTIONS */
+.lab-questions { border-top: 1px dashed var(--border); margin-top: 16px; }
+.lab-questions > summary { list-style: none; padding: 10px 0 6px; cursor: pointer; display: flex; align-items: center; gap: 8px; font-size: 10px; font-weight: 700; letter-spacing: 0.12em; color: var(--ink-muted); user-select: none; }
+.lab-questions > summary::-webkit-details-marker { display: none; }
+.lab-questions > summary:hover { color: var(--orange); }
+.lab-questions-count { background: var(--purple-light); color: var(--purple); border: 1px solid var(--purple-border); border-radius: 10px; padding: 1px 7px; font-size: 10px; font-weight: 700; margin-left: 4px; }
+.lab-questions-count:empty { display: none; }
+.lab-questions-chevron { margin-left: auto; font-size: 11px; transition: transform 0.2s; }
+.lab-questions[open] > summary .lab-questions-chevron { transform: rotate(90deg); }
+.lab-questions-body { padding: 8px 0 2px; }
+.lab-questions-input { width: 100%; min-height: 80px; border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; font-family: 'Epilogue', sans-serif; font-size: 13px; color: var(--ink-soft); background: var(--cream); resize: vertical; line-height: 1.6; transition: border-color 0.15s; }
+.lab-questions-input:focus { outline: none; border-color: var(--orange); }
+.lab-questions-input::placeholder { color: var(--ink-muted); font-style: italic; }
+
+/* ALL QUESTIONS PANEL */
+.all-questions-panel { background: var(--cream-dark); border: 1px solid var(--border); border-radius: 14px; margin-bottom: 28px; overflow: hidden; }
+.all-questions-toggle { list-style: none; padding: 18px 26px; cursor: pointer; display: flex; align-items: center; gap: 10px; user-select: none; transition: background 0.15s; }
+.all-questions-toggle::-webkit-details-marker { display: none; }
+.all-questions-toggle:hover { background: var(--orange-light); }
+.all-questions-title { font-family: 'Fraunces', serif; font-size: 20px; font-weight: 600; flex: 1; }
+.all-questions-title em { font-style: italic; font-weight: 400; color: var(--orange); }
+.all-questions-total { background: var(--purple-light); color: var(--purple); border: 1px solid var(--purple-border); border-radius: 10px; padding: 2px 9px; font-size: 11px; font-weight: 700; }
+.all-questions-total:empty { display: none; }
+.all-questions-chevron { font-size: 16px; color: var(--ink-muted); transition: transform 0.2s; }
+.all-questions-panel[open] .all-questions-chevron { transform: rotate(90deg); }
+.all-questions-body { padding: 16px 26px 20px; border-top: 1px solid var(--border); }
+.all-questions-empty { font-size: 13px; color: var(--ink-muted); font-style: italic; }
+.all-questions-entry { margin-bottom: 14px; padding-bottom: 14px; border-bottom: 1px dashed var(--border); }
+.all-questions-entry:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+.all-questions-lab-label { font-size: 10px; font-weight: 700; letter-spacing: 0.12em; color: var(--orange); margin-bottom: 5px; }
+.all-questions-text { font-size: 13px; color: var(--ink-soft); line-height: 1.7; white-space: pre-wrap; }
+
+.expand-controls { display: flex; gap: 8px; margin-bottom: 14px; justify-content: flex-end; }
+.expand-btn { background: var(--cream-dark); border: 1px solid var(--border); color: var(--ink-soft); padding: 6px 12px; border-radius: 16px; font-size: 11px; font-weight: 500; letter-spacing: 0.04em; cursor: pointer; font-family: 'Epilogue', sans-serif; transition: all 0.15s; }
+.expand-btn:hover { background: var(--orange-light); color: var(--orange); border-color: var(--orange-border); }
+
+footer { padding: 20px 60px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; background: var(--cream-dark); }
+.footer-left { font-family: 'Fraunces', serif; font-size: 16px; font-weight: 700; }
+.footer-left span { color: var(--orange); }
+.footer-right { font-size: 11px; color: var(--ink-muted); letter-spacing: 0.06em; }
+
+/* CONFIG PANEL COLLAPSE */
+.config-panel { padding: 0 60px; }
+.config-toggle-row { display: flex; align-items: center; justify-content: space-between; padding: 10px 0; cursor: pointer; user-select: none; }
+.config-toggle-title { font-size: 10px; letter-spacing: 0.16em; color: var(--orange); font-weight: 600; text-transform: uppercase; }
+.config-toggle-summary { font-size: 11px; color: #b8a18a; margin-left: 16px; font-family: 'JetBrains Mono', monospace; }
+.config-toggle-btn { background: none; border: 1px solid #3a3020; border-radius: 6px; color: #7a6a55; font-size: 11px; padding: 3px 10px; cursor: pointer; font-family: 'Epilogue', sans-serif; letter-spacing: 0.06em; transition: color 0.15s, border-color 0.15s; display: flex; align-items: center; gap: 5px; }
+.config-toggle-btn:hover { color: var(--orange); border-color: var(--orange); }
+.config-toggle-btn .chevron { transition: transform 0.25s ease; display: inline-block; }
+.config-panel.collapsed .config-toggle-btn .chevron { transform: rotate(180deg); }
+.config-body { overflow: hidden; max-height: 400px; transition: max-height 0.3s ease, opacity 0.25s ease, padding 0.25s ease; opacity: 1; padding-bottom: 18px; }
+.config-panel.collapsed .config-body { max-height: 0; opacity: 0; padding-bottom: 0; }
+
+/* PROGRESS RIBBON */
+.progress-ribbon { background: var(--cream-dark); border-bottom: 1px solid var(--border); padding: 10px 60px; display: flex; align-items: center; gap: 14px; position: sticky; top: 0; z-index: 50; }
+.progress-label { font-size: 10px; letter-spacing: 0.14em; color: var(--ink-muted); font-weight: 600; white-space: nowrap; }
+.progress-count { font-size: 13px; font-weight: 700; color: var(--ink); white-space: nowrap; }
+.progress-count span { color: var(--orange); }
+.progress-track { flex: 1; background: var(--border); border-radius: 8px; height: 8px; overflow: hidden; min-width: 60px; }
+.progress-fill { height: 100%; background: var(--orange); border-radius: 8px; transition: width 0.4s ease; width: 0%; }
+.progress-fill.all-done { background: var(--purple); }
+
+/* TASK CHECKBOXES */
+.task-check-wrap { display: flex; align-items: center; margin-right: 4px; flex-shrink: 0; }
+.task-check {
+  appearance: none; -webkit-appearance: none;
+  width: 18px; height: 18px; border-radius: 5px;
+  border: 2px solid var(--border); background: transparent;
+  cursor: pointer; position: relative; flex-shrink: 0;
+  transition: background 0.15s, border-color 0.15s;
+}
+.task-check:checked { background: transparent; border-color: var(--green); }
+.task-check:checked::after { content: '✓'; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: var(--green); font-size: 11px; font-weight: 700; line-height: 1; }
+.task.task-done > summary .task-num { background: var(--green-light); color: var(--green); border-color: var(--green-border); }
+.lab-nav-tab.lab-nav-done { background: var(--purple-light); border-color: var(--purple-border); color: var(--purple); }
+.lab-nav-tab.lab-nav-done::after { content: ' ✓'; font-size: 10px; }
+
+/* LAB INTRO ROW (image right, scenario+objectives left) */
+.lab-intro-row { display: flex; gap: 20px; align-items: flex-start; margin-bottom: 16px; }
+.lab-intro-left { flex: 1; min-width: 0; }
+.lab-intro-right { flex-shrink: 0; width: 300px; transition: width 0.4s ease; }
+.lab-intro-right img { width: 100%; border-radius: 10px; display: block; cursor: zoom-in; }
+.lab-intro-row.img-expanded { flex-direction: column; }
+.lab-intro-row.img-expanded .lab-intro-right { order: -1; width: 100%; }
+.lab-intro-row.img-expanded .lab-intro-left { order: 1; }
+.lab-intro-row.img-expanded .lab-intro-right img { cursor: zoom-out; }
+
+
+@media (max-width: 900px) {
+  header { padding: 24px 20px 20px; flex-direction: column; }
+  .config-panel { padding: 0 20px; }
+  .progress-ribbon { padding: 10px 20px; }
+  .lab-nav { padding: 10px 20px; }
+  main { padding: 24px 20px 40px; }
+  footer { padding: 20px; flex-direction: column; gap: 8px; text-align: center; }
+  h1 { font-size: 32px; }
+  .lab-intro-row { flex-direction: column; }
+  .lab-intro-right { width: 100%; }
+}
+@media print { .config-panel, .lab-nav, .expand-controls, .progress-ribbon { display: none; } details { open: true; } details > summary { background: #f5eddb !important; } .lab, .task { break-inside: avoid; } }
+
+/* ── COPY BUTTONS ── */
+.cmd-wrap { position: relative; display: block; margin: 8px 0; }
+.cmd-wrap .cmd { margin: 0; }
+.cmd-wrap .json-block { margin: 0; }
+.copy-btn {
+  position: absolute; top: 8px; right: 8px;
+  background: #2a2010; border: 1px solid #5a4a35; color: #7a6a55;
+  border-radius: 5px; padding: 2px 8px; font-size: 10px; font-weight: 600;
+  cursor: pointer; font-family: 'Epilogue', sans-serif; letter-spacing: 0.08em;
+  opacity: 0; transition: opacity 0.15s, background 0.15s, color 0.15s; line-height: 1.6;
+}
+.cmd-wrap:hover .copy-btn { opacity: 1; }
+.copy-btn:hover { background: #3a3020; color: var(--orange); border-color: var(--orange); }
+.copy-btn.copied { background: var(--green); color: #fff !important; border-color: var(--green-border); opacity: 1 !important; }
+.copy-inline {
+  display: inline-flex; align-items: center;
+  background: none; border: 1px solid transparent; color: var(--ink-muted);
+  font-size: 9px; cursor: pointer; padding: 0 3px; margin-left: 2px;
+  vertical-align: middle; border-radius: 3px; line-height: 1.4;
+  font-family: 'JetBrains Mono', monospace;
+  opacity: 0.4; transition: opacity 0.15s, color 0.15s, border-color 0.15s, background 0.15s;
+}
+.copy-inline:hover { opacity: 1; color: var(--orange); border-color: var(--orange-border); background: var(--orange-light); }
+.copy-inline.copied { color: var(--green) !important; border-color: var(--green-border) !important; background: var(--green-light) !important; opacity: 1 !important; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-left">
+    <div class="day-badge">
+      <span class="day-badge-dot"></span>
+      EDU-202 · ZSCALER FOR USERS — ENGINEER (CAPSTONE)
+    </div>
+    <h1>Hands-on <em>Lab Guide</em></h1>
+    <div class="header-meta-row">
+      <span class="tag tag-zia">ZIA</span>
+      <span class="tag tag-zpa">ZPA</span>
+      <span class="tag tag-zdx">ZDX</span>
+      <span class="tag tag-arch">ZIdentity · ZWA · Risk360 · Deception · OneAPI</span>
+      <span class="tag tag-weight">16 Labs · Capstone</span>
+    </div>
+  </div>
+</header>
+
+<div class="config-panel" id="config-panel">
+  <div class="config-toggle-row" onclick="toggleConfig()">
+    <div style="display:flex;align-items:center;gap:0;">
+      <span class="config-toggle-title">⚙ Lab Configuration</span>
+      <span class="config-toggle-summary" id="config-toggle-summary"></span>
+    </div>
+    <button class="config-toggle-btn" id="config-toggle-btn" onclick="event.stopPropagation();toggleConfig()">
+      <span class="chevron">▲</span> Collapse
+    </button>
+  </div>
+  <div class="config-body" id="config-body">
+  <div class="config-grid">
+    <div class="config-field">
+      <label for="fqdn-input">Student FQDN</label>
+      <div class="config-field-row">
+        <input type="text" id="fqdn-input" placeholder="zs9901.safemarch.com" autocomplete="off">
+        <button class="config-copy-btn" onclick="copyConfigField('fqdn-input', this)">⎘</button>
+      </div>
+    </div>
+    <div class="config-field">
+      <label for="pass-input">Session Password</label>
+      <div class="config-field-row">
+        <input type="text" id="pass-input" placeholder="(from Lab Access Instructions)" autocomplete="off">
+        <button class="config-copy-btn" onclick="copyConfigField('pass-input', this)">⎘</button>
+      </div>
+    </div>
+    <div class="config-field">
+      <label for="sdc-user-input">SDC ZIA Admin User ID</label>
+      <div class="config-field-row">
+        <input type="text" id="sdc-user-input" placeholder="(from Resources panel)" autocomplete="off">
+        <button class="config-copy-btn" onclick="copyConfigField('sdc-user-input', this)">⎘</button>
+      </div>
+    </div>
+    <div class="config-field">
+      <label for="sdc-pass-input">SDC Session Password</label>
+      <div class="config-field-row">
+        <input type="text" id="sdc-pass-input" placeholder="(SDC password)" autocomplete="off">
+        <button class="config-copy-btn" onclick="copyConfigField('sdc-pass-input', this)">⎘</button>
+      </div>
+    </div>
+    <div class="config-field">
+      <label for="mkt-user-input">MKT Dept Username (SDC)</label>
+      <div class="config-field-row">
+        <input type="text" id="mkt-user-input" placeholder="(from Resources panel)" autocomplete="off">
+        <button class="config-copy-btn" onclick="copyConfigField('mkt-user-input', this)">⎘</button>
+      </div>
+    </div>
+    <div class="config-field">
+      <label for="it-user-input">IT Dept Username (SDC)</label>
+      <div class="config-field-row">
+        <input type="text" id="it-user-input" placeholder="(from Resources panel)" autocomplete="off">
+        <button class="config-copy-btn" onclick="copyConfigField('it-user-input', this)">⎘</button>
+      </div>
+    </div>
+    <div class="config-actions">
+      <button class="config-btn" onclick="saveConfig()">Save</button>
+      <button class="config-btn secondary" onclick="clearConfig()">Clear</button>
+    </div>
+  </div>
+  <div class="config-derived" id="config-derived">
+    <span><strong>Student admin:</strong> <code id="d-student">student@&lt;Student FQDN&gt;</code><button class="config-copy-btn" onclick="copyDerived('d-student',this)">⎘</button></span>
+    <span><strong>Joe:</strong> <code id="d-joe">joe@&lt;Student FQDN&gt;</code><button class="config-copy-btn" onclick="copyDerived('d-joe',this)">⎘</button></span>
+    <span><strong>HVAC user:</strong> <code id="d-hvac">hvac@&lt;Student FQDN&gt;</code><button class="config-copy-btn" onclick="copyDerived('d-hvac',this)">⎘</button></span>
+    <span><strong>Student ID:</strong> <code id="d-id">&lt;Student ID&gt;</code><button class="config-copy-btn" onclick="copyDerived('d-id',this)">⎘</button></span>
+    <span><strong>HVAC FQDN:</strong> <code id="d-hvac-fqdn">&lt;Student ID&gt;.hvac.safemarch.com</code><button class="config-copy-btn" onclick="copyDerived('d-hvac-fqdn',this)">⎘</button></span>
+  </div>
+  </div><!-- /config-body -->
+</div>
+
+<div class="lab-nav">
+  <a class="lab-nav-tab" href="#lab1">Lab 1</a>
+  <a class="lab-nav-tab" href="#lab2">Lab 2</a>
+  <a class="lab-nav-tab" href="#lab3">Lab 3</a>
+  <a class="lab-nav-tab" href="#lab4">Lab 4</a>
+  <a class="lab-nav-tab" href="#lab5">Lab 5</a>
+  <a class="lab-nav-tab" href="#lab6">Lab 6</a>
+  <a class="lab-nav-tab" href="#lab7">Lab 7</a>
+  <a class="lab-nav-tab" href="#lab8">Lab 8</a>
+  <a class="lab-nav-tab" href="#lab9">Lab 9</a>
+  <a class="lab-nav-tab" href="#lab10">Lab 10</a>
+  <a class="lab-nav-tab" href="#lab11">Lab 11</a>
+  <a class="lab-nav-tab" href="#lab12">Lab 12</a>
+  <a class="lab-nav-tab" href="#lab13">Lab 13</a>
+  <a class="lab-nav-tab" href="#lab14">Lab 14</a>
+  <a class="lab-nav-tab" href="#lab15">Lab 15</a>
+  <a class="lab-nav-tab capstone" href="#lab16">★ Capstone</a>
+</div>
+
+<div class="progress-ribbon">
+  <span class="progress-label">PROGRESS</span>
+  <span class="progress-count"><span id="prog-done">0</span>%</span>
+  <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
+</div>
+
+<main>
+
+<!-- INTRO -->
+<div class="intro-block">
+  <h2>About this lab guide</h2>
+  <p>Advanced configuration of platform services, security services, data protection and management/logging services of the Zscaler Zero Trust Exchange — building on EDU-200. Includes a Capstone Project (Lab 16) where you must independently apply best practices across Identity, Access Control, Cyberthreat Protection, Data Protection, and Zero Trust Automation.</p>
+  <p><strong>Lab Topology:</strong> Corp: Client PC (joined to AD <code>patraining.safemarch.com</code>), Corp: Win Svr (DNS, AD, Cert Server), Corp: Docker Svr (HVAC + syslog/SIEM), Remote: DNS Server (simulates public DNS), Remote: Linux Client PC (3rd-party contractor), and two App Connectors — <strong>Corp: ZPA Connector</strong> (10.0.0.3) and <strong>Corp: Log Streaming Connector</strong> (10.0.0.20).</p>
+
+  <table class="creds-table">
+    <thead><tr><th>VM / User</th><th>Username</th><th>Password</th><th>IP / Notes</th></tr></thead>
+    <tbody>
+      <tr><td>Corp: Client PC</td><td><code>Student</code></td><td><code>Admin-123!</code></td><td>Joined to AD</td></tr>
+      <tr><td>Corp: Win Svr</td><td><code>Administrator</code></td><td><code>Admin-123!</code></td><td>DNS, AD, MS Cert Server</td></tr>
+      <tr><td>Corp: Docker Svr</td><td>—</td><td>—</td><td>HVAC + syslog/SIEM</td></tr>
+      <tr><td>Remote: DNS Server</td><td><code>administrator</code></td><td><code>Zscaler123!</code></td><td>Simulates public DNS</td></tr>
+      <tr><td>Remote: Linux Client PC</td><td><code>Admin</code></td><td><code>Admin-123!</code></td><td>3rd-party contractor</td></tr>
+      <tr><td>Corp: ZPA Connector</td><td><code>admin</code></td><td><code>zscaler</code></td><td><code>10.0.0.3</code> (CentOS)</td></tr>
+      <tr><td>Corp: Log Streaming Connector</td><td><code>admin</code></td><td><code>zscaler</code></td><td><code>10.0.0.20</code> (CentOS)</td></tr>
+      <tr><td>Student admin</td><td><code class="d-username-student">student@&lt;Student FQDN&gt;</code></td><td>Session Password</td><td>From Lab Access Instructions</td></tr>
+      <tr><td>Joe (test user)</td><td><code class="d-username-joe">joe@&lt;Student FQDN&gt;</code></td><td><code>Admin-123!</code></td><td>Created in Lab 2</td></tr>
+      <tr><td>HVAC contractor</td><td><code class="d-username-hvac">hvac@&lt;Student FQDN&gt;</code></td><td>Session Password</td><td>3rd-party Browser Access</td></tr>
+      <tr><td>SIEM via SSH</td><td><code>zscaler</code></td><td><code>Zscaler123!</code></td><td><code>siem.patraining.safemarch.com</code></td></tr>
+    </tbody>
+  </table>
+</div>
+
+<details class="all-questions-panel" id="all-questions-panel">
+  <summary class="all-questions-toggle">
+    <span class="all-questions-title">My <em>Questions</em></span>
+    <span class="all-questions-total" id="all-questions-total"></span>
+    <span class="all-questions-chevron">›</span>
+  </summary>
+  <div class="all-questions-body">
+    <p class="all-questions-empty" id="all-questions-empty">No questions yet — use the questions section at the end of each lab to add them.</p>
+    <div id="all-questions-list"></div>
+  </div>
+</details>
+
+<div class="expand-controls">
+  <button class="expand-btn" onclick="expandAll()">Expand all</button>
+  <button class="expand-btn" onclick="collapseAll()">Collapse all</button>
+</div>
+
+<!-- LAB 1 -->
+<details class="lab" id="lab1">
+  <summary>
+    <div class="lab-num">01</div>
+    <div class="lab-title">
+      <div class="lab-title-name">Connect to the Virtual Lab</div>
+      <div class="lab-title-meta">⏱ 10 minutes · Skytap · ZIdentity Landing Page</div>
+    </div>
+    <div class="lab-chevron">›</div>
+  </summary>
+  <div class="lab-body">
+    <div class="scenario-block">
+      <div class="scenario-block-label">SCENARIO</div>
+      <div class="scenario-block-text">Establish a functional, pre-configured environment (Skytap pod), sign in to the ZIdentity landing page, and verify access to the ZIA, ZPA, and ZDX admin portals.</div>
+    </div>
+    <div class="objectives">
+      <div class="objectives-label">OBJECTIVES</div>
+      <ul>
+        <li>Connect to Skytap and start all VMs</li>
+        <li>Authenticate to ZIdentity Landing Page</li>
+        <li>Verify Admin entitlements (ZIdentity, ZIA, ZPA, ZDX)</li>
+      </ul>
+    </div>
+
+    <details class="task">
+      <summary><div class="task-num">1.1</div><div class="task-title">Test Lab Access &amp; Start Environment</div><div class="task-chevron">›</div></summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>Click the Skytap Portal URL provided in your access instructions.</li>
+          <li>Ensure all VMs are checkbox-selected → click <strong>Play</strong>. All VMs launch (takes a few minutes — staged startup).</li>
+          <li>Click any VM tile to open a browser-based console; the Keys icon inserts the saved username/password.</li>
+        </ol>
+      </div>
+    </details>
+
+    <details class="task">
+      <summary><div class="task-num">1.2</div><div class="task-title">Sign in to the ZIdentity Landing Page</div><div class="task-chevron">›</div></summary>
+      <div class="task-body">
+        <div class="callout callout-tip">
+          <div class="callout-header"><div class="callout-icon">→</div>VARIABLE</div>
+          <span class="var var-fqdn">&lt;Student FQDN&gt;</span> = the domain assigned to your pod. e.g., <code class="d-username-student">student@&lt;Student FQDN&gt;</code>.
+        </div>
+        <ol class="steps">
+          <li>On <strong>Corp: Client PC</strong>: Skytap toolbar → Ctrl-Alt-Del → Keys icon → Insert credentials for <code>student</code>.</li>
+          <li>Open the ZIdentity Login URL from your Lab Access Instructions.</li>
+          <li>Authenticate:
+            <ul class="substeps">
+              <li>Username: <code class="d-username-student">student@&lt;Student FQDN&gt;</code></li>
+              <li>Password: <span class="var var-pass">&lt;Session Password&gt;</span></li>
+              <li>Click <strong>Sign in</strong></li>
+            </ul>
+          </li>
+        </ol>
+      </div>
+    </details>
+
+    <details class="task">
+      <summary><div class="task-num">1.3</div><div class="task-title">Verify Lab Access (Tiles)</div><div class="task-chevron">›</div></summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>Click the <strong>ZIdentity Administration</strong> tile → ZIdentity Admin Portal opens. Walk these menus:
+            <ul class="substeps">
+              <li><strong>Dashboard</strong> — managed users overview</li>
+              <li><strong>Directory</strong> — users, attributes, departments</li>
+              <li><strong>Integration</strong> — identity providers</li>
+              <li><strong>Policy</strong> — ZIdentity user policies</li>
+              <li><strong>Administration</strong> — auth methods, locations, Zscaler services, ZIdentity roles, audit logs</li>
+              <li><strong>My Profile</strong> · <strong>Remote Assistance</strong></li>
+            </ul>
+          </li>
+          <li>Click the <strong>Zscaler Internet Access</strong> tile → confirms ZIA admin access.</li>
+          <li>Click the <strong>Zscaler Private Access</strong> tile → confirms ZPA admin access.</li>
+          <li>Click the <strong>Zscaler Digital Experience</strong> tile → confirms ZDX admin access.</li>
+        </ol>
+      </div>
+    </details>
+    <div class="lab-takeaway">
+      <div class="lab-takeaway-label">WHY THIS MATTERS</div>
+      <p class="lab-takeaway-text">Verifying portal access upfront is the first thing a real deployment engineer does on day one — any misconfigured user group or service entitlement surfaces immediately rather than mid-configuration. Catching these issues before building on top of them saves hours of debugging later.</p>
+    </div>
+    <details class="lab-questions" id="q-lab1">
+      <summary><span class="lab-questions-icon">?</span> MY QUESTIONS <span class="lab-questions-count" id="q-count-lab1"></span><span class="lab-questions-chevron">›</span></summary>
+      <div class="lab-questions-body"><textarea class="lab-questions-input" id="q-input-lab1" placeholder="Type any questions to follow up later…" rows="3"></textarea></div>
+    </details>
+  </div>
+</details>
+
+<!-- LAB 2 -->
+<details class="lab" id="lab2">
+  <summary>
+    <div class="lab-num">02</div>
+    <div class="lab-title">
+      <div class="lab-title-name">Create ZIdentity User &amp; Verify Service Entitlement</div>
+      <div class="lab-title-meta">⏱ 20 minutes · Joe · Student Admin Group · ZCC verification</div>
+    </div>
+    <div class="lab-chevron">›</div>
+  </summary>
+  <div class="lab-body">
+    <div class="scenario-block">
+      <div class="scenario-block-label">SCENARIO</div>
+      <div class="scenario-block-text">Create a ZIdentity user (Joe), assign to the Student Admin user group so Joe inherits ZIA/ZPA/ZDX service entitlements, then verify on the Zscaler Client Connector that all three services come up after Joe logs in.</div>
+    </div>
+    <div class="objectives">
+      <div class="objectives-label">OBJECTIVES</div>
+      <ul>
+        <li>Create a ZIdentity user, assign to Student Admin Group</li>
+        <li>Verify ZIA, ZPA, ZDX service entitlements on ZCC</li>
+      </ul>
+    </div>
+
+    <details class="task">
+      <summary><div class="task-num">2.1</div><div class="task-title">Create User Account &amp; Verify Access on ZCC</div><div class="task-chevron">›</div></summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>In the ZIdentity Admin Portal, navigate <span class="path">Directory &gt; Users &gt; Add User</span>.</li>
+          <li>General section:
+            <ul class="substeps">
+              <li>Login ID: <code class="d-username-joe">joe@&lt;Student FQDN&gt;</code></li>
+              <li>Name / First Name: <code>Joe</code> &nbsp;·&nbsp; Last Name: <em>(blank)</em></li>
+              <li>Primary Email: <code class="d-username-student">student@&lt;Student FQDN&gt;</code></li>
+              <li>Same As Login ID: <strong>Disabled</strong></li>
+              <li>Department: <em>(leave default)</em> &nbsp;·&nbsp; Status: <strong>Enabled</strong></li>
+            </ul>
+          </li>
+          <li>Assign Groups → check <strong>Student Admin Group</strong>.</li>
+          <li>Security Settings:
+            <ul class="substeps">
+              <li>Password option: <strong>Set By Administrator</strong></li>
+              <li>Password / Confirm: <code>Admin-123!</code></li>
+              <li>Prompt for Password change After Initial Login: <strong>Unchecked</strong></li>
+              <li>Skip Second Factor Authentication: <strong>Enabled</strong></li>
+              <li>Skip Until: last allowed date</li>
+            </ul>
+          </li>
+          <li>Click <strong>Save</strong>.</li>
+          <li>On <strong>Corp: Client PC</strong>, launch Zscaler Client Connector and login:
+            <ul class="substeps">
+              <li>Login ID: <code class="d-username-joe">joe@&lt;Student FQDN&gt;</code></li>
+              <li>Password: <code>Admin-123!</code></li>
+            </ul>
+          </li>
+          <li>Verify ZIA, ZPA, and ZDX service entitlements all appear and Service Status is ON.</li>
+          <li>Click <strong>Log Out</strong> from ZCC.</li>
+        </ol>
+        <div class="callout callout-warn">
+          <div class="callout-header"><div class="callout-icon">!</div>PRODUCTION REMINDER</div>
+          MFA bypass is for lab convenience only. In production, never disable MFA for real users.
+        </div>
+      </div>
+    </details>
+    <div class="lab-takeaway">
+      <div class="lab-takeaway-label">WHY THIS MATTERS</div>
+      <p class="lab-takeaway-text">User group membership drives service entitlement inheritance across ZIA, ZPA, and ZDX simultaneously — the group assignment, not per-user configuration, determines what an employee can access from day one. This is the model for scaling onboarding across thousands of users without manual intervention per account.</p>
+    </div>
+    <details class="lab-questions" id="q-lab2">
+      <summary><span class="lab-questions-icon">?</span> MY QUESTIONS <span class="lab-questions-count" id="q-count-lab2"></span><span class="lab-questions-chevron">›</span></summary>
+      <div class="lab-questions-body"><textarea class="lab-questions-input" id="q-input-lab2" placeholder="Type any questions to follow up later…" rows="3"></textarea></div>
+    </details>
+  </div>
+</details>
+
+<!-- LAB 3 -->
+<details class="lab" id="lab3">
+  <summary>
+    <div class="lab-num">03</div>
+    <div class="lab-title">
+      <div class="lab-title-name">Connectivity Services — Browser Access for 3rd Parties (HVAC)</div>
+      <div class="lab-title-meta">⏱ 75 minutes · App Connector · BA Cert · App Segment · DNS CNAME</div>
+    </div>
+    <div class="lab-chevron">›</div>
+  </summary>
+  <div class="lab-body">
+    <div class="scenario-block">
+      <div class="scenario-block-label">SCENARIO</div>
+      <div class="scenario-block-text">Safemarch outsources HVAC monitoring. The 3rd party authenticates via SAML but has no Client Connector — provide them browser-only access to the internal HVAC console via ZPA Browser Access. Stages: provision App Connector → create signed Web Server cert → create App Segment + Access Policy → create public DNS CNAME → test from remote network.</div>
+    </div>
+    <div class="objectives">
+      <div class="objectives-label">OBJECTIVES</div>
+      <ul>
+        <li>Provision and activate the Corp: ZPA Connector</li>
+        <li>Create CSR, sign with PATraining CA, upload signed cert to ZPA</li>
+        <li>Create the HVAC Application Segment with Browser Access enabled</li>
+        <li>Create the public DNS CNAME for the BA exporter</li>
+        <li>Test browser access from the Remote: Linux Client PC</li>
+      </ul>
+    </div>
+
+    <details class="task">
+      <summary><div class="task-num">3.1</div><div class="task-title">Provision App Connector (OnPrem)</div><div class="task-chevron">›</div></summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>On <strong>Corp: Win Svr</strong>, login as <code>Administrator</code>/<code>Admin-123!</code>. Open the ZIdentity landing page → ZPA tile.</li>
+          <li>Locate the provisioning key:
+            <ul class="substeps">
+              <li><span class="path">Configuration &amp; Control &gt; Private Infrastructure &gt; App Connector Provisioning Keys</span></li>
+              <li>Select <strong>OnPrem</strong> provision key → click Copy icon</li>
+              <li>Paste into Notepad → Save to Desktop with filename <code>"provision_key"</code> (quotes prevent <code>.txt</code> being added)</li>
+            </ul>
+          </li>
+          <li>On <strong>Corp: ZPA Connector</strong> (login <code>admin</code>/<code>zscaler</code>), start SSH:
+            <span class="cmd">sudo systemctl start sshd</span>
+            <span class="cmd">sudo systemctl status sshd</span>
+            Confirm <strong>active (running)</strong>.
+          </li>
+          <li>On Corp: Win Svr, open <strong>WinSCP</strong> → Corp: ZPA Connector saved session:
+            <ul class="substeps">
+              <li>Protocol: SFTP &nbsp;·&nbsp; Host: <code>10.0.0.3</code> &nbsp;·&nbsp; Port: <code>22</code></li>
+              <li>Username: <code>admin</code> &nbsp;·&nbsp; Password: <code>zscaler</code></li>
+              <li>Click <strong>Update</strong> if a cert warning appears (expected)</li>
+              <li>Right-click <code>provision_key</code> → Upload to <code>/home/admin</code></li>
+            </ul>
+          </li>
+          <li>Back on the ZPA Connector, move the key into place:
+            <span class="cmd">sudo systemctl stop zpa-connector</span>
+            <span class="cmd">cd /home/admin</span>
+            <span class="cmd">ls</span>
+            <span class="cmd">sudo cp provision_key /opt/zscaler/var/</span>
+            <span class="cmd">sudo ls /opt/zscaler/var/</span>
+            <div class="callout callout-warn">
+              <div class="callout-header"><div class="callout-icon">!</div>FILENAME GOTCHA</div>
+              File MUST be named exactly <code>provision_key</code> — NOT <code>provision_key.txt</code> or <code>provisioning_key</code>. Case-sensitive.
+            </div>
+          </li>
+          <li>Activate &amp; enable on boot:
+            <span class="cmd">sudo systemctl start zpa-connector</span>
+            <span class="cmd">sudo systemctl enable zpa-connector</span>
+            <span class="cmd">sudo systemctl status zpa-connector</span>
+            Wait ~10s, confirm <strong>active</strong>.
+          </li>
+          <li>In ZPA Portal: <span class="path">Configuration &amp; Control &gt; Private Infrastructure &gt; App Connectors</span> — confirm the connector is listed and Connected.</li>
+        </ol>
+      </div>
+    </details>
+
+    <details class="task">
+      <summary><div class="task-num">3.2</div><div class="task-title">Create HVAC Web Server Certificate (CSR + Signed Cert)</div><div class="task-chevron">›</div></summary>
+      <div class="task-body">
+        <div class="task-desc">In production, public CAs sign these. For the lab, the PATraining enterprise CA on Corp: Win Svr signs the CSR.</div>
+        <ol class="steps">
+          <li>On Corp: Win Svr, ZPA Portal → <span class="path">Configuration &amp; Control &gt; Certificate Management &gt; Certificates</span> → <strong>Create CSR</strong>.</li>
+          <li>Populate the CSR fields:
+            <ul class="substeps">
+              <li>Name: <code>HVAC</code></li>
+              <li>Description: <code>HVAC Server Certificate</code></li>
+              <li>Subject: <code><span class="d-cn">CN=&lt;Student ID&gt;.hvac.safemarch.com</span>,O=safemarch,ST=NY,C=US,L=NY,OU=hvac</code></li>
+              <li>Subject Alternate Name: <span class="d-hvac-fqdn-inline">&lt;Student ID&gt;.hvac.safemarch.com</span></li>
+            </ul>
+          </li>
+          <li>Click <strong>Create</strong>.
+            <div class="callout callout-tip">
+              <div class="callout-header"><div class="callout-icon">→</div>CN vs SAN</div>
+              Normally CN must match the external FQDN. If external differs from internal, set the SAN to the internal FQDN to avoid mismatch warnings.
+            </div>
+          </li>
+          <li>Download the CSR:
+            <ul class="substeps">
+              <li>Click <strong>Download .CSR File</strong> → save as <code>HVAC.csr</code> in <code>\Downloads</code></li>
+              <li>Open in Notepad → Select All → Copy</li>
+            </ul>
+          </li>
+          <li>Sign the CSR with the PATraining CA:
+            <ul class="substeps">
+              <li>Open the Microsoft Cert Services page (provided in lab) → sign in</li>
+              <li>Submit the CSR → choose Web Server template → submit</li>
+            </ul>
+          </li>
+          <li>Download the signed cert:
+            <ul class="substeps">
+              <li>Certificate Issued → select <strong>Base 64 encoded</strong></li>
+              <li>Click <strong>Download certificate</strong> → save (default <code>certnew.cer</code>)</li>
+            </ul>
+          </li>
+          <li>Upload to ZPA:
+            <ul class="substeps">
+              <li>Return to <span class="path">Configuration &amp; Control &gt; Certificate Management &gt; Certificates</span></li>
+              <li>Click <strong>Upload Certificate</strong> next to your CSR → Select File → choose the <code>.cer</code> → <strong>Upload</strong></li>
+              <li>Confirm Expiry Date is populated and Upload action is gone</li>
+            </ul>
+          </li>
+        </ol>
+      </div>
+    </details>
+
+    <details class="task">
+      <summary><div class="task-num">3.3</div><div class="task-title">Create HVAC App Segment &amp; Access Policy</div><div class="task-chevron">›</div></summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li><span class="path">Resource Management &gt; Application Management &gt; Application Segments</span> → <strong>Add Application Segment</strong>.</li>
+          <li>Configure App Segment:
+            <ul class="substeps">
+              <li>Name: <code>HVAC</code> · Status: <strong>Enabled</strong></li>
+              <li>Description: <code>Browser Access for HVAC Application</code></li>
+              <li>Applications: <span class="d-hvac-fqdn-inline">&lt;Student ID&gt;.hvac.safemarch.com</span></li>
+              <li><strong>Access Type — Browser Access:</strong> ✓ Checked</li>
+              <li>Certificate: <strong>HVAC</strong> · Protocol: <strong>HTTP</strong> · Internal Port: <code>80</code></li>
+              <li>TCP Port Ranges: <code>80 to 80</code></li>
+              <li>Health Reporting: <strong>Continuous</strong></li>
+            </ul>
+            <div class="callout callout-note">
+              <div class="callout-header"><div class="callout-icon">★</div>BA = HTTPS TO CLIENT</div>
+              Browser Access is always HTTPS to the client over the internet. The HTTP/80 setting here defines the App Connector → application leg only.
+            </div>
+          </li>
+          <li>Segment Group → <strong>Add Segment Group</strong>:
+            <ul class="substeps">
+              <li>Name: <code>Maint</code> &nbsp;·&nbsp; Status: <strong>Enabled</strong></li>
+            </ul>
+          </li>
+          <li>Server Groups → <strong>Select Server Group</strong> → choose <strong>Corp Servers</strong>.</li>
+          <li>Review &amp; <strong>Save</strong>.</li>
+          <li>Click <strong>Edit Policy</strong> → on the Access Policy page → <strong>Add Rule</strong>:
+            <ul class="substeps">
+              <li>Name: <code>Allow HVAC</code> &nbsp;·&nbsp; Action: <strong>Allow Access</strong></li>
+              <li>App Connector Selection Method: <strong>All Connector Groups for the application</strong></li>
+              <li>Add Criteria → <strong>Applications</strong> → <strong>HVAC</strong></li>
+              <li>Add Criteria → <strong>Client Types</strong> → <strong>Web Browser</strong></li>
+            </ul>
+          </li>
+          <li>Click <strong>Save</strong>. Expand the Allow HVAC rule and verify the configuration.</li>
+        </ol>
+      </div>
+    </details>
+
+    <details class="task">
+      <summary><div class="task-num">3.4</div><div class="task-title">Create DNS CNAME Record for HVAC App</div><div class="task-chevron">›</div></summary>
+      <div class="task-body">
+        <div class="task-desc">In production this is a public DNS record. Here we create it on Remote: DNS Server (which the Remote: Linux Client PC uses) to simulate public DNS.</div>
+        <ol class="steps">
+          <li>Get the Canonical Name from ZPA:
+            <ul class="substeps">
+              <li>On <strong>Remote: DNS Server</strong>, login as <code>Administrator</code>/<code>Zscaler123!</code></li>
+              <li>Open ZIdentity → ZPA tile</li>
+              <li><span class="path">Resource Management &gt; Application Management &gt; Browser Access</span></li>
+              <li>Click HVAC application → expand → copy ONLY the Canonical Name value (e.g. <code>30665.123456789...h.p.zpa-app.net.</code>)</li>
+            </ul>
+          </li>
+          <li>Open DNS Manager:
+            <ul class="substeps">
+              <li>Server Manager Dashboard → Tools → <strong>DNS</strong></li>
+              <li>Expand DNS-SERVER → Forward Lookup Zones → <code>hvac.safemarch.com</code></li>
+              <li>Right-click → <strong>New Alias (CNAME)…</strong></li>
+            </ul>
+          </li>
+          <li>Configure the New Resource Record:
+            <ul class="substeps">
+              <li>Alias Name: <span class="var var-id">&lt;Student ID&gt;</span></li>
+              <li>FQDN for target host: paste the Canonical Name (form: <code>...zpa-app.net.</code>)</li>
+            </ul>
+            <div class="callout callout-warn">
+              <div class="callout-header"><div class="callout-icon">!</div>PASTE GOTCHA</div>
+              If the word "CNAME" gets included at the start of the paste, REMOVE it before saving. Only the value should be in the field.
+            </div>
+          </li>
+          <li>Click <strong>OK</strong>.</li>
+        </ol>
+      </div>
+    </details>
+
+    <details class="task">
+      <summary><div class="task-num">3.5</div><div class="task-title">Test Browser Access from Remote: Linux Client</div><div class="task-chevron">›</div></summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>Open <strong>Remote: Linux Client PC</strong>, login <code>Admin</code>/<code>Admin-123!</code>.</li>
+          <li>Verify CNAME resolution:
+            <span class="cmd no-prompt">dig <span class="d-hvac-fqdn-inline">&lt;Student ID&gt;.hvac.safemarch.com</span></span>
+            Last two entries should be public IPs of the Zscaler Zero Trust Exchange exporter (hostnames begin with <code>zpath-prod-exporter</code>).
+            <div class="callout callout-tip">
+              <div class="callout-header"><div class="callout-icon">→</div>CACHE FLUSH</div>
+              If misconfigured, fix CNAME and flush DNS cache:
+              <span class="cmd">sudo systemd-resolve --flush-caches</span>
+            </div>
+          </li>
+          <li>Test Browser Access:
+            <ul class="substeps">
+              <li>Open Chrome → <code>http://<span class="d-hvac-fqdn-inline">&lt;Student ID&gt;.hvac.safemarch.com</span></code></li>
+              <li>Bypass cert privacy warning (Advanced → Proceed)</li>
+              <li>Login: <code class="d-username-hvac">hvac@&lt;Student FQDN&gt;</code> / <span class="var var-pass">&lt;Session Password&gt;</span></li>
+              <li>Confirm Safemarch HVAC Control page is accessible</li>
+            </ul>
+          </li>
+        </ol>
+      </div>
+    </details>
+    <div class="lab-takeaway">
+      <div class="lab-takeaway-label">WHY THIS MATTERS</div>
+      <p class="lab-takeaway-text">Third-party vendors are one of the highest-risk access vectors in any organisation — they need specific application access but cannot be given VPN credentials or agents. ZPA Browser Access solves this by exposing only the exact internal app through a public URL backed by zero-trust policies, with no network-level access ever granted to the vendor's device.</p>
+    </div>
+    <details class="lab-questions" id="q-lab3">
+      <summary><span class="lab-questions-icon">?</span> MY QUESTIONS <span class="lab-questions-count" id="q-count-lab3"></span><span class="lab-questions-chevron">›</span></summary>
+      <div class="lab-questions-body"><textarea class="lab-questions-input" id="q-input-lab3" placeholder="Type any questions to follow up later…" rows="3"></textarea></div>
+    </details>
+  </div>
+</details>
+
+
+
+<!-- LAB 4 -->
+<details class="lab" id="lab4">
+  <summary>
+    <div class="lab-num">04</div>
+    <div class="lab-title">
+      <div class="lab-title-name">Platform Services — Configure Log Streaming</div>
+      <div class="lab-title-meta">⏱ 30 minutes · 2nd App Connector · LSS · SSH App Segment</div>
+    </div>
+    <div class="lab-chevron">›</div>
+  </summary>
+  <div class="lab-body">
+    <div class="scenario-block">
+      <div class="scenario-block-label">SCENARIO</div>
+      <div class="scenario-block-text">Stream ZPA user activity logs to a SIEM in the private data center using a dedicated Log Streaming App Connector. Then enable SSH access to the SIEM via a separate App Segment so the admin can verify logs are landing.</div>
+    </div>
+    <div class="objectives">
+      <div class="objectives-label">OBJECTIVES</div>
+      <ul>
+        <li>Provision the dedicated Log Streaming App Connector (10.0.0.20)</li>
+        <li>Add a Log Receiver streaming User Activity to the SIEM (TCP 514, CSV)</li>
+        <li>Add an SSH App Segment + Access Policy to siem.patraining.safemarch.com</li>
+        <li>Tail <code>/var/log/syslog</code> and confirm zpa-lss entries</li>
+      </ul>
+    </div>
+
+    <details class="task">
+      <summary><div class="task-num">4.1</div><div class="task-title">Provision Dedicated App Connector for Log Streaming</div><div class="task-chevron">›</div></summary>
+      <div class="task-body">
+        <div class="task-desc">Same flow as Lab 3.1, but for the Log Streaming connector group on host <code>10.0.0.20</code>.</div>
+        <ol class="steps">
+          <li>In ZPA: <span class="path">Configuration &amp; Control &gt; Private Infrastructure &gt; App Connector Provisioning Keys</span> → download the <strong>Log Streaming</strong> provisioning key.</li>
+          <li>Upload <code>provision_key</code> to the Log Streaming Connector via WinSCP (IP <code>10.0.0.20</code>, Port <code>22</code>) into <code>/home/admin</code>.</li>
+          <li>On the connector:
+            <span class="cmd">sudo systemctl stop zpa-connector</span>
+            <span class="cmd">sudo cp provision_key /opt/zscaler/var/</span>
+            <span class="cmd">sudo systemctl start zpa-connector</span>
+            <span class="cmd">sudo systemctl status zpa-connector</span>
+          </li>
+          <li>In ZPA Portal → <span class="path">Configuration &amp; Control &gt; Private Infrastructure &gt; App Connectors</span>. Confirm Log Streaming connector is <strong>Connected</strong>.</li>
+        </ol>
+      </div>
+    </details>
+
+    <details class="task">
+      <summary><div class="task-num">4.2</div><div class="task-title">Add Log Receiver (Syslog-UserActivity)</div><div class="task-chevron">›</div></summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>In ZPA Admin Portal → <span class="path">Configuration &amp; Control &gt; Private Infrastructure &gt; Log Receivers</span> → <strong>Add Log Receiver</strong>.</li>
+          <li>Configure (3-step wizard):
+            <ul class="substeps">
+              <li>Name: <code>Syslog-UserActivity</code></li>
+              <li>Domain or IP: <code>siem.patraining.safemarch.com</code></li>
+              <li>TCP Port: <code>514</code></li>
+              <li>App Connector Groups: <strong>Log Streaming</strong></li>
+              <li>Log Type: <strong>User Activity</strong></li>
+              <li>Log Template: <strong>CSV</strong></li>
+              <li>Log Stream Content: leave default</li>
+              <li>POLICY: leave defaults (all SAML/SCIM, all App Segments, all Segment Groups, all Client Types, all Sessions)</li>
+            </ul>
+          </li>
+          <li>At Review step → <strong>Save</strong>.</li>
+        </ol>
+      </div>
+    </details>
+
+    <details class="task">
+      <summary><div class="task-num">4.3</div><div class="task-title">Add SSH Access to SIEM Server (App Segment + Access Policy)</div><div class="task-chevron">›</div></summary>
+      <div class="task-body">
+        <div class="task-desc">Application segments + access policies are EDU-200 prerequisite skills. The expected outcome is shown — apply your previous skills.</div>
+        <ol class="steps">
+          <li><span class="path">Resource Management &gt; Application Management &gt; Application Segments</span> → Add Application Segment:
+            <ul class="substeps">
+              <li>Name: <code>SSH to SIEM</code></li>
+              <li>Applications: <code>siem.patraining.safemarch.com</code></li>
+              <li>Default Port Ranges: <strong>SSH</strong> (port 22)</li>
+              <li>Segment Group: add <code>CorpApps</code></li>
+              <li>Server Group: select <strong>Corp Servers</strong></li>
+              <li><strong>Save</strong></li>
+            </ul>
+          </li>
+          <li>Click <strong>Edit Policy</strong> → configure an Access Policy that <strong>Allows SSH access</strong> to the SIEM segment.</li>
+        </ol>
+      </div>
+    </details>
+
+    <details class="task">
+      <summary><div class="task-num">4.4</div><div class="task-title">Verify Log Feed (tail syslog)</div><div class="task-chevron">›</div></summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>On <strong>Corp: Client PC</strong>, open a command prompt.</li>
+          <li>SSH to the SIEM:
+            <span class="cmd">ssh zscaler@siem.patraining.safemarch.com</span>
+            Password: <code>Zscaler123!</code> · Type <code>yes</code> to accept the host key.
+          </li>
+          <li>Tail the syslog:
+            <span class="cmd">tail -f /var/log/syslog</span>
+            Look for entries showing <strong>"User Activity zpa-lss"</strong> after the time field.
+          </li>
+          <li>If no new entries, generate user activity (e.g., refresh the HVAC app from the Remote: Linux Client PC).</li>
+        </ol>
+      </div>
+    </details>
+    <div class="lab-takeaway">
+      <div class="lab-takeaway-label">WHY THIS MATTERS</div>
+      <p class="lab-takeaway-text">Enterprise SOCs run on SIEMs — Splunk, Microsoft Sentinel, QRadar. Without log streaming, ZPA activity is invisible to the security operations workflow. This architecture (App Connectors for access, a dedicated Log Streaming connector for telemetry) is the standard pattern most enterprises deploy alongside their ZPA rollout to maintain SIEM coverage.</p>
+    </div>
+    <details class="lab-questions" id="q-lab4">
+      <summary><span class="lab-questions-icon">?</span> MY QUESTIONS <span class="lab-questions-count" id="q-count-lab4"></span><span class="lab-questions-chevron">›</span></summary>
+      <div class="lab-questions-body"><textarea class="lab-questions-input" id="q-input-lab4" placeholder="Type any questions to follow up later…" rows="3"></textarea></div>
+    </details>
+  </div>
+</details>
+
+<!-- LAB 5 -->
+<details class="lab" id="lab5">
+  <summary>
+    <div class="lab-num">05</div>
+    <div class="lab-title">
+      <div class="lab-title-name">Access Control — Configure &amp; Examine Firewall Policies</div>
+      <div class="lab-title-meta">⏱ 35 minutes · Z-Tunnel 2.0 DTLS · Default Block · Allow ICMP/SSH</div>
+    </div>
+    <div class="lab-chevron">›</div>
+  </summary>
+  <div class="lab-body">
+    <div class="scenario-block">
+      <div class="scenario-block-label">SCENARIO</div>
+      <div class="scenario-block-text">Verify ZCC forwards all traffic via Z-Tunnel 2.0 DTLS, confirm non-web traffic is blocked by default, then create rules to allow ICMP and SSH. Examine firewall logs and dashboards.</div>
+    </div>
+    <div class="objectives">
+      <div class="objectives-label">OBJECTIVES</div>
+      <ul>
+        <li>Verify Forwarding Profile + App Profile (Z-Tunnel 2.0)</li>
+        <li>Confirm v2.0 DTLS tunnel on user device</li>
+        <li>Create Allow ICMP &amp; Allow SSH firewall rules</li>
+        <li>Build a custom dashboard widget; review block logs</li>
+      </ul>
+    </div>
+
+    <details class="task">
+      <summary><div class="task-num">5.1</div><div class="task-title">Verify Client Connector Forwarding to Firewall</div><div class="task-chevron">›</div></summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>On <strong>Corp: Win Svr</strong>, ZIdentity → <strong>Zscaler Client Connector</strong> tile.</li>
+          <li>Verify the <strong>HandsOnLab Forwarding Profile</strong> at <span class="path">Administration &gt; Forwarding Profile</span>:
+            <ul class="substeps">
+              <li>Windows Driver Selection: <strong>Packet Filter Based</strong></li>
+              <li><strong>FOR ZIA:</strong> On Trusted = Tunnel · Tunnel Version = <strong>Z-Tunnel 2.0</strong> · System Proxy = Enforce (all unchecked) · VPN/Off-Trusted = Same as On-Trusted</li>
+              <li><strong>FOR ZPA:</strong> On Trusted = Tunnel · VPN/Off-Trusted = Same as On-Trusted</li>
+              <li><strong>Save</strong></li>
+            </ul>
+            <div class="callout callout-tip">
+              <div class="callout-header"><div class="callout-icon">→</div>WHY Z-TUNNEL 2.0?</div>
+              Required to intercept ALL ports/protocols and tunnel them to ZIA for full Firewall functionality. Z-Tunnel 1.0 only handles HTTP/HTTPS.
+            </div>
+          </li>
+          <li>Verify <strong>HandsOnLab App Profile</strong> at <span class="path">App Profiles &gt; Platforms &gt; Windows</span>:
+            <ul class="substeps">
+              <li>Rule Order: 1 · Status: Enable · User Groups: All Selected</li>
+              <li>Install Zscaler SSL Certificate: Enable · Forwarding Profile: HandsOnLab</li>
+              <li><strong>Save</strong></li>
+            </ul>
+          </li>
+        </ol>
+      </div>
+    </details>
+
+    <details class="task">
+      <summary><div class="task-num">5.2</div><div class="task-title">Verify Tunnel Version v2.0 DTLS on Device</div><div class="task-chevron">›</div></summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>Login to ZCC on Corp: Client PC as <code class="d-username-student">student@&lt;Student FQDN&gt;</code>.</li>
+          <li>Click <strong>Internet Security</strong> service status → confirm <strong>Tunnel Version: v2.0 - DTLS</strong>.</li>
+          <li>If not v2.0 DTLS:
+            <ul class="substeps">
+              <li>Click <strong>More</strong> → check applied App Policy</li>
+              <li>Click <strong>Update Policy</strong></li>
+              <li>Verify policy is <strong>HandsOnLab</strong></li>
+              <li>Re-check Internet Security → Tunnel Version</li>
+            </ul>
+          </li>
+        </ol>
+      </div>
+    </details>
+
+    <details class="task">
+      <summary><div class="task-num">5.3</div><div class="task-title">Test Non-Web Traffic with Firewall Default Block</div><div class="task-chevron">›</div></summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>In ZIA Admin Portal: <span class="path">Policy &gt; Firewall Control</span> — verify <strong>Default rule = Block/Drop</strong>; no other rules allow non-web traffic.</li>
+          <li>Test from Corp: Client PC:
+            <span class="cmd">ping www.google.com</span>
+            Should fail with timeout (ICMP dropped by default).
+          </li>
+          <li>Open <strong>puTTY</strong> → Host: <code>github.com</code> → Open. Should fail (PuTTY Fatal Error after ~20s).</li>
+          <li>Close cmd prompt and puTTY.</li>
+        </ol>
+      </div>
+    </details>
+
+    <details class="task">
+      <summary><div class="task-num">5.4</div><div class="task-title">Configure Firewall Rules (Allow ICMP, Allow SSH)</div><div class="task-chevron">›</div></summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li><strong>Rule 1 — Allow ICMP:</strong> ZIA Admin → <span class="path">Policy &gt; Firewall Filtering &gt; Firewall Control</span> → <strong>Add Firewall Filtering Rule</strong>:
+            <ul class="substeps">
+              <li>Rule Order: 1 · Rule Name: <code>Allow ICMP</code></li>
+              <li>Who/Where/Criteria: select your Student user account</li>
+              <li>Services tab → Network Services: <strong>ICMP</strong> → Done</li>
+              <li>Action: Network Traffic = <strong>Allow</strong></li>
+              <li><strong>Save</strong></li>
+            </ul>
+          </li>
+          <li><strong>Rule 2 — Allow SSH:</strong> Same flow:
+            <ul class="substeps">
+              <li>Rule Order: 2 · Rule Name: <code>Allow SSH</code></li>
+              <li>Criteria → Student user</li>
+              <li>Services → Network Services: <strong>SSH</strong></li>
+              <li>Action: <strong>Allow</strong> · <strong>Save</strong></li>
+            </ul>
+          </li>
+          <li><strong>Activate</strong> changes.</li>
+          <li>Re-test:
+            <span class="cmd">ping www.google.com</span>
+            Should now succeed.
+          </li>
+          <li>puTTY → <code>Github.com</code> → Open. Should now connect/prompt for login.</li>
+        </ol>
+      </div>
+    </details>
+
+    <details class="task">
+      <summary><div class="task-num">5.5</div><div class="task-title">Examine Firewall Traffic (Dashboard + Custom Widget)</div><div class="task-chevron">›</div></summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li><span class="path">Dashboard &gt; Firewall Overview</span> → click <strong>Reset to Default</strong> → OK.</li>
+          <li>Verify Top Network Services and Top Applications widgets show traffic.</li>
+          <li>Build a custom widget:
+            <ul class="substeps">
+              <li>Click <strong>Add Widget</strong> → <strong>Firewall</strong>:</li>
+              <li>Title: <code>Top Network Services by Bytes</code></li>
+              <li>Data Type: <strong>Network Service</strong> · Units: <strong>Bytes</strong> · Chart Type: <strong>Line Chart</strong></li>
+              <li>Click <strong>OK</strong></li>
+            </ul>
+          </li>
+          <li>Drag-drop the new widget to the top right column position.</li>
+        </ol>
+      </div>
+    </details>
+
+    <details class="task">
+      <summary><div class="task-num">5.6</div><div class="task-title">Check Firewall Filtering Rule Log Data</div><div class="task-chevron">›</div></summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li><span class="path">Dashboard &gt; Firewall Overview</span> → scroll to <strong>Top Blocked Rules Hit</strong> widget.</li>
+          <li>Single-click any blocked entry → select <strong>View Logs</strong>.</li>
+          <li>Review the logs and Event Time. Find ICMP and SSH events corresponding to your earlier testing.</li>
+        </ol>
+      </div>
+    </details>
+    <div class="lab-takeaway">
+      <div class="lab-takeaway-label">WHY THIS MATTERS</div>
+      <p class="lab-takeaway-text">Default-deny cloud firewall posture is the operational baseline for zero trust — but its value extends beyond web traffic. Non-web protocols like SSH, ICMP, and custom TCP ports are invisible to a proxy. In practice, discovering rogue SSH tunnels and shadow protocols in firewall logs is a regular finding during ZIA deployments that would otherwise go undetected entirely.</p>
+    </div>
+    <details class="lab-questions" id="q-lab5">
+      <summary><span class="lab-questions-icon">?</span> MY QUESTIONS <span class="lab-questions-count" id="q-count-lab5"></span><span class="lab-questions-chevron">›</span></summary>
+      <div class="lab-questions-body"><textarea class="lab-questions-input" id="q-input-lab5" placeholder="Type any questions to follow up later…" rows="3"></textarea></div>
+    </details>
+  </div>
+</details>
+
+<!-- LAB 6 -->
+<details class="lab" id="lab6">
+  <summary>
+    <div class="lab-num">06</div>
+    <div class="lab-title">
+      <div class="lab-title-name">Securing Access to Internet — SSL Inspection Policy</div>
+      <div class="lab-title-meta">⏱ 20 minutes · Inspect All · Zscaler Intermediate Root CA</div>
+    </div>
+    <div class="lab-chevron">›</div>
+  </summary>
+  <div class="lab-body">
+    <div class="scenario-block">
+      <div class="scenario-block-label">SCENARIO</div>
+      <div class="scenario-block-text">Enable SSL/TLS inspection so policies can be enforced on encrypted traffic. Verify pre/post inspection by examining server certificates.</div>
+    </div>
+    <div class="objectives">
+      <div class="objectives-label">OBJECTIVES</div>
+      <ul>
+        <li>Confirm SSL is NOT being inspected (cert from destination server)</li>
+        <li>Configure SSL Inspection rule to <strong>Inspect</strong> all traffic</li>
+        <li>Confirm cert is now signed by Zscaler Intermediate Root CA</li>
+      </ul>
+    </div>
+
+    <details class="task">
+      <summary><div class="task-num">6.1</div><div class="task-title">Configure SSL Inspection &amp; Verify Decryption</div><div class="task-chevron">›</div></summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>Login to ZIdentity → ZIA tile as <code class="d-username-student">student@&lt;Student FQDN&gt;</code>.</li>
+          <li>Pre-test (no inspection):
+            <ul class="substeps">
+              <li>On Corp: Client PC, open Chrome <strong>Incognito</strong> → <code>https://zscaler.com</code></li>
+              <li>Click filter icon in URL → <strong>Connection is secure</strong> &gt; <strong>Certificate is valid</strong></li>
+              <li>Note: cert is from destination server</li>
+            </ul>
+          </li>
+          <li>Configure SSL Inspection:
+            <ul class="substeps">
+              <li><span class="path">Policy &gt; Web &gt; ACCESS CONTROL &gt; SSL Inspection</span></li>
+              <li>SSL Inspection Policy tab → <strong>+ Add SSL Inspection Rule</strong></li>
+              <li>Rule Order: <code>1</code> · Rule Name: <code>Enable SSL</code></li>
+              <li>Action: <strong>Inspect</strong></li>
+              <li><strong>Save</strong> + <strong>Activate</strong></li>
+            </ul>
+          </li>
+          <li>Post-test:
+            <ul class="substeps">
+              <li>Close browser, reopen Incognito → <code>https://www.zscaler.com</code></li>
+              <li>Site info → cert is now signed by <strong>Zscaler Intermediate Root CA</strong></li>
+            </ul>
+          </li>
+        </ol>
+      </div>
+    </details>
+    <div class="lab-takeaway">
+      <div class="lab-takeaway-label">WHY THIS MATTERS</div>
+      <p class="lab-takeaway-text">90%+ of enterprise web traffic is HTTPS. Without SSL inspection, URL filtering, DLP, sandbox, and browser isolation all operate blind on encrypted traffic — effectively useless against modern threats. SSL inspection is often the most contested step in a deployment, requiring root CA distribution and communications to users, which makes understanding the mechanism essential for any engineer running the rollout.</p>
+    </div>
+    <details class="lab-questions" id="q-lab6">
+      <summary><span class="lab-questions-icon">?</span> MY QUESTIONS <span class="lab-questions-count" id="q-count-lab6"></span><span class="lab-questions-chevron">›</span></summary>
+      <div class="lab-questions-body"><textarea class="lab-questions-input" id="q-input-lab6" placeholder="Type any questions to follow up later…" rows="3"></textarea></div>
+    </details>
+  </div>
+</details>
+
+<!-- LAB 7 -->
+<details class="lab" id="lab7">
+  <summary>
+    <div class="lab-num">07</div>
+    <div class="lab-title">
+      <div class="lab-title-name">Cyberthreat Protection — Sandbox File Inspection</div>
+      <div class="lab-title-meta">⏱ 15 minutes · Catch-all Sandbox Rule · Quarantine</div>
+    </div>
+    <div class="lab-chevron">›</div>
+  </summary>
+  <div class="lab-body">
+    <div class="scenario-block">
+      <div class="scenario-block-label">SCENARIO</div>
+      <div class="scenario-block-text">Configure a catch-all Sandbox rule to inline-quarantine first-time downloads of all file types and block subsequent downloads.</div>
+    </div>
+
+    <details class="task">
+      <summary><div class="task-num">7.1</div><div class="task-title">Configure Sandbox Policies (Catch-all)</div><div class="task-chevron">›</div></summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>ZIA Admin Portal → <span class="path">Policy &gt; Sandbox</span> → <strong>Add Sandbox Rule</strong>.</li>
+          <li>Configure:
+            <ul class="substeps">
+              <li>Rule Name: <code>Catch-all</code></li>
+              <li>CRITERIA — File Types: select ALL groups (Archive, Executable, Microsoft Office, Mobile, Other Documents, Web Content)</li>
+              <li>Sandbox Categories: select all from drop-down</li>
+              <li>Protocol: select all</li>
+              <li>ZPA Application Segment: <strong>Inspect App Segments</strong></li>
+            </ul>
+          </li>
+          <li>ACTION:
+            <ul class="substeps">
+              <li>First-Time Action: <strong>Quarantine</strong></li>
+              <li>Action for Subsequent Downloads: <strong>Block</strong></li>
+            </ul>
+          </li>
+          <li><strong>Save</strong> + <strong>Activate</strong>.</li>
+        </ol>
+        <div class="callout callout-tip">
+          <div class="callout-header"><div class="callout-icon">→</div>QUARANTINE vs BLOCK</div>
+          First-time Quarantine holds the file inline while Sandbox analyzes. Subsequent matches are Blocked outright since verdict is now known. This combo balances user experience (don't block known-good repeatedly) and safety (don't let unknowns through).
+        </div>
+      </div>
+    </details>
+    <div class="lab-takeaway">
+      <div class="lab-takeaway-label">WHY THIS MATTERS</div>
+      <p class="lab-takeaway-text">Cloud sandbox fills the gap between signature-based AV (which only catches known threats) and allowing all downloads unchecked. The quarantine-then-block pattern prevents productivity loss on benign first-time files while ensuring that a malicious file's verdict is shared globally — once one user is protected, every user on the platform is protected from that file automatically.</p>
+    </div>
+    <details class="lab-questions" id="q-lab7">
+      <summary><span class="lab-questions-icon">?</span> MY QUESTIONS <span class="lab-questions-count" id="q-count-lab7"></span><span class="lab-questions-chevron">›</span></summary>
+      <div class="lab-questions-body"><textarea class="lab-questions-input" id="q-input-lab7" placeholder="Type any questions to follow up later…" rows="3"></textarea></div>
+    </details>
+  </div>
+</details>
+
+<!-- LAB 8 -->
+<details class="lab" id="lab8">
+  <summary>
+    <div class="lab-num">08</div>
+    <div class="lab-title">
+      <div class="lab-title-name">Cyberthreat Protection — Browser Isolation</div>
+      <div class="lab-title-meta">⏱ 30 minutes · Render Only · Isolation Profile · Cloud App Isolate</div>
+    </div>
+    <div class="lab-chevron">›</div>
+  </summary>
+  <div class="lab-body">
+    <div class="scenario-block">
+      <div class="scenario-block-label">SCENARIO</div>
+      <div class="scenario-block-text">Browser Isolation runs risky sites in a cloud container — only pixels reach the user. Build a Render Only profile (no copy/paste/upload/download), then attach it to URL Filtering and Cloud App Control rules.</div>
+    </div>
+
+    <details class="task">
+      <summary><div class="task-num">8.1</div><div class="task-title">Build Isolation Profile (Render Only)</div><div class="task-chevron">›</div></summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>ZIA Admin Portal → <span class="path">Administration &gt; Browser Isolation</span> → <strong>Add Profile</strong>.</li>
+          <li>General:
+            <ul class="substeps">
+              <li>Name: <code>Render Only</code></li>
+              <li>Description: <code>Render docs in Isolation, but not allow download, upload, copy, or paste.</code></li>
+              <li>Click <strong>Next</strong></li>
+            </ul>
+          </li>
+          <li>Company Settings → ROOT CERTIFICATES (.pem): <strong>Zscaler Root Certificate</strong>.</li>
+          <li>Security → scroll to <strong>View office files in isolation: Enable</strong>.</li>
+          <li>Regions → Isolation Regions: <strong>Any</strong>.</li>
+          <li>Click <strong>Save</strong>.</li>
+        </ol>
+      </div>
+    </details>
+
+    <details class="task">
+      <summary><div class="task-num">8.2</div><div class="task-title">Implement Isolation Policy (URL Filtering)</div><div class="task-chevron">›</div></summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li><span class="path">Policy &gt; URL &amp; Cloud App Control</span> → <strong>URL Filtering Policy</strong> tab → <strong>Add URL Filtering Rule</strong>.</li>
+          <li>Configure rule:
+            <ul class="substeps">
+              <li>Rule Order: 1 · Rule Name: <code>Isolate Test</code></li>
+              <li>CRITERIA — URL Categories: <strong>Social Networking</strong>, <strong>Social Networking Adult</strong></li>
+              <li>Protocols: <strong>HTTP</strong>, <strong>HTTPS</strong></li>
+              <li>User Agent: Chrome, Firefox, Microsoft Edge, Safari</li>
+              <li>ACTION — Web Traffic: <strong>Isolate</strong></li>
+              <li>Isolation Profile: <strong>Render Only</strong></li>
+            </ul>
+          </li>
+          <li><strong>Save</strong> + <strong>Activate</strong>.</li>
+        </ol>
+      </div>
+    </details>
+
+    <details class="task">
+      <summary><div class="task-num">8.3</div><div class="task-title">Add URL/Cloud App Isolate Control Policy (Twitter/Reddit)</div><div class="task-chevron">›</div></summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li><span class="path">Policy &gt; URL &amp; Cloud Application Control</span> → <strong>Cloud App Control Policy</strong> tab → Add → <strong>Social Networking</strong>.</li>
+          <li>Configure:
+            <ul class="substeps">
+              <li>Rule Order: 1 · Rule Name: <code>Social_Networking_2</code></li>
+              <li>Cloud Application: <strong>Twitter</strong> and <strong>Reddit</strong></li>
+              <li>User Agent: as required</li>
+              <li>ACTION — Web Traffic: <strong>Isolate</strong> · Isolation Profile: <strong>Render Only</strong></li>
+            </ul>
+          </li>
+          <li><strong>Activate</strong>.</li>
+          <li>Test: visit <code>reddit.com</code> or <code>twitter.com</code> — should render in isolation.
+            <div class="callout callout-warn">
+              <div class="callout-header"><div class="callout-icon">!</div>RENDER ONLY ERROR?</div>
+              If Render Only throws errors, switch to <strong>Default Isolation Profile</strong> for testing.
+            </div>
+          </li>
+        </ol>
+      </div>
+    </details>
+    <div class="lab-takeaway">
+      <div class="lab-takeaway-label">WHY THIS MATTERS</div>
+      <p class="lab-takeaway-text">Browser isolation is the final layer of the defense-in-depth stack. When a site clears URL filtering but carries inherent risk — social media, consumer apps, uncategorised destinations — isolation ensures that even if malicious content is served, only safe pixels reach the endpoint. No script executes, no file downloads to the device; the threat stays confined to the cloud container.</p>
+    </div>
+    <details class="lab-questions" id="q-lab8">
+      <summary><span class="lab-questions-icon">?</span> MY QUESTIONS <span class="lab-questions-count" id="q-count-lab8"></span><span class="lab-questions-chevron">›</span></summary>
+      <div class="lab-questions-body"><textarea class="lab-questions-input" id="q-input-lab8" placeholder="Type any questions to follow up later…" rows="3"></textarea></div>
+    </details>
+  </div>
+</details>
+
+
+<!-- LAB 9 -->
+<details class="lab" id="lab9">
+  <summary>
+    <div class="lab-num">09</div>
+    <div class="lab-title">
+      <div class="lab-title-name">Cyberthreat Protection — Deception-Based Active Defense</div>
+      <div class="lab-title-meta">⏱ 35 minutes · SDC tenant · Public Decoys · ThreatParse · Orchestrate</div>
+    </div>
+    <div class="lab-chevron">›</div>
+  </summary>
+  <div class="lab-body">
+    <div class="scenario-block">
+      <div class="scenario-block-label">SCENARIO</div>
+      <div class="scenario-block-text">Decoys mimic production assets — any interaction is a high-confidence breach indicator. Trigger reconnaissance against public-facing decoys, then investigate alerts in the Deception Admin Console on the SDC tenant.</div>
+    </div>
+    <div class="callout callout-note">
+      <div class="callout-header"><div class="callout-icon">★</div>SDC TENANT</div>
+      Lab 9 runs on the Solutions Demo Center (<code>https://sdc.zslogin.net</code>). Use the read-only SDC admin credentials from your Resources panel: <span class="var var-sdc-user">&lt;SDC ZIA Admin User ID&gt;</span> / <span class="var var-sdc-pass">&lt;SDC Session Password&gt;</span>.
+    </div>
+
+    <details class="task">
+      <summary><div class="task-num">9.1</div><div class="task-title">Generate Recon Activity (Public Decoys)</div><div class="task-chevron">›</div></summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>On Corp: Client PC → Logout of ZCC.</li>
+          <li>Login to ZCC as the Marketing department user on SDC:
+            <ul class="substeps">
+              <li>Username: <span class="var var-mkt-user">&lt;MKT_department_username&gt;</span></li>
+              <li>IdP prompt: enter the same username (Next), then enter <span class="var var-sdc-pass">&lt;SDC Session Password&gt;</span></li>
+            </ul>
+          </li>
+          <li>Open browser and visit one of the public-facing decoys:
+            <ul class="substeps">
+              <li><code>http://moveit.thezerotrustexchange.com/</code></li>
+              <li><code>http://wordpress.thezerotrustexchange.com/</code></li>
+              <li><code>http://helpdesk.thezerotrustexchange.com/</code></li>
+            </ul>
+          </li>
+          <li>Submit fake credentials with a unique identifier (so you can find your own log entry):
+            <ul class="substeps">
+              <li>Username: <code>sdcuser_&lt;identifier&gt;</code></li>
+              <li>Password: <code>SDCaccess</code></li>
+              <li>Click <strong>Sign On</strong> — page appears to clear/re-prompt (expected; decoy recording recon)</li>
+            </ul>
+          </li>
+        </ol>
+      </div>
+    </details>
+
+    <details class="task">
+      <summary><div class="task-num">9.2</div><div class="task-title">Investigate Deception Alerts (ThreatParse)</div><div class="task-chevron">›</div></summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>Go to <code>https://sdc.zslogin.net</code> → click <strong>Solutions Demo Center Login</strong> tile.</li>
+          <li>Login: <span class="var var-sdc-user">&lt;SDC ZIA Admin User ID&gt;</span> / <span class="var var-sdc-pass">&lt;SDC Session Password&gt;</span>.</li>
+          <li>Click the <strong>Deception</strong> tile → accept End User Agreement.</li>
+          <li>Investigate &gt; <strong>ThreatParse</strong>. Set timeframe: <strong>Last 10 minutes</strong>.</li>
+          <li>Search:
+            <span class="cmd no-prompt">decoy.name is "moveit.thezerotrustexchange.com"</span>
+            (substitute the decoy you visited). Press Enter.
+          </li>
+          <li>Click any attacker entry → review <strong>Event summary</strong> on right → click <strong>View Extended Details</strong>.</li>
+          <li>ThreatParse tab → <strong>Threat Intel - Attempted Login</strong> shows the username you submitted.</li>
+          <li>Switch to <strong>Event Logs</strong> tab → sort/search by <code>recon post_data user</code>:
+            <div class="callout callout-tip">
+              <div class="callout-header"><div class="callout-icon">→</div>FIELD HIDDEN?</div>
+              If <code>recon post_data user</code> isn't visible, click the chevron at the top-left of the table to enable that column.
+            </div>
+          </li>
+          <li>Click your specific event log entry to see full details.</li>
+        </ol>
+      </div>
+    </details>
+
+    <details class="task">
+      <summary><div class="task-num">9.3</div><div class="task-title">Explore Orchestrate Menu</div><div class="task-chevron">›</div></summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>Login to SDC → Deception tile.</li>
+          <li><span class="path">Orchestrate &gt; Rules</span> — view rules that automate workflows, notifications, containment in response to detection. View Pause Orchestration button.</li>
+          <li><span class="path">Orchestrate &gt; SIEM Integration</span> — view integrated 3rd-party SIEM solutions.</li>
+          <li><span class="path">Orchestrate &gt; API Tokens</span> — manage API tokens for programmatic access (deploy decoys, manage event logs, evidence).</li>
+          <li><span class="path">Orchestrate &gt; Containment</span> — integrated 3rd-party security solutions for automated/manual attacker isolation.</li>
+          <li><span class="path">Orchestrate &gt; Service Connector</span> — service connectors that forward events/audit logs to SIEM.</li>
+        </ol>
+      </div>
+    </details>
+    <div class="lab-takeaway">
+      <div class="lab-takeaway-label">WHY THIS MATTERS</div>
+      <p class="lab-takeaway-text">Deception technology operates on different logic from perimeter controls — it assumes breach and watches for lateral movement. Any interaction with a decoy is a high-confidence, low-noise alert because only an attacker or misconfigured system touches a honeypot. This radically reduces alert fatigue compared to anomaly-based detection, which generates hundreds of false positives for every real incident.</p>
+    </div>
+    <details class="lab-questions" id="q-lab9">
+      <summary><span class="lab-questions-icon">?</span> MY QUESTIONS <span class="lab-questions-count" id="q-count-lab9"></span><span class="lab-questions-chevron">›</span></summary>
+      <div class="lab-questions-body"><textarea class="lab-questions-input" id="q-input-lab9" placeholder="Type any questions to follow up later…" rows="3"></textarea></div>
+    </details>
+  </div>
+</details>
+
+<!-- LAB 10 -->
+<details class="lab" id="lab10">
+  <summary>
+    <div class="lab-num">10</div>
+    <div class="lab-title">
+      <div class="lab-title-name">Unified DLP for Multi-Channel — Block CCN in Documents</div>
+      <div class="lab-title-meta">⏱ 30 minutes · Predefined Dictionary · DLP Engine · DLP Rule</div>
+    </div>
+    <div class="lab-chevron">›</div>
+  </summary>
+  <div class="lab-body">
+    <div class="scenario-block">
+      <div class="scenario-block-label">SCENARIO</div>
+      <div class="scenario-block-text">PCI-compliant blocking of credit card data in documents — including unsearchable PDFs and images embedded in documents. Switch back from SDC to your assigned tenant.</div>
+    </div>
+
+    <details class="task">
+      <summary><div class="task-num">10.1</div><div class="task-title">Protect PII in Unsearchable PDF/Documents</div><div class="task-chevron">›</div></summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>Logout of ZCC if logged in as SDC user. Login to ZCC as <code class="d-username-student">student@&lt;Student FQDN&gt;</code> / <span class="var var-pass">&lt;Session Password&gt;</span>.</li>
+          <li>Verify SSL Inspection is on:
+            <ul class="substeps">
+              <li><span class="path">Policy &gt; SSL Inspection</span> → search for <code>Enable SSL</code> rule (created in Lab 6) — confirm Enabled</li>
+              <li>Test: open <code>https://dlptoolbox.com/</code> → site info → cert is signed by Zscaler</li>
+            </ul>
+          </li>
+          <li>Inspect predefined Credit Cards dictionary:
+            <ul class="substeps">
+              <li><span class="path">Administration &gt; Data Loss Prevention &gt; DLP Dictionaries &amp; Engines</span></li>
+              <li>Search <strong>Credit Cards</strong> → Edit → explore</li>
+            </ul>
+          </li>
+          <li>Create a DLP Engine:
+            <ul class="substeps">
+              <li><span class="path">Policy &gt; Data Loss Prevention</span> → <strong>DLP Engines</strong> → <strong>Add DLP Engines</strong></li>
+              <li>Name: <code>Sensitive Data</code></li>
+              <li>Expression: <strong>All</strong></li>
+              <li>Predefined Dictionary: <strong>Credit cards</strong></li>
+              <li>Violations Threshold: <code>1</code></li>
+              <li>Description: <code>Credit Card Number and sensitive data violation</code></li>
+              <li><strong>Save</strong></li>
+            </ul>
+          </li>
+          <li>Create a DLP Rule:
+            <ul class="substeps">
+              <li><span class="path">Policy &gt; Data Loss Prevention</span> → <strong>+ Add DLP Rule</strong></li>
+              <li>Rule Order: 1 · Severity: <strong>High</strong> · Status: Enabled</li>
+              <li>Rule Name: <code>Data Violation Rule</code></li>
+              <li>Content Matching: <strong>Select DLP Engine</strong> → <strong>Sensitive Data</strong></li>
+              <li>Incident Receiver: <strong>Zscaler Incident Receiver</strong></li>
+              <li>Data Traffic: <strong>Block</strong> · Auditor Type: <strong>Hosted</strong> · End User Notification: <strong>Show</strong></li>
+            </ul>
+          </li>
+          <li>(Optional) Add a custom Notification Message:
+            <ul class="substeps">
+              <li>Notification Message dropdown → <strong>+</strong> sign</li>
+              <li>Name: <code>CCN Block</code> · edit Allow/Block messages · select details to include</li>
+              <li><strong>Save</strong></li>
+            </ul>
+          </li>
+          <li>Click <strong>Save</strong> on the DLP Rule.</li>
+          <li>Test as user:
+            <ul class="substeps">
+              <li>ZCC → confirm Internet Security ON</li>
+              <li>Browser → <code>https://dlptoolbox.com/</code> → <strong>File Audit</strong></li>
+              <li>Choose file → <code>sensitive data.txt</code> from <code>DLP Test Files</code> on Desktop</li>
+              <li>Click <strong>Upload</strong> → verify Block notification appears</li>
+            </ul>
+          </li>
+        </ol>
+      </div>
+    </details>
+    <div class="lab-takeaway">
+      <div class="lab-takeaway-label">WHY THIS MATTERS</div>
+      <p class="lab-takeaway-text">Regulatory compliance (PCI-DSS, HIPAA, GDPR) mandates that sensitive data cannot leave the organisation through web channels. Exact data matching catches partial credit card numbers and structured data inside documents, images, and unsearchable PDFs — content types that keyword-based filters completely miss. DLP is frequently the first control compliance teams mandate when deploying a new security platform.</p>
+    </div>
+    <details class="lab-questions" id="q-lab10">
+      <summary><span class="lab-questions-icon">?</span> MY QUESTIONS <span class="lab-questions-count" id="q-count-lab10"></span><span class="lab-questions-chevron">›</span></summary>
+      <div class="lab-questions-body"><textarea class="lab-questions-input" id="q-input-lab10" placeholder="Type any questions to follow up later…" rows="3"></textarea></div>
+    </details>
+  </div>
+</details>
+
+<!-- LAB 11 -->
+<details class="lab" id="lab11">
+  <summary>
+    <div class="lab-num">11</div>
+    <div class="lab-title">
+      <div class="lab-title-name">Manage Incidents with Zscaler Workflow Automation (ZWA)</div>
+      <div class="lab-title-meta">⏱ 45 minutes · SDC IT user · Incidents · Notify · Escalate · Workflows</div>
+    </div>
+    <div class="lab-chevron">›</div>
+  </summary>
+  <div class="lab-body">
+    <div class="scenario-block">
+      <div class="scenario-block-label">SCENARIO</div>
+      <div class="scenario-block-text">Manage DLP incidents using ZWA — change status, escalate, notify the end user via email, walk through automated workflow templates and mappings. Re-enroll ZCC as an SDC IT user for this lab.</div>
+    </div>
+
+    <details class="task">
+      <summary><div class="task-num">11.1</div><div class="task-title">Enroll ZCC as SDC IT User</div><div class="task-chevron">›</div></summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>Logout of ZCC.</li>
+          <li>Login as IT department user (SDC):
+            <ul class="substeps">
+              <li>Username: <span class="var var-it-user">&lt;IT_department_username&gt;</span></li>
+              <li>Password (IdP step): <span class="var var-sdc-pass">&lt;SDC Session Password&gt;</span></li>
+            </ul>
+          </li>
+          <li>ZCC initialization may restart and take a few minutes. Then verify:
+            <ul class="substeps">
+              <li>Internet Security: <strong>ON</strong></li>
+              <li>Network Type: <strong>Off-Trusted Network</strong></li>
+            </ul>
+          </li>
+        </ol>
+      </div>
+    </details>
+
+    <details class="task">
+      <summary><div class="task-num">11.2</div><div class="task-title">View Current DLP Incidents in ZWA</div><div class="task-chevron">›</div></summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>Login to <code>https://sdc.zslogin.net</code> with SDC ZIA Admin / SDC Session Password.</li>
+          <li>ZIA Admin Portal → <span class="path">Administration &gt; Data Loss Prevention &gt; Workflow Automation</span>. New tab opens to ZWA.</li>
+          <li>Click the <strong>Data Protection</strong> tab.</li>
+          <li>Click <strong>Incidents</strong> in the main menu.</li>
+          <li>Click any Transaction ID to open <strong>Incident Details</strong>.</li>
+          <li>Review <strong>Overview</strong> and <strong>Violation Details</strong> sections.</li>
+          <li>Scroll to <strong>Violation Content</strong> → expand <strong>View Trigger Data</strong> to see what triggered the violation.</li>
+        </ol>
+      </div>
+    </details>
+
+    <details class="task">
+      <summary><div class="task-num">11.3</div><div class="task-title">Modify Incident Metadata</div><div class="task-chevron">›</div></summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>On Incident Details, click the <strong>Actions</strong> menu.</li>
+          <li>Set status to <strong>Investigating</strong> · Note: <code>Test</code>.</li>
+          <li>Click <strong>Assign Priority</strong> → set to <strong>High</strong> (if not already).</li>
+          <li>Refresh browser → verify Status and Priority updated.</li>
+          <li>Scroll to <strong>State Changes</strong> section → view related entries.</li>
+        </ol>
+      </div>
+    </details>
+
+    <details class="task">
+      <summary><div class="task-num">11.4</div><div class="task-title">Test User Notification/Coaching &amp; Escalation</div><div class="task-chevron">›</div></summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>Incident Details → Actions Menu → <strong>Notify User</strong>.</li>
+          <li>Notify User settings:
+            <ul class="substeps">
+              <li>Select language</li>
+              <li>Note to user: <code>Please justify uploading this document for testing purposes of HandsOnLab.</code></li>
+              <li>Click <strong>Submit</strong></li>
+            </ul>
+            <div class="callout callout-note">
+              <div class="callout-header"><div class="callout-icon">★</div>NOTE</div>
+              The email goes to the originator (not your personal Gmail). Reload Incident Details to see State Changes.
+            </div>
+          </li>
+          <li>Add yourself as Approver:
+            <ul class="substeps">
+              <li><span class="path">Setup &gt; Approvers</span> → <strong>+ Add More</strong></li>
+              <li>Add your name and email</li>
+            </ul>
+          </li>
+          <li>Escalate the incident:
+            <ul class="substeps">
+              <li>Incidents → Action menu of the same Transaction ID → <strong>Escalate</strong></li>
+              <li>Select Approver dropdown → choose your ID → <strong>Save</strong></li>
+              <li>Check personal Gmail for "DLP incident Notification" (Spam if needed) → click <strong>Click here</strong></li>
+              <li>Justification Type: <strong>Approved</strong> · provide reason → <strong>Submit</strong></li>
+            </ul>
+          </li>
+        </ol>
+      </div>
+    </details>
+
+    <details class="task">
+      <summary><div class="task-num">11.5</div><div class="task-title">Configure Automated Workflows</div><div class="task-chevron">›</div></summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>From ZWA Dashboard → <strong>Workflows</strong>.</li>
+          <li>Workflow Templates page → review predefined template descriptions.</li>
+          <li>Click <strong>View Workflow Template</strong> for <strong>Auto Escalate</strong> → view graphical Workflow Settings.
+            <div class="callout callout-note">
+              <div class="callout-header"><div class="callout-icon">★</div>FLOW</div>
+              On incident creation, an email goes to the user's manager — or to the approver if no manager is found.
+            </div>
+          </li>
+          <li>Workflows → <strong>Workflow Mapping</strong> → expand the first mapping → explore triggering attributes, conditions, logic constructs.</li>
+          <li>Read-only — exploration only. Click <strong>Reset</strong> when finished.</li>
+        </ol>
+      </div>
+    </details>
+    <div class="lab-takeaway">
+      <div class="lab-takeaway-label">WHY THIS MATTERS</div>
+      <p class="lab-takeaway-text">Detecting a DLP violation is only half the job — incident response workflow determines mean-time-to-containment. Automated escalation via ZWA means a violation doesn't sit in a queue waiting for manual triage; the right people are notified, the right actions are triggered, and the audit trail is preserved automatically. This is what separates a DLP deployment that catches violations from one that actually resolves them.</p>
+    </div>
+    <details class="lab-questions" id="q-lab11">
+      <summary><span class="lab-questions-icon">?</span> MY QUESTIONS <span class="lab-questions-count" id="q-count-lab11"></span><span class="lab-questions-chevron">›</span></summary>
+      <div class="lab-questions-body"><textarea class="lab-questions-input" id="q-input-lab11" placeholder="Type any questions to follow up later…" rows="3"></textarea></div>
+    </details>
+  </div>
+</details>
+
+<!-- LAB 12 -->
+<details class="lab" id="lab12">
+  <summary>
+    <div class="lab-num">12</div>
+    <div class="lab-title">
+      <div class="lab-title-name">Analyzing Risk with MITRE ATT&amp;CK and NIST CSF</div>
+      <div class="lab-title-meta">⏱ 25 minutes · Risk360 · TTPs · Coverage Map</div>
+    </div>
+    <div class="lab-chevron">›</div>
+  </summary>
+  <div class="lab-body">
+    <div class="scenario-block">
+      <div class="scenario-block-label">SCENARIO</div>
+      <div class="scenario-block-text">Risk360 maps your Zscaler protections to MITRE ATT&amp;CK TTPs and NIST CSF. Use it to see which attack techniques are covered, which are misconfigured, and where to strengthen posture.</div>
+    </div>
+
+    <details class="task">
+      <summary><div class="task-num">12.1</div><div class="task-title">Analyzing Risk with MITRE ATT&amp;CK</div><div class="task-chevron">›</div></summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>Login to SDC (<code>https://sdc.zslogin.net</code>) with SDC credentials.</li>
+          <li>Click the <strong>Risk360</strong> tile.</li>
+          <li><span class="path">Frameworks &gt; MITRE ATT&amp;CK</span>.</li>
+          <li>Review the <strong>Legend</strong> on the left:
+            <ul class="substeps">
+              <li>Donut chart: covered vs not-covered techniques (% in centre)</li>
+              <li>Configurations: misconfigured vs correct policy counts</li>
+              <li>Toggle legend visibility with the arrow at top right</li>
+            </ul>
+          </li>
+          <li>Hover any TTP tile for summary; click a tile (e.g., <strong>Active Scanning</strong>) to open the right drawer:
+            <ul class="substeps">
+              <li>Technique name, ID, sub-technique state</li>
+              <li>Details (link to MITRE site) + MITRE Description</li>
+              <li>Zscaler Comment (mitigation guidance)</li>
+              <li>TTP-to-Zscaler Product Mapping</li>
+              <li>TTP-to-Risk360 Factor Mapping</li>
+              <li>Notes (custom)</li>
+            </ul>
+            <div class="callout callout-tip">
+              <div class="callout-header"><div class="callout-icon">→</div>COLOR CODING</div>
+              Tiles highlighted blue = covered by Zscaler. Green = correctly configured. Red = misconfigured.
+            </div>
+          </li>
+        </ol>
+      </div>
+    </details>
+
+    <details class="task">
+      <summary><div class="task-num">12.2</div><div class="task-title">Analyzing Risk with NIST CSF</div><div class="task-chevron">›</div></summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>Risk360 portal → <span class="path">Frameworks &gt; NIST CSF</span> (supports CSF 1.1 and 2.0).</li>
+          <li>Click NIST CSF and view TTP tiles. Review Legend (pie chart, configurations).</li>
+          <li>Hover/click any tile for details (technique name + NIST ID, link to NIST CSF PDF, NIST Description, Zscaler Comment, Product Mapping, Risk360 Factor Mapping, Notes).</li>
+          <li>For sub-techniques: same drawer pattern, plus configuration-correct status indicator.</li>
+        </ol>
+      </div>
+    </details>
+    <div class="lab-takeaway">
+      <div class="lab-takeaway-label">WHY THIS MATTERS</div>
+      <p class="lab-takeaway-text">Risk360 translates Zscaler's technical controls into language security leadership understands — MITRE ATT&amp;CK technique coverage and NIST CSF alignment. In practice, this is how a CISO communicates posture to a board or regulator: not which logs are ingested, but which attack techniques are covered, which are misconfigured, and where investment is needed next.</p>
+    </div>
+    <details class="lab-questions" id="q-lab12">
+      <summary><span class="lab-questions-icon">?</span> MY QUESTIONS <span class="lab-questions-count" id="q-count-lab12"></span><span class="lab-questions-chevron">›</span></summary>
+      <div class="lab-questions-body"><textarea class="lab-questions-input" id="q-input-lab12" placeholder="Type any questions to follow up later…" rows="3"></textarea></div>
+    </details>
+  </div>
+</details>
+
+
+<!-- LAB 13 -->
+<details class="lab" id="lab13">
+  <summary>
+    <div class="lab-num">13</div>
+    <div class="lab-title">
+      <div class="lab-title-name">Configuring Cloud Applications Monitoring (ZDX)</div>
+      <div class="lab-title-meta">⏱ 25 minutes · Custom App · Web Probe · Cloud Path Probe</div>
+    </div>
+    <div class="lab-chevron">›</div>
+  </summary>
+  <div class="lab-body">
+    <div class="scenario-block">
+      <div class="scenario-block-label">SCENARIO</div>
+      <div class="scenario-block-text">Define a custom application in ZDX (Mail_Server) and attach Web + Cloud Path probes so ZDX can monitor it.</div>
+    </div>
+
+    <details class="task">
+      <summary><div class="task-num">13.1</div><div class="task-title">Configure a Custom Application (Mail_server)</div><div class="task-chevron">›</div></summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>Switch from SDC. Login to ZCC as <code class="d-username-student">student@&lt;Student FQDN&gt;</code>.</li>
+          <li>ZIdentity Landing Page → <strong>Zscaler Digital Experience</strong> tile.</li>
+          <li>ZDX Admin Portal → <span class="path">Configuration &gt; Applications</span>.</li>
+          <li>Click <strong>Add New Custom Application</strong>.</li>
+          <li>Name: <code>Mail_server</code> → <strong>Save</strong>.
+            <div class="callout callout-note">
+              <div class="callout-header"><div class="callout-icon">★</div>NO PROBE = NO ENABLE</div>
+              The custom application stays disabled until at least one probe is associated with it.
+            </div>
+          </li>
+        </ol>
+      </div>
+    </details>
+
+    <details class="task">
+      <summary><div class="task-num">13.2</div><div class="task-title">Create Custom Probes (Web + Cloud Path)</div><div class="task-chevron">›</div></summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>Under the new application click <strong>Add New Probe</strong>.</li>
+          <li>Add the <strong>Web Probe</strong>:
+            <table class="compare-table">
+              <thead><tr><th>Field</th><th>Value</th></tr></thead>
+              <tbody>
+                <tr><td>Name</td><td><code>Mail_Server_Web</code></td></tr>
+                <tr><td>Status</td><td>Enable</td></tr>
+                <tr><td>Probe Type</td><td>Web</td></tr>
+                <tr><td>Application</td><td>Mail_Server</td></tr>
+                <tr><td>Run Frequency</td><td>5 minutes</td></tr>
+                <tr><td>Probing Criteria</td><td>Users / User Group / Locations / Location Group / Departments / Devices: <strong>All</strong></td></tr>
+                <tr><td>Exclusion Criteria</td><td>All <strong>None</strong></td></tr>
+                <tr><td>Destination URL</td><td><code>https://mail.google.com</code></td></tr>
+                <tr><td>Number of Attempts</td><td>2</td></tr>
+                <tr><td>Timeout</td><td>60 seconds</td></tr>
+                <tr><td>Follow Redirect</td><td>Enable</td></tr>
+                <tr><td>Maximum Redirect</td><td>5</td></tr>
+              </tbody>
+            </table>
+          </li>
+          <li><strong>Activation</strong> → click <strong>Activate</strong>.</li>
+          <li><span class="path">Configuration &gt; Applications</span> → edit <strong>Mail_Server</strong> → click <strong>Enable</strong> → <strong>Save</strong>. Verify Enabled.
+            <div class="callout callout-note">
+              <div class="callout-header"><div class="callout-icon">★</div>NOTE</div>
+              ZDX may take 15–30 minutes to start reporting metrics. Move on while metrics populate.
+            </div>
+          </li>
+          <li>Add the <strong>Cloud Path Probe</strong> → <strong>Add Probe</strong>:
+            <table class="compare-table">
+              <thead><tr><th>Field</th><th>Value</th></tr></thead>
+              <tbody>
+                <tr><td>Name</td><td><code>Mail_Server_cloud</code></td></tr>
+                <tr><td>Status</td><td>Enabled</td></tr>
+                <tr><td>Application</td><td>Mail_server</td></tr>
+                <tr><td>Probe Type</td><td>Cloud Path</td></tr>
+                <tr><td>Follow Web Probe</td><td>Mail_Server_Web</td></tr>
+                <tr><td>Run Frequency</td><td>5 minutes</td></tr>
+                <tr><td>Probing &amp; Exclusion Criteria</td><td>All / None (defaults)</td></tr>
+                <tr><td>Protocol</td><td>ICMP</td></tr>
+                <tr><td>Packet Count</td><td>5</td></tr>
+                <tr><td>Interval / Timeout</td><td>1000 ms / 1000 ms</td></tr>
+                <tr><td>Cloud Path Host</td><td><code>mail.google.com</code></td></tr>
+              </tbody>
+            </table>
+          </li>
+          <li>Click <strong>Submit</strong> → <strong>Activation</strong> → <strong>Activate</strong>.</li>
+        </ol>
+      </div>
+    </details>
+    <div class="lab-takeaway">
+      <div class="lab-takeaway-label">WHY THIS MATTERS</div>
+      <p class="lab-takeaway-text">Out-of-the-box ZDX monitors major SaaS apps, but most enterprises also run custom or on-premises applications that users depend on. Defining custom ZDX apps with web and cloud path probes gives IT and network teams the same experience visibility into internal apps that they get for Microsoft 365 — essential for resolving "it feels slow" complaints that can't otherwise be quantified or replicated.</p>
+    </div>
+    <details class="lab-questions" id="q-lab13">
+      <summary><span class="lab-questions-icon">?</span> MY QUESTIONS <span class="lab-questions-count" id="q-count-lab13"></span><span class="lab-questions-chevron">›</span></summary>
+      <div class="lab-questions-body"><textarea class="lab-questions-input" id="q-input-lab13" placeholder="Type any questions to follow up later…" rows="3"></textarea></div>
+    </details>
+  </div>
+</details>
+
+<!-- LAB 14 -->
+<details class="lab" id="lab14">
+  <summary>
+    <div class="lab-num">14</div>
+    <div class="lab-title">
+      <div class="lab-title-name">ZDX — Configure Alerts &amp; Diagnostics</div>
+      <div class="lab-title-meta">⏱ 25 minutes · Alert Rule · Deep Tracing · User Privacy</div>
+    </div>
+    <div class="lab-chevron">›</div>
+  </summary>
+  <div class="lab-body">
+    <div class="scenario-block">
+      <div class="scenario-block-label">SCENARIO</div>
+      <div class="scenario-block-text">Define performance alert thresholds and run a Diagnostics session for a specific user/device. Includes the User Privacy step needed to make Diagnostics available.</div>
+    </div>
+
+    <details class="task">
+      <summary><div class="task-num">14.1</div><div class="task-title">Create an Alert Rule</div><div class="task-chevron">›</div></summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>ZDX Admin Portal → <strong>Alerts</strong> tab → <strong>Rules</strong>.</li>
+          <li>Click <strong>Add Alert rule</strong>.</li>
+          <li>Configure (General):
+            <ul class="substeps">
+              <li>Name: <code>Test_Alert</code> · Status: Enabled · Type: <strong>Application</strong> · Severity: <strong>Medium</strong></li>
+              <li>Click <strong>Next</strong></li>
+            </ul>
+          </li>
+          <li>Filters tab:
+            <ul class="substeps">
+              <li>Application: <strong>Mail_server</strong> (from Lab 13)</li>
+              <li>Probe: select from dropdown</li>
+              <li><strong>Add filter</strong> → Geolocation → all countries in <strong>Asia</strong></li>
+            </ul>
+          </li>
+          <li>Criteria tab:
+            <ul class="substeps">
+              <li>Page Fetch Time &gt; <code>800 ms</code></li>
+              <li>ZDX Score &lt; <code>20</code></li>
+            </ul>
+          </li>
+          <li>Actions tab:
+            <ul class="substeps">
+              <li>Alert Only if Repeated: <code>2</code></li>
+              <li>Number of Active Devices is: <code>1</code></li>
+              <li>Alert Delivery Method: Email (any dummy email)</li>
+            </ul>
+          </li>
+          <li>Review tab → <strong>Save</strong>.</li>
+          <li>Activation tab → <strong>Activate</strong>.</li>
+        </ol>
+      </div>
+    </details>
+
+    <details class="task">
+      <summary><div class="task-num">14.2</div><div class="task-title">Configure a Diagnostic Session</div><div class="task-chevron">›</div></summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>ZDX → Diagnostics → <strong>Start New Diagnostic Session</strong>.</li>
+          <li>If button is missing: enable User Privacy first:
+            <ul class="substeps">
+              <li>ZIdentity Landing Page → <strong>Zscaler Client Connector</strong> tile</li>
+              <li><span class="path">Administration &gt; Client Connector Support</span></li>
+              <li><strong>User Privacy</strong> tab → enable <strong>Collect Machine Hostname Information</strong> → <strong>Save</strong></li>
+              <li>Refresh ZDX → return to Diagnostics</li>
+            </ul>
+          </li>
+          <li>Configure session:
+            <ul class="substeps">
+              <li>Name: <code>Test Diagnostic Session</code></li>
+              <li>User: Student Admin user assigned to you</li>
+              <li>Device: select your device</li>
+              <li><strong>Deep Tracing</strong> · Run for <strong>5 Minutes</strong></li>
+              <li>Click <strong>Next</strong></li>
+            </ul>
+          </li>
+          <li>Probes:
+            <ul class="substeps">
+              <li>Application: <strong>Mail_Server</strong> · select Web and Cloud Path probes</li>
+              <li>Cloud Path Probe Thresholds: Packet Loss = <code>20%</code> · Latency = <code>10 ms</code></li>
+            </ul>
+          </li>
+          <li>Click <strong>Save</strong>. Session appears in the progress table.</li>
+        </ol>
+      </div>
+    </details>
+    <div class="lab-takeaway">
+      <div class="lab-takeaway-label">WHY THIS MATTERS</div>
+      <p class="lab-takeaway-text">Reactive troubleshooting — waiting for a user complaint before investigating — means mean-time-to-resolution is measured in hours. ZDX alerting shifts this to proactive: the system detects a degraded score before users notice and captures the network path data automatically. In production, this is often the difference between a 5-minute targeted fix and a 2-hour all-hands escalation call.</p>
+    </div>
+    <details class="lab-questions" id="q-lab14">
+      <summary><span class="lab-questions-icon">?</span> MY QUESTIONS <span class="lab-questions-count" id="q-count-lab14"></span><span class="lab-questions-chevron">›</span></summary>
+      <div class="lab-questions-body"><textarea class="lab-questions-input" id="q-input-lab14" placeholder="Type any questions to follow up later…" rows="3"></textarea></div>
+    </details>
+  </div>
+</details>
+
+<!-- LAB 15 -->
+<details class="lab" id="lab15">
+  <summary>
+    <div class="lab-num">15</div>
+    <div class="lab-title">
+      <div class="lab-title-name">Adding API Clients (OneAPI)</div>
+      <div class="lab-title-meta">⏱ 40 minutes · OAuth 2.0 · Postman · ZCC API · ZPA App Connector Group</div>
+    </div>
+    <div class="lab-chevron">›</div>
+  </summary>
+  <div class="lab-body">
+    <div class="scenario-block">
+      <div class="scenario-block-label">SCENARIO</div>
+      <div class="scenario-block-text">OneAPI is a unified gateway with OAuth 2.0 across Zscaler services. Create a ZIdentity API client, test ZCC endpoints in Postman, then create a ZPA App Connector Group via the API.</div>
+    </div>
+
+    <details class="task">
+      <summary><div class="task-num">15.1</div><div class="task-title">Add an API Client in ZIdentity</div><div class="task-chevron">›</div></summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>ZIdentity Landing Page → ZIdentity Administration tile.</li>
+          <li><span class="path">Integration &gt; API Clients</span> → <strong>Add API Client</strong>.</li>
+          <li>Client tab:
+            <ul class="substeps">
+              <li>Name: <code>TestClient</code></li>
+              <li>Description: <code>Testing API Client.</code></li>
+              <li>Status: Enable</li>
+              <li>Access Token Lifetime: <code>90</code> minutes (range 1 min – 24 hr)</li>
+            </ul>
+          </li>
+          <li>Client Authentication:
+            <ul class="substeps">
+              <li>Validation Type: <strong>Secret</strong></li>
+              <li>Click <strong>Add</strong> → secret key auto-generated (validity 30–365 days)</li>
+              <li><strong>Copy</strong> the secret and save locally — it can't be re-shown</li>
+            </ul>
+            <div class="callout callout-warn">
+              <div class="callout-header"><div class="callout-icon">!</div>SECRET LIMITS</div>
+              Max two client secrets per client. A third generation replaces the most recent. The validity is set at creation time and cannot be updated.
+            </div>
+          </li>
+          <li>(Resources tab is informational — shows linked Zscaler services + scopes.)</li>
+          <li>Click <strong>Save</strong> — ZIdentity auto-generates the Client ID.</li>
+        </ol>
+      </div>
+    </details>
+
+    <details class="task">
+      <summary><div class="task-num">15.2</div><div class="task-title">Test API Endpoint via Postman (ZCC)</div><div class="task-chevron">›</div></summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>On Corp: Client PC → open <strong>Postman</strong> from Desktop. Sign up with your email.</li>
+          <li>Download the latest OneAPI collection from <code>https://automate.zscaler.com/docs/tools/postman/adding-oneapi-postman-collection</code>.</li>
+          <li>Postman → File → Import → upload the OneAPI collection.</li>
+          <li>Select OneAPI collection → <strong>Authorization</strong> tab:
+            <ul class="substeps">
+              <li>Access Token URL: ZIdentity Landing Page URL from Lab Access Instructions
+                <div class="callout callout-tip">
+                  <div class="callout-header"><div class="callout-icon">→</div>BETTER WAY</div>
+                  Hover over <code>{{zIdentityBaseUrl}}</code> and paste the ZIdentity URL there to avoid manual edits.
+                </div>
+              </li>
+              <li>Client ID: from Step 6 of Task 15.1</li>
+              <li>Client Secret: from Step 4 of Task 15.1</li>
+            </ul>
+          </li>
+          <li>Click <strong>Get New Access Token</strong> → in Manage Access Token window click <strong>Use Token</strong>.</li>
+          <li>Verify in ZIdentity → <span class="path">Integrations &gt; Tokens</span> — your token is listed.</li>
+          <li>Test ZCC endpoints:
+            <ul class="substeps">
+              <li>Collections → expand <strong>Zscaler Client Connector</strong> → <strong>GET Get All Enrolled Devices</strong> → Send → expect <code>200</code></li>
+              <li>Run <strong>GET Download device details as a CSV file</strong> → check status code</li>
+            </ul>
+          </li>
+        </ol>
+      </div>
+    </details>
+
+    <details class="task">
+      <summary><div class="task-num">15.3</div><div class="task-title">Add ZPA App Connector Group via OneAPI</div><div class="task-chevron">›</div></summary>
+      <div class="task-body">
+        <div class="task-desc">Endpoint: <code>{{ZPABase}}/mgmtconfig/v1/admin/customers/:customerId/appConnectorGroup</code></div>
+        <ol class="steps">
+          <li>ZPA Admin Portal → <span class="path">Configuration &amp; Control &gt; Private Infrastructure &gt; App Connector Management &gt; App Connector Group</span> — note the existing groups.</li>
+          <li>Get ZPA Customer ID from the <strong>Accounts</strong> page.</li>
+          <li>In Postman, OneAPI → ZPA → <strong>Enrollment Certificate Controller</strong> → <strong>Get all configured enrollment certificate details for the specific customer</strong>.</li>
+          <li>Params tab → enter Customer ID → <strong>Send</strong>.</li>
+          <li>In response Body, find the <code>Id</code> — you'll use it as <code>signingCertId</code>.</li>
+          <li>Navigate to OneAPI → ZPA → <strong>Connector Group Controller</strong> → <strong>Add a new App Connector Group for Specified Customer</strong>.</li>
+          <li>Body tab — enter:
+            <pre class="json-block">{
+  <span class="k">"name"</span>: <span class="s">"ZPALAB APPC Group"</span>,
+  <span class="k">"description"</span>: <span class="s">"App Connector training Lab at San Jose"</span>,
+  <span class="k">"upgradeTimeInSecs"</span>: <span class="s">"66600"</span>,
+  <span class="k">"latitude"</span>: <span class="s">"37.3382032"</span>,
+  <span class="k">"longitude"</span>: <span class="s">"-121.886286"</span>,
+  <span class="k">"location"</span>: <span class="s">"San Jose, CA, USA"</span>,
+  <span class="k">"signingCertId"</span>: <span class="s">"8662"</span>
+}</pre>
+            <div class="callout callout-note">
+              <div class="callout-header"><div class="callout-icon">★</div>NOTE</div>
+              Replace <code>signingCertId</code> with the Id you got in step 5. Make sure your access token is still valid.
+            </div>
+          </li>
+          <li>Click <strong>Send</strong> → expect response code <strong>201 Created</strong>.</li>
+          <li>Verify in ZPA Portal → App Connector Group page → new group is listed.</li>
+        </ol>
+      </div>
+    </details>
+    <div class="lab-takeaway">
+      <div class="lab-takeaway-label">WHY THIS MATTERS</div>
+      <p class="lab-takeaway-text">API-driven configuration is how large enterprises scale Zscaler deployments — no one manually clicks through a portal to create hundreds of app segments or firewall rules. OneAPI with OAuth 2.0 integrates Zscaler into CI/CD pipelines, IaC tools like Terraform, and ITSM systems, enabling policy changes to go through proper approval workflows before being applied at scale.</p>
+    </div>
+    <details class="lab-questions" id="q-lab15">
+      <summary><span class="lab-questions-icon">?</span> MY QUESTIONS <span class="lab-questions-count" id="q-count-lab15"></span><span class="lab-questions-chevron">›</span></summary>
+      <div class="lab-questions-body"><textarea class="lab-questions-input" id="q-input-lab15" placeholder="Type any questions to follow up later…" rows="3"></textarea></div>
+    </details>
+  </div>
+</details>
+
+<!-- LAB 16 - CAPSTONE -->
+<details class="lab capstone-lab" id="lab16">
+  <summary>
+    <div class="lab-num">★</div>
+    <div class="lab-title">
+      <div class="lab-title-name">Capstone Project — Apply Best Practices Across All Domains</div>
+      <div class="lab-title-meta">⏱ Variable · 5 Independent Tasks · Pass/Fail · Reference Implementation</div>
+    </div>
+    <div class="lab-chevron">›</div>
+  </summary>
+  <div class="lab-body">
+    <div class="scenario-block">
+      <div class="scenario-block-label">CAPSTONE</div>
+      <div class="scenario-block-text">Independently configure a solution that meets each scenario's criteria. Your solution will be evaluated against a checklist + reference implementation. Pass/Fail.</div>
+    </div>
+
+    <details class="task">
+      <summary><div class="task-num">16.1</div><div class="task-title">Apply Identity Services Best Practices</div><div class="task-chevron">›</div></summary>
+      <div class="task-body">
+        <div class="capstone-section">
+          <div class="capstone-section-label">TASK ENTRY CONDITIONS</div>
+          <ul>
+            <li>Users for your assigned FQDN authenticate via your assigned ZIdentity tenant</li>
+            <li>Users assigned to groups based on admin/service access needs</li>
+            <li>Administration &amp; Service Entitlements assigned to applicable groups</li>
+          </ul>
+        </div>
+        <div class="capstone-section">
+          <div class="capstone-section-label">CONFIGURATION REQUIREMENTS</div>
+          <ul>
+            <li>Configure user group <strong>ZPA Helpdesk</strong> — admins providing helpdesk support for private apps. Need entitlements + roles to <strong>examine but not change</strong> all aspects of ZPA + ZIdentity admin portals</li>
+            <li>Configure user group <strong>ZDX Rollout</strong> — users testing the initial Digital Experience monitoring rollout in your region</li>
+          </ul>
+        </div>
+        <div class="capstone-section">
+          <div class="capstone-section-label">TESTING REQUIREMENTS</div>
+          <ul>
+            <li>Add <code>appuser@<span class="d-fqdn-inline">&lt;Student FQDN&gt;</span></code> to ZPA Helpdesk → verify ZPA + ZIdentity portal read-only</li>
+            <li>Add <code>reportuser@<span class="d-fqdn-inline">&lt;Student FQDN&gt;</span></code> to ZDX Rollout → verify successful ZCC enrollment + Digital Experience service ON</li>
+          </ul>
+        </div>
+        <div class="capstone-section">
+          <div class="capstone-section-label">CONFIGURATION HINTS</div>
+          <ul>
+            <li>Check that role <strong>ZPA Read Only Administrator</strong> exists for the ZPA Administrative Entitlement</li>
+            <li>ZDX Rollout group should have service entitlements for <strong>Zscaler Internet Access</strong> AND <strong>Zscaler Digital Experience</strong></li>
+          </ul>
+        </div>
+        <div class="capstone-section">
+          <div class="capstone-section-label">WHERE TO GET HELP</div>
+          <ul>
+            <li><a href="https://help.zscaler.com/zidentity/adding-users" target="_blank" rel="noreferrer">help.zscaler.com/zidentity/adding-users</a></li>
+            <li><a href="https://help.zscaler.com/zidentity/adding-user-groups" target="_blank" rel="noreferrer">help.zscaler.com/zidentity/adding-user-groups</a></li>
+            <li><a href="https://help.zscaler.com/zidentity/assigning-users-zscaler-service" target="_blank" rel="noreferrer">help.zscaler.com/zidentity/assigning-users-zscaler-service</a></li>
+          </ul>
+        </div>
+      </div>
+    </details>
+
+    <details class="task">
+      <summary><div class="task-num">16.2</div><div class="task-title">Apply Access Control Services Requirements</div><div class="task-chevron">›</div></summary>
+      <div class="task-body">
+        <div class="capstone-section">
+          <div class="capstone-section-label">TASK ENTRY CONDITIONS</div>
+          <ul><li>Client Connector installed on Corp: Client PC; App Connectors provisioned and active</li></ul>
+        </div>
+        <div class="capstone-section">
+          <div class="capstone-section-label">CONFIGURATION REQUIREMENTS</div>
+          <ul>
+            <li>Allow all employees access to private application: <strong>Intranet</strong> (<code>intranet.patraining.safemarch.com</code>)</li>
+          </ul>
+        </div>
+        <div class="capstone-section">
+          <div class="capstone-section-label">TESTING REQUIREMENTS</div>
+          <ul>
+            <li>Access intranet via <strong>http</strong> and <strong>https</strong> from browser on Corp: Client PC</li>
+            <li>Use <strong>Diagnostics</strong> + <strong>Live Logs</strong> in ZPA Admin Portal to verify the policy works</li>
+          </ul>
+        </div>
+        <div class="capstone-section">
+          <div class="capstone-section-label">CONFIGURATION HINTS</div>
+          <ul><li>For <code>intranet.patraining.safemarch.com</code> use <strong>TCP ports 80 and 443</strong></li></ul>
+        </div>
+      </div>
+    </details>
+
+    <details class="task">
+      <summary><div class="task-num">16.3</div><div class="task-title">Apply Cyberthreat Protection Services Requirements</div><div class="task-chevron">›</div></summary>
+      <div class="task-body">
+        <div class="capstone-section">
+          <div class="capstone-section-label">CONFIGURATION REQUIREMENTS</div>
+          <ul><li>Configure SSL Inspection so that user access to <strong>personal banking accounts</strong> is NOT inspected (privacy)</li></ul>
+        </div>
+        <div class="capstone-section">
+          <div class="capstone-section-label">TESTING REQUIREMENTS</div>
+          <ul>
+            <li>Check existing SSL Inspection policies in ZIA</li>
+            <li>Create new rule (or modify existing) → <strong>Exclude Banking SSL Traffic</strong></li>
+            <li>Create custom URL category (e.g., <code>Banking Exclusions</code>) OR use predefined <strong>Finance</strong></li>
+            <li>Test with <code>https://www.icicibank.com</code> → cert is from origin (NOT Zscaler)</li>
+            <li>Test a non-banking site → cert from Zscaler (still inspected)</li>
+          </ul>
+        </div>
+        <div class="capstone-section">
+          <div class="capstone-section-label">CONFIGURATION HINTS</div>
+          <ul>
+            <li>Check if any existing SSL inspection rule already excludes banking URLs</li>
+            <li>SSL inspection action: <strong>Do Not Inspect</strong></li>
+            <li>URL filtering policy action: <strong>Allow</strong></li>
+          </ul>
+        </div>
+        <div class="capstone-section">
+          <div class="capstone-section-label">WHERE TO GET HELP</div>
+          <ul>
+            <li><a href="https://help.zscaler.com/zia/about-ssl-inspection-policy" target="_blank" rel="noreferrer">about-ssl-inspection-policy</a></li>
+            <li><a href="https://help.zscaler.com/zia/configuring-ssl-inspection-policy" target="_blank" rel="noreferrer">configuring-ssl-inspection-policy</a></li>
+          </ul>
+        </div>
+      </div>
+    </details>
+
+    <details class="task">
+      <summary><div class="task-num">16.4</div><div class="task-title">Apply Data Protection Services Requirements</div><div class="task-chevron">›</div></summary>
+      <div class="task-body">
+        <div class="capstone-section">
+          <div class="capstone-section-label">CONFIGURATION REQUIREMENTS</div>
+          <ul><li>Add a rule that <strong>blocks</strong> users from sending private health data (<strong>HIPAA</strong>)</li></ul>
+        </div>
+        <div class="capstone-section">
+          <div class="capstone-section-label">TESTING REQUIREMENTS</div>
+          <ul>
+            <li>Open <code>https://dlptoolbox.com/filemaster.aspx</code></li>
+            <li>Attempt to submit private health information (Medical Info)</li>
+            <li>Verify submission is blocked or logged per policy</li>
+            <li>Check ZIA Admin Portal logs to confirm rule triggered</li>
+          </ul>
+        </div>
+        <div class="capstone-section">
+          <div class="capstone-section-label">CONFIGURATION HINTS</div>
+          <ul>
+            <li>Check existing DLP policies for HIPAA coverage</li>
+            <li>Create new rule <strong>Block HIPAA Data Sharing</strong> with action <strong>Block</strong></li>
+            <li>Test sensitive AND non-sensitive submissions to confirm rule scope</li>
+          </ul>
+        </div>
+        <div class="capstone-section">
+          <div class="capstone-section-label">WHERE TO GET HELP</div>
+          <ul>
+            <li><a href="https://help.zscaler.com/zia/about-data-loss-prevention" target="_blank" rel="noreferrer">about-data-loss-prevention</a></li>
+            <li><a href="https://help.zscaler.com/zia/configuring-dlp-policy-rules-content-inspection" target="_blank" rel="noreferrer">configuring-dlp-policy-rules-content-inspection</a></li>
+          </ul>
+        </div>
+      </div>
+    </details>
+
+    <details class="task">
+      <summary><div class="task-num">16.5</div><div class="task-title">Apply Zero Trust Automation Requirements (OneAPI)</div><div class="task-chevron">›</div></summary>
+      <div class="task-body">
+        <div class="capstone-section">
+          <div class="capstone-section-label">CONFIGURATION REQUIREMENTS</div>
+          <ul><li>Configure a OneAPI client used in an automation that creates a <strong>URL Filtering rule</strong> blocking gambling websites</li></ul>
+        </div>
+        <div class="capstone-section">
+          <div class="capstone-section-label">TESTING REQUIREMENTS</div>
+          <ul>
+            <li>Create an API client in ZIdentity Dashboard (Corp: Client PC)</li>
+            <li>Authenticate a session for the OneAPI client in Postman</li>
+            <li>Call API endpoint to create the URL filtering policy</li>
+            <li>ZIA Admin Portal → confirm URL filtering rule exists</li>
+            <li>Browse to <code>https://www.888.com</code> → confirm blocked</li>
+          </ul>
+          <div class="callout callout-warn">
+            <div class="callout-header"><div class="callout-icon">!</div>JSON BODY HINT</div>
+            When creating the JSON body for the URL Filtering Rule, ensure: <code>"protocols": ["ANY_RULE"]</code>
+          </div>
+        </div>
+        <div class="capstone-section">
+          <div class="capstone-section-label">CONFIGURATION HINTS</div>
+          <ul>
+            <li>ZIdentity Landing Page → Zscaler Internet Access tile</li>
+            <li>Check if a URL filtering policy for gambling already exists</li>
+            <li>In ZIdentity, create an API Client for the ZIA resource</li>
+            <li>In Postman, input Access Token URL, Client ID, Client Secret → Generate Access Token</li>
+            <li>Use the token to call the ZIA API endpoint with the JSON body</li>
+          </ul>
+        </div>
+        <div class="capstone-section">
+          <div class="capstone-section-label">WHERE TO GET HELP</div>
+          <ul>
+            <li><a href="https://help.zscaler.com/oneapi/understanding-oneapi-endpoints" target="_blank" rel="noreferrer">understanding-oneapi-endpoints</a></li>
+            <li><a href="https://help.zscaler.com/oneapi/configuring-postman-rest-api-client" target="_blank" rel="noreferrer">configuring-postman-rest-api-client</a></li>
+            <li><a href="https://help.zscaler.com/zia/url-filtering-policy#/urlFilteringRules-post" target="_blank" rel="noreferrer">url-filtering-policy POST</a></li>
+          </ul>
+        </div>
+      </div>
+    </details>
+    <div class="lab-takeaway">
+      <div class="lab-takeaway-label">WHY THIS MATTERS</div>
+      <p class="lab-takeaway-text">The capstone brings together every domain covered in the lab series — identity, access, security policies, experience monitoring, and automation. In a real deployment, these disciplines don't operate in silos; a new acquisition, office opening, or third-party integration requires coordinating all of them simultaneously. The ability to work through each layer independently under time pressure is what a deployment engineer faces on every engagement.</p>
+    </div>
+    <details class="lab-questions" id="q-lab16">
+      <summary><span class="lab-questions-icon">?</span> MY QUESTIONS <span class="lab-questions-count" id="q-count-lab16"></span><span class="lab-questions-chevron">›</span></summary>
+      <div class="lab-questions-body"><textarea class="lab-questions-input" id="q-input-lab16" placeholder="Type any questions to follow up later…" rows="3"></textarea></div>
+    </details>
+  </div>
+</details>
+
+</main>
+
+<footer>
+  <div class="footer-left">EDU-202<span>.</span></div>
+  <div class="footer-right">Zscaler For Users — Engineer · Hands-on Lab Guide · Capstone Project · Feb 2025 Rev 3.3</div>
+</footer>
+
+<script>
+/* ── CONFIG PANEL COLLAPSE ── */
+function toggleConfig() {
+  const panel = document.getElementById('config-panel');
+  const btn   = document.getElementById('config-toggle-btn');
+  const collapsed = panel.classList.toggle('collapsed');
+  btn.innerHTML = collapsed
+    ? '<span class="chevron" style="transform:rotate(180deg);display:inline-block;">▲</span> Expand'
+    : '<span class="chevron">▲</span> Collapse';
+}
+
+function updateToggleSummary() {
+  const fqdn = document.getElementById('fqdn-input').value.trim();
+  const summary = document.getElementById('config-toggle-summary');
+  summary.textContent = fqdn ? `— ${fqdn}` : '';
+}
+
+const STORAGE_KEY = 'edu202-lab-config';
+
+function loadConfig() {
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) {
+      const cfg = JSON.parse(saved);
+      document.getElementById('fqdn-input').value = cfg.fqdn || '';
+      document.getElementById('pass-input').value = cfg.pass || '';
+      document.getElementById('sdc-user-input').value = cfg.sdcUser || '';
+      document.getElementById('sdc-pass-input').value = cfg.sdcPass || '';
+      document.getElementById('mkt-user-input').value = cfg.mktUser || '';
+      document.getElementById('it-user-input').value = cfg.itUser || '';
+    }
+  } catch (e) {}
+  applyAll();
+}
+
+function saveConfig() {
+  const cfg = {
+    fqdn: document.getElementById('fqdn-input').value.trim(),
+    pass: document.getElementById('pass-input').value.trim(),
+    sdcUser: document.getElementById('sdc-user-input').value.trim(),
+    sdcPass: document.getElementById('sdc-pass-input').value.trim(),
+    mktUser: document.getElementById('mkt-user-input').value.trim(),
+    itUser: document.getElementById('it-user-input').value.trim(),
+  };
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(cfg)); } catch (e) {}
+  applyAll();
+  flashSaved();
+}
+
+function clearConfig() {
+  ['fqdn-input','pass-input','sdc-user-input','sdc-pass-input','mkt-user-input','it-user-input']
+    .forEach(id => document.getElementById(id).value = '');
+  try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
+  applyAll();
+}
+
+function flashSaved() {
+  const btn = document.querySelector('.config-btn');
+  const orig = btn.textContent;
+  btn.textContent = '✓ Saved';
+  btn.style.background = 'var(--green)';
+  btn.style.color = 'white';
+  setTimeout(() => { btn.textContent = orig; btn.style.background = ''; btn.style.color = ''; }, 1200);
+}
+
+function applyAll() {
+  const fqdn = document.getElementById('fqdn-input').value.trim();
+  const pass = document.getElementById('pass-input').value.trim();
+  const sdcUser = document.getElementById('sdc-user-input').value.trim();
+  const sdcPass = document.getElementById('sdc-pass-input').value.trim();
+  const mktUser = document.getElementById('mkt-user-input').value.trim();
+  const itUser  = document.getElementById('it-user-input').value.trim();
+
+  // Derive Student ID
+  const studentId = fqdn ? fqdn.split('.')[0] : '';
+
+  // <Student FQDN> placeholders
+  document.querySelectorAll('.var-fqdn').forEach(el => {
+    if (fqdn) { el.textContent = fqdn; el.classList.add('filled'); }
+    else { el.textContent = '<Student FQDN>'; el.classList.remove('filled'); }
+  });
+  document.querySelectorAll('.d-fqdn-inline').forEach(el => {
+    el.textContent = fqdn || '<Student FQDN>';
+  });
+
+  // <Student ID> placeholders
+  document.querySelectorAll('.var-id').forEach(el => {
+    if (studentId) { el.textContent = studentId; el.classList.add('filled'); }
+    else { el.textContent = '<Student ID>'; el.classList.remove('filled'); }
+  });
+  // HVAC FQDN inline (resolves <Student ID>.hvac.safemarch.com)
+  document.querySelectorAll('.d-hvac-fqdn-inline').forEach(el => {
+    el.textContent = studentId ? `${studentId}.hvac.safemarch.com` : '<Student ID>.hvac.safemarch.com';
+  });
+  document.querySelectorAll('.d-cn').forEach(el => {
+    el.textContent = studentId ? `CN=${studentId}.hvac.safemarch.com` : 'CN=<Student ID>.hvac.safemarch.com';
+  });
+
+  // Other fields
+  document.querySelectorAll('.var-pass').forEach(el => {
+    if (pass) { el.textContent = pass; el.classList.add('filled'); }
+    else { el.textContent = '<Session Password>'; el.classList.remove('filled'); }
+  });
+  document.querySelectorAll('.var-sdc-user').forEach(el => {
+    if (sdcUser) { el.textContent = sdcUser; el.classList.add('filled'); }
+    else { el.textContent = '<SDC ZIA Admin User ID>'; el.classList.remove('filled'); }
+  });
+  document.querySelectorAll('.var-sdc-pass').forEach(el => {
+    if (sdcPass) { el.textContent = sdcPass; el.classList.add('filled'); }
+    else { el.textContent = '<SDC Session Password>'; el.classList.remove('filled'); }
+  });
+  document.querySelectorAll('.var-mkt-user').forEach(el => {
+    if (mktUser) { el.textContent = mktUser; el.classList.add('filled'); }
+    else { el.textContent = '<MKT_department_username>'; el.classList.remove('filled'); }
+  });
+  document.querySelectorAll('.var-it-user').forEach(el => {
+    if (itUser) { el.textContent = itUser; el.classList.add('filled'); }
+    else { el.textContent = '<IT_department_username>'; el.classList.remove('filled'); }
+  });
+
+  // Derived usernames
+  const studentUser = fqdn ? `student@${fqdn}` : 'student@<Student FQDN>';
+  const joeUser     = fqdn ? `joe@${fqdn}`     : 'joe@<Student FQDN>';
+  const hvacUser    = fqdn ? `hvac@${fqdn}`    : 'hvac@<Student FQDN>';
+
+  document.querySelectorAll('.d-username-student').forEach(el => el.textContent = studentUser);
+  document.querySelectorAll('.d-username-joe').forEach(el => el.textContent = joeUser);
+  document.querySelectorAll('.d-username-hvac').forEach(el => el.textContent = hvacUser);
+
+  // Derived header strip
+  document.getElementById('d-student').textContent = studentUser;
+  document.getElementById('d-joe').textContent     = joeUser;
+  document.getElementById('d-hvac').textContent    = hvacUser;
+  document.getElementById('d-id').textContent      = studentId || '<Student ID>';
+  document.getElementById('d-hvac-fqdn').textContent = studentId ? `${studentId}.hvac.safemarch.com` : '<Student ID>.hvac.safemarch.com';
+}
+
+function expandAll() { document.querySelectorAll('details').forEach(d => d.open = true); }
+function collapseAll() { document.querySelectorAll('details').forEach(d => d.open = false); }
+
+['fqdn-input','pass-input','sdc-user-input','sdc-pass-input','mkt-user-input','it-user-input']
+  .forEach(id => {
+    document.getElementById(id).addEventListener('input', applyAll);
+    document.getElementById(id).addEventListener('input', updateToggleSummary);
+  });
+
+loadConfig();
+updateToggleSummary();
+
+/* ── TASK PROGRESS TRACKING ── */
+const PROG_KEY = 'edu202-progress';
+
+function loadProg() {
+  try { return JSON.parse(localStorage.getItem(PROG_KEY)) || {}; } catch { return {}; }
+}
+function saveProg(s) {
+  try { localStorage.setItem(PROG_KEY, JSON.stringify(s)); } catch {}
+}
+
+function updateProgress(state) {
+  const tasks = document.querySelectorAll('details.task');
+  const total = tasks.length;
+  let done = 0;
+  tasks.forEach(task => {
+    const key = taskKey(task);
+    if (state[key]) done++;
+  });
+  const pct = total ? Math.round((done / total) * 100) : 0;
+  document.getElementById('prog-done').textContent = pct;
+  const fill = document.getElementById('progress-fill');
+  fill.style.width = pct + '%';
+  fill.classList.toggle('all-done', done === total && total > 0);
+
+  // Mark lab nav tabs done when all their tasks are checked
+  document.querySelectorAll('details.lab').forEach(lab => {
+    const labTasks = lab.querySelectorAll('details.task');
+    const allDone = labTasks.length > 0 && [...labTasks].every(t => !!state[taskKey(t)]);
+    const tab = document.querySelector(`.lab-nav-tab[href="#${lab.id}"]`);
+    if (tab) tab.classList.toggle('lab-nav-done', allDone);
+  });
+}
+
+function taskKey(taskEl) {
+  const num = taskEl.querySelector('.task-num');
+  return 'task-' + (num ? num.textContent.trim() : taskEl.id || Math.random());
+}
+
+function injectTaskCheckboxes() {
+  const state = loadProg();
+  document.querySelectorAll('details.task').forEach(task => {
+    const summary = task.querySelector(':scope > summary');
+    if (!summary || summary.querySelector('.task-check')) return;
+
+    const key = taskKey(task);
+
+    const wrap = document.createElement('div');
+    wrap.className = 'task-check-wrap';
+    const cb = document.createElement('input');
+    cb.type = 'checkbox';
+    cb.className = 'task-check';
+    cb.checked = !!state[key];
+    if (cb.checked) task.classList.add('task-done');
+
+    cb.addEventListener('click', e => {
+      e.stopPropagation();
+      state[key] = cb.checked;
+      task.classList.toggle('task-done', cb.checked);
+      saveProg(state);
+      updateProgress(state);
+    });
+    wrap.appendChild(cb);
+
+    const chevron = summary.querySelector('.task-chevron');
+    summary.insertBefore(wrap, chevron);
+  });
+  updateProgress(state);
+}
+
+injectTaskCheckboxes();
+
+/* ── LAB IMAGE PLACEHOLDERS ── */
+const LAB_IMAGES = {
+  lab1:  { src: '../images/labs/edu-202/lab-01-virtual-environment.png',  alt: 'Admin launching Skytap environment with Client PC, Win Svr and App Connector VMs, ZIdentity login screen in foreground' },
+  lab2:  { src: '../images/labs/edu-202/lab-02-user-creation.png',         alt: 'Admin creating user Joe in Zscaler portal, ZCC phone showing ZIA, ZPA and ZDX tiles all active' },
+  lab3:  { src: '../images/labs/edu-202/lab-03-hvac-browser-access.png',   alt: 'HVAC technician accessing internal HVAC console through ZPA Browser Access via App Connector, no VPN' },
+  lab4:  { src: '../images/labs/edu-202/lab-04-log-streaming.png',          alt: 'Log entries flowing from ZPA through Log Streaming Connector into SIEM server, admin viewing live SSH tail output' },
+  lab5:  { src: '../images/labs/edu-202/lab-05-firewall.png',               alt: 'Firewall bouncer with VIP list waving through ICMP and SSH packets, blocking UDP with DEFAULT BLOCK wall' },
+  lab6:  { src: '../images/labs/edu-202/lab-06-ssl-inspection.png',         alt: 'Zscaler security guard opening encrypted envelope, re-sealing with intermediate certificate, passing to internet' },
+  lab7:  { src: '../images/labs/edu-202/lab-07-sandbox.png',                alt: 'Suspicious file download placed by robot arm into glass quarantine chamber, second download blocked with stop sign' },
+  lab8:  { src: '../images/labs/edu-202/lab-08-browser-isolation.png',      alt: 'User viewing risky website inside cloud glass Render Only box, no copy/paste/download/screenshot' },
+  lab9:  { src: '../images/labs/edu-202/lab-09-deception.png',              alt: 'Hacker approaching glowing honeypot decoy server, alarm bell rings, SOC analysts see THREAT DETECTED alert' },
+  lab10: {
+    src: '../images/labs/edu-202/lab-10-dlp-ccn.png',
+    alt: 'DLP guard blocking PDF with credit card numbers and unsearchable PDF at the DLP Gateway'
+  },
+  lab11: {
+    src: '../images/labs/edu-202/lab-11-zwa-incidents.png',
+    alt: 'DLP incident tickets on conveyor belt stamped NOTIFY, ESCALATE, RESOLVED by robotic arms under ZWA workflow'
+  },
+  lab12: {
+    src: '../images/labs/edu-202/lab-12-risk360-mitre.png',
+    alt: 'Security analyst at giant MITRE ATT&CK grid map with green shields, orange flags, and red gaps, NIST CSF badge'
+  },
+  lab13: {
+    src: '../images/labs/edu-202/lab-13-zdx-monitoring.png',
+    alt: 'Mail_Server connected to Web Probe and Cloud Path Probe robots, ZDX dashboard showing latency and health scores'
+  },
+  lab14: {
+    src: '../images/labs/edu-202/lab-14-zdx-diagnostics.png',
+    alt: 'ZDX dashboard with latency alert, Deep Trace spotlight following user device through network, User Privacy enabled'
+  },
+  lab15: {
+    src: '../images/labs/edu-202/lab-15-oneapi.png',
+    alt: 'Developer with Postman at OneAPI gateway, OAuth 2.0 token unlocking access to ZCC, ZPA, ZIA services'
+  },
+  lab16: {
+    src: '../images/labs/edu-202/lab-16-capstone.png',
+    alt: 'Student at exam desk with 5 domain challenge cards, graduation cap and trophy, PASS/FAIL scorecard'
+  }
+};
+
+function injectImageSlots() {
+  Object.entries(LAB_IMAGES).forEach(([labId, img]) => {
+    if (!img.src) return;
+    const lab = document.getElementById(labId);
+    if (!lab) return;
+    const body = lab.querySelector('.lab-body');
+    if (!body) return;
+
+    const scenario   = body.querySelector('.scenario-block');
+    const objectives = body.querySelector('.objectives');
+
+    const row   = document.createElement('div');
+    row.className = 'lab-intro-row';
+
+    const left  = document.createElement('div');
+    left.className = 'lab-intro-left';
+    if (scenario)   left.appendChild(scenario);
+    if (objectives) left.appendChild(objectives);
+
+    const right = document.createElement('div');
+    right.className = 'lab-intro-right';
+    right.innerHTML = `<img src="${img.src}" alt="${img.alt || ''}">`;
+
+    row.appendChild(left);
+    row.appendChild(right);
+    body.insertBefore(row, body.firstChild);
+  });
+}
+
+injectImageSlots();
+
+/* ── COPY BUTTONS ── */
+function copyToClipboard(text, btn, isBlock) {
+  navigator.clipboard.writeText(text).then(() => {
+    btn.classList.add('copied');
+    btn.textContent = isBlock ? '✓ copied' : '✓';
+    setTimeout(() => {
+      btn.classList.remove('copied');
+      btn.textContent = isBlock ? 'copy' : '⎘';
+    }, 1500);
+  });
+}
+
+function injectCopyButtons() {
+  // Command and JSON blocks — floating copy button on hover
+  document.querySelectorAll('.cmd, .json-block').forEach(cmd => {
+    const wrap = document.createElement('div');
+    wrap.className = 'cmd-wrap';
+    cmd.parentNode.insertBefore(wrap, cmd);
+    wrap.appendChild(cmd);
+    const btn = document.createElement('button');
+    btn.className = 'copy-btn';
+    btn.textContent = 'copy';
+    btn.addEventListener('click', () => copyToClipboard(cmd.textContent.trim(), btn, true));
+    wrap.appendChild(btn);
+  });
+
+  // Inline code values in substeps, step list items, and credentials table
+  document.querySelectorAll('.substeps li code, .steps li code, .creds-table td code, .capstone-section li code').forEach(code => {
+    if (code.closest('.callout') || code.closest('.cmd-wrap')) return;
+    const initialText = code.textContent.trim();
+    if (initialText.length < 2) return;
+    if (/^(Ctrl|Cmd|Alt)\+/.test(initialText)) return;
+    const btn = document.createElement('button');
+    btn.className = 'copy-inline';
+    btn.title = 'Copy';
+    btn.textContent = '⎘';
+    btn.addEventListener('click', e => {
+      e.stopPropagation();
+      copyToClipboard(code.textContent.trim(), btn, false);
+    });
+    code.after(btn);
+  });
+}
+
+injectCopyButtons();
+
+/* ── IMAGE EXPAND ── */
+function initImageZoom() {
+  document.querySelectorAll('.lab-intro-right img').forEach(img => {
+    img.addEventListener('click', () => {
+      const row   = img.closest('.lab-intro-row');
+      const right = img.closest('.lab-intro-right');
+
+      if (row.classList.contains('img-expanded')) {
+        // Phase 1: shrink image back to 300px while still in column layout
+        right.style.width = '300px';
+        right.addEventListener('transitionend', function done() {
+          right.removeEventListener('transitionend', done);
+          right.style.width = '';       // let CSS take over
+          row.classList.remove('img-expanded'); // reflow back to row
+        }, { once: true });
+      } else {
+        // Expand: content drops below instantly, image width animates to 100%
+        row.classList.add('img-expanded');
+      }
+    });
+  });
+}
+initImageZoom();
+
+document.querySelectorAll('.lab-nav-tab').forEach(tab => {
+  tab.addEventListener('click', (e) => {
+    e.preventDefault();
+    const id = tab.getAttribute('href').slice(1);
+    const target = document.getElementById(id);
+    if (target) {
+      target.open = true;
+      const top = target.getBoundingClientRect().top + window.scrollY - 100;
+      window.scrollTo({ top, behavior: 'smooth' });
+    }
+  });
+});
+
+/* ── LAB NOTES ── */
+const NOTES_KEY = 'edu202-lab-notes';
+function loadNotes() { try { return JSON.parse(localStorage.getItem(NOTES_KEY)) || {}; } catch { return {}; } }
+function saveNotes(n) { try { localStorage.setItem(NOTES_KEY, JSON.stringify(n)); } catch {} }
+
+function injectLabNotes() {
+  const saved = loadNotes();
+  document.querySelectorAll('details.lab').forEach(lab => {
+    const anchor = lab.querySelector('.objectives') || lab.querySelector('.scenario-block');
+    if (!anchor) return;
+    const objectives = anchor;
+    const block = document.createElement('div');
+    block.className = 'lab-notes';
+    const label = document.createElement('div');
+    label.className = 'lab-notes-label';
+    label.textContent = 'NOTES';
+    const ta = document.createElement('textarea');
+    ta.className = 'lab-notes-input';
+    ta.placeholder = 'Add your notes here…';
+    ta.rows = 2;
+    ta.value = saved[lab.id] || '';
+    ta.addEventListener('input', () => {
+      const n = loadNotes(); n[lab.id] = ta.value; saveNotes(n);
+    });
+    block.appendChild(label);
+    block.appendChild(ta);
+    objectives.after(block);
+  });
+}
+
+injectLabNotes();
+
+/* ── CONFIG FIELD COPY ── */
+function copyConfigField(inputId, btn) {
+  const val = document.getElementById(inputId).value.trim();
+  if (!val) return;
+  navigator.clipboard.writeText(val).then(() => {
+    btn.classList.add('copied'); btn.textContent = '✓';
+    setTimeout(() => { btn.classList.remove('copied'); btn.textContent = '⎘'; }, 1500);
+  });
+}
+
+function copyDerived(elId, btn) {
+  const val = document.getElementById(elId).textContent.trim();
+  if (!val || val.startsWith('<')) return;
+  navigator.clipboard.writeText(val).then(() => {
+    btn.classList.add('copied'); btn.textContent = '✓';
+    setTimeout(() => { btn.classList.remove('copied'); btn.textContent = '⎘'; }, 1500);
+  });
+}
+
+/* ── LAB QUESTIONS ── */
+const Q_STORE = 'edu202-questions';
+const LAB_LABELS = {
+  lab1:  'Lab 1 — Connect to the Virtual Lab',
+  lab2:  'Lab 2 — Create ZIdentity User & Verify Service Entitlement',
+  lab3:  'Lab 3 — Browser Access for 3rd Parties (HVAC)',
+  lab4:  'Lab 4 — Configure Log Streaming',
+  lab5:  'Lab 5 — Configure & Examine Firewall Policies',
+  lab6:  'Lab 6 — SSL Inspection Policy',
+  lab7:  'Lab 7 — Sandbox File Inspection',
+  lab8:  'Lab 8 — Browser Isolation',
+  lab9:  'Lab 9 — Deception-Based Active Defense',
+  lab10: 'Lab 10 — Block CCN in Documents (DLP)',
+  lab11: 'Lab 11 — Manage Incidents with ZWA',
+  lab12: 'Lab 12 — Risk360 (MITRE ATT&CK / NIST CSF)',
+  lab13: 'Lab 13 — Configuring Cloud Application Monitoring (ZDX)',
+  lab14: 'Lab 14 — ZDX Alerts & Diagnostics',
+  lab15: 'Lab 15 — OneAPI',
+  lab16: 'Capstone — Apply Best Practices Across All Domains',
+};
+
+function loadQs() { try { return JSON.parse(localStorage.getItem(Q_STORE)) || {}; } catch { return {}; } }
+function saveQs(q) { try { localStorage.setItem(Q_STORE, JSON.stringify(q)); } catch {} }
+function escHtml(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+function updateQCount(labId, text) {
+  const el = document.getElementById('q-count-' + labId);
+  if (!el) return;
+  const n = text.trim() ? text.trim().split('\n').filter(l => l.trim()).length : 0;
+  el.textContent = n > 0 ? n + (n === 1 ? ' Q' : ' Qs') : '';
+}
+
+function renderAllQs() {
+  const list  = document.getElementById('all-questions-list');
+  const empty = document.getElementById('all-questions-empty');
+  const total = document.getElementById('all-questions-total');
+  if (!list) return;
+  const q = loadQs();
+  let html = '', hasAny = false, count = 0;
+  for (let i = 1; i <= 16; i++) {
+    const id = 'lab' + i, text = (q[id] || '').trim();
+    if (!text) continue;
+    hasAny = true; count++;
+    html += `<div class="all-questions-entry"><div class="all-questions-lab-label">${LAB_LABELS[id]}</div><div class="all-questions-text">${escHtml(text)}</div></div>`;
+  }
+  list.innerHTML = html;
+  if (empty) empty.style.display = hasAny ? 'none' : '';
+  if (total) total.textContent = count > 0 ? count + (count === 1 ? ' lab' : ' labs') : '';
+}
+
+function initQs() {
+  const q = loadQs();
+  document.querySelectorAll('.lab-questions-input').forEach(ta => {
+    const labId = ta.id.replace('q-input-', '');
+    ta.value = q[labId] || '';
+    updateQCount(labId, ta.value);
+    ta.addEventListener('input', () => {
+      const cur = loadQs(); cur[labId] = ta.value;
+      saveQs(cur); updateQCount(labId, ta.value); renderAllQs();
+    });
+  });
+  renderAllQs();
+}
+
+initQs();
+</script>
+
+</body>
+</html>

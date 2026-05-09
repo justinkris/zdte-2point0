@@ -1,0 +1,3392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EDU-200 — Hands-on Lab Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;0,700;1,400&family=Epilogue:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   ZDTE Lab Guide — Embedded Stylesheet (from template.css)
+   ============================================================ */
+:root {
+  --cream: #fef9f0;
+  --cream-dark: #f5eddb;
+  --ink: #1a1209;
+  --ink-soft: #5a4a35;
+  --ink-muted: #8a7660;
+  --orange: #ff6b35;
+  --orange-light: #fff3ec;
+  --orange-border: #ffd5c0;
+  --amber-light: #fffbe6;
+  --green: #3a7d44;
+  --green-light: #edf7ee;
+  --green-border: #b2dfb4;
+  --purple: #5c35cc;
+  --purple-light: #ece8ff;
+  --purple-border: #c8bbff;
+  --blue-light: #e8f0fb;
+  --blue-border: #b3ccf0;
+  --blue: #1a6bcc;
+  --red-light: #fce8e8;
+  --red-border: #f7c1c1;
+  --red: #a32d2d;
+  --border: #ede5d8;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Epilogue', sans-serif; background: var(--cream); color: var(--ink); min-height: 100vh; }
+
+/* ── HEADER ── */
+header {
+  padding: 40px 60px 28px;
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: flex-start; justify-content: space-between;
+  gap: 32px; background: var(--cream);
+}
+.header-left { flex: 1; }
+.day-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: var(--ink); color: var(--cream);
+  padding: 5px 14px; border-radius: 20px;
+  font-size: 11px; letter-spacing: 0.1em; margin-bottom: 14px;
+}
+.day-badge-dot { width: 5px; height: 5px; background: var(--orange); border-radius: 50%; }
+h1 { font-family: 'Fraunces', serif; font-size: 42px; font-weight: 700; line-height: 1.0; color: var(--ink); margin-bottom: 10px; }
+h1 em { font-style: italic; font-weight: 400; color: var(--orange); }
+.header-meta-row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-top: 14px; }
+.tag { padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 500; border: 1px solid; display: inline-block; }
+.tag-zia    { background: var(--blue-light);   color: var(--blue);   border-color: var(--blue-border); }
+.tag-zpa    { background: var(--green-light);  color: var(--green);  border-color: var(--green-border); }
+.tag-zdx    { background: var(--purple-light); color: var(--purple); border-color: var(--purple-border); }
+.tag-arch   { background: var(--amber-light);  color: #a07c00;       border-color: #ffe680; }
+.tag-weight { background: var(--orange-light); color: #cc4a18;       border-color: var(--orange-border); }
+
+/* ── CONFIG PANEL (sticky) ── */
+.config-panel {
+  background: var(--ink); color: var(--cream);
+  padding: 0 60px;
+  position: sticky; top: 0; z-index: 200;
+  border-bottom: 2px solid var(--orange);
+  box-shadow: 0 4px 12px rgba(26,18,9,0.18);
+}
+.config-toggle-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 10px 0; cursor: pointer; user-select: none;
+}
+.config-toggle-title {
+  font-size: 10px; letter-spacing: 0.16em; color: var(--orange);
+  font-weight: 600; text-transform: uppercase;
+}
+.config-toggle-summary {
+  font-size: 11px; color: #b8a18a; margin-left: 16px;
+  font-family: 'JetBrains Mono', monospace;
+}
+.config-toggle-btn {
+  background: none; border: 1px solid #3a3020; border-radius: 6px;
+  color: #7a6a55; font-size: 11px; padding: 3px 10px; cursor: pointer;
+  font-family: 'Epilogue', sans-serif; letter-spacing: 0.06em;
+  transition: color 0.15s, border-color 0.15s;
+  display: flex; align-items: center; gap: 5px;
+}
+.config-toggle-btn:hover { color: var(--orange); border-color: var(--orange); }
+.config-toggle-btn .chevron { transition: transform 0.25s ease; display: inline-block; }
+.config-panel.collapsed .config-toggle-btn .chevron { transform: rotate(180deg); }
+.config-body {
+  overflow: hidden;
+  max-height: 300px;
+  transition: max-height 0.3s ease, opacity 0.25s ease, padding 0.25s ease;
+  opacity: 1;
+  padding-bottom: 18px;
+}
+.config-panel.collapsed .config-body {
+  max-height: 0;
+  opacity: 0;
+  padding-bottom: 0;
+}
+.config-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 14px;
+  align-items: end;
+}
+.config-field { display: flex; flex-direction: column; gap: 6px; }
+.config-field label {
+  font-size: 10px; letter-spacing: 0.14em; color: var(--orange);
+  font-weight: 600; text-transform: uppercase;
+}
+.config-field input {
+  background: #2a2010; color: var(--cream);
+  border: 1px solid #3a3020; border-radius: 8px;
+  padding: 9px 12px; font-size: 13px;
+  font-family: 'JetBrains Mono', monospace;
+  transition: border-color 0.15s, background 0.15s;
+}
+.config-field input:focus {
+  outline: none; border-color: var(--orange);
+  background: #1f1608;
+}
+.config-field input::placeholder { color: #7a6a55; font-style: italic; }
+.config-derived {
+  display: flex; flex-wrap: wrap; gap: 16px;
+  margin-top: 12px; padding-top: 12px;
+  border-top: 1px solid #2a2010;
+  font-size: 11px; color: #b8a18a;
+}
+.config-derived span { display: inline-flex; gap: 6px; align-items: center; }
+.config-derived strong { color: var(--orange); font-weight: 500; letter-spacing: 0.04em; }
+.config-derived code {
+  background: #2a2010; color: var(--cream);
+  padding: 2px 8px; border-radius: 4px;
+  font-family: 'JetBrains Mono', monospace; font-size: 11px;
+}
+.config-actions { display: flex; gap: 8px; }
+.config-btn {
+  background: var(--orange); color: var(--ink);
+  border: none; border-radius: 8px;
+  padding: 9px 14px; font-size: 11px; font-weight: 600;
+  letter-spacing: 0.06em; cursor: pointer;
+  font-family: 'Epilogue', sans-serif;
+  transition: background 0.15s;
+}
+.config-btn:hover { background: #ff8a5c; }
+.config-btn.secondary { background: #3a3020; color: var(--cream); }
+.config-btn.secondary:hover { background: #4a4030; }
+
+/* ── VARIABLES (dynamic placeholders) ── */
+.var {
+  background: var(--orange-light);
+  color: #cc4a18;
+  border: 1px dashed var(--orange-border);
+  padding: 1px 6px; border-radius: 4px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.92em; font-weight: 500;
+}
+.var.filled {
+  background: var(--green-light);
+  color: var(--green);
+  border: 1px solid var(--green-border);
+}
+
+/* ── LAB NAV ── */
+.lab-nav {
+  padding: 12px 60px;
+  background: var(--cream-dark);
+  border-bottom: 1px solid var(--border);
+  display: flex; gap: 6px; overflow-x: auto;
+  position: sticky; top: 0; z-index: 100;
+}
+.lab-nav-tab {
+  padding: 8px 14px; font-size: 11px; font-weight: 600;
+  color: var(--ink-soft); letter-spacing: 0.06em;
+  border-radius: 16px; cursor: pointer; white-space: nowrap;
+  background: var(--cream); border: 1px solid var(--border);
+  text-decoration: none; transition: all 0.15s;
+}
+.lab-nav-tab:hover { background: var(--orange-light); border-color: var(--orange-border); color: var(--orange); }
+.lab-nav-tab.lab-nav-done { background: var(--purple-light); border-color: var(--purple-border); color: var(--purple); }
+.lab-nav-tab.lab-nav-done::after { content: ' ✓'; font-size: 10px; }
+
+/* ── PROGRESS RIBBON ── */
+.progress-ribbon {
+  background: var(--cream-dark); border-bottom: 1px solid var(--border);
+  padding: 10px 60px; display: flex; align-items: center; gap: 14px;
+  position: sticky; top: 0; z-index: 50;
+}
+.progress-label { font-size: 10px; letter-spacing: 0.14em; color: var(--ink-muted); font-weight: 600; white-space: nowrap; }
+.progress-count { font-size: 13px; font-weight: 700; color: var(--ink); white-space: nowrap; }
+.progress-count span { color: var(--orange); }
+.progress-track { flex: 1; background: var(--border); border-radius: 8px; height: 8px; overflow: hidden; min-width: 60px; }
+.progress-fill { height: 100%; background: var(--orange); border-radius: 8px; transition: width 0.4s ease; width: 0%; }
+.progress-fill.all-done { background: var(--purple); }
+.progress-tasks { font-size: 11px; color: var(--ink-muted); white-space: nowrap; }
+
+/* ── LAB CHECKBOX (injected into summary) ── */
+.lab-check-wrap { display: flex; align-items: center; margin-right: 2px; flex-shrink: 0; }
+.lab-check {
+  appearance: none; -webkit-appearance: none;
+  width: 22px; height: 22px; border-radius: 6px;
+  border: 2px solid #3a3020; background: transparent;
+  cursor: pointer; position: relative; flex-shrink: 0;
+  transition: background 0.15s, border-color 0.15s;
+}
+.lab[open] > summary .lab-check { border-color: #7a6a55; }
+.lab-check:checked { background: transparent; border-color: var(--green); }
+.lab-check:checked::after {
+  content: '✓'; position: absolute; top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  color: var(--green); font-size: 12px; font-weight: 700; line-height: 1;
+}
+.lab.lab-done:not([open]) > summary .lab-num { background: var(--ink); }
+
+/* ── OBJECTIVE CHECKBOXES (injected into .objectives li) ── */
+.objectives li { padding-left: 30px; }
+.objectives li::before { content: none; }
+.obj-check {
+  appearance: none; -webkit-appearance: none;
+  width: 16px; height: 16px; border-radius: 4px;
+  border: 1.5px solid var(--border); background: var(--cream);
+  cursor: pointer; position: absolute; left: 0; top: 4px; flex-shrink: 0;
+  transition: border-color 0.15s;
+}
+.obj-check:checked { background: transparent; border-color: var(--green); }
+.obj-check:checked::after {
+  content: '✓'; position: absolute; top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  color: var(--green); font-size: 9px; font-weight: 700; line-height: 1;
+}
+.objectives li.obj-done {
+  background: #f0faf1; border-radius: 6px;
+  color: var(--ink-soft) !important; text-decoration: none;
+  padding-right: 6px;
+}
+
+/* ── MAIN ── */
+main { padding: 36px 60px 60px; max-width: 1200px; margin: 0 auto; }
+
+/* ── INTRO BLOCK ── */
+.intro-block {
+  background: var(--cream-dark);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 22px 26px;
+  margin-bottom: 28px;
+}
+.intro-block h2 { font-family: 'Fraunces', serif; font-size: 22px; margin-bottom: 12px; color: var(--ink); }
+.intro-block p { font-size: 13px; color: var(--ink-soft); line-height: 1.7; margin-bottom: 8px; }
+
+/* ── CREDS TABLE ── */
+.creds-table { width: 100%; border-collapse: collapse; font-size: 12px; margin: 12px 0 4px; background: var(--cream); border-radius: 10px; overflow: hidden; }
+.creds-table th { background: var(--ink); color: var(--cream); padding: 8px 12px; text-align: left; font-weight: 500; font-size: 10px; letter-spacing: 0.08em; }
+.creds-table td { padding: 8px 12px; border-bottom: 1px solid var(--border); color: var(--ink-soft); }
+.creds-table tr:last-child td { border-bottom: none; }
+.creds-table code { font-size: 11px; }
+
+/* ── LAB (top-level details) ── */
+.lab {
+  background: var(--cream);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  margin-bottom: 14px;
+  overflow: hidden;
+}
+.lab > summary {
+  list-style: none;
+  padding: 18px 24px;
+  cursor: pointer;
+  display: flex; align-items: center; gap: 16px;
+  background: var(--cream);
+  transition: background 0.15s;
+}
+.lab > summary::-webkit-details-marker { display: none; }
+.lab > summary:hover { background: var(--orange-light); }
+.lab[open] > summary { background: var(--ink); color: var(--cream); border-bottom: 1px solid var(--border); }
+.lab-num {
+  flex-shrink: 0;
+  width: 44px; height: 44px;
+  border-radius: 10px;
+  background: var(--ink); color: var(--orange);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Fraunces', serif; font-weight: 700; font-size: 17px;
+}
+.lab[open] > summary .lab-num { background: var(--orange); color: var(--ink); }
+.lab-title { flex: 1; }
+.lab-title-name { font-family: 'Fraunces', serif; font-size: 18px; font-weight: 600; color: inherit; line-height: 1.3; }
+.lab-title-meta { font-size: 11px; color: var(--ink-muted); letter-spacing: 0.06em; margin-top: 3px; }
+.lab[open] > summary .lab-title-meta { color: #b8a18a; }
+.lab-chevron {
+  flex-shrink: 0; font-size: 14px; color: var(--ink-muted);
+  transition: transform 0.2s;
+}
+.lab[open] > summary .lab-chevron { transform: rotate(90deg); color: var(--orange); }
+.lab-body { padding: 22px 26px 26px; }
+
+/* ── SCENARIO BLOCK ── */
+.scenario-block {
+  background: var(--orange-light);
+  border-left: 3px solid var(--orange);
+  padding: 14px 18px;
+  border-radius: 0 10px 10px 0;
+  margin-bottom: 16px;
+}
+.scenario-block-label {
+  font-size: 10px; font-weight: 700; letter-spacing: 0.14em;
+  color: var(--orange); margin-bottom: 6px;
+}
+.scenario-block-text { font-size: 13px; color: #7a3010; line-height: 1.7; }
+
+/* ── OBJECTIVES ── */
+.objectives { margin-bottom: 16px; }
+.objectives-label { font-size: 10px; font-weight: 700; letter-spacing: 0.14em; color: var(--ink-muted); margin-bottom: 8px; }
+.objectives ul { list-style: none; padding-left: 0; }
+.objectives li {
+  font-size: 13px; color: var(--ink-soft);
+  padding: 4px 0 4px 22px; position: relative; line-height: 1.6;
+}
+.objectives li::before {
+  content: '✓'; position: absolute; left: 0;
+  color: var(--green); font-weight: 700;
+}
+.lab-time {
+  display: inline-block;
+  background: var(--cream-dark);
+  color: var(--ink-soft);
+  font-size: 11px; padding: 4px 10px;
+  border-radius: 12px; margin-bottom: 18px;
+  border: 1px solid var(--border);
+}
+.lab-time::before { content: '⏱'; margin-right: 5px; }
+
+/* ── TASK (nested details) ── */
+.task {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  margin-bottom: 10px;
+  overflow: hidden;
+}
+.task > summary {
+  list-style: none;
+  padding: 12px 16px;
+  cursor: pointer;
+  display: flex; align-items: center; gap: 12px;
+  transition: background 0.15s;
+}
+.task > summary::-webkit-details-marker { display: none; }
+.task > summary:hover { background: var(--cream-dark); }
+.task[open] > summary { background: var(--cream-dark); border-bottom: 1px solid var(--border); }
+.task-num {
+  flex-shrink: 0;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; font-weight: 600;
+  color: var(--orange); background: var(--orange-light);
+  padding: 3px 8px; border-radius: 5px;
+  border: 1px solid var(--orange-border);
+}
+.task-title { flex: 1; font-size: 14px; font-weight: 500; color: var(--ink); }
+.task-chevron {
+  flex-shrink: 0; font-size: 12px; color: var(--ink-muted);
+  transition: transform 0.2s;
+}
+.task[open] > summary .task-chevron { transform: rotate(90deg); color: var(--orange); }
+.task-body { padding: 16px 18px 18px; }
+.task-desc {
+  font-size: 13px; color: var(--ink-soft);
+  line-height: 1.7; margin-bottom: 12px; font-style: italic;
+}
+
+/* ── STEPS ── */
+.steps { list-style: none; counter-reset: step; }
+.steps > li {
+  counter-increment: step;
+  position: relative;
+  padding: 10px 0 10px 38px;
+  font-size: 13px; color: var(--ink);
+  line-height: 1.7;
+  border-bottom: 1px dashed var(--border);
+}
+.steps > li:last-child { border-bottom: none; }
+.steps > li::before {
+  content: counter(step);
+  position: absolute; left: 0; top: 10px;
+  width: 26px; height: 26px;
+  border-radius: 50%;
+  background: var(--ink); color: var(--orange);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 700;
+  font-family: 'JetBrains Mono', monospace;
+}
+.steps ul, .steps ol {
+  margin-top: 6px; padding-left: 22px;
+  list-style: disc; color: var(--ink-soft);
+}
+.steps ul ul, .steps ol ul { list-style: circle; }
+.steps li li { padding: 3px 0; font-size: 13px; border: none; }
+.steps li li::before { content: none; }
+.steps strong { color: var(--ink); font-weight: 600; }
+
+/* sub-steps that should NOT have a circle number */
+.substeps { list-style: disc; padding-left: 22px; margin-top: 6px; color: var(--ink-soft); }
+.substeps li { font-size: 13px; padding: 3px 0; line-height: 1.6; }
+.substeps ul { list-style: circle; padding-left: 22px; margin-top: 4px; }
+
+/* ── INLINE CODE & PATHS ── */
+code {
+  background: var(--cream-dark);
+  padding: 1px 6px; border-radius: 4px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.88em; color: var(--ink);
+  border: 1px solid var(--border);
+}
+.path {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.9em; color: var(--blue);
+  background: var(--blue-light);
+  padding: 1px 6px; border-radius: 4px;
+  border: 1px solid var(--blue-border);
+}
+
+/* ── COMMAND BOX ── */
+.cmd {
+  background: var(--ink); color: #d9cfbf;
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px; line-height: 1.7;
+  margin: 8px 0;
+  display: block;
+  border-left: 3px solid var(--orange);
+  overflow-x: auto;
+}
+.cmd::before {
+  content: '$'; color: var(--orange); margin-right: 8px; font-weight: 700;
+}
+.cmd.no-prompt::before { content: ''; margin: 0; }
+
+/* ── CALLOUTS ── */
+.callout { border-radius: 10px; padding: 12px 16px; margin: 10px 0; border: 1px solid; font-size: 12px; line-height: 1.7; }
+.callout-header { display: flex; align-items: center; gap: 6px; font-size: 10px; font-weight: 700; letter-spacing: 0.12em; margin-bottom: 6px; }
+.callout-icon { width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; flex-shrink: 0; }
+.callout-note { background: var(--amber-light); border-color: #ffe680; color: #7a5c00; }
+.callout-note .callout-header { color: #a07c00; }
+.callout-note .callout-icon  { background: #ffe680; color: #a07c00; }
+.callout-tip { background: var(--blue-light); border-color: var(--blue-border); color: #153d7a; }
+.callout-tip .callout-header { color: var(--blue); }
+.callout-tip .callout-icon  { background: var(--blue-border); color: var(--blue); }
+.callout-warn { background: var(--red-light); border-color: var(--red-border); color: #7a1f1f; }
+.callout-warn .callout-header { color: var(--red); }
+.callout-warn .callout-icon  { background: var(--red-border); color: var(--red); }
+
+/* ── COMPARE TABLE ── */
+.compare-table { width: 100%; border-collapse: collapse; font-size: 12px; margin: 10px 0; }
+.compare-table th { background: var(--ink); color: var(--cream); padding: 8px 12px; text-align: left; font-weight: 500; font-size: 10px; letter-spacing: 0.08em; }
+.compare-table th:first-child { border-radius: 8px 0 0 0; }
+.compare-table th:last-child { border-radius: 0 8px 0 0; }
+.compare-table td { padding: 8px 12px; border-bottom: 1px solid var(--border); color: var(--ink-soft); vertical-align: top; line-height: 1.6; }
+.compare-table tr:nth-child(even) td { background: var(--cream-dark); }
+
+/* TAKEAWAY */
+.lab-takeaway { margin-top: 18px; padding: 12px 18px; background: var(--cream-dark); border-radius: 8px; border-left: 3px solid var(--ink-muted); }
+.lab-takeaway-label { font-size: 10px; font-weight: 700; letter-spacing: 0.14em; color: var(--ink-muted); margin-bottom: 6px; }
+.lab-takeaway-text { font-size: 13px; color: var(--ink-soft); line-height: 1.7; }
+
+/* LAB NOTES */
+.lab-notes { margin-bottom: 16px; }
+.lab-notes-label { font-size: 10px; font-weight: 700; letter-spacing: 0.14em; color: var(--ink-muted); margin-bottom: 6px; }
+.lab-notes-input { width: 100%; min-height: 62px; border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; font-family: 'Epilogue', sans-serif; font-size: 13px; color: var(--ink-soft); background: var(--cream); resize: vertical; line-height: 1.6; transition: border-color 0.15s; }
+.lab-notes-input:focus { outline: none; border-color: var(--orange); }
+.lab-notes-input::placeholder { color: var(--ink-muted); font-style: italic; }
+
+/* LAB QUESTIONS */
+.lab-questions { border-top: 1px dashed var(--border); margin-top: 16px; }
+.lab-questions > summary { list-style: none; padding: 10px 0 6px; cursor: pointer; display: flex; align-items: center; gap: 8px; font-size: 10px; font-weight: 700; letter-spacing: 0.12em; color: var(--ink-muted); user-select: none; }
+.lab-questions > summary::-webkit-details-marker { display: none; }
+.lab-questions > summary:hover { color: var(--orange); }
+.lab-questions-count { background: var(--purple-light); color: var(--purple); border: 1px solid var(--purple-border); border-radius: 10px; padding: 1px 7px; font-size: 10px; font-weight: 700; margin-left: 4px; }
+.lab-questions-count:empty { display: none; }
+.lab-questions-chevron { margin-left: auto; font-size: 11px; transition: transform 0.2s; }
+.lab-questions[open] > summary .lab-questions-chevron { transform: rotate(90deg); }
+.lab-questions-body { padding: 8px 0 2px; }
+.lab-questions-input { width: 100%; min-height: 80px; border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; font-family: 'Epilogue', sans-serif; font-size: 13px; color: var(--ink-soft); background: var(--cream); resize: vertical; line-height: 1.6; transition: border-color 0.15s; }
+.lab-questions-input:focus { outline: none; border-color: var(--orange); }
+.lab-questions-input::placeholder { color: var(--ink-muted); font-style: italic; }
+
+/* ALL QUESTIONS PANEL */
+.all-questions-panel { background: var(--cream-dark); border: 1px solid var(--border); border-radius: 14px; margin-bottom: 28px; overflow: hidden; }
+.all-questions-toggle { list-style: none; padding: 18px 26px; cursor: pointer; display: flex; align-items: center; gap: 10px; user-select: none; transition: background 0.15s; }
+.all-questions-toggle::-webkit-details-marker { display: none; }
+.all-questions-toggle:hover { background: var(--orange-light); }
+.all-questions-title { font-family: 'Fraunces', serif; font-size: 20px; font-weight: 600; flex: 1; }
+.all-questions-title em { font-style: italic; font-weight: 400; color: var(--orange); }
+.all-questions-total { background: var(--purple-light); color: var(--purple); border: 1px solid var(--purple-border); border-radius: 10px; padding: 2px 9px; font-size: 11px; font-weight: 700; }
+.all-questions-total:empty { display: none; }
+.all-questions-chevron { font-size: 16px; color: var(--ink-muted); transition: transform 0.2s; }
+.all-questions-panel[open] .all-questions-chevron { transform: rotate(90deg); }
+.all-questions-body { padding: 16px 26px 20px; border-top: 1px solid var(--border); }
+.all-questions-empty { font-size: 13px; color: var(--ink-muted); font-style: italic; }
+.all-questions-entry { margin-bottom: 14px; padding-bottom: 14px; border-bottom: 1px dashed var(--border); }
+.all-questions-entry:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+.all-questions-lab-label { font-size: 10px; font-weight: 700; letter-spacing: 0.12em; color: var(--orange); margin-bottom: 5px; }
+.all-questions-text { font-size: 13px; color: var(--ink-soft); line-height: 1.7; white-space: pre-wrap; }
+
+.config-field-row { display: flex; gap: 6px; align-items: center; }
+.config-field-row input { flex: 1; min-width: 0; }
+.config-copy-btn { flex-shrink: 0; background: #2a2010; border: 1px solid #5a4a35; color: #7a6a55; border-radius: 6px; padding: 0 9px; font-size: 11px; cursor: pointer; font-family: 'JetBrains Mono', monospace; height: 38px; transition: color 0.15s, border-color 0.15s, background 0.15s; }
+.config-copy-btn:hover { color: var(--orange); border-color: var(--orange); background: #3a3020; }
+.config-copy-btn.copied { background: var(--green); color: #fff !important; border-color: var(--green); }
+
+/* ── EXPAND ALL CONTROLS ── */
+.expand-controls {
+  display: flex; gap: 8px;
+  margin-bottom: 14px;
+  justify-content: flex-end;
+}
+.expand-btn {
+  background: var(--cream-dark);
+  border: 1px solid var(--border);
+  color: var(--ink-soft);
+  padding: 6px 12px; border-radius: 16px;
+  font-size: 11px; font-weight: 500; letter-spacing: 0.04em;
+  cursor: pointer; font-family: 'Epilogue', sans-serif;
+  transition: all 0.15s;
+}
+.expand-btn:hover { background: var(--orange-light); color: var(--orange); border-color: var(--orange-border); }
+
+/* ── FOOTER ── */
+footer { padding: 20px 60px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; background: var(--cream-dark); }
+.footer-left { font-family: 'Fraunces', serif; font-size: 16px; font-weight: 700; }
+.footer-left span { color: var(--orange); }
+.footer-right { font-size: 11px; color: var(--ink-muted); letter-spacing: 0.06em; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 900px) {
+  header { padding: 24px 20px 20px; flex-direction: column; }
+  .config-panel { padding: 0 20px; }
+  .lab-nav { padding: 10px 20px; }
+  main { padding: 24px 20px 40px; }
+  footer { padding: 20px; flex-direction: column; gap: 8px; text-align: center; }
+  h1 { font-size: 32px; }
+}
+
+/* Print friendly */
+@media print {
+  .config-panel, .lab-nav, .expand-controls { display: none; }
+  details { open: true; }
+  details > summary { background: #f5eddb !important; }
+  .lab, .task { break-inside: avoid; }
+}
+
+/* ── COPY BUTTONS ── */
+.cmd-wrap { position: relative; display: block; margin: 8px 0; }
+.cmd-wrap .cmd { margin: 0; }
+.copy-btn {
+  position: absolute; top: 8px; right: 8px;
+  background: #2a2010; border: 1px solid #5a4a35; color: #7a6a55;
+  border-radius: 5px; padding: 2px 8px; font-size: 10px; font-weight: 600;
+  cursor: pointer; font-family: 'Epilogue', sans-serif; letter-spacing: 0.08em;
+  opacity: 0; transition: opacity 0.15s, background 0.15s, color 0.15s; line-height: 1.6;
+}
+.cmd-wrap:hover .copy-btn { opacity: 1; }
+.copy-btn:hover { background: #3a3020; color: var(--orange); border-color: var(--orange); }
+.copy-btn.copied { background: var(--green); color: #fff !important; border-color: var(--green-border); opacity: 1 !important; }
+.copy-inline {
+  display: inline-flex; align-items: center;
+  background: none; border: 1px solid transparent; color: var(--ink-muted);
+  font-size: 9px; cursor: pointer; padding: 0 3px; margin-left: 2px;
+  vertical-align: middle; border-radius: 3px; line-height: 1.4;
+  font-family: 'JetBrains Mono', monospace;
+  opacity: 0.4; transition: opacity 0.15s, color 0.15s, border-color 0.15s, background 0.15s;
+}
+.copy-inline:hover { opacity: 1; color: var(--orange); border-color: var(--orange-border); background: var(--orange-light); }
+.copy-inline.copied { color: var(--green) !important; border-color: var(--green-border) !important; background: var(--green-light) !important; opacity: 1 !important; }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════ HEADER ═══════════════ -->
+<header>
+  <div class="header-left">
+    <div class="day-badge">
+      <span class="day-badge-dot"></span>
+      EDU-200 · ZSCALER FOR USERS — ADMINISTRATOR
+    </div>
+    <h1>Hands-on <em>Lab Guide</em></h1>
+    <div class="header-meta-row">
+      <span class="tag tag-zia">ZIA</span>
+      <span class="tag tag-zpa">ZPA</span>
+      <span class="tag tag-zdx">ZDX</span>
+      <span class="tag tag-arch">ZIdentity</span>
+      <span class="tag tag-weight">16 Labs</span>
+    </div>
+  </div>
+</header>
+
+<!-- ═══════════════ CONFIG PANEL ═══════════════ -->
+<div class="config-panel" id="config-panel">
+  <div class="config-toggle-row" onclick="toggleConfig()">
+    <div style="display:flex;align-items:center;gap:0;">
+      <span class="config-toggle-title">⚙ Lab Configuration</span>
+      <span class="config-toggle-summary" id="config-toggle-summary"></span>
+    </div>
+    <button class="config-toggle-btn" id="config-toggle-btn" onclick="event.stopPropagation();toggleConfig()">
+      <span class="chevron">▲</span> Collapse
+    </button>
+  </div>
+  <div class="config-body" id="config-body">
+  <div class="config-grid">
+    <div class="config-field">
+      <label for="fqdn-input">Student FQDN</label>
+      <div class="config-field-row">
+        <input type="text" id="fqdn-input" placeholder="zs9901.labtenant.com" autocomplete="off">
+        <button class="config-copy-btn" onclick="copyConfigField('fqdn-input', this)">⎘</button>
+      </div>
+    </div>
+    <div class="config-field">
+      <label for="pass-input">Session Password</label>
+      <div class="config-field-row">
+        <input type="text" id="pass-input" placeholder="(from Lab Access Instructions)" autocomplete="off">
+        <button class="config-copy-btn" onclick="copyConfigField('pass-input', this)">⎘</button>
+      </div>
+    </div>
+    <div class="config-field">
+      <label for="sdc-user-input">SDC Admin Username</label>
+      <div class="config-field-row">
+        <input type="text" id="sdc-user-input" placeholder="(from Lab Access Instructions)" autocomplete="off">
+        <button class="config-copy-btn" onclick="copyConfigField('sdc-user-input', this)">⎘</button>
+      </div>
+    </div>
+    <div class="config-field">
+      <label for="sdc-pass-input">SDC Password</label>
+      <div class="config-field-row">
+        <input type="text" id="sdc-pass-input" placeholder="(from Lab Access Instructions)" autocomplete="off">
+        <button class="config-copy-btn" onclick="copyConfigField('sdc-pass-input', this)">⎘</button>
+      </div>
+    </div>
+    <div class="config-actions">
+      <button class="config-btn" onclick="saveConfig()">Save</button>
+      <button class="config-btn secondary" onclick="clearConfig()">Clear</button>
+    </div>
+  </div>
+  <div class="config-derived" id="config-derived">
+    <span><strong>Student admin:</strong> <code id="d-student">student@&lt;Student FQDN&gt;</code></span>
+    <span><strong>Joe:</strong> <code id="d-joe">joe@&lt;Student FQDN&gt;</code></span>
+    <span><strong>Bev:</strong> <code id="d-bev">bev@&lt;Student FQDN&gt;</code></span>
+    <span><strong>Student ID:</strong> <code id="d-id">&lt;Student ID&gt;</code></span>
+  </div>
+  </div><!-- /config-body -->
+</div>
+
+<!-- ═══════════════ PROGRESS RIBBON ═══════════════ -->
+<div class="progress-ribbon">
+  <span class="progress-label">PROGRESS</span>
+  <span class="progress-count"><span id="prog-done">0</span>%</span>
+  <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
+  <span class="progress-tasks" id="prog-tasks">0 / 0 tasks</span>
+</div>
+
+<!-- ═══════════════ LAB NAV ═══════════════ -->
+<div class="lab-nav">
+  <a class="lab-nav-tab" href="#lab1">Lab 1</a>
+  <a class="lab-nav-tab" href="#lab2">Lab 2</a>
+  <a class="lab-nav-tab" href="#lab3">Lab 3</a>
+  <a class="lab-nav-tab" href="#lab4">Lab 4</a>
+  <a class="lab-nav-tab" href="#lab5">Lab 5</a>
+  <a class="lab-nav-tab" href="#lab6">Lab 6</a>
+  <a class="lab-nav-tab" href="#lab7">Lab 7</a>
+  <a class="lab-nav-tab" href="#lab8">Lab 8</a>
+  <a class="lab-nav-tab" href="#lab9">Lab 9</a>
+  <a class="lab-nav-tab" href="#lab10">Lab 10</a>
+  <a class="lab-nav-tab" href="#lab11">Lab 11</a>
+  <a class="lab-nav-tab" href="#lab12">Lab 12</a>
+  <a class="lab-nav-tab" href="#lab13">Lab 13</a>
+  <a class="lab-nav-tab" href="#lab14">Lab 14</a>
+  <a class="lab-nav-tab" href="#lab15">Lab 15</a>
+  <a class="lab-nav-tab" href="#lab16">Lab 16</a>
+</div>
+
+<main>
+
+<!-- ═══════════════ INTRO ═══════════════ -->
+<div class="intro-block">
+  <h2>About this lab guide</h2>
+  <p>By the end of these labs you will be able to: configure connectivity to the Zero Trust Exchange, configure access control policies to allow or deny traffic through the Zero Trust Exchange, and use the administration interfaces to interpret and analyze traffic patterns.</p>
+  <p><strong>Lab Topology:</strong> Windows Client PC (Corp:&nbsp;Client&nbsp;PC, joined to AD <code>patraining.safemarch.com</code>), Windows Server 2016 (Corp:&nbsp;Win&nbsp;Svr — DNS, AD, intranet hosting), and pre-deployed App Connector VM.</p>
+
+  <table class="creds-table">
+    <thead><tr><th>VM / User</th><th>Username</th><th>Password</th><th>IP / Notes</th></tr></thead>
+    <tbody>
+      <tr><td>Corp: Client PC</td><td><code>student</code></td><td><code>Admin-123!</code></td><td><code>192.168.1.1</code></td></tr>
+      <tr><td>Corp: Win Svr 2016</td><td><code>administrator</code></td><td><code>Admin-123!</code></td><td><code>10.0.0.0/24</code></td></tr>
+      <tr><td>Corp: App Connector</td><td><code>admin</code></td><td><code>zscaler</code></td><td><code>10.0.0.4</code> (RHEL 9.4)</td></tr>
+      <tr><td>Student admin</td><td><code class="d-username-student">student@&lt;Student FQDN&gt;</code></td><td>Session Password</td><td>Set on first login</td></tr>
+      <tr><td>Joe (Helpdesk L1)</td><td><code class="d-username-joe">joe@&lt;Student FQDN&gt;</code></td><td><code>Admin-123!</code></td><td>Created in Lab 2</td></tr>
+      <tr><td>Bev (IT Admin)</td><td><code class="d-username-bev">bev@&lt;Student FQDN&gt;</code></td><td><code>Admin-123!</code></td><td>Created in Lab 2</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<details class="all-questions-panel" id="all-questions-panel">
+  <summary class="all-questions-toggle">
+    <span class="all-questions-title">My <em>Questions</em></span>
+    <span class="all-questions-total" id="all-questions-total"></span>
+    <span class="all-questions-chevron">›</span>
+  </summary>
+  <div class="all-questions-body">
+    <p class="all-questions-empty" id="all-questions-empty">No questions yet — use the questions section at the end of each lab to add them.</p>
+    <div id="all-questions-list"></div>
+  </div>
+</details>
+
+<div class="expand-controls">
+  <button class="expand-btn" onclick="expandAll()">Expand all</button>
+  <button class="expand-btn" onclick="collapseAll()">Collapse all</button>
+</div>
+
+<!-- ═══════════════ LAB 1 ═══════════════ -->
+<details class="lab" id="lab1">
+  <summary>
+    <div class="lab-num">01</div>
+    <div class="lab-title">
+      <div class="lab-title-name">Connect to the Virtual Lab Environment</div>
+      <div class="lab-title-meta">⏱ 10 minutes · Skytap · Experience Center</div>
+    </div>
+    <div class="lab-chevron">›</div>
+  </summary>
+  <div class="lab-body">
+    <div class="scenario-block">
+      <div class="scenario-block-label">SCENARIO</div>
+      <div class="scenario-block-text">As the Zscaler administrator, you need to establish a functional, pre-configured environment (the Virtual Lab) that mirrors Labtenant's potential production setup, and access the Experience Center management console before configuration tasks.</div>
+    </div>
+    <div class="objectives">
+      <div class="objectives-label">OBJECTIVES</div>
+      <ul>
+        <li>Connect to Skytap and your lab virtual machines (VMs)</li>
+        <li>Familiarize yourself with the login options and clipboard copy/paste functions</li>
+      </ul>
+    </div>
+
+    <details class="task">
+      <summary>
+        <div class="task-num">1.1</div>
+        <div class="task-title">Verify Lab Access</div>
+        <div class="task-chevron">›</div>
+      </summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>Start and connect to your Skytap pod:
+            <ul class="substeps">
+              <li>Click the Skytap Portal URL provided in your access instructions</li>
+              <li>Ensure the checkbox is checked to select all VMs</li>
+              <li>If machines have not already started, click the Play button — all VMs will launch</li>
+            </ul>
+          </li>
+        </ol>
+        <div class="callout callout-note">
+          <div class="callout-header"><div class="callout-icon">★</div>NOTE</div>
+          VMs in the environment start in stages — the whole process takes a few minutes.
+        </div>
+      </div>
+    </details>
+
+    <details class="task">
+      <summary>
+        <div class="task-num">1.2</div>
+        <div class="task-title">Sign In to the Experience Center Landing Page</div>
+        <div class="task-chevron">›</div>
+      </summary>
+      <div class="task-body">
+        <div class="callout callout-tip">
+          <div class="callout-header"><div class="callout-icon">→</div>VARIABLE</div>
+          Throughout this guide, <span class="var var-fqdn">&lt;Student FQDN&gt;</span> represents the domain assigned to your tenant. e.g., if your admin username is <code class="d-username-student">student@&lt;Student FQDN&gt;</code>, your FQDN is <span class="var var-fqdn">&lt;Student FQDN&gt;</span>.
+        </div>
+        <ol class="steps">
+          <li>Login to <strong>Corp: Client PC</strong> as the local Student User:
+            <ul class="substeps">
+              <li>Launch <strong>Corp: Client PC</strong> from the Skytap portal</li>
+              <li>Click the <strong>Ctrl-Alt-Del</strong> icon in the Skytap Toolbar</li>
+              <li>Click the <strong>Credential (keys)</strong> icon in the Skytap Toolbar</li>
+              <li>Click <strong>Insert Credentials</strong> next to the password field for the <code>student</code> username</li>
+            </ul>
+          </li>
+          <li>In a browser, open the Experience Center Landing Page: <code>https://console.zscaler.com/</code>
+            <div class="callout callout-note">
+              <div class="callout-header"><div class="callout-icon">★</div>NOTE</div>
+              You will be redirected to the ZIdentity login page to validate your identity.
+            </div>
+          </li>
+          <li>Authenticate with your student admin account:
+            <ul class="substeps">
+              <li>Username: <code class="d-username-student">student@&lt;Student FQDN&gt;</code></li>
+              <li>Password: <span class="var var-pass">&lt;Session Password&gt;</span> (from Lab Access Instructions)</li>
+              <li>Click <strong>Sign in</strong></li>
+            </ul>
+          </li>
+          <li>You will be prompted to change your password upon successful authentication.</li>
+        </ol>
+      </div>
+    </details>
+
+    <details class="task">
+      <summary>
+        <div class="task-num">1.3</div>
+        <div class="task-title">Use the Lab Clipboard</div>
+        <div class="task-chevron">›</div>
+      </summary>
+      <div class="task-body">
+        <div class="task-desc">During the labs you will frequently copy commands, URLs, and configuration values from the lab guide into the VMs.</div>
+        <ol class="steps">
+          <li>Use the clipboard icon in the lab interface — Copy text from your host to the VM clipboard:
+            <ul class="substeps">
+              <li>Click the clipboard icon</li>
+              <li>Paste text into the <strong>Copy/paste</strong> field</li>
+            </ul>
+          </li>
+          <li>Paste in the VM — use <code>Ctrl+V</code> (or right-click &gt; Paste).</li>
+        </ol>
+        <div class="callout callout-warn">
+          <div class="callout-header"><div class="callout-icon">!</div>GOTCHA</div>
+          Even on a Mac, the VM is Windows — use <code>Ctrl+V</code> (not <code>Cmd+V</code>) inside the VM.
+        </div>
+      </div>
+    </details>
+    <div class="lab-takeaway">
+      <div class="lab-takeaway-label">WHY THIS MATTERS</div>
+      <p class="lab-takeaway-text">Connecting to the virtual lab environment correctly — including the clipboard trick — is the prerequisite that unlocks all subsequent labs. Engineers who understand the Skytap architecture and VM credential flow spend less time on access issues and more time learning the actual platform configuration steps that appear in production deployments.</p>
+    </div>
+    <details class="lab-questions" id="q-lab1">
+      <summary><span class="lab-questions-icon">?</span> MY QUESTIONS <span class="lab-questions-count" id="q-count-lab1"></span><span class="lab-questions-chevron">›</span></summary>
+      <div class="lab-questions-body"><textarea class="lab-questions-input" id="q-input-lab1" placeholder="Type any questions to follow up later…" rows="3"></textarea></div>
+    </details>
+  </div>
+</details>
+
+<!-- ═══════════════ LAB 2 ═══════════════ -->
+<details class="lab" id="lab2">
+  <summary>
+    <div class="lab-num">02</div>
+    <div class="lab-title">
+      <div class="lab-title-name">Configure User and Administrator Access Entitlements</div>
+      <div class="lab-title-meta">⏱ 40 minutes · ZIdentity · RBAC · Entitlements</div>
+    </div>
+    <div class="lab-chevron">›</div>
+  </summary>
+  <div class="lab-body">
+    <div class="scenario-block">
+      <div class="scenario-block-label">SCENARIO</div>
+      <div class="scenario-block-text">Onboard two users — Joe (Support / helpdesk) and Bev (IT / admin) — into the right departments and groups so they inherit the correct entitlements. Joe gets limited, read-only access (Tier 1 support); Bev gets full administrative access. Validate by logging in as each.</div>
+    </div>
+    <div class="objectives">
+      <div class="objectives-label">OBJECTIVES</div>
+      <ul>
+        <li>Create org structure (departments, groups)</li>
+        <li>Provision users so policies and entitlements apply correctly</li>
+        <li>Configure entitlements and confirm they apply to the right identity/group</li>
+        <li>Validate access via role-based UI restrictions and service status</li>
+      </ul>
+    </div>
+
+    <table class="compare-table">
+      <thead><tr><th>User</th><th>Department</th><th>User Group</th><th>Service Entitlement</th><th>Administrative Entitlement</th></tr></thead>
+      <tbody>
+        <tr><td>Joe</td><td>Support</td><td>Helpdesk L1</td><td>ZIA</td><td>ZIA (Read-only) · ZDX (Read-only)</td></tr>
+        <tr><td>Bev</td><td>IT</td><td>Zscaler Global Administrators (built-in)</td><td>—</td><td>ZIdentity, Workflow Automation, ZIA, ZPA, ZDX, ZCC, Cloud/Branch Connector, Business Insights</td></tr>
+      </tbody>
+    </table>
+
+    <details class="task">
+      <summary>
+        <div class="task-num">2.1</div>
+        <div class="task-title">Create Departments and User Groups</div>
+        <div class="task-chevron">›</div>
+      </summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>In the Zscaler Admin Console, select the <strong>Administration</strong> tab → <span class="path">Identity &gt; Departments</span></li>
+          <li>Create the <strong>Support</strong> department:
+            <ul class="substeps">
+              <li>Select <strong>Add Department</strong></li>
+              <li>Department Name: <code>Support</code></li>
+              <li>Description: <code>Support Department</code></li>
+              <li>Click <strong>Save</strong></li>
+            </ul>
+          </li>
+          <li>Create the <strong>IT</strong> department (same flow):
+            <ul class="substeps">
+              <li>Department Name: <code>IT</code></li>
+              <li>Description: <code>IT Department</code></li>
+            </ul>
+          </li>
+          <li>Confirm both departments appear in the list.</li>
+          <li>Create the <strong>Helpdesk L1</strong> user group:
+            <ul class="substeps">
+              <li><span class="path">Administration &gt; Identity &gt; User Groups</span></li>
+              <li>Click <strong>Add User Group</strong></li>
+              <li>User Group Name: <code>Helpdesk L1</code></li>
+              <li>Click <strong>Save</strong></li>
+            </ul>
+          </li>
+        </ol>
+      </div>
+    </details>
+
+    <details class="task">
+      <summary>
+        <div class="task-num">2.2</div>
+        <div class="task-title">Create Users (Joe and Bev)</div>
+        <div class="task-chevron">›</div>
+      </summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>Create User <strong>Joe</strong> — go to <span class="path">Users</span> &gt; <strong>Add User</strong>:
+            <ul class="substeps">
+              <li>Login ID: <code class="d-username-joe">joe@&lt;Student FQDN&gt;</code></li>
+              <li>Name: <code>Joe</code> &nbsp;·&nbsp; First Name: <code>Joe</code></li>
+              <li>Same As Login ID: <strong>Enabled</strong></li>
+              <li>Primary Email: <code class="d-username-joe">joe@&lt;Student FQDN&gt;</code></li>
+              <li>Department: <code>Support</code></li>
+              <li>Assign Groups → <code>Helpdesk L1</code></li>
+            </ul>
+          </li>
+          <li>Click the <strong>Security Settings</strong> tab and configure:
+            <ul class="substeps">
+              <li>Password option: <strong>Set By Administrator</strong></li>
+              <li>Password / Confirm: <code>Admin-123!</code></li>
+              <li>Prompt for Password change After Initial Login: <strong>Unchecked</strong></li>
+              <li>Multi-Factor Bypass — Skip Second Factor Authentication: <strong>Enabled</strong></li>
+              <li>Skip until: set as far out as allowed</li>
+            </ul>
+          </li>
+          <li>Navigate to <strong>Additional Attributes</strong> → INFORMATION:
+            <ul class="substeps">
+              <li><code>SyncZPA</code>: <code>Zscaler</code></li>
+            </ul>
+          </li>
+          <li>Click <strong>Save</strong>.
+            <div class="callout callout-note">
+              <div class="callout-header"><div class="callout-icon">★</div>NOTE</div>
+              Setting <code>SyncZPA</code> to <code>Zscaler</code> tells the lab environment to sync this user with ZPA, so later ZPA labs and lab-reset scripts work correctly.
+            </div>
+          </li>
+          <li>Create User <strong>Bev</strong> — repeat the flow with these values:
+            <ul class="substeps">
+              <li>Login ID / Email: <code class="d-username-bev">bev@&lt;Student FQDN&gt;</code></li>
+              <li>Name / First Name: <code>Bev</code></li>
+              <li>Department: <code>IT</code></li>
+              <li>Assign Groups: <strong>Zscaler Global Administrators</strong></li>
+              <li>Same security &amp; SyncZPA settings as Joe</li>
+            </ul>
+          </li>
+        </ol>
+        <div class="callout callout-warn">
+          <div class="callout-header"><div class="callout-icon">!</div>PRODUCTION REMINDER</div>
+          Bypassing MFA is for lab purposes only. Zscaler recommends MFA for all real users.
+        </div>
+      </div>
+    </details>
+
+    <details class="task">
+      <summary>
+        <div class="task-num">2.3</div>
+        <div class="task-title">Add Administrative and Service Entitlements</div>
+        <div class="task-chevron">›</div>
+      </summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>Assign Administrative Entitlement for <strong>ZIA</strong> (Helpdesk L1):
+            <ul class="substeps">
+              <li><span class="path">Administration &gt; Admin Management &gt; Role Based Access Control &gt; Administrative Entitlements</span></li>
+              <li>Click <strong>Zscaler Internet Access</strong></li>
+              <li>Click <strong>Assign Groups</strong> → check <strong>Helpdesk L1</strong></li>
+              <li>Role: <strong>Executive Insights App</strong> (predefined read-only)</li>
+              <li>Click <strong>Next</strong> &gt; <strong>Assign</strong></li>
+            </ul>
+          </li>
+          <li>Assign Administrative Entitlement for <strong>ZDX</strong> (Helpdesk L1):
+            <ul class="substeps">
+              <li>Back &gt; click <strong>Zscaler Digital Experience</strong></li>
+              <li>Assign Groups → <strong>Helpdesk L1</strong></li>
+              <li>Role: <strong>ZDX Read-only Admin</strong></li>
+              <li>Click <strong>Next</strong> &gt; <strong>Assign</strong></li>
+            </ul>
+          </li>
+          <li>Assign Service Entitlement for <strong>ZIA</strong> (Helpdesk L1):
+            <ul class="substeps">
+              <li><span class="path">Administration &gt; Entitlements &gt; End User Entitlements &gt; Service Entitlements</span></li>
+              <li>Click <strong>Zscaler Internet Access</strong></li>
+              <li>Click <strong>Assign Groups</strong> → check <strong>Helpdesk L1</strong></li>
+              <li>Click <strong>Next</strong> &gt; <strong>Assign</strong></li>
+            </ul>
+          </li>
+          <li>Verify entitlements for <strong>Joe</strong>:
+            <ul class="substeps">
+              <li><span class="path">Administration &gt; Identity &gt; Users</span></li>
+              <li>Click Edit (pencil) on Joe → <strong>Entitlements</strong> tab</li>
+              <li>Confirm both administrative and service entitlements are assigned</li>
+            </ul>
+          </li>
+        </ol>
+        <div class="callout callout-tip">
+          <div class="callout-header"><div class="callout-icon">→</div>WHY THIS ROLE</div>
+          For simplicity the lab uses the predefined <strong>Executive Insights App</strong> role (read-only). In production, create a custom role under <span class="path">Admin Management &gt; RBAC &gt; Roles</span>.
+        </div>
+      </div>
+    </details>
+
+    <details class="task">
+      <summary>
+        <div class="task-num">2.4</div>
+        <div class="task-title">Validate Entitlement Access for Users</div>
+        <div class="task-chevron">›</div>
+      </summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>Validate admin entitlements for <strong>Joe</strong>:
+            <ul class="substeps">
+              <li>On Corp: Client PC, open Chrome <strong>Incognito</strong></li>
+              <li>Navigate to <code>https://console.zscaler.com/</code></li>
+              <li>Login as <code class="d-username-joe">joe@&lt;Student FQDN&gt;</code> / <code>Admin-123!</code></li>
+              <li>Confirm Administration and Policy tabs are restrictive (read-only)</li>
+              <li>Confirm Joe cannot access <strong>Admin Management</strong>, <strong>Sign-On Policies</strong>, or other config areas</li>
+              <li>Sign out from the account icon (top-right)</li>
+            </ul>
+          </li>
+          <li>Validate admin entitlements for <strong>Bev</strong>:
+            <ul class="substeps">
+              <li>Same incognito window → login as <code class="d-username-bev">bev@&lt;Student FQDN&gt;</code> / <code>Admin-123!</code></li>
+              <li><span class="path">Administration &gt; Admin Management &gt; Sign-On policies</span></li>
+              <li>Confirm <strong>Add Rule</strong> button is enabled (Bev is in Zscaler Global Administrators)</li>
+              <li>Sign out</li>
+            </ul>
+          </li>
+          <li>Validate service entitlement for <strong>Joe</strong> via Zscaler Client Connector (ZCC):
+            <ul class="substeps">
+              <li>In Windows taskbar, click ^ (Show hidden icons) → Zscaler Client Connector → <strong>Open Zscaler</strong></li>
+              <li>Login as <code class="d-username-joe">joe@&lt;Student FQDN&gt;</code> / <code>Admin-123!</code></li>
+              <li>Verify <strong>Zscaler Internet Access</strong> is <strong>ON</strong></li>
+              <li>Log out (you'll log in differently later)</li>
+            </ul>
+          </li>
+        </ol>
+      </div>
+    </details>
+    <div class="lab-takeaway">
+      <div class="lab-takeaway-label">WHY THIS MATTERS</div>
+      <p class="lab-takeaway-text">User and administrator access entitlements in ZIA and ZPA are the foundation of every downstream security and access policy — who can do what is defined here before any traffic policies are applied. Understanding how to create administrators with least-privilege roles and synchronise users is essential for operating any Zscaler deployment at scale.</p>
+    </div>
+    <details class="lab-questions" id="q-lab2">
+      <summary><span class="lab-questions-icon">?</span> MY QUESTIONS <span class="lab-questions-count" id="q-count-lab2"></span><span class="lab-questions-chevron">›</span></summary>
+      <div class="lab-questions-body"><textarea class="lab-questions-input" id="q-input-lab2" placeholder="Type any questions to follow up later…" rows="3"></textarea></div>
+    </details>
+  </div>
+</details>
+
+<!-- ═══════════════ LAB 3 ═══════════════ -->
+<details class="lab" id="lab3">
+  <summary>
+    <div class="lab-num">03</div>
+    <div class="lab-title">
+      <div class="lab-title-name">Forward Traffic with the Zscaler Client Connector</div>
+      <div class="lab-title-meta">⏱ 20 minutes · Forwarding Profile · Z-Tunnel 2.0 · App Profile</div>
+    </div>
+    <div class="lab-chevron">›</div>
+  </summary>
+  <div class="lab-body">
+    <div class="scenario-block">
+      <div class="scenario-block-label">SCENARIO</div>
+      <div class="scenario-block-text">Configure ZCC to securely forward all user traffic — regardless of protocol — to Zscaler for inspection. Enables firewall functionality, secure internet access, and multi-platform compatibility on/off trusted networks.</div>
+    </div>
+    <div class="objectives">
+      <div class="objectives-label">OBJECTIVES</div>
+      <ul>
+        <li>Configure forwarding options to send all user traffic securely to Zscaler</li>
+        <li>Set up forwarding profiles and platform settings for Windows devices</li>
+        <li>Confirm Private Access, Internet Security, and Digital Experience are enabled</li>
+        <li>Confirm Corp: Client PC traffic is forwarded to Zscaler</li>
+      </ul>
+    </div>
+
+    <details class="task">
+      <summary>
+        <div class="task-num">3.1</div>
+        <div class="task-title">Configure Traffic Forwarding Options</div>
+        <div class="task-chevron">›</div>
+      </summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>Login to Experience Center: <code>https://console.zscaler.com</code> as <code class="d-username-student">student@&lt;Student FQDN&gt;</code></li>
+          <li>Create a Forwarding Profile:
+            <ul class="substeps">
+              <li><span class="path">Infrastructure &gt; Connectors &gt; Client &gt; Forwarding Profile for Platforms</span></li>
+              <li>Click <strong>Add Forwarding Profile</strong></li>
+              <li>Name: <code>HandsOnLab</code></li>
+              <li><strong>Windows Driver Selection:</strong> Packet Filter Based</li>
+            </ul>
+          </li>
+          <li>FORWARDING PROFILE ACTION FOR ZIA:
+            <ul class="substeps">
+              <li>On-Trusted Network: <strong>Tunnel</strong></li>
+              <li>Tunnel version: <strong>Z-Tunnel 2.0</strong></li>
+              <li>VPN Trusted &amp; Off-Trusted Network: ✓ <strong>Same as "On-Trusted Network"</strong></li>
+            </ul>
+          </li>
+          <li>FORWARDING PROFILE ACTION FOR ZPA:
+            <ul class="substeps">
+              <li>On-Trusted Network: <strong>Tunnel</strong></li>
+              <li>VPN Trusted &amp; Off-Trusted Network: <strong>Same as "On-Trusted Network"</strong></li>
+              <li>Click <strong>Save</strong></li>
+            </ul>
+          </li>
+          <li>Add Windows App Profile:
+            <ul class="substeps">
+              <li><span class="path">Platform Settings &gt; Windows</span></li>
+              <li>Click <strong>Add Windows Policy</strong> under App Profile</li>
+              <li>Name: <code>HandsOnLab</code> &nbsp;·&nbsp; Rule Order: <code>1</code> &nbsp;·&nbsp; Status: <strong>Enable</strong></li>
+              <li>Forwarding Profile: <strong>HandsOnLab</strong></li>
+              <li>Install Zscaler SSL Certificate: <strong>On</strong></li>
+              <li>User Groups: <strong>All</strong></li>
+              <li>Click <strong>Add</strong></li>
+            </ul>
+          </li>
+        </ol>
+        <div class="callout callout-tip">
+          <div class="callout-header"><div class="callout-icon">→</div>WHY Z-TUNNEL 2.0?</div>
+          Z-Tunnel 2.0 is necessary to intercept all traffic (any port/protocol) and tunnel it to ZIA for Firewall functionality. Z-Tunnel 1.0 only handles web (TCP/80, 443).
+        </div>
+        <div class="callout callout-note">
+          <div class="callout-header"><div class="callout-icon">★</div>NOTE</div>
+          ZCC v4.8+ on Windows defaults to Packet Filter driver, ignoring the Route-Based option.
+        </div>
+      </div>
+    </details>
+
+    <details class="task">
+      <summary>
+        <div class="task-num">3.2</div>
+        <div class="task-title">Sign In to ZCC and Verify Protection</div>
+        <div class="task-chevron">›</div>
+      </summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>Open ZCC from the Windows system tray → <strong>Open Zscaler</strong></li>
+          <li>Login as <code class="d-username-student">student@&lt;Student FQDN&gt;</code> with the password set in Lab 1</li>
+          <li>Verify <strong>Private Access</strong>:
+            <ul class="substeps">
+              <li>Service Status: <strong>ON</strong></li>
+              <li>Client and Broker IP addresses: <strong>populated</strong></li>
+            </ul>
+          </li>
+          <li>Verify <strong>Internet Security</strong>:
+            <ul class="substeps">
+              <li>Service Status: <strong>ON</strong></li>
+              <li>Username displays correctly</li>
+              <li>Total Bytes Sent / Received increment as you load web pages</li>
+            </ul>
+          </li>
+          <li>Verify <strong>Digital Experience</strong>:
+            <ul class="substeps">
+              <li>Service Status: <strong>ON</strong> &nbsp;·&nbsp; Authentication Status: <strong>Authenticated</strong></li>
+            </ul>
+          </li>
+          <li>Verify Applied App Policy on the <strong>More</strong> page:
+            <ul class="substeps">
+              <li>App Policy: <code>HandsOnLab</code></li>
+              <li>If not reflected, click <strong>Update Policy</strong> in ZCC and re-verify</li>
+            </ul>
+          </li>
+          <li>Verify Traffic Forwarding: open <code>https://ip.zscaler.com</code> — confirm a Service Edge geographically close to you</li>
+        </ol>
+        <div class="callout callout-warn">
+          <div class="callout-header"><div class="callout-icon">!</div>TROUBLESHOOTING</div>
+          If ZPA or ZDX don't appear in ZCC, verify the Student Admin user has those service entitlements under <span class="path">Administration &gt; Users &gt; Edit &gt; Entitlements</span>.
+        </div>
+      </div>
+    </details>
+    <div class="lab-takeaway">
+      <div class="lab-takeaway-label">WHY THIS MATTERS</div>
+      <p class="lab-takeaway-text">The Zscaler Client Connector is the on-ramp that routes all user traffic through the Zero Trust Exchange — without it configured correctly, none of the ZIA or ZPA policies you define will apply to the end user. Understanding forwarding profiles, Z-Tunnel versions, and app profiles is critical for deploying ZCC consistently across an enterprise fleet.</p>
+    </div>
+    <details class="lab-questions" id="q-lab3">
+      <summary><span class="lab-questions-icon">?</span> MY QUESTIONS <span class="lab-questions-count" id="q-count-lab3"></span><span class="lab-questions-chevron">›</span></summary>
+      <div class="lab-questions-body"><textarea class="lab-questions-input" id="q-input-lab3" placeholder="Type any questions to follow up later…" rows="3"></textarea></div>
+    </details>
+  </div>
+</details>
+
+<!-- ═══════════════ LAB 4 ═══════════════ -->
+<details class="lab" id="lab4">
+  <summary>
+    <div class="lab-num">04</div>
+    <div class="lab-title">
+      <div class="lab-title-name">Configure Firewall Filtering Policy</div>
+      <div class="lab-title-meta">⏱ 25 minutes · Default Block · ICMP/SSH Allow · Block WhatsApp</div>
+    </div>
+    <div class="lab-chevron">›</div>
+  </summary>
+  <div class="lab-body">
+    <div class="scenario-block">
+      <div class="scenario-block-label">SCENARIO</div>
+      <div class="scenario-block-text">Block WhatsApp at the network layer to prevent users from accessing it, while ensuring SSH and ICMP work for everything else.</div>
+    </div>
+    <div class="objectives">
+      <div class="objectives-label">OBJECTIVES</div>
+      <ul>
+        <li>Verify the default firewall filtering policy blocks all non-web traffic</li>
+        <li>Test default rules that block ICMP and SSH</li>
+        <li>Create rules to allow outbound ICMP and SSH</li>
+        <li>Create a rule to block external apps like WhatsApp</li>
+        <li>Verify with practical, real-world testing</li>
+      </ul>
+    </div>
+
+    <details class="task">
+      <summary>
+        <div class="task-num">4.1</div>
+        <div class="task-title">Test Non-Web Traffic with the Default Firewall Block</div>
+        <div class="task-chevron">›</div>
+      </summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>Verify Default Firewall Policy:
+            <ul class="substeps">
+              <li><span class="path">Policies &gt; Access Control &gt; Firewall &gt; Firewall Filtering Policy</span></li>
+              <li>Confirm the <strong>Default Rule</strong> is set to <strong>Block/Drop</strong></li>
+              <li>Confirm there are no other rules allowing non-web traffic</li>
+            </ul>
+          </li>
+          <li>Test default policies on Corp: Client PC:
+            <ul class="substeps">
+              <li>Open command prompt: <code>ping www.google.com</code> — should fail (request timeout)</li>
+              <li>Open <strong>puTTY</strong>; Host Name: <code>github.com</code> → Open — should fail (PuTTY Fatal Error after ~20s)</li>
+            </ul>
+          </li>
+          <li>End the unsuccessful sessions (close cmd, exit puTTY).</li>
+        </ol>
+        <div class="callout callout-note">
+          <div class="callout-header"><div class="callout-icon">★</div>WHY THESE FAIL</div>
+          With Z-Tunnel 2.0, ALL ports/protocols go to Zscaler. ICMP and SSH don't match Office 365 / Zscaler Proxy / Recommended rules, so they fall to the Default Block/Drop.
+        </div>
+      </div>
+    </details>
+
+    <details class="task">
+      <summary>
+        <div class="task-num">4.2</div>
+        <div class="task-title">Configure Firewall Policy to Allow Outbound SSH and ICMP</div>
+        <div class="task-chevron">›</div>
+      </summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>Create a Firewall Filtering Rule:
+            <ul class="substeps">
+              <li><span class="path">Policies &gt; Access Control &gt; Firewall &gt; Firewall Filtering Policy</span></li>
+              <li>Click <strong>Add Firewall Filtering Rule</strong></li>
+              <li>Rule Order: <code>1</code> &nbsp;·&nbsp; Status: <strong>Enabled</strong></li>
+              <li>Rule Name: <code>allow-outbound-icmp_ssh-student-any</code> (format: <code>[action]-[direction]-[services]-[source-scope]-[destination-scope]</code>)</li>
+            </ul>
+          </li>
+          <li>On <strong>Who, Where, Criteria</strong> tab → select your Student user account.</li>
+          <li>On <strong>Services</strong> tab → Network Services → search and select <code>ICMP</code>, <code>SSH</code> → <strong>Done</strong>.</li>
+          <li>ACTION: Network Traffic = <strong>Allow</strong>.</li>
+          <li>Click <strong>Save</strong> and <strong>Activate</strong> from the cloud-arrow icon (top-right).</li>
+          <li>Test ICMP: <code>ping www.google.com</code> — should now succeed.</li>
+          <li>Test SSH: open puTTY → <code>github.com</code> → Open — should prompt for fingerprint / login.</li>
+        </ol>
+      </div>
+    </details>
+
+    <details class="task">
+      <summary>
+        <div class="task-num">4.3</div>
+        <div class="task-title">Configure a Firewall Filtering Policy to Restrict Applications (WhatsApp)</div>
+        <div class="task-chevron">›</div>
+      </summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>Create a Firewall Filtering Rule:
+            <ul class="substeps">
+              <li><span class="path">Policies &gt; Access Control &gt; Firewall &gt; Firewall Filtering Policy</span></li>
+              <li>Click <strong>Add Firewall Filtering Rule</strong></li>
+              <li>Rule Name: <code>block_drop_all_whatspp_student_any</code></li>
+              <li>Rule Order: <code>2</code> &nbsp;·&nbsp; Status: <strong>Enabled</strong></li>
+            </ul>
+          </li>
+          <li>Who, Where &amp; When → User: <strong>Student Admin</strong></li>
+          <li>Action → Network Traffic: <strong>Block/Drop</strong></li>
+          <li>Applications → Network Applications: search for and select <strong>WhatsApp</strong> → <strong>Done</strong></li>
+          <li>Click <strong>Save</strong> &amp; <strong>Activate</strong>.</li>
+          <li>Test: navigate to <code>https://web.whatsapp.com</code> — should be blocked.</li>
+        </ol>
+        <div class="callout callout-tip">
+          <div class="callout-header"><div class="callout-icon">→</div>FW vs URL FILTERING</div>
+          URL Filtering can block <code>web.whatsapp.com</code> but NOT a user with the WhatsApp desktop app. Firewall Filtering blocks at the network layer — full enforcement.
+        </div>
+      </div>
+    </details>
+    <div class="lab-takeaway">
+      <div class="lab-takeaway-label">WHY THIS MATTERS</div>
+      <p class="lab-takeaway-text">The ZIA Cloud Firewall enforces policy at layers 3–7 across ALL ports and protocols, not just HTTP/HTTPS — this is the critical difference between URL filtering (web-only) and firewall policy (everything). Understanding how to build rules that allow ICMP/SSH for operations while blocking consumer apps at the network layer is a foundational enterprise security configuration.</p>
+    </div>
+    <details class="lab-questions" id="q-lab4">
+      <summary><span class="lab-questions-icon">?</span> MY QUESTIONS <span class="lab-questions-count" id="q-count-lab4"></span><span class="lab-questions-chevron">›</span></summary>
+      <div class="lab-questions-body"><textarea class="lab-questions-input" id="q-input-lab4" placeholder="Type any questions to follow up later…" rows="3"></textarea></div>
+    </details>
+  </div>
+</details>
+
+<!-- ═══════════════ LAB 5 ═══════════════ -->
+<details class="lab" id="lab5">
+  <summary>
+    <div class="lab-num">05</div>
+    <div class="lab-title">
+      <div class="lab-title-name">Configure SSL Inspection Policies</div>
+      <div class="lab-title-meta">⏱ 30 minutes · SSL Inspect All · Cert Pinning · Bypass</div>
+    </div>
+    <div class="lab-chevron">›</div>
+  </summary>
+  <div class="lab-body">
+    <div class="scenario-block">
+      <div class="scenario-block-label">SCENARIO</div>
+      <div class="scenario-block-text">Enable SSL/TLS inspection to monitor and enforce policies on encrypted traffic. Most modern threats hide inside HTTPS — inspection provides visibility. Define SSL inspection for all destinations and exempt trusted/privacy-sensitive categories.</div>
+    </div>
+    <div class="objectives">
+      <div class="objectives-label">OBJECTIVES</div>
+      <ul>
+        <li>Enable SSL inspection for all encrypted traffic</li>
+        <li>Verify Zscaler's certificate installation on the Windows Corp: Client PC</li>
+        <li>Analyze and resolve certificate pinning errors</li>
+        <li>Analyze SSL inspection logs and identify inspection or bypass events</li>
+      </ul>
+    </div>
+    <div class="callout callout-note">
+      <div class="callout-header"><div class="callout-icon">★</div>ROOT CA INSTALL</div>
+      The Zscaler Root CA is installed when ZCC is installed. On Windows it lives in: (a) the System Cert Store (Trusted Root Certification Authorities), and (b) the Firefox Cert Store (based on App Profile).
+    </div>
+
+    <details class="task">
+      <summary>
+        <div class="task-num">5.1</div>
+        <div class="task-title">Enable SSL Inspection for All Destinations</div>
+        <div class="task-chevron">›</div>
+      </summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>Verify current SSL Inspection status:
+            <ul class="substeps">
+              <li>Open Chrome <strong>Incognito</strong> on Corp: Client PC → <code>www.wikipedia.org</code></li>
+              <li>Click site info icon → <strong>Connection is secure</strong> &gt; <strong>Certificate is valid</strong></li>
+              <li>Note: cert is from the destination web server (no Zscaler interception yet)</li>
+            </ul>
+          </li>
+          <li>Enable SSL Inspection:
+            <ul class="substeps">
+              <li><span class="path">Policies &gt; Common Configuration &gt; SSL/TLS Inspection &gt; SSL/TLS Inspection Policy</span></li>
+              <li>Click <strong>+ Add SSL Inspection Rule</strong></li>
+              <li>Rule Order: <code>1</code> &nbsp;·&nbsp; Rule Name: <code>SSL Inspect All</code></li>
+              <li>ACTION → <strong>Inspect</strong></li>
+              <li>Click <strong>Save</strong> &amp; <strong>Activate</strong></li>
+            </ul>
+          </li>
+          <li>Verify inspection status:
+            <ul class="substeps">
+              <li>Close/refresh incognito browser to apply policy</li>
+              <li>Reopen incognito → <code>www.wikipedia.org</code></li>
+              <li>Site info → cert is now signed by <strong>Zscaler</strong></li>
+            </ul>
+          </li>
+        </ol>
+      </div>
+    </details>
+
+    <details class="task">
+      <summary>
+        <div class="task-num">5.2</div>
+        <div class="task-title">Verify Zscaler CA Installation [Optional]</div>
+        <div class="task-chevron">›</div>
+      </summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>Open <code>certmgr</code> from Windows search.</li>
+          <li>Navigate to <span class="path">Trusted Root Certification Authorities &gt; Certificates</span>.</li>
+          <li>Confirm:
+            <ul class="substeps">
+              <li>Zscaler Root CA Certificate is listed</li>
+              <li>Certificate is not expired</li>
+            </ul>
+          </li>
+          <li>Verify via Chrome:
+            <ul class="substeps">
+              <li>Open <code>chrome://certificate-manager/</code></li>
+              <li>Click <strong>Local certificates</strong> → <strong>View imported certificates from windows</strong></li>
+            </ul>
+          </li>
+        </ol>
+      </div>
+    </details>
+
+    <details class="task">
+      <summary>
+        <div class="task-num">5.3</div>
+        <div class="task-title">Review Certificate Pinning Errors</div>
+        <div class="task-chevron">›</div>
+      </summary>
+      <div class="task-body">
+        <div class="task-desc">Cert pinning hardcodes a trusted cert into an app to defeat MITM. With SSL inspection, the pinned cert won't match Zscaler's — connection fails. Two common fixes follow.</div>
+        <ol class="steps">
+          <li>Recreate the pinning error:
+            <ul class="substeps">
+              <li>Download Threema Private Desktop for Windows from <code>https://threema.com/en/download</code> (an .msix file)</li>
+              <li>Open PowerShell from Start menu and run:
+                <span class="cmd">Add-AppxPackage -Path .\Downloads\threema-desktop-latest-windows-x64.msix</span>
+              </li>
+              <li>Open <strong>Threema Beta</strong> from Start → observe the error</li>
+            </ul>
+          </li>
+          <li>Configure an SSL Bypass Rule:
+            <ul class="substeps">
+              <li>From SSL Inspection page → <strong>Add SSL Inspection Rule</strong></li>
+              <li>Rule Order: <code>1</code> &nbsp;·&nbsp; Rule Name: <code>Bypass Threema</code></li>
+              <li>Cloud Applications → Instant Messaging → select <strong>Threema</strong> → Done</li>
+              <li>Action: <strong>Do Not Inspect</strong></li>
+              <li><strong>Save</strong> and <strong>Activate</strong></li>
+            </ul>
+          </li>
+          <li>Reattempt Threema:
+            <ul class="substeps">
+              <li>Task Manager → end any running Threema task</li>
+              <li>Open Threema Beta from Start — should now work</li>
+            </ul>
+          </li>
+          <li>Analyze SSL Inspection &amp; Bypass logs:
+            <ul class="substeps">
+              <li><span class="path">Logs &gt; Web Insights &gt; Logs</span></li>
+              <li>Timeframe: Last 1 hour (or longer)</li>
+              <li>Add filters: <strong>SSL Inspected</strong> and <strong>Bypassed Transaction</strong></li>
+              <li>Click <strong>Run Query</strong></li>
+            </ul>
+          </li>
+        </ol>
+        <div class="callout callout-note">
+          <div class="callout-header"><div class="callout-icon">★</div>NOTE</div>
+          Allow ~5 minutes for logs to populate.
+        </div>
+      </div>
+    </details>
+    <div class="lab-takeaway">
+      <div class="lab-takeaway-label">WHY THIS MATTERS</div>
+      <p class="lab-takeaway-text">SSL Inspection is the prerequisite that unlocks virtually every advanced ZIA security control — without it, all HTTPS traffic is an opaque tunnel Zscaler cannot inspect. Properly configuring bypass rules for certificate-pinned and sensitive-category traffic prevents SSL inspection from breaking legitimate applications while still providing full visibility into the web traffic that matters most for security.</p>
+    </div>
+    <details class="lab-questions" id="q-lab5">
+      <summary><span class="lab-questions-icon">?</span> MY QUESTIONS <span class="lab-questions-count" id="q-count-lab5"></span><span class="lab-questions-chevron">›</span></summary>
+      <div class="lab-questions-body"><textarea class="lab-questions-input" id="q-input-lab5" placeholder="Type any questions to follow up later…" rows="3"></textarea></div>
+    </details>
+  </div>
+</details>
+
+<!-- ═══════════════ LAB 6 ═══════════════ -->
+<details class="lab" id="lab6">
+  <summary>
+    <div class="lab-num">06</div>
+    <div class="lab-title">
+      <div class="lab-title-name">Configure Content Filtering &amp; Access Control</div>
+      <div class="lab-title-meta">⏱ 25 minutes · Threat Reports · URL Filtering · Cloud App Control</div>
+    </div>
+    <div class="lab-chevron">›</div>
+  </summary>
+  <div class="lab-body">
+    <div class="scenario-block">
+      <div class="scenario-block-label">SCENARIO</div>
+      <div class="scenario-block-text">Improve user browsing experience by ensuring only safe and appropriate content is reachable. Verify threat protection, configure URL Filtering, and create granular Cloud App Control rules.</div>
+    </div>
+    <div class="objectives">
+      <div class="objectives-label">OBJECTIVES</div>
+      <ul>
+        <li>Explore ZIA threat protection and risk reporting</li>
+        <li>Configure and validate a URL Filtering Policy (gambling, adult, shopping)</li>
+        <li>Test the effect of URL Filtering on end users</li>
+        <li>Create a Cloud App Control policy (allow YouTube, restrict others)</li>
+      </ul>
+    </div>
+
+    <details class="task">
+      <summary>
+        <div class="task-num">6.1</div>
+        <div class="task-title">View Threat Protection Reports</div>
+        <div class="task-chevron">›</div>
+      </summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>View Malware Protection: <span class="path">Policies &gt; Cybersecurity &gt; Malware Protection</span> — compare to Recommended; confirm protections are enabled.</li>
+          <li>View Advanced Threat Protection: <span class="path">Policies &gt; Cybersecurity &gt; Advanced Threat Protection</span> — covers C2, phishing, cryptomining, tunneling, XSS, etc.</li>
+          <li>Review Page Risk™ Score Index (Suspicious Content Protection) — calculates threat score on access dynamically.</li>
+        </ol>
+      </div>
+    </details>
+
+    <details class="task">
+      <summary>
+        <div class="task-num">6.2</div>
+        <div class="task-title">Configure Content Filtering Controls</div>
+        <div class="task-chevron">›</div>
+      </summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>Test high-risk URL access (before configuration): try <code>888.com</code> — confirm it loads.</li>
+          <li>Create URL Filtering Policy:
+            <ul class="substeps">
+              <li><span class="path">Policies &gt; Access Control &gt; Internet and SaaS &gt; URL Control &gt; URL Filtering</span></li>
+              <li>Click <strong>Add URL Filtering Rule</strong></li>
+              <li>Rule Order: <code>1</code> &nbsp;·&nbsp; Rule Name: <code>Risky URL Categories</code></li>
+              <li>URL Categories: <strong>Adult Materials</strong>, <strong>Shopping and Auctions</strong>, <strong>Gambling</strong>, <strong>Video Streaming</strong></li>
+              <li>Request Methods and Protocols: <strong>all</strong></li>
+              <li>Action: <strong>Block</strong></li>
+              <li><strong>Save</strong> and <strong>Activate</strong></li>
+            </ul>
+          </li>
+        </ol>
+      </div>
+    </details>
+
+    <details class="task">
+      <summary>
+        <div class="task-num">6.3</div>
+        <div class="task-title">Test End-User Experience with URL Filtering</div>
+        <div class="task-chevron">›</div>
+      </summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>Test blocked URLs:
+            <ul class="substeps">
+              <li><code>888.com</code> (Gambling)</li>
+              <li><code>ebay.com</code> (Shopping and Auctions)</li>
+            </ul>
+          </li>
+          <li>Test video streaming sites: <code>YouTube.com</code>, <code>Netflix.com</code> — should be blocked.</li>
+          <li>If testing fails, use Incognito; verify Rule Status is <strong>Enabled</strong>.</li>
+        </ol>
+      </div>
+    </details>
+
+    <details class="task">
+      <summary>
+        <div class="task-num">6.4</div>
+        <div class="task-title">Configure Cloud App Control (Allow YouTube)</div>
+        <div class="task-chevron">›</div>
+      </summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>Add a Cloud App Control Policy:
+            <ul class="substeps">
+              <li><span class="path">Policies &gt; Access Control &gt; Internet &amp; SaaS &gt; SaaS Application Control &gt; Policies</span></li>
+              <li>Click <strong>Add</strong> dropdown → select <strong>Streaming Media</strong></li>
+            </ul>
+          </li>
+          <li>Configure the Cloud App Control Rule:
+            <ul class="substeps">
+              <li>Rule Order: <code>1</code> &nbsp;·&nbsp; Rule Name: <code>Allow YouTube</code></li>
+              <li>Cloud Applications: <strong>YouTube</strong> → Done</li>
+              <li>Action — Application Access: <strong>Allow</strong></li>
+              <li>Description: <code>Allow only YouTube</code></li>
+              <li><strong>Save</strong> and <strong>Activate</strong></li>
+            </ul>
+          </li>
+          <li>Verify on Corp: Client PC: YouTube works, Netflix is blocked.</li>
+        </ol>
+        <div class="callout callout-tip">
+          <div class="callout-header"><div class="callout-icon">→</div>POLICY ORDER (EXAM!)</div>
+          SaaS Application policies are enforced with <strong>higher priority</strong> than URL category-based policies.
+        </div>
+      </div>
+    </details>
+    <div class="lab-takeaway">
+      <div class="lab-takeaway-label">WHY THIS MATTERS</div>
+      <p class="lab-takeaway-text">URL Filtering and Cloud App Control are the most commonly deployed ZIA controls — they determine what users can access on the internet and at what level of granularity. Understanding how URL category policies interact with SaaS application policies (and which takes precedence) is critical exam knowledge and prevents unexpected policy conflicts in production.</p>
+    </div>
+    <details class="lab-questions" id="q-lab6">
+      <summary><span class="lab-questions-icon">?</span> MY QUESTIONS <span class="lab-questions-count" id="q-count-lab6"></span><span class="lab-questions-chevron">›</span></summary>
+      <div class="lab-questions-body"><textarea class="lab-questions-input" id="q-input-lab6" placeholder="Type any questions to follow up later…" rows="3"></textarea></div>
+    </details>
+  </div>
+</details>
+
+<!-- ═══════════════ LAB 7 ═══════════════ -->
+<details class="lab" id="lab7">
+  <summary>
+    <div class="lab-num">07</div>
+    <div class="lab-title">
+      <div class="lab-title-name">Configure DNS Security</div>
+      <div class="lab-title-meta">⏱ 20 minutes · DNS Steering · DNS Control · DNS Insights</div>
+    </div>
+    <div class="lab-chevron">›</div>
+  </summary>
+  <div class="lab-body">
+    <div class="scenario-block">
+      <div class="scenario-block-label">SCENARIO</div>
+      <div class="scenario-block-text">Block access to malicious domains and gambling sites. Configure DNS security controls and validate them with DNS Insight logs.</div>
+    </div>
+    <div class="objectives">
+      <div class="objectives-label">OBJECTIVES</div>
+      <ul>
+        <li>Configure App Profile so all DNS traffic flows through the Zero Trust Exchange</li>
+        <li>Create and test a DNS Control Policy to block gambling sites</li>
+        <li>Verify enforcement using DNS Insight Logs</li>
+      </ul>
+    </div>
+
+    <details class="task">
+      <summary>
+        <div class="task-num">7.1</div>
+        <div class="task-title">Configure App Profile (Steer all DNS to Zscaler)</div>
+        <div class="task-chevron">›</div>
+      </summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>Edit <strong>HandsOnLab</strong> Windows App Profile:
+            <ul class="substeps">
+              <li><span class="path">Infrastructure &gt; Connectors &gt; Client &gt; Platform Settings &gt; Windows</span></li>
+              <li>Click Edit on <strong>HandsOnLab</strong> policy</li>
+            </ul>
+          </li>
+          <li>Under <strong>Traffic Steering</strong> → <strong>DNS</strong> tab:
+            <ul class="substeps">
+              <li>Domain Inclusion: enter wildcard <code>*</code></li>
+              <li>Click <strong>Create "*"</strong> and <strong>Save</strong></li>
+            </ul>
+          </li>
+          <li>On Corp: Client PC, open ZCC → <strong>More</strong> → click <strong>Update Policy</strong>.</li>
+        </ol>
+      </div>
+    </details>
+
+    <details class="task">
+      <summary>
+        <div class="task-num">7.2</div>
+        <div class="task-title">Configure a DNS Control Policy (Block Gambling)</div>
+        <div class="task-chevron">›</div>
+      </summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>Test before configuration on Corp: Client PC:
+            <span class="cmd">nslookup www.gambling.com</span>
+            Should resolve successfully.
+          </li>
+          <li>Create DNS Control Policy:
+            <ul class="substeps">
+              <li><span class="path">Policies &gt; Firewall &gt; DNS Control</span></li>
+              <li>Click <strong>Add DNS Filtering Rule</strong></li>
+              <li>Rule Order: <code>1</code> &nbsp;·&nbsp; Rule Name: <code>Block Gambling</code> &nbsp;·&nbsp; Status: <strong>Enabled</strong></li>
+            </ul>
+          </li>
+          <li><strong>DNS Application</strong> tab:
+            <ul class="substeps">
+              <li>Request Categories: <strong>Gambling</strong> → Done</li>
+              <li>Response Categories: <strong>Gambling</strong> → Done</li>
+              <li>Action — Network Traffic: <strong>Block</strong></li>
+              <li><strong>Save</strong> and <strong>Activate</strong></li>
+            </ul>
+          </li>
+          <li>Test new DNS settings:
+            <span class="cmd">nslookup www.google.com</span>
+            <span class="cmd">ipconfig /flushdns</span>
+            <span class="cmd">nslookup www.gambling.com 8.8.8.8</span>
+            Expect Google to resolve, gambling lookup to time out.
+          </li>
+        </ol>
+      </div>
+    </details>
+
+    <details class="task">
+      <summary>
+        <div class="task-num">7.3</div>
+        <div class="task-title">View DNS Insight Logs</div>
+        <div class="task-chevron">›</div>
+      </summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>Access logs: <span class="path">Logs &gt; Internet &amp; SaaS &gt; DNS Insights &gt; Logs</span></li>
+          <li>Configure log settings:
+            <ul class="substeps">
+              <li>Timeframe: <strong>Current Day</strong></li>
+              <li>Add Filter → Rule Name: <code>Block Gambling</code></li>
+              <li>Click <strong>Apply Filters</strong></li>
+            </ul>
+          </li>
+          <li>Verify Block Gambling activity — confirm DNS requests for gambling domains hit the Block Gambling rule with blocking action.</li>
+        </ol>
+        <div class="callout callout-note">
+          <div class="callout-header"><div class="callout-icon">★</div>NOTE</div>
+          Allow ~15 minutes for logs to become available.
+        </div>
+      </div>
+    </details>
+    <div class="lab-takeaway">
+      <div class="lab-takeaway-label">WHY THIS MATTERS</div>
+      <p class="lab-takeaway-text">DNS Security intercepts malicious domains at the resolution layer — before any TCP connection is attempted — making it one of the most effective and lowest-latency controls for blocking C2 callbacks, malware distribution, and phishing infrastructure. DNS Insights logs provide forensic evidence of blocked query attempts that would otherwise be invisible to HTTP-level monitoring.</p>
+    </div>
+    <details class="lab-questions" id="q-lab7">
+      <summary><span class="lab-questions-icon">?</span> MY QUESTIONS <span class="lab-questions-count" id="q-count-lab7"></span><span class="lab-questions-chevron">›</span></summary>
+      <div class="lab-questions-body"><textarea class="lab-questions-input" id="q-input-lab7" placeholder="Type any questions to follow up later…" rows="3"></textarea></div>
+    </details>
+  </div>
+</details>
+
+<!-- ═══════════════ LAB 8 ═══════════════ -->
+<details class="lab" id="lab8">
+  <summary>
+    <div class="lab-num">08</div>
+    <div class="lab-title">
+      <div class="lab-title-name">Enforce Policy with Unified DLP across Multi-Channel</div>
+      <div class="lab-title-meta">⏱ 15 minutes · DLP Dictionary · DLP Engine · DLP Rule</div>
+    </div>
+    <div class="lab-chevron">›</div>
+  </summary>
+  <div class="lab-body">
+    <div class="scenario-block">
+      <div class="scenario-block-label">SCENARIO</div>
+      <div class="scenario-block-text">Protect data in motion and at rest, ensuring PCI-DSS compliance. Use Zscaler Unified DLP to secure multi-channel data via endpoint and SaaS application security logs.</div>
+    </div>
+    <div class="objectives">
+      <div class="objectives-label">OBJECTIVES</div>
+      <ul>
+        <li>Verify and enable SSL/TLS inspection for data traffic visibility</li>
+        <li>Configure DLP Dictionaries, DLP Engines, and DLP Rules</li>
+        <li>Test policy enforcement to validate DLP rules block sensitive data</li>
+      </ul>
+    </div>
+
+    <details class="task">
+      <summary>
+        <div class="task-num">8.1</div>
+        <div class="task-title">Protect PII Information for Data in Motion</div>
+        <div class="task-chevron">›</div>
+      </summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>Verify SSL Inspection: <span class="path">Policies &gt; Common Configuration &gt; SSL/TLS Inspection</span> — confirm <strong>SSL Inspect All</strong> is Enabled.</li>
+          <li>Create a DLP Engine:
+            <ul class="substeps">
+              <li><span class="path">Policies &gt; Data Protection &gt; Common Resources &gt; Dictionaries and Engines</span></li>
+              <li><strong>DLP Dictionaries</strong> tab → search for <strong>Credit Cards</strong> → click Edit to explore</li>
+              <li>Switch to <strong>DLP Engine</strong> tab → <strong>Add DLP Engines</strong></li>
+              <li>Name: <code>Sensitive Data</code></li>
+              <li>Expression: <strong>All</strong></li>
+              <li>Predefined Dictionary: <strong>Credit Cards</strong></li>
+              <li>Violations Threshold: <code>1</code></li>
+              <li>Description: <code>Credit Card Number and Sensitive Data Violation</code></li>
+              <li><strong>Save</strong> and <strong>Activate</strong></li>
+            </ul>
+          </li>
+          <li>Create a DLP Rule:
+            <ul class="substeps">
+              <li><span class="path">Policies &gt; Data Protection &gt; Policy &gt; Data Loss Prevention</span></li>
+              <li>Click <strong>+ Add DLP Rule</strong></li>
+              <li>Rule Order: <code>1</code> &nbsp;·&nbsp; Severity: <strong>High</strong></li>
+              <li>Rule Name: <code>Data Violation Rule</code> &nbsp;·&nbsp; Status: <strong>Enabled</strong></li>
+              <li>Content Matching: <strong>Select DLP Engine</strong> → DLP Engines: <strong>Sensitive Data</strong></li>
+              <li>Leave Criteria and DLP Incident Receiver default</li>
+              <li>Action — Data Traffic: <strong>Block</strong> &nbsp;·&nbsp; End User Notification: <strong>Show</strong></li>
+              <li><strong>Save</strong> and <strong>Activate</strong></li>
+            </ul>
+          </li>
+          <li>Test the policy as a user:
+            <ul class="substeps">
+              <li>Confirm Internet Security is enabled in ZCC</li>
+              <li>Open browser → <code>https://dlptoolbox.com/</code></li>
+              <li>Left nav → <strong>File Audit</strong></li>
+              <li>Choose file: <code>Sensitive Data.txt</code> from <strong>DLP Test Files</strong> folder on Desktop</li>
+              <li>Click <strong>Upload</strong></li>
+            </ul>
+          </li>
+          <li>Verify a Block Notification is displayed during upload — confirms the DLP rule blocked sensitive data.</li>
+        </ol>
+        <div class="callout callout-tip">
+          <div class="callout-header"><div class="callout-icon">→</div>OPTIONAL</div>
+          You can add a custom notification message via Notification Message dropdown → + → name: <code>CreditCard Block</code>.
+        </div>
+      </div>
+    </details>
+    <div class="lab-takeaway">
+      <div class="lab-takeaway-label">WHY THIS MATTERS</div>
+      <p class="lab-takeaway-text">DLP is one of the most critical compliance controls in ZIA — preventing regulated data (PCI, HIPAA, GDPR) from leaking through web upload, email, or cloud storage is a regulatory requirement for most enterprises. Understanding how to configure DLP dictionaries, engine combinations, and notification policies gives you the skills to design effective data protection without creating user friction for legitimate business activities.</p>
+    </div>
+    <details class="lab-questions" id="q-lab8">
+      <summary><span class="lab-questions-icon">?</span> MY QUESTIONS <span class="lab-questions-count" id="q-count-lab8"></span><span class="lab-questions-chevron">›</span></summary>
+      <div class="lab-questions-body"><textarea class="lab-questions-input" id="q-input-lab8" placeholder="Type any questions to follow up later…" rows="3"></textarea></div>
+    </details>
+  </div>
+</details>
+
+<!-- ═══════════════ LAB 9 ═══════════════ -->
+<details class="lab" id="lab9">
+  <summary>
+    <div class="lab-num">09</div>
+    <div class="lab-title">
+      <div class="lab-title-name">Provision ZPA Infrastructure</div>
+      <div class="lab-title-meta">⏱ 25 minutes · App Connector · Provisioning Key · WinSCP</div>
+    </div>
+    <div class="lab-chevron">›</div>
+  </summary>
+  <div class="lab-body">
+    <div class="scenario-block">
+      <div class="scenario-block-label">SCENARIO</div>
+      <div class="scenario-block-text">Safemarch is preparing to launch internal apps and needs secure, policy-driven connectivity without exposing them to the internet. Deploy and provision ZPA App Connectors to provide encrypted connectivity through the Zero Trust Exchange while keeping internal apps protected.</div>
+    </div>
+    <div class="objectives">
+      <div class="objectives-label">OBJECTIVES</div>
+      <ul>
+        <li>Deploy and provision an App Connector using a provisioning key and certificate</li>
+        <li>Activate the App Connector for secure communication with the ZPA infrastructure</li>
+        <li>Validate the connection</li>
+      </ul>
+    </div>
+
+    <details class="task">
+      <summary>
+        <div class="task-num">9.1</div>
+        <div class="task-title">Provision an App Connector</div>
+        <div class="task-chevron">›</div>
+      </summary>
+      <div class="task-body">
+        <div class="callout callout-note">
+          <div class="callout-header"><div class="callout-icon">★</div>NOTE</div>
+          The App Connector is pre-installed (network/DNS/NTP configured). You'll activate it by providing the provisioning key from the Experience Center Portal.
+        </div>
+        <ol class="steps">
+          <li>On <strong>Corp: Win Svr 2016</strong>, login with <code>PATRAINING\Administrator</code> / <code>Admin-123!</code></li>
+          <li>Open <code>https://console.zscaler.com/</code> and authenticate with the Student account.
+            <div class="callout callout-tip">
+              <div class="callout-header"><div class="callout-icon">→</div>WHY WIN SVR?</div>
+              Use Win Svr 2016 because you'll upload the provisioning key via WinSCP from there.
+            </div>
+          </li>
+          <li>Add an App Connector Group:
+            <ul class="substeps">
+              <li><span class="path">Infrastructure &gt; Private Access &gt; App Connector Groups</span> → <strong>Add App Connector Group</strong></li>
+              <li>Name: <code>OnPrem</code> &nbsp;·&nbsp; Status: <strong>Enabled</strong></li>
+              <li>Signing Certificate: <strong>Connector</strong></li>
+              <li>DNS Settings (IPv4/IPv6): default</li>
+              <li>Location: <code>NYC, NY, USA</code></li>
+              <li>Version Profile: default</li>
+              <li>Software Update Schedule: <strong>Sundays at 00:30</strong></li>
+              <li><strong>Save</strong></li>
+            </ul>
+          </li>
+          <li>Add App Connector Keys:
+            <ul class="substeps">
+              <li>Click <strong>Add App Connector Keys</strong></li>
+              <li>Group: <code>OnPrem</code> &nbsp;·&nbsp; Name: <code>OnPrem</code></li>
+              <li>Maximum Reuse Count: <code>4</code> &nbsp;·&nbsp; Signing Certificate: <strong>Connector</strong></li>
+              <li><strong>Save</strong></li>
+            </ul>
+          </li>
+          <li>Save the provisioning key:
+            <ul class="substeps">
+              <li>Select <strong>App Connector Provision Keys</strong> → click the Copy icon</li>
+              <li>Right-click Desktop → New → Text Document → name it <code>provision_key</code> (no <code>.txt</code> extension!)</li>
+              <li>Open in Notepad → paste the key → Save → close</li>
+            </ul>
+          </li>
+        </ol>
+      </div>
+    </details>
+
+    <details class="task">
+      <summary>
+        <div class="task-num">9.2</div>
+        <div class="task-title">Activate the App Connector</div>
+        <div class="task-chevron">›</div>
+      </summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>Login to <strong>Corp: APP Connector</strong> (admin / zscaler).</li>
+          <li>Start SSH Daemon:
+            <span class="cmd">sudo systemctl start sshd</span>
+            (password: <code>zscaler</code>)
+          </li>
+          <li>Verify SSH is running (active):
+            <span class="cmd">sudo systemctl status sshd</span>
+          </li>
+          <li>On Corp: Win Svr 2016, open WinSCP and connect:
+            <ul class="substeps">
+              <li>IP: <code>10.0.0.4</code> &nbsp;·&nbsp; Port: <code>22</code></li>
+              <li>Username: <code>admin</code> &nbsp;·&nbsp; Password: <code>zscaler</code></li>
+              <li>Browse to <code>C:\Users\Administrator\Documents</code> → Browse → Select <strong>Desktop</strong> → OK</li>
+              <li>Right-click <code>provision_key</code> → Upload (or drag from left to right panel)</li>
+              <li>Verify upload succeeded → close WinSCP</li>
+            </ul>
+          </li>
+          <li>On the App Connector terminal, you should see a prompt like <code>admin@zpa-connector ~]$</code></li>
+          <li>Verify directory and files:
+            <span class="cmd">pwd</span>
+            <span class="cmd">ls</span>
+            Expect <code>/home/admin</code> and <code>provision_key</code>.
+          </li>
+          <li>Activate the App Connector:
+            <span class="cmd">sudo systemctl stop zpa-connector</span>
+            <span class="cmd">sudo cp provision_key /opt/zscaler/var/</span>
+            <div class="callout callout-warn">
+              <div class="callout-header"><div class="callout-icon">!</div>GOTCHA</div>
+              Ensure the trailing slash <code>/</code> after <code>var</code> — missing it causes service startup failures.
+            </div>
+            <span class="cmd">sudo ls /opt/zscaler/var/</span>
+            <span class="cmd">sudo systemctl start zpa-connector</span>
+            <span class="cmd">sudo systemctl enable zpa-connector</span>
+          </li>
+          <li>Verify service:
+            <span class="cmd">sudo systemctl status zpa-connector</span>
+            Expect "active" — also see <code>.pem</code> key and certificate files.
+          </li>
+          <li>Optional recovery (if status is red/failing):
+            <ul class="substeps">
+              <li><code>sudo systemctl stop zpa-connector</code></li>
+              <li><code>sudo find /opt/zscaler/var -mindepth 1 -delete</code></li>
+              <li>Re-upload <code>provision_key</code> via WinSCP if missing</li>
+              <li><code>sudo cp provision_key /opt/zscaler/var/</code></li>
+              <li><code>sudo systemctl start zpa-connector</code></li>
+              <li><code>sudo systemctl status zpa-connector</code></li>
+            </ul>
+          </li>
+          <li>Verify in ZPA Admin Portal:
+            <ul class="substeps">
+              <li><span class="path">Infrastructure &gt; Private Access &gt; App Connectors</span></li>
+              <li>Confirm App Connector is listed</li>
+              <li>Update Status: <strong>Success</strong> (latest software) or <strong>Scheduled</strong> (will update next interval)</li>
+              <li>Click connector name → expand details (Host OS, PSE, Location, IPs, Uptime)</li>
+            </ul>
+          </li>
+        </ol>
+      </div>
+    </details>
+    <div class="lab-takeaway">
+      <div class="lab-takeaway-label">WHY THIS MATTERS</div>
+      <p class="lab-takeaway-text">The App Connector is the ZPA data plane — without it deployed and enrolled, private application access cannot function regardless of how policies are configured. Understanding the provisioning key workflow, the SSH-based activation process, and how to verify connector health in the portal is essential for any ZPA deployment or troubleshooting engagement.</p>
+    </div>
+    <details class="lab-questions" id="q-lab9">
+      <summary><span class="lab-questions-icon">?</span> MY QUESTIONS <span class="lab-questions-count" id="q-count-lab9"></span><span class="lab-questions-chevron">›</span></summary>
+      <div class="lab-questions-body"><textarea class="lab-questions-input" id="q-input-lab9" placeholder="Type any questions to follow up later…" rows="3"></textarea></div>
+    </details>
+  </div>
+</details>
+
+<!-- ═══════════════ LAB 10 ═══════════════ -->
+<details class="lab" id="lab10">
+  <summary>
+    <div class="lab-num">10</div>
+    <div class="lab-title">
+      <div class="lab-title-name">Add a Corporate Application</div>
+      <div class="lab-title-meta">⏱ 35 minutes · Wildcard App Segment · User-Specific Access · ICMP</div>
+    </div>
+    <div class="lab-chevron">›</div>
+  </summary>
+  <div class="lab-body">
+    <div class="scenario-block">
+      <div class="scenario-block-label">SCENARIO</div>
+      <div class="scenario-block-text">Configure a wildcard application segment for general access plus a dedicated segment for granular user/app access. Implement ICMP for troubleshooting.</div>
+    </div>
+    <div class="objectives">
+      <div class="objectives-label">OBJECTIVES</div>
+      <ul>
+        <li>Configure wildcard app segment (e.g., <code>*.patraining.safemarch.com</code>)</li>
+        <li>Configure user-specific access to defined internal applications</li>
+        <li>Enable ICMP access for troubleshooting</li>
+      </ul>
+    </div>
+
+    <details class="task">
+      <summary>
+        <div class="task-num">10.1</div>
+        <div class="task-title">Configure a Wildcard Application Segment for Internal Applications</div>
+        <div class="task-chevron">›</div>
+      </summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>Add a Wildcard Application Segment:
+            <ul class="substeps">
+              <li><span class="path">Policies &gt; Access Control &gt; Private Applications &gt; App Segments</span></li>
+              <li>Click <strong>+ Add Application Segment</strong></li>
+            </ul>
+          </li>
+          <li>Define Applications → General Information:
+            <ul class="substeps">
+              <li>Name: <code>Discovery</code> &nbsp;·&nbsp; Status: <strong>Enabled</strong></li>
+              <li>Source IP Anchor: <strong>Disabled</strong></li>
+              <li>Add a description</li>
+            </ul>
+          </li>
+          <li>Applications → Domain: <code>*.patraining.safemarch.com</code></li>
+          <li>Client Connector Access:
+            <ul class="substeps">
+              <li>TCP Port Ranges: <code>2-52</code> and <code>54-65535</code></li>
+              <li>UDP Port Ranges: <code>1-52</code> and <code>54-65535</code></li>
+              <li>TCP Keepalive: <strong>Disabled</strong></li>
+            </ul>
+          </li>
+          <li>Common Configuration: defaults.</li>
+          <li>Additional Configuration:
+            <ul class="substeps">
+              <li>Double Encryption: <strong>Disabled</strong></li>
+              <li>Bypass: <strong>Use Client Forwarding Policy</strong></li>
+              <li>ICMP Access: <strong>Disabled</strong></li>
+              <li>Click <strong>Next</strong></li>
+            </ul>
+          </li>
+          <li>Segment Group:
+            <ul class="substeps">
+              <li>Click <strong>Add Segment Group</strong></li>
+              <li>Name: <code>Discovered Apps</code> &nbsp;·&nbsp; Status: <strong>Enabled</strong></li>
+              <li>Click <strong>Next</strong></li>
+            </ul>
+          </li>
+          <li>Server Group:
+            <ul class="substeps">
+              <li>Name: <code>CorpServers</code> &nbsp;·&nbsp; Status: <strong>Enabled</strong></li>
+              <li>Dynamic Server Discovery: <strong>Enabled</strong></li>
+              <li>App Connector Groups: <strong>OnPrem</strong></li>
+              <li>Click <strong>Next</strong> → Review → <strong>Save</strong></li>
+            </ul>
+          </li>
+          <li>Configure Access Policy:
+            <ul class="substeps">
+              <li><span class="path">Policies &gt; Access Policy</span> → <strong>Add</strong></li>
+              <li>Name: <code>Discovered Apps</code> &nbsp;·&nbsp; Action: <strong>Allow Access</strong></li>
+              <li>App Connector Selection Method: <strong>All App Connector Groups for the Application</strong></li>
+              <li>Add Criteria → Applications → choose <strong>Discovered Apps</strong> Segment Group</li>
+              <li>Click <strong>Save</strong></li>
+            </ul>
+          </li>
+          <li>Test the policy:
+            <ul class="substeps">
+              <li>On Corp: Client PC, open browser side-by-side with ZCC</li>
+              <li>Load <code>http://intranet.patraining.safemarch.com</code> (bookmark provided)</li>
+              <li>Confirm intranet loads; refresh — Total Bytes Sent/Received in ZCC should increment</li>
+            </ul>
+          </li>
+        </ol>
+      </div>
+    </details>
+
+    <details class="task">
+      <summary>
+        <div class="task-num">10.2</div>
+        <div class="task-title">Configure User-Specific Access to an Intranet Application</div>
+        <div class="task-chevron">›</div>
+      </summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>Review recently accessed apps: search <code>applications</code> → <span class="path">Analytics &gt; Private Applications</span> → "Applications Discovered in past 14 days".</li>
+          <li>Configure the Intranet Application Segment:
+            <ul class="substeps">
+              <li>Click <strong>Add Application Segment</strong> → select <code>intranet.patraining.safemarch.com</code> → <strong>Define Selected Applications</strong></li>
+              <li>(Or navigate <span class="path">Policies &gt; App Segment</span>)</li>
+            </ul>
+          </li>
+          <li>Define Applications:
+            <ul class="substeps">
+              <li>Name: <code>Intranet</code> &nbsp;·&nbsp; Status: <strong>Enabled</strong></li>
+              <li>Source IP Anchor: <strong>Disabled</strong></li>
+              <li>Other settings: default → Next</li>
+            </ul>
+          </li>
+          <li>Add Segment Group:
+            <ul class="substeps">
+              <li>Name: <code>CorpApps</code> &nbsp;·&nbsp; Status: <strong>Enabled</strong> → Next</li>
+            </ul>
+          </li>
+          <li>Add Server Group:
+            <ul class="substeps">
+              <li>Name: <code>CorpServers</code> (re-use from wildcard segment) → Next → <strong>Save</strong></li>
+            </ul>
+          </li>
+          <li>Add Access Policy: <span class="path">Policies &gt; Access Policy</span> → Add:
+            <ul class="substeps">
+              <li>Rule Name: <code>Allow Intranet</code></li>
+              <li>Rule Action: <strong>Allow Access</strong></li>
+              <li>App Connector Selection Method: <strong>All App Connector Groups</strong></li>
+              <li>Add Criteria → Applications → <strong>Intranet</strong> segment</li>
+              <li>+ User Attributes → <code>loginname</code> → <code class="d-username-student">student@&lt;Student FQDN&gt;</code></li>
+              <li>Click <strong>Save</strong></li>
+            </ul>
+          </li>
+          <li>Test:
+            <ul class="substeps">
+              <li>Open browser + ZCC side-by-side</li>
+              <li>Load <code>http://intranet.patraining.safemarch.com</code></li>
+              <li>Page loads as Student User; refresh — counters increment</li>
+            </ul>
+          </li>
+        </ol>
+      </div>
+    </details>
+
+    <details class="task">
+      <summary>
+        <div class="task-num">10.3</div>
+        <div class="task-title">Enable ICMP Access</div>
+        <div class="task-chevron">›</div>
+      </summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>Verify ICMP currently fails:
+            <span class="cmd">ping intranet.patraining.safemarch.com</span>
+            With ICMP disabled in the App Segment, no response.
+          </li>
+          <li>Enable ICMP in the App Segment:
+            <ul class="substeps">
+              <li><span class="path">Policies &gt; Access Control &gt; Private Applications &gt; App Segments</span></li>
+              <li>Locate <strong>Intranet</strong> → Edit</li>
+              <li>Click <strong>Next</strong> to navigate to ICMP Access field</li>
+              <li>Set ICMP Access: <strong>Enabled</strong> → <strong>Save</strong></li>
+            </ul>
+          </li>
+          <li>Re-test ping:
+            <span class="cmd">ping intranet.patraining.safemarch.com</span>
+            Should now respond.
+          </li>
+        </ol>
+        <div class="callout callout-warn">
+          <div class="callout-header"><div class="callout-icon">!</div>BEST PRACTICE</div>
+          Only enable ICMP if needed for troubleshooting — avoid using it for general application testing.
+        </div>
+      </div>
+    </details>
+    <div class="lab-takeaway">
+      <div class="lab-takeaway-label">WHY THIS MATTERS</div>
+      <p class="lab-takeaway-text">Application Segments are the core ZPA building block that maps an application's FQDN and port range to an App Connector Group — without an App Segment, ZPA has no knowledge of the application. Understanding wildcard segments, user-specific access policies, and ICMP handling gives you the skills to onboard corporate applications at scale and troubleshoot access issues accurately.</p>
+    </div>
+    <details class="lab-questions" id="q-lab10">
+      <summary><span class="lab-questions-icon">?</span> MY QUESTIONS <span class="lab-questions-count" id="q-count-lab10"></span><span class="lab-questions-chevron">›</span></summary>
+      <div class="lab-questions-body"><textarea class="lab-questions-input" id="q-input-lab10" placeholder="Type any questions to follow up later…" rows="3"></textarea></div>
+    </details>
+  </div>
+</details>
+
+<!-- ═══════════════ LAB 11 ═══════════════ -->
+<details class="lab" id="lab11">
+  <summary>
+    <div class="lab-num">11</div>
+    <div class="lab-title">
+      <div class="lab-title-name">Troubleshoot Access to an Internal Application for a Specific User</div>
+      <div class="lab-title-meta">⏱ 25 minutes · Service Entitlement · Joe missing ZPA</div>
+    </div>
+    <div class="lab-chevron">›</div>
+  </summary>
+  <div class="lab-body">
+    <div class="scenario-block">
+      <div class="scenario-block-label">SCENARIO</div>
+      <div class="scenario-block-text">Joe cannot access <code>intranet.patraining.safemarch.com</code> via ZPA. Diagnose and fix by granting the missing ZPA service entitlement.</div>
+    </div>
+    <div class="objectives">
+      <div class="objectives-label">OBJECTIVES</div>
+      <ul>
+        <li>Identify the root cause using ZPA admin tools</li>
+        <li>Analyze configuration and troubleshoot the issue</li>
+        <li>Assign the missing ZPA service entitlement</li>
+        <li>Confirm Joe can access the internal application</li>
+      </ul>
+    </div>
+
+    <details class="task">
+      <summary>
+        <div class="task-num">11.1</div>
+        <div class="task-title">Identify the Root Cause</div>
+        <div class="task-chevron">›</div>
+      </summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>Simulate the issue:
+            <ul class="substeps">
+              <li>Login to ZCC as <code class="d-username-joe">joe@&lt;Student FQDN&gt;</code></li>
+              <li>Open <code>http://intranet.patraining.safemarch.com</code> — Joe cannot access</li>
+            </ul>
+          </li>
+          <li>Troubleshoot User Entitlements:
+            <ul class="substeps">
+              <li><span class="path">Administration &gt; Identity &gt; ZIdentity &gt; User Management &gt; Users</span></li>
+              <li>Find Joe → Edit → <strong>Entitlement</strong> tab</li>
+              <li>Joe has ZIA via Helpdesk L1; ZPA is missing — needs to be assigned</li>
+            </ul>
+          </li>
+        </ol>
+      </div>
+    </details>
+
+    <details class="task">
+      <summary>
+        <div class="task-num">11.2</div>
+        <div class="task-title">Resolve the Internal Application Access Issue</div>
+        <div class="task-chevron">›</div>
+      </summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>Assign ZPA Service Entitlement:
+            <ul class="substeps">
+              <li><span class="path">Administration &gt; Entitlements &gt; Service Entitlements &gt; End User Entitlements</span></li>
+              <li>Select <strong>Zscaler Private Access</strong></li>
+              <li>Users tab → <strong>Assign Users</strong></li>
+              <li>Select <strong>Joe</strong> → Next → <strong>Assign</strong></li>
+            </ul>
+          </li>
+          <li>Verify assignment — confirm Joe now has ZPA via the HelpDesk L1 User Group.</li>
+          <li>Test access:
+            <ul class="substeps">
+              <li>Open ZCC → click <strong>Update Policy</strong> → confirm <strong>Private Access</strong> is now visible</li>
+              <li>Open browser → <code>http://intranet.patraining.safemarch.com</code> — should load</li>
+            </ul>
+          </li>
+        </ol>
+      </div>
+    </details>
+    <div class="lab-takeaway">
+      <div class="lab-takeaway-label">WHY THIS MATTERS</div>
+      <p class="lab-takeaway-text">ZPA access failures are most commonly caused by users lacking entitlements or not being assigned to the correct policy — not by infrastructure problems. The troubleshooting workflow in this lab — checking user group membership, service entitlements, and access policy criteria — mirrors the systematic approach a real support engineer follows to resolve "cannot access internal app" tickets efficiently.</p>
+    </div>
+    <details class="lab-questions" id="q-lab11">
+      <summary><span class="lab-questions-icon">?</span> MY QUESTIONS <span class="lab-questions-count" id="q-count-lab11"></span><span class="lab-questions-chevron">›</span></summary>
+      <div class="lab-questions-body"><textarea class="lab-questions-input" id="q-input-lab11" placeholder="Type any questions to follow up later…" rows="3"></textarea></div>
+    </details>
+  </div>
+</details>
+
+<!-- ═══════════════ LAB 12 ═══════════════ -->
+<details class="lab" id="lab12">
+  <summary>
+    <div class="lab-num">12</div>
+    <div class="lab-title">
+      <div class="lab-title-name">Traffic Forwarding through SIPA</div>
+      <div class="lab-title-meta">⏱ 30 minutes · Source IP Anchoring · ZIA → ZPA → Connector</div>
+    </div>
+    <div class="lab-chevron">›</div>
+  </summary>
+  <div class="lab-body">
+    <div class="scenario-block">
+      <div class="scenario-block-label">SCENARIO</div>
+      <div class="scenario-block-text">Safemarch hosts cloud apps requiring source IP whitelisting. ZIA's dynamic egress IPs are an issue. Configure Source IP Anchoring (SIPA) to provide consistent, whitelisted egress IPs via ZPA infrastructure.</div>
+    </div>
+    <div class="objectives">
+      <div class="objectives-label">OBJECTIVES</div>
+      <ul>
+        <li>Configure a SIPA application segment for consistent egress IPs</li>
+        <li>Define and apply ZPA + ZIA forwarding rules</li>
+        <li>Validate by testing traffic routing through SIPA</li>
+      </ul>
+    </div>
+
+    <details class="task">
+      <summary>
+        <div class="task-num">12.1</div>
+        <div class="task-title">Configure Source IP Anchoring (SIPA) in ZPA</div>
+        <div class="task-chevron">›</div>
+      </summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>Verify current egress IPs:
+            <ul class="substeps">
+              <li>Identify native public IP: disable ZIA &amp; ZPA in ZCC → open <code>ip.zscaler.com</code></li>
+              <li>Identify ZIA egress IP: re-enable ZIA &amp; ZPA → open <code>ip.zscaler.com</code></li>
+              <li>Note the ZIA egress IP changes dynamically — that's the problem SIPA solves</li>
+            </ul>
+          </li>
+          <li>Configure SIPA in ZPA:
+            <ul class="substeps">
+              <li><span class="path">Infrastructure &gt; Private Access &gt; App Connectors</span> — verify deployed and connected</li>
+              <li><span class="path">Policies &gt; Private Applications &gt; App Segments</span> → <strong>Add Application Segment</strong></li>
+              <li>Name: <code>SIPA Application</code></li>
+              <li><strong>Source IP Anchor: Enabled</strong></li>
+              <li>Application: <code>ip.zscaler.com</code></li>
+              <li>TCP Port Ranges: <code>80</code> and <code>443</code></li>
+              <li>Click <strong>Next</strong></li>
+            </ul>
+          </li>
+          <li>Segment Group: Name <code>SIPA Segment</code> · Status <strong>Enabled</strong> → Next.</li>
+          <li>Server Group: Name <code>SIPA Server</code> · App Connector Group <strong>OnPrem</strong> → Next → <strong>Save</strong>.</li>
+          <li>Configure Access Policy:
+            <ul class="substeps">
+              <li><span class="path">Policies &gt; Private Applications &gt; Access Policy</span> → Add</li>
+              <li>Name: <code>SIPA Policy</code> &nbsp;·&nbsp; Action: <strong>Allow Access</strong></li>
+              <li>Criteria → Applications: <strong>SIPA Application</strong> segment / segment groups</li>
+              <li><strong>Save</strong></li>
+            </ul>
+          </li>
+          <li>Configure Client Forwarding Policies:
+            <ul class="substeps">
+              <li><span class="path">Infrastructure &gt; Private Access &gt; Client Connector Policies &gt; Client Forwarding Policies</span></li>
+              <li><strong>Rule 1: SIPA Bypass</strong>
+                <ul>
+                  <li>Action: <strong>Bypass ZPA</strong></li>
+                  <li>Applications: SIPA segment(s)</li>
+                  <li>Client Types: <strong>Client Connector</strong></li>
+                  <li>Save</li>
+                </ul>
+              </li>
+              <li><strong>Rule 2: SIPA Forward</strong>
+                <ul>
+                  <li>Action: <strong>Forward to ZPA</strong></li>
+                  <li>Applications: SIPA segment(s)</li>
+                  <li>Client Types: <strong>ZIA Service Edge</strong></li>
+                  <li>Save</li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+        </ol>
+      </div>
+    </details>
+
+    <details class="task">
+      <summary>
+        <div class="task-num">12.2</div>
+        <div class="task-title">Configure ZIA Forwarding for Source IP Anchoring</div>
+        <div class="task-chevron">›</div>
+      </summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li><span class="path">Infrastructure &gt; Internet and SaaS &gt; Network Policies &gt; Zscaler Private Access</span></li>
+          <li>Define ZPA Gateway:
+            <ul class="substeps">
+              <li>Click <strong>Add Gateway for ZPA</strong></li>
+              <li>Name: <code>SIPA Gateway</code></li>
+              <li>Server Group + App Segment: auto-fetched from ZPA config in 12.1</li>
+            </ul>
+          </li>
+          <li>Forwarding Control Policy tab:
+            <ul class="substeps">
+              <li>Rule order set</li>
+              <li>Rule Name: <code>SIPA Forward</code> &nbsp;·&nbsp; Status: <strong>Enabled</strong></li>
+              <li>Forwarding Method: <strong>ZPA</strong></li>
+            </ul>
+          </li>
+          <li>Criteria tab:
+            <ul class="substeps">
+              <li>Destination: define ZPA app segment (<code>SIPA application</code>)</li>
+              <li>Forward to ZPA Gateway action: <strong>SIPA Gateway</strong></li>
+              <li><strong>Save</strong> and <strong>Activate</strong></li>
+            </ul>
+          </li>
+        </ol>
+      </div>
+    </details>
+
+    <details class="task">
+      <summary>
+        <div class="task-num">12.3</div>
+        <div class="task-title">Verify Source IP Anchoring (SIPA) Functionality</div>
+        <div class="task-chevron">›</div>
+      </summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>Initial verification:
+            <ul class="substeps">
+              <li>On Corp: Client PC, open <code>ip.zscaler.com</code></li>
+              <li>Confirm displayed IP differs from default ZIA egress (Step 1 of Task 12.1)</li>
+              <li>Traffic now flows ZIA → ZPA → App Connector</li>
+            </ul>
+          </li>
+          <li>Dynamic test (modify segment):
+            <ul class="substeps">
+              <li><span class="path">Policies &gt; Private Application &gt; App Segments</span></li>
+              <li>Edit <strong>SIPA Application</strong> → remove <code>ip.zscaler.com</code> → add <code>ping.eu</code></li>
+            </ul>
+          </li>
+          <li>Test:
+            <ul class="substeps">
+              <li>Open browser → <code>ping.eu</code></li>
+              <li>Observe new IP — confirms traffic for the new app routes through ZPA-SIPA</li>
+            </ul>
+          </li>
+        </ol>
+        <div class="callout callout-tip">
+          <div class="callout-header"><div class="callout-icon">→</div>SIPA TRAFFIC PATH</div>
+          ZIA receives traffic, identifies a SIPA-flagged app, forwards via ZPA Gateway → App Connector → destination. The destination sees the App Connector's egress IP — fixed and whitelistable.
+        </div>
+      </div>
+    </details>
+    <div class="lab-takeaway">
+      <div class="lab-takeaway-label">WHY THIS MATTERS</div>
+      <p class="lab-takeaway-text">Source IP Anchoring (SIPA) solves the problem of SaaS applications that only allow traffic from a known, whitelisted IP — without SIPA, users on Zscaler would be blocked because their egress IP is a Zscaler Service Edge, not a known corporate IP. Understanding the ZIA → ZPA Gateway → App Connector traffic path is essential for designing Zscaler deployments that work alongside IP-allow-list requirements.</p>
+    </div>
+    <details class="lab-questions" id="q-lab12">
+      <summary><span class="lab-questions-icon">?</span> MY QUESTIONS <span class="lab-questions-count" id="q-count-lab12"></span><span class="lab-questions-chevron">›</span></summary>
+      <div class="lab-questions-body"><textarea class="lab-questions-input" id="q-input-lab12" placeholder="Type any questions to follow up later…" rows="3"></textarea></div>
+    </details>
+  </div>
+</details>
+
+<!-- ═══════════════ LAB 13 ═══════════════ -->
+<details class="lab" id="lab13">
+  <summary>
+    <div class="lab-num">13</div>
+    <div class="lab-title">
+      <div class="lab-title-name">Access an Internal Application using RDP [Optional]</div>
+      <div class="lab-title-meta">⏱ 10 minutes · TCP 3389 · App Segment Update</div>
+    </div>
+    <div class="lab-chevron">›</div>
+  </summary>
+  <div class="lab-body">
+    <div class="scenario-block">
+      <div class="scenario-block-label">SCENARIO</div>
+      <div class="scenario-block-text">A user can't reach <code>intranet.patraining.safemarch.com</code> via RDP. Investigation shows port 3389 is missing from the App Segment's TCP Port Ranges. Update the segment to include 3389 and confirm RDP access via ZPA.</div>
+    </div>
+    <div class="objectives">
+      <div class="objectives-label">OBJECTIVES</div>
+      <ul>
+        <li>Configure Intranet App Segment to allow RDP on port 3389</li>
+        <li>Verify access details in logs</li>
+      </ul>
+    </div>
+
+    <details class="task">
+      <summary>
+        <div class="task-num">13.1</div>
+        <div class="task-title">Verify Access to External Application Using RDP</div>
+        <div class="task-chevron">›</div>
+      </summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>Enable RDP port in App Segment:
+            <ul class="substeps">
+              <li><span class="path">Policies &gt; Access Control &gt; Private Applications &gt; App Segment</span></li>
+              <li>Find <strong>Intranet</strong> → Edit</li>
+              <li>Add <code>3389</code> to TCP Port Ranges → <strong>Save</strong></li>
+            </ul>
+          </li>
+          <li>Connect via Remote Desktop:
+            <ul class="substeps">
+              <li>Open Remote Desktop Connection on Corp: Client PC</li>
+              <li>Computer: <code>intranet.patraining.safemarch.com</code></li>
+              <li>Username: <code>student</code> &nbsp;·&nbsp; Password: <code>Admin-123!</code></li>
+              <li>Confirm internal application is accessed via RDP</li>
+            </ul>
+          </li>
+          <li>Verify connection &amp; logs:
+            <span class="cmd">netstat -fn</span>
+            Confirm port 3389 shows ESTABLISHED.
+            <ul class="substeps">
+              <li><span class="path">Analytics &gt; Private Applications</span> → <strong>Recently Application Accessed</strong></li>
+              <li>Find <code>intranet.patraining.safemarch.com:3389</code> → click for diagnostics</li>
+              <li>(Toggle "Switch to existing reports" if needed)</li>
+            </ul>
+          </li>
+          <li>Optional troubleshooting (induce failure):
+            <ul class="substeps">
+              <li>Edit Intranet App Segment → remove TCP/UDP <code>3389</code></li>
+              <li>Reconnect via Remote Desktop → connection fails</li>
+              <li><span class="path">Analytics &gt; Private Applications</span> → Top Policy Blocks → Access Policy Blocks → Show in Logs</li>
+              <li>Diagnostics: review Status Code, Server IP &amp; Protocol</li>
+            </ul>
+          </li>
+        </ol>
+      </div>
+    </details>
+    <div class="lab-takeaway">
+      <div class="lab-takeaway-label">WHY THIS MATTERS</div>
+      <p class="lab-takeaway-text">RDP via ZPA demonstrates that zero-trust private access works for any TCP/UDP application, not just web apps — eliminating VPN for RDP access to Windows servers is one of the most common ZPA use cases in enterprise environments. The port-troubleshooting exercise reinforces that ZPA enforces app segment port ranges strictly, which is a common source of access issues in real deployments.</p>
+    </div>
+    <details class="lab-questions" id="q-lab13">
+      <summary><span class="lab-questions-icon">?</span> MY QUESTIONS <span class="lab-questions-count" id="q-count-lab13"></span><span class="lab-questions-chevron">›</span></summary>
+      <div class="lab-questions-body"><textarea class="lab-questions-input" id="q-input-lab13" placeholder="Type any questions to follow up later…" rows="3"></textarea></div>
+    </details>
+  </div>
+</details>
+
+<!-- ═══════════════ SDC SECTION HEADER ═══════════════ -->
+<div class="intro-block" style="margin-top:36px;">
+  <h2>Solutions Demo Center (SDC) Labs</h2>
+  <p>The next labs (14–16) are <strong>read-only SDC labs</strong>, used because of report timelines (24h+) and restricted access. They expose you to ZDX dashboards and analytics workflows.</p>
+  <p><strong>SDC Login:</strong> <code>https://console.zscaler.com</code> with <span class="var var-sdc-user">&lt;SDC Admin Username&gt;</span> / <span class="var var-sdc-pass">&lt;SDC Password&gt;</span>. Skip MFA when prompted.</p>
+</div>
+
+<!-- ═══════════════ LAB 14 ═══════════════ -->
+<details class="lab" id="lab14">
+  <summary>
+    <div class="lab-num">14</div>
+    <div class="lab-title">
+      <div class="lab-title-name">Navigate the Incident, Self-Service, Application Overview Dashboards</div>
+      <div class="lab-title-meta">⏱ 20 minutes · ZDX Performance · Incidents · Apps · Users</div>
+    </div>
+    <div class="lab-chevron">›</div>
+  </summary>
+  <div class="lab-body">
+    <div class="scenario-block">
+      <div class="scenario-block-label">SCENARIO</div>
+      <div class="scenario-block-text">Your org uses ZDX to monitor and improve user experience across endpoints, networks, and apps. Analyze ZDX dashboards (Incident, Self-Service, Application Overview, User Overview) and use data to identify root causes.</div>
+    </div>
+    <div class="objectives">
+      <div class="objectives-label">OBJECTIVES</div>
+      <ul>
+        <li>Navigate ZDX dashboards: Performance Overview, Incidents, Self-Service, Application Overview, User Overview</li>
+        <li>Analyze root cause indicators for application, network, and user issues</li>
+        <li>Troubleshoot performance problems and plan corrective actions</li>
+      </ul>
+    </div>
+
+    <details class="task">
+      <summary>
+        <div class="task-num">14.1</div>
+        <div class="task-title">View ZDX Performance Dashboard</div>
+        <div class="task-chevron">›</div>
+      </summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>Login to Experience Center as SDC admin: <span class="var var-sdc-user">&lt;SDC Admin Username&gt;</span> / <span class="var var-sdc-pass">&lt;SDC Password&gt;</span> (skip MFA).</li>
+          <li>Go to Analytics → click <strong>Switch to Existing Reports</strong>.</li>
+          <li>Navigate <span class="path">Analytics &gt; Digital Experience &gt; Applications &gt; Mapview</span> (or search "Map View").</li>
+          <li>Set reporting interval to <strong>24 Hours</strong>.</li>
+          <li>Explore Most Impacted Applications — click an app (e.g., "ZPA Application") to drill into metrics.</li>
+          <li>Analyze Regions by ZDX Score map:
+            <ul class="substeps">
+              <li>Click a location → view ZDX Score and total users in region</li>
+              <li>+/- to zoom; <strong>Draw Fence</strong> to select a geographic area; <strong>Filter Selection</strong> to apply</li>
+              <li>Click <strong>Reset</strong> to clear</li>
+            </ul>
+          </li>
+          <li>Review ZDX Score for Selected Applications — scroll down; click <strong>Add Another Application</strong> to compare.</li>
+          <li>Filter by Geolocations — top of dashboard → Geolocations dropdown → Apply → Reset to clear.</li>
+          <li>Explore Filtering Options at Most Impacted Applications: Departments, Zscaler Locations, User groups, Location groups, Last Mile ISPs, Operating systems.</li>
+          <li>Wi-Fi Dashboard — review Total Access Points, Wi-Fi Performance, Total Devices Connected.</li>
+        </ol>
+      </div>
+    </details>
+
+    <details class="task">
+      <summary>
+        <div class="task-num">14.2</div>
+        <div class="task-title">View Incidents and Self Service Dashboards</div>
+        <div class="task-chevron">›</div>
+      </summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>Incidents Dashboard:
+            <ul class="substeps">
+              <li>Left nav → <strong>Incident Dashboard</strong> (or search "Incident Dashboard")</li>
+              <li>Review the various incident areas</li>
+              <li>Scroll to Incidents by Epicenters map → click marker → select an incident</li>
+              <li>Click <strong>View incidents Details</strong> link → review collected metrics</li>
+            </ul>
+          </li>
+          <li>Self Service Dashboard:
+            <ul class="substeps">
+              <li><span class="path">Dashboard &gt; Self Service Dashboard</span></li>
+              <li>Explore summary graphs about notifications in the selected timeframe</li>
+            </ul>
+          </li>
+        </ol>
+        <div class="callout callout-note">
+          <div class="callout-header"><div class="callout-icon">★</div>NOTE</div>
+          If "Try again later. If this persists, contact Zscaler Support" appears on the Incidents By Epicenters dashboard, refresh and retry.
+        </div>
+      </div>
+    </details>
+
+    <details class="task">
+      <summary>
+        <div class="task-num">14.3</div>
+        <div class="task-title">View Application Overview Dashboard</div>
+        <div class="task-chevron">›</div>
+      </summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>Navigate: left nav → <strong>Applications</strong> (or search "Applications").</li>
+          <li>Identify lowest score: sort table by ZDX Score Trend → click app with lowest score.</li>
+          <li>Scope a time period: in ZDX Score Over Time graph, drag to zoom; click <strong>Zoom out</strong>.</li>
+          <li>View Impact Dimensions — scroll for impacted Meetings, Regions, Zscaler Locations, and Probe Status.</li>
+        </ol>
+        <div class="callout callout-note">
+          <div class="callout-header"><div class="callout-icon">★</div>NOTE</div>
+          Different apps show different views — UCAAS apps don't display Page Fetch Time tab.
+        </div>
+      </div>
+    </details>
+
+    <details class="task">
+      <summary>
+        <div class="task-num">14.4</div>
+        <div class="task-title">View User Overview Dashboard</div>
+        <div class="task-chevron">›</div>
+      </summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>Navigate the Users Overview Dashboard from the navigation bar (<strong>Users</strong>).</li>
+          <li>Scope by application: select from dropdown → Apply.</li>
+          <li>Find impacted users: filter by ZDX Score (Poor / Okay / Good); pick a user with Poor or Okay perf.</li>
+          <li>Review User/Device context:
+            <ul class="substeps">
+              <li>OS, IP, device-specific metrics</li>
+              <li>Click <strong>View</strong> for a user → <strong>View More Device Details</strong></li>
+              <li>Analyze Hardware, Network, Software tabs → Done</li>
+            </ul>
+          </li>
+          <li>Review Application Performance for this user — view ZDX Score Over Time graph.</li>
+          <li>Review Web Probe Metrics — toggle graphs; click for spike details (Page Fetch Time, Server Response Time, etc.).</li>
+          <li>Review Cloud Path Metrics:
+            <ul class="substeps">
+              <li>Cloud Path graph for Latency and Packet Loss</li>
+              <li>Select/unselect Cloud Path legs as needed</li>
+              <li>Hop View — expand the leg with highest differential latency (orange)</li>
+              <li>Mouse-over a hop for more info</li>
+              <li>Click <strong>Command Line View</strong> to identify hops with high packet loss/latency</li>
+            </ul>
+          </li>
+        </ol>
+        <div class="callout callout-tip">
+          <div class="callout-header"><div class="callout-icon">→</div>EXAM-CRITICAL: PROBES</div>
+          ZDX probes collect application performance data. <strong>Predefined apps</strong> include built-in probes by default; <strong>custom apps</strong> require you to configure probes manually. Probes provide baseline + real-time visibility into where a problem exists. Troubleshooting in ZDX is probe-driven — probes generate the data that lets you pinpoint the exact hop or layer causing degradation.
+        </div>
+      </div>
+    </details>
+    <div class="lab-takeaway">
+      <div class="lab-takeaway-label">WHY THIS MATTERS</div>
+      <p class="lab-takeaway-text">ZDX dashboards give you a user-centric view of digital experience that complements ZIA and ZPA policy monitoring — instead of asking "are policies applied?" you can ask "what is the actual experience quality?". Understanding the Incident, Self-Service, and Application Overview dashboards, plus Deep Trace and Cloud Path, gives you the triage toolkit for any end-user performance complaint.</p>
+    </div>
+    <details class="lab-questions" id="q-lab14">
+      <summary><span class="lab-questions-icon">?</span> MY QUESTIONS <span class="lab-questions-count" id="q-count-lab14"></span><span class="lab-questions-chevron">›</span></summary>
+      <div class="lab-questions-body"><textarea class="lab-questions-input" id="q-input-lab14" placeholder="Type any questions to follow up later…" rows="3"></textarea></div>
+    </details>
+  </div>
+</details>
+
+<!-- ═══════════════ LAB 15 ═══════════════ -->
+<details class="lab" id="lab15">
+  <summary>
+    <div class="lab-num">15</div>
+    <div class="lab-title">
+      <div class="lab-title-name">Troubleshoot Poor Wi-Fi</div>
+      <div class="lab-title-meta">⏱ 15 minutes · Y-Engine · Cloud Path · SSID Change</div>
+    </div>
+    <div class="lab-chevron">›</div>
+  </summary>
+  <div class="lab-body">
+    <div class="scenario-block">
+      <div class="scenario-block-label">SCENARIO</div>
+      <div class="scenario-block-text">A user reports frequent disconnections, slow internet, difficulty completing work. Initial signals point to poor Wi-Fi but details are unclear. Use ZDX to pinpoint root cause and restore digital experience.</div>
+    </div>
+    <div class="objectives">
+      <div class="objectives-label">OBJECTIVES</div>
+      <ul>
+        <li>Filter ZDX dashboards to isolate user-specific device/Wi-Fi data</li>
+        <li>Use ZDX Y-Engine Analyze Score to find score-degradation factors</li>
+        <li>Compare Cloud Path data and diagnose ZDX score degradation</li>
+        <li>Analyze Device Events associated with score changes</li>
+      </ul>
+    </div>
+    <table class="compare-table">
+      <thead><tr><th>Field</th><th>Value</th></tr></thead>
+      <tbody>
+        <tr><td>User</td><td>Curtis Hardwick</td></tr>
+        <tr><td>Device</td><td>PC-Curtis-Wi-Fi</td></tr>
+        <tr><td>Time Range</td><td>Last 48 Hours</td></tr>
+        <tr><td>Highlights</td><td>Poor Wi-Fi Signal · SSID Changing · Y-Engine Comparison</td></tr>
+      </tbody>
+    </table>
+
+    <details class="task">
+      <summary>
+        <div class="task-num">15.1</div>
+        <div class="task-title">View User ZDX Score for an Application</div>
+        <div class="task-chevron">›</div>
+      </summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>Search for the affected user:
+            <ul class="substeps">
+              <li>Search "User/Device Search" or <span class="path">Analytics &gt; Digital Experience Management &gt; User/Device Search</span></li>
+              <li>Dropdown: <strong>User Search</strong></li>
+              <li>Type: <code>Curtis Hardwick</code> → click result</li>
+            </ul>
+          </li>
+          <li>Reset any filter applied in Task 14.4 before viewing the user dashboard.</li>
+          <li>Filter by time range and application:
+            <ul class="substeps">
+              <li>Time period: <strong>48 Hours</strong></li>
+              <li>Application: <strong>Salesforce Lightning</strong></li>
+              <li>Observe ZDX Score Over Time graph fluctuating between Good and Poor</li>
+            </ul>
+          </li>
+        </ol>
+        <div class="callout callout-tip">
+          <div class="callout-header"><div class="callout-icon">→</div>TIP</div>
+          You may need a custom timeframe to see meaningful data.
+        </div>
+      </div>
+    </details>
+
+    <details class="task">
+      <summary>
+        <div class="task-num">15.2</div>
+        <div class="task-title">Analyze Poor ZDX Score Interval</div>
+        <div class="task-chevron">›</div>
+      </summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>Zoom into a Poor score interval — locate a Poor period in the graph (include time before/after for context).</li>
+          <li>Run Y-Engine Analyze Score:
+            <ul class="substeps">
+              <li>Click on a Poor score point</li>
+              <li>View ZDX Score for that sample</li>
+              <li>Click <strong>Analyze Score</strong> (a few seconds to compute)</li>
+              <li>View the analysis results table for contributing factors</li>
+            </ul>
+          </li>
+        </ol>
+        <div class="callout callout-note">
+          <div class="callout-header"><div class="callout-icon">★</div>EXAMPLE</div>
+          Score 10/100 likely came from Low Wi-Fi Signal; Suboptimal Wi-Fi after connecting to <code>3Com_Wifi</code> SSID degraded performance.
+        </div>
+      </div>
+    </details>
+
+    <details class="task">
+      <summary>
+        <div class="task-num">15.3</div>
+        <div class="task-title">Compare Poor ZDX Score to Last Known Good Score</div>
+        <div class="task-chevron">›</div>
+      </summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>Click <strong>Compare to</strong> for the selected point on the graph.</li>
+          <li>Select <strong>Last known good score</strong>.</li>
+          <li>Review the comparison panel, focusing on:
+            <ul class="substeps">
+              <li>ZDX Score (Analyzed Point vs Comparison Point)</li>
+              <li>Wi-Fi identifier</li>
+              <li>Client-Egress Latency</li>
+            </ul>
+          </li>
+        </ol>
+      </div>
+    </details>
+
+    <details class="task">
+      <summary>
+        <div class="task-num">15.4</div>
+        <div class="task-title">Isolate High Latency Hop</div>
+        <div class="task-chevron">›</div>
+      </summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>Return to the user report — click <strong>Back</strong> next to Compare ZDX Scores; confirm Curtis Hardwick + Salesforce Lightning.</li>
+          <li>Focus on a Poor score interval — zoom in on the ZDX Score Over Time graph.</li>
+          <li>Review Cloud Path latency at the selected data point.</li>
+          <li>Examine Hop View:
+            <ul class="substeps">
+              <li>Hop View shows each detected hop between client and server with latency</li>
+              <li>Identify which hop contributes most to end-to-end latency</li>
+            </ul>
+          </li>
+        </ol>
+        <div class="callout callout-note">
+          <div class="callout-header"><div class="callout-icon">★</div>EXAMPLE</div>
+          Hop View isolates the slow latency to the <strong>first hop</strong> between user's device and local gateway. If network was lost, no Hop View data — pick a different point.
+        </div>
+      </div>
+    </details>
+
+    <details class="task">
+      <summary>
+        <div class="task-num">15.5</div>
+        <div class="task-title">View User Device Events Associated with ZDX Score Changes</div>
+        <div class="task-chevron">›</div>
+      </summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>Scroll to the bottom of the user view to find User Device Events timelines.</li>
+          <li>Correlate device events with the Poor score transition:
+            <ul class="substeps">
+              <li>In the Network timeline, find when ZDX Score went Poor</li>
+              <li>Mouse over the dot for Network Interface details</li>
+            </ul>
+          </li>
+          <li>Review pop-up details — identify what changed (look at <strong>New Value</strong> field).
+            <div class="callout callout-note">
+              <div class="callout-header"><div class="callout-icon">★</div>EXAMPLE</div>
+              SSID change from <code>Google_Nest</code> to <code>Columbus-OH-Office</code> aligns with the Poor transition.
+            </div>
+          </li>
+          <li>Correlate Recovery Back to Good — find dot where score went back to Good; mouse over for Network Interface data.
+            <div class="callout callout-note">
+              <div class="callout-header"><div class="callout-icon">★</div>EXAMPLE</div>
+              Switching back to <code>Google_Nest</code> aligns with the recovery.
+            </div>
+          </li>
+          <li>Interpret impact: identify Wi-Fi/network events (SSID changes, disconnects, signal changes) that align with score degradation/recovery. Conclude root cause (e.g., "SSID changes and poor Wi-Fi signal on PC-Curtis-Wi-Fi caused poor experience").</li>
+        </ol>
+      </div>
+    </details>
+    <div class="lab-takeaway">
+      <div class="lab-takeaway-label">WHY THIS MATTERS</div>
+      <p class="lab-takeaway-text">WiFi-related complaints are the most common source of "Zscaler is making my internet slow" tickets — when in fact the root cause is a poor access point or SSID roaming event. ZDX's WiFi data (signal strength, SSID changes, AP latency) gives engineers the correlation between network layer events and ZDX Score drops, enabling a data-driven response that redirects responsibility to the correct team.</p>
+    </div>
+    <details class="lab-questions" id="q-lab15">
+      <summary><span class="lab-questions-icon">?</span> MY QUESTIONS <span class="lab-questions-count" id="q-count-lab15"></span><span class="lab-questions-chevron">›</span></summary>
+      <div class="lab-questions-body"><textarea class="lab-questions-input" id="q-input-lab15" placeholder="Type any questions to follow up later…" rows="3"></textarea></div>
+    </details>
+  </div>
+</details>
+
+<!-- ═══════════════ LAB 16 ═══════════════ -->
+<details class="lab" id="lab16">
+  <summary>
+    <div class="lab-num">16</div>
+    <div class="lab-title">
+      <div class="lab-title-name">Troubleshoot Slow DNS Response</div>
+      <div class="lab-title-meta">⏱ 15 minutes · Copilot · PFT · DNS Resolve · Y-Engine</div>
+    </div>
+    <div class="lab-chevron">›</div>
+  </summary>
+  <div class="lab-body">
+    <div class="scenario-block">
+      <div class="scenario-block-label">SCENARIO</div>
+      <div class="scenario-block-text">Linda Lucas reports consistently poor experience with SaaS apps. Zoom calls work fine once connected; web apps are very slow. Initial investigation suggests slow DNS response times. Use ZDX Copilot + manual analysis to confirm.</div>
+    </div>
+    <div class="objectives">
+      <div class="objectives-label">OBJECTIVES</div>
+      <ul>
+        <li>Use ZDX Copilot to identify likely root causes</li>
+        <li>View user's overall ZDX score over time</li>
+        <li>Analyze Page Fetch Time and related Web Probe Metrics</li>
+        <li>Confirm primary root cause using ZDX Y-Engine</li>
+      </ul>
+    </div>
+    <table class="compare-table">
+      <thead><tr><th>Field</th><th>Value</th></tr></thead>
+      <tbody>
+        <tr><td>User</td><td>Linda Lucas</td></tr>
+        <tr><td>Device</td><td>HOST-2</td></tr>
+        <tr><td>Time Range</td><td>Last 48 Hours</td></tr>
+        <tr><td>Highlights</td><td>Poor App Experience · Slow DNS Response Times</td></tr>
+      </tbody>
+    </table>
+
+    <details class="task">
+      <summary>
+        <div class="task-num">16.1</div>
+        <div class="task-title">Use ZDX Copilot for Root Cause Analysis</div>
+        <div class="task-chevron">›</div>
+      </summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>Navigate <span class="path">Analytics &gt; Copilot</span> (or search "Copilot").</li>
+          <li>In Copilot chat, send:
+            <span class="cmd no-prompt">Linda Lucas linda.lucas@thexerotrustlab.com reports to the service desk that she is having a consistently poor experience when accessing SaaS apps like okta. analyze the reason behind</span>
+          </li>
+          <li>Review Copilot's response — focus on:
+            <ul class="substeps">
+              <li>Reason it identifies for Linda's poor SaaS experience</li>
+              <li>Mention of DNS, latency, or Page Fetch Time as factors</li>
+            </ul>
+          </li>
+        </ol>
+        <div class="callout callout-tip">
+          <div class="callout-header"><div class="callout-icon">→</div>NEXT</div>
+          You'll do a manual investigation in subsequent tasks to validate Copilot's findings and understand how ZDX derives that conclusion.
+        </div>
+      </div>
+    </details>
+
+    <details class="task">
+      <summary>
+        <div class="task-num">16.2</div>
+        <div class="task-title">View User ZDX Score Over Time</div>
+        <div class="task-chevron">›</div>
+      </summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>Navigate <span class="path">Analytics &gt; Digital Experience Management &gt; User/Device Search</span> and search:
+            <ul class="substeps">
+              <li>User: <code>Linda Lucas</code></li>
+              <li>Device: <code>HOST-2</code></li>
+            </ul>
+          </li>
+          <li>View ZDX score for incident period:
+            <ul class="substeps">
+              <li>Time period: <strong>48 Hours</strong></li>
+              <li>View ZDX Score Over Time graph</li>
+            </ul>
+          </li>
+          <li>Observe example behaviour:
+            <ul class="substeps">
+              <li>ZDX score consistently <strong>Poor</strong> over the entire interval</li>
+              <li>Every application scoring 13/100 or lower</li>
+            </ul>
+          </li>
+        </ol>
+      </div>
+    </details>
+
+    <details class="task">
+      <summary>
+        <div class="task-num">16.3</div>
+        <div class="task-title">Analyze High Page Fetch Time</div>
+        <div class="task-chevron">›</div>
+      </summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>Scroll to <strong>Web Probe Metrics</strong> on Linda's user/device report.</li>
+          <li>Review overall range of Page Fetch Time values (e.g., ~1000–3000 ms — high latency).</li>
+          <li>Click a specific point in the Page Fetch Time graph to analyze.</li>
+          <li>Compare:
+            <ul class="substeps">
+              <li>Page Fetch Time at this point (e.g., 1204 ms)</li>
+              <li>PFT Baseline (e.g., 506 ms)</li>
+            </ul>
+            Significantly higher than baseline = unusually high latency per request.
+          </li>
+          <li>Examine Page Fetch Time breakdown:
+            <ul class="substeps">
+              <li>Server Response Time</li>
+              <li>DNS Resolve Time</li>
+            </ul>
+          </li>
+          <li>Note in this example:
+            <ul class="substeps">
+              <li>High fluctuations in DNS Resolve Time</li>
+              <li>DNS Resolve Time accounts for most of the overall PFT latency</li>
+            </ul>
+          </li>
+        </ol>
+        <div class="callout callout-tip">
+          <div class="callout-header"><div class="callout-icon">→</div>FINDING</div>
+          Slow / unstable DNS is the primary contributor to Linda's poor experience.
+        </div>
+      </div>
+    </details>
+
+    <details class="task">
+      <summary>
+        <div class="task-num">16.4</div>
+        <div class="task-title">Use ZDX Root Cause Analysis to Determine Root Cause</div>
+        <div class="task-chevron">›</div>
+      </summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>Scroll back to ZDX Score Over Time graph for Linda's device.</li>
+          <li>Click <strong>Analyze Score</strong>.</li>
+          <li>Review the analysis panel — factors that may have impacted the score during the time window.</li>
+          <li>Identify the top contributing factor(s).
+            <div class="callout callout-note">
+              <div class="callout-header"><div class="callout-icon">★</div>EXAMPLE</div>
+              <strong>High DNS</strong> is identified as the most likely root cause with a Confidence Level of <strong>100%</strong>.
+            </div>
+          </li>
+          <li>Confirm alignment with Task 16.3:
+            <ul class="substeps">
+              <li>DNS Resolve Time = majority of Page Fetch Time</li>
+              <li>DNS latency had significant variability</li>
+            </ul>
+          </li>
+          <li>View User Devices section — identify DNS server used by Host-2: <code>10.0.1.53</code>.</li>
+        </ol>
+        <div class="callout callout-tip">
+          <div class="callout-header"><div class="callout-icon">→</div>CONCLUSION</div>
+          Slow DNS response from the configured DNS server is the primary cause of Linda's poor SaaS experience — confirmed by both manual analysis and Copilot.
+        </div>
+      </div>
+    </details>
+    <div class="lab-takeaway">
+      <div class="lab-takeaway-label">WHY THIS MATTERS</div>
+      <p class="lab-takeaway-text">Slow DNS is a frequently overlooked root cause of poor SaaS application experience — it is invisible at the application level but compounds across every page load. ZDX's Page Fetch Time decomposition (DNS Resolve, TCP, SSL, TTFB) combined with Y-Engine root cause analysis and Copilot gives engineers a structured, repeatable path from symptom to specific DNS server IP, enabling fast and accurate escalation to the network team.</p>
+    </div>
+    <details class="lab-questions" id="q-lab16">
+      <summary><span class="lab-questions-icon">?</span> MY QUESTIONS <span class="lab-questions-count" id="q-count-lab16"></span><span class="lab-questions-chevron">›</span></summary>
+      <div class="lab-questions-body"><textarea class="lab-questions-input" id="q-input-lab16" placeholder="Type any questions to follow up later…" rows="3"></textarea></div>
+    </details>
+  </div>
+</details>
+
+</main>
+
+<footer>
+  <div class="footer-left">EDU-200<span>.</span></div>
+  <div class="footer-right">Zscaler For Users — Administrator · Hands-on Lab Guide · Dec 2025 Rev 1.0</div>
+</footer>
+
+<script>
+/* ── CONFIG PANEL COLLAPSE ── */
+function toggleConfig() {
+  const panel = document.getElementById('config-panel');
+  const btn   = document.getElementById('config-toggle-btn');
+  const collapsed = panel.classList.toggle('collapsed');
+  btn.innerHTML = collapsed
+    ? '<span class="chevron" style="transform:rotate(180deg);display:inline-block;">▲</span> Expand'
+    : '<span class="chevron">▲</span> Collapse';
+}
+
+function updateToggleSummary() {
+  const fqdn = document.getElementById('fqdn-input').value.trim();
+  const summary = document.getElementById('config-toggle-summary');
+  summary.textContent = fqdn ? `— ${fqdn}` : '';
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   FQDN / VARIABLE REPLACEMENT ENGINE
+   ═══════════════════════════════════════════════════════════════ */
+
+const STORAGE_KEY = 'edu200-lab-config';
+
+function loadConfig() {
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) {
+      const cfg = JSON.parse(saved);
+      document.getElementById('fqdn-input').value = cfg.fqdn || '';
+      document.getElementById('pass-input').value = cfg.pass || '';
+      document.getElementById('sdc-user-input').value = cfg.sdcUser || '';
+      document.getElementById('sdc-pass-input').value = cfg.sdcPass || '';
+    }
+  } catch (e) { /* ignore */ }
+  applyAll();
+}
+
+function saveConfig() {
+  const cfg = {
+    fqdn: document.getElementById('fqdn-input').value.trim(),
+    pass: document.getElementById('pass-input').value.trim(),
+    sdcUser: document.getElementById('sdc-user-input').value.trim(),
+    sdcPass: document.getElementById('sdc-pass-input').value.trim(),
+  };
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(cfg)); } catch (e) {}
+  applyAll();
+  updateToggleSummary();
+  flashSaved();
+}
+
+function clearConfig() {
+  document.getElementById('fqdn-input').value = '';
+  document.getElementById('pass-input').value = '';
+  document.getElementById('sdc-user-input').value = '';
+  document.getElementById('sdc-pass-input').value = '';
+  try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
+  applyAll();
+  updateToggleSummary();
+}
+
+function flashSaved() {
+  const btn = document.querySelector('.config-btn');
+  const orig = btn.textContent;
+  btn.textContent = '✓ Saved';
+  btn.style.background = 'var(--green)';
+  btn.style.color = 'white';
+  setTimeout(() => {
+    btn.textContent = orig;
+    btn.style.background = '';
+    btn.style.color = '';
+  }, 1200);
+}
+
+function applyAll() {
+  const fqdn = document.getElementById('fqdn-input').value.trim();
+  const pass = document.getElementById('pass-input').value.trim();
+  const sdcUser = document.getElementById('sdc-user-input').value.trim();
+  const sdcPass = document.getElementById('sdc-pass-input').value.trim();
+
+  // Derive Student ID from FQDN (everything before first dot)
+  const studentId = fqdn ? fqdn.split('.')[0] : '';
+
+  // ── Update <Student FQDN> placeholders ──
+  document.querySelectorAll('.var-fqdn').forEach(el => {
+    if (fqdn) {
+      el.textContent = fqdn;
+      el.classList.add('filled');
+    } else {
+      el.textContent = '<Student FQDN>';
+      el.classList.remove('filled');
+    }
+  });
+
+  // ── Update <Session Password> placeholders ──
+  document.querySelectorAll('.var-pass').forEach(el => {
+    if (pass) {
+      el.textContent = pass;
+      el.classList.add('filled');
+    } else {
+      el.textContent = '<Session Password>';
+      el.classList.remove('filled');
+    }
+  });
+
+  // ── Update <SDC Admin Username> placeholders ──
+  document.querySelectorAll('.var-sdc-user').forEach(el => {
+    if (sdcUser) {
+      el.textContent = sdcUser;
+      el.classList.add('filled');
+    } else {
+      el.textContent = '<SDC Admin Username>';
+      el.classList.remove('filled');
+    }
+  });
+
+  // ── Update <SDC Password> placeholders ──
+  document.querySelectorAll('.var-sdc-pass').forEach(el => {
+    if (sdcPass) {
+      el.textContent = sdcPass;
+      el.classList.add('filled');
+    } else {
+      el.textContent = '<SDC Password>';
+      el.classList.remove('filled');
+    }
+  });
+
+  // ── Derived usernames ──
+  const studentUser = fqdn ? `student@${fqdn}` : 'student@<Student FQDN>';
+  const joeUser     = fqdn ? `joe@${fqdn}`     : 'joe@<Student FQDN>';
+  const bevUser     = fqdn ? `bev@${fqdn}`     : 'bev@<Student FQDN>';
+
+  document.querySelectorAll('.d-username-student').forEach(el => el.textContent = studentUser);
+  document.querySelectorAll('.d-username-joe').forEach(el => el.textContent = joeUser);
+  document.querySelectorAll('.d-username-bev').forEach(el => el.textContent = bevUser);
+
+  // ── Derived header strip ──
+  document.getElementById('d-student').textContent = studentUser;
+  document.getElementById('d-joe').textContent     = joeUser;
+  document.getElementById('d-bev').textContent     = bevUser;
+  document.getElementById('d-id').textContent      = studentId || '<Student ID>';
+}
+
+/* ═══ EXPAND / COLLAPSE ALL ═══ */
+function expandAll() {
+  document.querySelectorAll('details').forEach(d => d.open = true);
+}
+function collapseAll() {
+  document.querySelectorAll('details').forEach(d => d.open = false);
+}
+
+/* ═══ LIVE INPUT WIRING ═══ */
+['fqdn-input', 'pass-input', 'sdc-user-input', 'sdc-pass-input'].forEach(id => {
+  document.getElementById(id).addEventListener('input', applyAll);
+});
+
+/* ═══ INITIALIZE ═══ */
+loadConfig();
+updateToggleSummary();
+
+/* ═══ SMOOTH SCROLL FOR LAB NAV ═══ */
+document.querySelectorAll('.lab-nav-tab').forEach(tab => {
+  tab.addEventListener('click', (e) => {
+    e.preventDefault();
+    const id = tab.getAttribute('href').slice(1);
+    const target = document.getElementById(id);
+    if (target) {
+      // Auto-open the lab when nav clicked
+      target.open = true;
+      const top = target.getBoundingClientRect().top + window.scrollY - 100;
+      window.scrollTo({ top, behavior: 'smooth' });
+    }
+  });
+});
+
+/* ═══════════════════════════════════════════════════════════════
+   PROGRESS TRACKING — lab + objective checkboxes
+   ═══════════════════════════════════════════════════════════════ */
+const PROG_KEY = 'edu200-progress';
+
+function loadProg() {
+  try { return JSON.parse(localStorage.getItem(PROG_KEY)) || {}; } catch { return {}; }
+}
+function saveProg(s) {
+  try { localStorage.setItem(PROG_KEY, JSON.stringify(s)); } catch {}
+}
+
+function updateProgress(state) {
+  const labs = document.querySelectorAll('details.lab');
+  let doneLabs = 0, totalTasks = 0, doneTasks = 0;
+  labs.forEach(lab => {
+    const labId = lab.id;
+    if (state['lc-' + labId]) doneLabs++;
+    lab.querySelectorAll('.obj-check').forEach((_, i) => {
+      totalTasks++;
+      if (state['oc-' + labId + '-' + i]) doneTasks++;
+    });
+    const tab = document.querySelector('.lab-nav-tab[href="#' + labId + '"]');
+    if (tab) tab.classList.toggle('lab-nav-done', !!state['lc-' + labId]);
+  });
+  const pct = labs.length ? (doneLabs / labs.length) * 100 : 0;
+  const fill = document.getElementById('progress-fill');
+  fill.style.width = pct + '%';
+  fill.classList.toggle('all-done', doneLabs === labs.length && labs.length > 0);
+  document.getElementById('prog-done').textContent = Math.round(pct);
+  document.getElementById('prog-tasks').textContent = doneTasks + ' / ' + totalTasks + ' tasks';
+}
+
+function injectCheckboxes() {
+  const state = loadProg();
+document.querySelectorAll('details.lab').forEach(lab => {
+    const labId = lab.id;
+    const summary = lab.querySelector(':scope > summary');
+
+    // ── Lab-level checkbox ──
+    const wrap = document.createElement('div');
+    wrap.className = 'lab-check-wrap';
+    const lcb = document.createElement('input');
+    lcb.type = 'checkbox';
+    lcb.className = 'lab-check';
+    lcb.id = 'lc-' + labId;
+    lcb.checked = !!state['lc-' + labId];
+    if (lcb.checked) lab.classList.add('lab-done');
+    lcb.addEventListener('click', e => {
+      e.stopPropagation();
+      const checked = lcb.checked;
+      state['lc-' + labId] = checked;
+      checked ? lab.classList.add('lab-done') : lab.classList.remove('lab-done');
+      lab.querySelectorAll('.obj-check').forEach((oc, i) => {
+        oc.checked = checked;
+        state['oc-' + labId + '-' + i] = checked;
+        oc.closest('li').classList.toggle('obj-done', checked);
+      });
+      saveProg(state);
+      updateProgress(state);
+    });
+    wrap.appendChild(lcb);
+    summary.insertBefore(wrap, summary.querySelector('.lab-chevron'));
+
+    // ── Objective checkboxes ──
+    lab.querySelectorAll('.objectives > ul > li').forEach((li, i) => {
+      const oc = document.createElement('input');
+      oc.type = 'checkbox';
+      oc.className = 'obj-check';
+      oc.checked = !!state['oc-' + labId + '-' + i];
+      if (oc.checked) li.classList.add('obj-done');
+      oc.addEventListener('change', () => {
+        state['oc-' + labId + '-' + i] = oc.checked;
+        li.classList.toggle('obj-done', oc.checked);
+        const allDone = [...lab.querySelectorAll('.obj-check')].every(x => x.checked);
+        lcb.checked = allDone;
+        state['lc-' + labId] = allDone;
+        allDone ? lab.classList.add('lab-done') : lab.classList.remove('lab-done');
+        saveProg(state);
+        updateProgress(state);
+      });
+      li.prepend(oc);
+    });
+  });
+  updateProgress(state);
+}
+
+injectCheckboxes();
+
+/* ═══ COPY BUTTONS ═══ */
+function copyToClipboard(text, btn, isBlock) {
+  navigator.clipboard.writeText(text).then(() => {
+    btn.classList.add('copied');
+    btn.textContent = isBlock ? '✓ copied' : '✓';
+    setTimeout(() => {
+      btn.classList.remove('copied');
+      btn.textContent = isBlock ? 'copy' : '⎘';
+    }, 1500);
+  });
+}
+
+function injectCopyButtons() {
+  // Command blocks — floating copy button on hover
+  document.querySelectorAll('.cmd').forEach(cmd => {
+    const wrap = document.createElement('div');
+    wrap.className = 'cmd-wrap';
+    cmd.parentNode.insertBefore(wrap, cmd);
+    wrap.appendChild(cmd);
+    const btn = document.createElement('button');
+    btn.className = 'copy-btn';
+    btn.textContent = 'copy';
+    btn.addEventListener('click', () => copyToClipboard(cmd.textContent.trim(), btn, true));
+    wrap.appendChild(btn);
+  });
+
+  // Inline code values in substeps, step list items, and credentials table
+  document.querySelectorAll('.substeps li code, .steps li code, .creds-table td code').forEach(code => {
+    if (code.closest('.callout') || code.closest('.cmd-wrap')) return;
+    const initialText = code.textContent.trim();
+    if (initialText.length < 2) return;
+    if (/^(Ctrl|Cmd|Alt)\+/.test(initialText)) return;
+    const btn = document.createElement('button');
+    btn.className = 'copy-inline';
+    btn.title = 'Copy';
+    btn.textContent = '⎘';
+    btn.addEventListener('click', e => {
+      e.stopPropagation();
+      copyToClipboard(code.textContent.trim(), btn, false);
+    });
+    code.after(btn);
+  });
+}
+
+injectCopyButtons();
+
+/* ── CONFIG FIELD COPY ── */
+function copyConfigField(inputId, btn) {
+  const val = document.getElementById(inputId).value.trim();
+  if (!val) return;
+  navigator.clipboard.writeText(val).then(() => {
+    btn.classList.add('copied'); btn.textContent = '✓';
+    setTimeout(() => { btn.classList.remove('copied'); btn.textContent = '⎘'; }, 1500);
+  });
+}
+
+/* ── LAB NOTES ── */
+const NOTES_KEY = 'edu200-lab-notes';
+function loadNotes() { try { return JSON.parse(localStorage.getItem(NOTES_KEY)) || {}; } catch { return {}; } }
+function saveNotes(n) { try { localStorage.setItem(NOTES_KEY, JSON.stringify(n)); } catch {} }
+function injectLabNotes() {
+  const saved = loadNotes();
+  document.querySelectorAll('details.lab').forEach(lab => {
+    const anchor = lab.querySelector('.objectives') || lab.querySelector('.scenario-block');
+    if (!anchor) return;
+    const block = document.createElement('div');
+    block.className = 'lab-notes';
+    const label = document.createElement('div');
+    label.className = 'lab-notes-label';
+    label.textContent = 'NOTES';
+    const ta = document.createElement('textarea');
+    ta.className = 'lab-notes-input';
+    ta.placeholder = 'Add your notes here…';
+    ta.rows = 2;
+    ta.value = saved[lab.id] || '';
+    ta.addEventListener('input', () => {
+      const n = loadNotes(); n[lab.id] = ta.value; saveNotes(n);
+    });
+    block.appendChild(label);
+    block.appendChild(ta);
+    anchor.after(block);
+  });
+}
+injectLabNotes();
+
+/* ── LAB QUESTIONS ── */
+const Q_STORE = 'edu200-questions';
+const LAB_LABELS = {
+  lab1:  'Lab 1 — Connect to the Virtual Lab Environment',
+  lab2:  'Lab 2 — Configure User and Administrator Access Entitlements',
+  lab3:  'Lab 3 — Forward Traffic with the Zscaler Client Connector',
+  lab4:  'Lab 4 — Configure Firewall Filtering Policy',
+  lab5:  'Lab 5 — Configure SSL Inspection Policies',
+  lab6:  'Lab 6 — Configure Content Filtering & Access Control',
+  lab7:  'Lab 7 — Configure DNS Security',
+  lab8:  'Lab 8 — Enforce Policy with Unified DLP across Multi-Channel',
+  lab9:  'Lab 9 — Provision ZPA Infrastructure',
+  lab10: 'Lab 10 — Add a Corporate Application',
+  lab11: 'Lab 11 — Troubleshoot Access to an Internal Application for a Specific User',
+  lab12: 'Lab 12 — Traffic Forwarding through SIPA',
+  lab13: 'Lab 13 — Access an Internal Application using RDP [Optional]',
+  lab14: 'Lab 14 — Navigate the Incident, Self-Service, Application Overview Dashboards',
+  lab15: 'Lab 15 — Troubleshoot Poor Wi-Fi',
+  lab16: 'Lab 16 — Troubleshoot Slow DNS Response',
+};
+function loadQs() { try { return JSON.parse(localStorage.getItem(Q_STORE)) || {}; } catch { return {}; } }
+function saveQs(q) { try { localStorage.setItem(Q_STORE, JSON.stringify(q)); } catch {} }
+function escHtml(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function updateQCount(labId, text) {
+  const el = document.getElementById('q-count-' + labId);
+  if (!el) return;
+  const n = text.trim() ? text.trim().split('\n').filter(l => l.trim()).length : 0;
+  el.textContent = n > 0 ? n + (n === 1 ? ' Q' : ' Qs') : '';
+}
+function renderAllQs() {
+  const list  = document.getElementById('all-questions-list');
+  const empty = document.getElementById('all-questions-empty');
+  const total = document.getElementById('all-questions-total');
+  if (!list) return;
+  const q = loadQs();
+  let html = '', hasAny = false, count = 0;
+  for (let i = 1; i <= 16; i++) {
+    const id = 'lab' + i, text = (q[id] || '').trim();
+    if (!text) continue;
+    hasAny = true; count++;
+    html += `<div class="all-questions-entry"><div class="all-questions-lab-label">${LAB_LABELS[id]}</div><div class="all-questions-text">${escHtml(text)}</div></div>`;
+  }
+  list.innerHTML = html;
+  if (empty) empty.style.display = hasAny ? 'none' : '';
+  if (total) total.textContent = count > 0 ? count + (count === 1 ? ' lab' : ' labs') : '';
+}
+function initQs() {
+  const q = loadQs();
+  document.querySelectorAll('.lab-questions-input').forEach(ta => {
+    const labId = ta.id.replace('q-input-', '');
+    ta.value = q[labId] || '';
+    updateQCount(labId, ta.value);
+    ta.addEventListener('input', () => {
+      const cur = loadQs(); cur[labId] = ta.value;
+      saveQs(cur); updateQCount(labId, ta.value); renderAllQs();
+    });
+  });
+  renderAllQs();
+}
+initQs();
+</script>
+
+</body>
+</html>

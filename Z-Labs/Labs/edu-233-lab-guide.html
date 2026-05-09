@@ -1,0 +1,1473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EDU-233 — Zscaler Browser Isolation Lab Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;0,700;1,400&family=Epilogue:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --cream: #fef9f0; --cream-dark: #f5eddb; --ink: #1a1209; --ink-soft: #5a4a35; --ink-muted: #8a7660;
+  --orange: #ff6b35; --orange-light: #fff3ec; --orange-border: #ffd5c0;
+  --amber-light: #fffbe6;
+  --green: #3a7d44; --green-light: #edf7ee; --green-border: #b2dfb4;
+  --purple: #5c35cc; --purple-light: #ece8ff; --purple-border: #c8bbff;
+  --blue-light: #e8f0fb; --blue-border: #b3ccf0; --blue: #1a6bcc;
+  --red-light: #fce8e8; --red-border: #f7c1c1; --red: #a32d2d;
+  --border: #ede5d8;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Epilogue', sans-serif; background: var(--cream); color: var(--ink); min-height: 100vh; }
+header { padding: 40px 60px 28px; border-bottom: 1px solid var(--border); display: flex; align-items: flex-start; gap: 32px; background: var(--cream); }
+.header-left { flex: 1; }
+.day-badge { display: inline-flex; align-items: center; gap: 6px; background: var(--ink); color: var(--cream); padding: 5px 14px; border-radius: 20px; font-size: 11px; letter-spacing: 0.1em; margin-bottom: 14px; }
+.day-badge-dot { width: 5px; height: 5px; background: var(--orange); border-radius: 50%; }
+h1 { font-family: 'Fraunces', serif; font-size: 42px; font-weight: 700; line-height: 1.0; color: var(--ink); margin-bottom: 10px; }
+h1 em { font-style: italic; font-weight: 400; color: var(--orange); }
+.header-meta-row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-top: 14px; }
+.tag { padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 500; border: 1px solid; display: inline-block; }
+.tag-zia  { background: var(--blue-light);   color: var(--blue);   border-color: var(--blue-border); }
+.tag-zpa  { background: var(--green-light);  color: var(--green);  border-color: var(--green-border); }
+.tag-arch { background: var(--amber-light);  color: #a07c00;       border-color: #ffe680; }
+.tag-weight { background: var(--orange-light); color: #cc4a18; border-color: var(--orange-border); }
+.tag-ro   { background: var(--red-light); color: var(--red); border-color: var(--red-border); }
+
+/* CONFIG PANEL */
+.config-panel { background: var(--ink); color: var(--cream); padding: 0 60px; position: sticky; top: 0; z-index: 200; border-bottom: 2px solid var(--orange); box-shadow: 0 4px 12px rgba(26,18,9,0.18); }
+.config-toggle-row { display: flex; align-items: center; justify-content: space-between; padding: 10px 0; cursor: pointer; user-select: none; }
+.config-toggle-title { font-size: 10px; letter-spacing: 0.16em; color: var(--orange); font-weight: 600; text-transform: uppercase; }
+.config-toggle-summary { font-size: 11px; color: #b8a18a; margin-left: 16px; font-family: 'JetBrains Mono', monospace; }
+.config-toggle-btn { background: none; border: 1px solid #3a3020; border-radius: 6px; color: #7a6a55; font-size: 11px; padding: 3px 10px; cursor: pointer; font-family: 'Epilogue', sans-serif; letter-spacing: 0.06em; transition: color 0.15s, border-color 0.15s; display: flex; align-items: center; gap: 5px; }
+.config-toggle-btn:hover { color: var(--orange); border-color: var(--orange); }
+.config-toggle-btn .chevron { transition: transform 0.25s ease; display: inline-block; }
+.config-panel.collapsed .config-toggle-btn .chevron { transform: rotate(180deg); }
+.config-body { overflow: hidden; max-height: 400px; transition: max-height 0.3s ease, opacity 0.25s ease, padding 0.25s ease; opacity: 1; padding-bottom: 18px; }
+.config-panel.collapsed .config-body { max-height: 0; opacity: 0; padding-bottom: 0; }
+.config-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 14px; align-items: end; }
+.config-field { display: flex; flex-direction: column; gap: 6px; }
+.config-field label { font-size: 10px; letter-spacing: 0.14em; color: var(--orange); font-weight: 600; text-transform: uppercase; }
+.config-field input { background: #2a2010; color: var(--cream); border: 1px solid #3a3020; border-radius: 8px; padding: 9px 12px; font-size: 13px; font-family: 'JetBrains Mono', monospace; transition: border-color 0.15s; }
+.config-field input:focus { outline: none; border-color: var(--orange); background: #1f1608; }
+.config-field input::placeholder { color: #7a6a55; font-style: italic; }
+.config-derived { display: flex; flex-wrap: wrap; gap: 16px; margin-top: 12px; padding-top: 12px; border-top: 1px solid #2a2010; font-size: 11px; color: #b8a18a; }
+.config-derived span { display: inline-flex; gap: 6px; align-items: center; }
+.config-derived strong { color: var(--orange); font-weight: 500; }
+.config-derived code { background: #2a2010; color: var(--cream); padding: 2px 8px; border-radius: 4px; font-family: 'JetBrains Mono', monospace; font-size: 11px; }
+.config-actions { display: flex; gap: 8px; }
+.config-btn { background: var(--orange); color: var(--ink); border: none; border-radius: 8px; padding: 9px 14px; font-size: 11px; font-weight: 600; letter-spacing: 0.06em; cursor: pointer; font-family: 'Epilogue', sans-serif; transition: background 0.15s; }
+.config-btn:hover { background: #ff8a5c; }
+.config-btn.secondary { background: #3a3020; color: var(--cream); }
+.config-btn.secondary:hover { background: #4a4030; }
+
+/* VARIABLES */
+.var { background: var(--orange-light); color: #cc4a18; border: 1px dashed var(--orange-border); padding: 1px 6px; border-radius: 4px; font-family: 'JetBrains Mono', monospace; font-size: 0.92em; font-weight: 500; }
+.var.filled { background: var(--green-light); color: var(--green); border: 1px solid var(--green-border); }
+
+/* LAB NAV */
+.lab-nav { padding: 12px 60px; background: var(--cream-dark); border-bottom: 1px solid var(--border); display: flex; gap: 6px; overflow-x: auto; position: sticky; top: 0; z-index: 100; }
+.lab-nav-tab { padding: 8px 14px; font-size: 11px; font-weight: 600; color: var(--ink-soft); letter-spacing: 0.06em; border-radius: 16px; cursor: pointer; white-space: nowrap; background: var(--cream); border: 1px solid var(--border); text-decoration: none; transition: all 0.15s; }
+.lab-nav-tab:hover { background: var(--orange-light); border-color: var(--orange-border); color: var(--orange); }
+.lab-nav-tab.lab-nav-done { background: var(--purple-light); border-color: var(--purple-border); color: var(--purple); }
+.lab-nav-tab.lab-nav-done::after { content: ' ✓'; font-size: 10px; }
+
+/* PROGRESS RIBBON */
+.progress-ribbon { background: var(--cream-dark); border-bottom: 1px solid var(--border); padding: 10px 60px; display: flex; align-items: center; gap: 14px; position: sticky; top: 0; z-index: 50; }
+.progress-label { font-size: 10px; letter-spacing: 0.14em; color: var(--ink-muted); font-weight: 600; white-space: nowrap; }
+.progress-count { font-size: 13px; font-weight: 700; color: var(--ink); white-space: nowrap; }
+.progress-count span { color: var(--orange); }
+.progress-track { flex: 1; background: var(--border); border-radius: 8px; height: 8px; overflow: hidden; min-width: 60px; }
+.progress-fill { height: 100%; background: var(--orange); border-radius: 8px; transition: width 0.4s ease; width: 0%; }
+.progress-fill.all-done { background: var(--purple); }
+
+main { padding: 36px 60px 60px; max-width: 1200px; margin: 0 auto; }
+
+/* INTRO */
+.intro-block { background: var(--cream-dark); border: 1px solid var(--border); border-radius: 14px; padding: 22px 26px; margin-bottom: 28px; }
+.intro-block h2 { font-family: 'Fraunces', serif; font-size: 22px; margin-bottom: 12px; }
+.intro-block p { font-size: 13px; color: var(--ink-soft); line-height: 1.7; margin-bottom: 8px; }
+
+/* CREDS TABLE */
+.creds-table { width: 100%; border-collapse: collapse; font-size: 12px; margin: 12px 0 4px; background: var(--cream); border-radius: 10px; overflow: hidden; }
+.creds-table th { background: var(--ink); color: var(--cream); padding: 8px 12px; text-align: left; font-weight: 500; font-size: 10px; letter-spacing: 0.08em; }
+.creds-table td { padding: 8px 12px; border-bottom: 1px solid var(--border); color: var(--ink-soft); }
+.creds-table tr:last-child td { border-bottom: none; }
+.creds-table code { font-size: 11px; }
+
+/* LAB */
+.lab { background: var(--cream); border: 1px solid var(--border); border-radius: 14px; margin-bottom: 14px; overflow: hidden; }
+.lab > summary { list-style: none; padding: 18px 24px; cursor: pointer; display: flex; align-items: center; gap: 16px; background: var(--cream); transition: background 0.15s; }
+.lab > summary::-webkit-details-marker { display: none; }
+.lab > summary:hover { background: var(--orange-light); }
+.lab[open] > summary { background: var(--ink); color: var(--cream); border-bottom: 1px solid var(--border); }
+.lab-num { flex-shrink: 0; width: 44px; height: 44px; border-radius: 10px; background: var(--ink); color: var(--orange); display: flex; align-items: center; justify-content: center; font-family: 'Fraunces', serif; font-weight: 700; font-size: 17px; }
+.lab[open] > summary .lab-num { background: var(--orange); color: var(--ink); }
+.lab-title { flex: 1; }
+.lab-title-name { font-family: 'Fraunces', serif; font-size: 18px; font-weight: 600; color: inherit; line-height: 1.3; }
+.lab-title-meta { font-size: 11px; color: var(--ink-muted); letter-spacing: 0.06em; margin-top: 3px; }
+.lab[open] > summary .lab-title-meta { color: #b8a18a; }
+.lab-chevron { flex-shrink: 0; font-size: 14px; color: var(--ink-muted); transition: transform 0.2s; }
+.lab[open] > summary .lab-chevron { transform: rotate(90deg); color: var(--orange); }
+.lab-body { padding: 22px 26px 26px; }
+
+/* SCENARIO */
+.scenario-block { background: var(--orange-light); border-left: 3px solid var(--orange); padding: 14px 18px; border-radius: 0 10px 10px 0; margin-bottom: 16px; }
+.scenario-block-label { font-size: 10px; font-weight: 700; letter-spacing: 0.14em; color: var(--orange); margin-bottom: 6px; }
+.scenario-block-text { font-size: 13px; color: #7a3010; line-height: 1.7; }
+
+/* OBJECTIVES */
+.objectives { margin-bottom: 16px; }
+.objectives-label { font-size: 10px; font-weight: 700; letter-spacing: 0.14em; color: var(--ink-muted); margin-bottom: 8px; }
+.objectives ul { list-style: none; padding-left: 0; }
+.objectives li { font-size: 13px; color: var(--ink-soft); padding: 4px 0 4px 22px; position: relative; line-height: 1.6; }
+.objectives li::before { content: '✓'; position: absolute; left: 0; color: var(--green); font-weight: 700; }
+
+/* TASK */
+.task { background: #fff; border: 1px solid var(--border); border-radius: 10px; margin-bottom: 10px; overflow: hidden; }
+.task > summary { list-style: none; padding: 12px 16px; cursor: pointer; display: flex; align-items: center; gap: 12px; transition: background 0.15s; }
+.task > summary::-webkit-details-marker { display: none; }
+.task > summary:hover { background: var(--cream-dark); }
+.task[open] > summary { background: var(--cream-dark); border-bottom: 1px solid var(--border); }
+.task-num { flex-shrink: 0; font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 600; color: var(--orange); background: var(--orange-light); padding: 3px 8px; border-radius: 5px; border: 1px solid var(--orange-border); }
+.task-title { flex: 1; font-size: 14px; font-weight: 500; color: var(--ink); }
+.task-chevron { flex-shrink: 0; font-size: 12px; color: var(--ink-muted); transition: transform 0.2s; }
+.task[open] > summary .task-chevron { transform: rotate(90deg); color: var(--orange); }
+.task-body { padding: 16px 18px 18px; }
+.task-desc { font-size: 13px; color: var(--ink-soft); line-height: 1.7; margin-bottom: 12px; font-style: italic; }
+
+/* TASK CHECKBOXES */
+.task-check-wrap { display: flex; align-items: center; margin-right: 4px; flex-shrink: 0; }
+.task-check { appearance: none; -webkit-appearance: none; width: 18px; height: 18px; border-radius: 5px; border: 2px solid var(--border); background: transparent; cursor: pointer; position: relative; flex-shrink: 0; transition: background 0.15s, border-color 0.15s; }
+.task-check:checked { background: transparent; border-color: var(--green); }
+.task-check:checked::after { content: '✓'; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: var(--green); font-size: 11px; font-weight: 700; line-height: 1; }
+.task.task-done > summary .task-num { background: var(--green-light); color: var(--green); border-color: var(--green-border); }
+
+/* STEPS */
+.steps { list-style: none; counter-reset: step; }
+.steps > li { counter-increment: step; position: relative; padding: 10px 0 10px 38px; font-size: 13px; color: var(--ink); line-height: 1.7; border-bottom: 1px dashed var(--border); }
+.steps > li:last-child { border-bottom: none; }
+.steps > li::before { content: counter(step); position: absolute; left: 0; top: 10px; width: 26px; height: 26px; border-radius: 50%; background: var(--ink); color: var(--orange); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; font-family: 'JetBrains Mono', monospace; }
+.steps strong { color: var(--ink); font-weight: 600; }
+.substeps { list-style: disc; padding-left: 22px; margin-top: 6px; color: var(--ink-soft); }
+.substeps li { font-size: 13px; padding: 3px 0; line-height: 1.6; }
+
+/* CODE */
+code { background: var(--cream-dark); padding: 1px 6px; border-radius: 4px; font-family: 'JetBrains Mono', monospace; font-size: 0.88em; color: var(--ink); border: 1px solid var(--border); }
+.path { font-family: 'JetBrains Mono', monospace; font-size: 0.9em; color: var(--blue); background: var(--blue-light); padding: 1px 6px; border-radius: 4px; border: 1px solid var(--blue-border); }
+.cmd { background: var(--ink); color: #d9cfbf; border-radius: 8px; padding: 10px 14px; font-family: 'JetBrains Mono', monospace; font-size: 12px; line-height: 1.7; margin: 8px 0; display: block; border-left: 3px solid var(--orange); overflow-x: auto; }
+.cmd.no-prompt::before { content: none; }
+
+/* CALLOUTS */
+.callout { border-radius: 10px; padding: 12px 16px; margin: 10px 0; border: 1px solid; font-size: 12px; line-height: 1.7; }
+.callout-header { display: flex; align-items: center; gap: 6px; font-size: 10px; font-weight: 700; letter-spacing: 0.12em; margin-bottom: 6px; }
+.callout-icon { width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; flex-shrink: 0; }
+.callout-note { background: var(--amber-light); border-color: #ffe680; color: #7a5c00; }
+.callout-note .callout-header { color: #a07c00; }
+.callout-note .callout-icon { background: #ffe680; color: #a07c00; }
+.callout-tip { background: var(--blue-light); border-color: var(--blue-border); color: #153d7a; }
+.callout-tip .callout-header { color: var(--blue); }
+.callout-tip .callout-icon { background: var(--blue-border); color: var(--blue); }
+.callout-warn { background: var(--red-light); border-color: var(--red-border); color: #7a1f1f; }
+.callout-warn .callout-header { color: var(--red); }
+.callout-warn .callout-icon { background: var(--red-border); color: var(--red); }
+
+/* TAKEAWAY */
+.lab-takeaway { margin-top: 18px; padding: 12px 18px; background: var(--cream-dark); border-radius: 8px; border-left: 3px solid var(--ink-muted); }
+.lab-takeaway-label { font-size: 10px; font-weight: 700; letter-spacing: 0.14em; color: var(--ink-muted); margin-bottom: 6px; }
+.lab-takeaway-text { font-size: 13px; color: var(--ink-soft); line-height: 1.7; }
+
+/* LAB NOTES */
+.lab-notes { margin-bottom: 16px; }
+.lab-notes-label { font-size: 10px; font-weight: 700; letter-spacing: 0.14em; color: var(--ink-muted); margin-bottom: 6px; }
+.lab-notes-input { width: 100%; min-height: 62px; border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; font-family: 'Epilogue', sans-serif; font-size: 13px; color: var(--ink-soft); background: var(--cream); resize: vertical; line-height: 1.6; transition: border-color 0.15s; }
+.lab-notes-input:focus { outline: none; border-color: var(--orange); }
+.lab-notes-input::placeholder { color: var(--ink-muted); font-style: italic; }
+
+/* LAB QUESTIONS */
+.lab-questions { border-top: 1px dashed var(--border); margin-top: 16px; }
+.lab-questions > summary { list-style: none; padding: 10px 0 6px; cursor: pointer; display: flex; align-items: center; gap: 8px; font-size: 10px; font-weight: 700; letter-spacing: 0.12em; color: var(--ink-muted); user-select: none; }
+.lab-questions > summary::-webkit-details-marker { display: none; }
+.lab-questions > summary:hover { color: var(--orange); }
+.lab-questions-count { background: var(--purple-light); color: var(--purple); border: 1px solid var(--purple-border); border-radius: 10px; padding: 1px 7px; font-size: 10px; font-weight: 700; margin-left: 4px; }
+.lab-questions-count:empty { display: none; }
+.lab-questions-chevron { margin-left: auto; font-size: 11px; transition: transform 0.2s; }
+.lab-questions[open] > summary .lab-questions-chevron { transform: rotate(90deg); }
+.lab-questions-body { padding: 8px 0 2px; }
+.lab-questions-input { width: 100%; min-height: 80px; border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; font-family: 'Epilogue', sans-serif; font-size: 13px; color: var(--ink-soft); background: var(--cream); resize: vertical; line-height: 1.6; transition: border-color 0.15s; }
+.lab-questions-input:focus { outline: none; border-color: var(--orange); }
+.lab-questions-input::placeholder { color: var(--ink-muted); font-style: italic; }
+
+/* ALL QUESTIONS PANEL */
+.all-questions-panel { background: var(--cream-dark); border: 1px solid var(--border); border-radius: 14px; margin-bottom: 28px; overflow: hidden; }
+.all-questions-toggle { list-style: none; padding: 18px 26px; cursor: pointer; display: flex; align-items: center; gap: 10px; user-select: none; transition: background 0.15s; }
+.all-questions-toggle::-webkit-details-marker { display: none; }
+.all-questions-toggle:hover { background: var(--orange-light); }
+.all-questions-title { font-family: 'Fraunces', serif; font-size: 20px; font-weight: 600; flex: 1; }
+.all-questions-title em { font-style: italic; font-weight: 400; color: var(--orange); }
+.all-questions-total { background: var(--purple-light); color: var(--purple); border: 1px solid var(--purple-border); border-radius: 10px; padding: 2px 9px; font-size: 11px; font-weight: 700; }
+.all-questions-total:empty { display: none; }
+.all-questions-chevron { font-size: 16px; color: var(--ink-muted); transition: transform 0.2s; }
+.all-questions-panel[open] .all-questions-chevron { transform: rotate(90deg); }
+.all-questions-body { padding: 16px 26px 20px; border-top: 1px solid var(--border); }
+.all-questions-empty { font-size: 13px; color: var(--ink-muted); font-style: italic; }
+.all-questions-entry { margin-bottom: 14px; padding-bottom: 14px; border-bottom: 1px dashed var(--border); }
+.all-questions-entry:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+.all-questions-lab-label { font-size: 10px; font-weight: 700; letter-spacing: 0.12em; color: var(--orange); margin-bottom: 5px; }
+.all-questions-text { font-size: 13px; color: var(--ink-soft); line-height: 1.7; white-space: pre-wrap; }
+
+.config-field-row { display: flex; gap: 6px; align-items: center; }
+.config-field-row input { flex: 1; min-width: 0; }
+.config-copy-btn { flex-shrink: 0; background: #2a2010; border: 1px solid #5a4a35; color: #7a6a55; border-radius: 6px; padding: 0 9px; font-size: 11px; cursor: pointer; font-family: 'JetBrains Mono', monospace; height: 38px; transition: color 0.15s, border-color 0.15s, background 0.15s; }
+.config-copy-btn:hover { color: var(--orange); border-color: var(--orange); background: #3a3020; }
+.config-copy-btn.copied { background: var(--green); color: #fff !important; border-color: var(--green); }
+
+/* EXPAND CONTROLS */
+.expand-controls { display: flex; gap: 8px; margin-bottom: 14px; justify-content: flex-end; }
+.expand-btn { background: var(--cream-dark); border: 1px solid var(--border); color: var(--ink-soft); padding: 6px 12px; border-radius: 16px; font-size: 11px; font-weight: 500; cursor: pointer; font-family: 'Epilogue', sans-serif; transition: all 0.15s; }
+.expand-btn:hover { background: var(--orange-light); color: var(--orange); border-color: var(--orange-border); }
+
+/* COPY BUTTONS */
+.cmd-wrap { position: relative; display: block; margin: 8px 0; }
+.cmd-wrap .cmd { margin: 0; }
+.copy-btn { position: absolute; top: 8px; right: 8px; background: #2a2010; border: 1px solid #5a4a35; color: #7a6a55; border-radius: 5px; padding: 2px 8px; font-size: 10px; font-weight: 600; cursor: pointer; font-family: 'Epilogue', sans-serif; letter-spacing: 0.08em; opacity: 0; transition: opacity 0.15s, background 0.15s, color 0.15s; line-height: 1.6; }
+.cmd-wrap:hover .copy-btn { opacity: 1; }
+.copy-btn:hover { background: #3a3020; color: var(--orange); border-color: var(--orange); }
+.copy-btn.copied { background: var(--green); color: #fff !important; border-color: var(--green-border); opacity: 1 !important; }
+.copy-inline { display: inline-flex; align-items: center; background: none; border: 1px solid transparent; color: var(--ink-muted); font-size: 9px; cursor: pointer; padding: 0 3px; margin-left: 2px; vertical-align: middle; border-radius: 3px; line-height: 1.4; font-family: 'JetBrains Mono', monospace; opacity: 0.4; transition: opacity 0.15s, color 0.15s, border-color 0.15s, background 0.15s; }
+.copy-inline:hover { opacity: 1; color: var(--orange); border-color: var(--orange-border); background: var(--orange-light); }
+.copy-inline.copied { color: var(--green) !important; border-color: var(--green-border) !important; background: var(--green-light) !important; opacity: 1 !important; }
+
+footer { padding: 20px 60px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; background: var(--cream-dark); }
+.footer-left { font-family: 'Fraunces', serif; font-size: 16px; font-weight: 700; }
+.footer-left span { color: var(--orange); }
+.footer-right { font-size: 11px; color: var(--ink-muted); letter-spacing: 0.06em; }
+
+@media (max-width: 900px) {
+  header { padding: 24px 20px 20px; flex-direction: column; }
+  .config-panel { padding: 0 20px; }
+  .progress-ribbon { padding: 10px 20px; }
+  .lab-nav { padding: 10px 20px; }
+  main { padding: 24px 20px 40px; }
+  footer { padding: 20px; flex-direction: column; gap: 8px; text-align: center; }
+  h1 { font-size: 32px; }
+}
+@media print { .config-panel, .lab-nav, .expand-controls, .progress-ribbon { display: none; } }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-left">
+    <div class="day-badge"><span class="day-badge-dot"></span>EDU-233 · ZSCALER BROWSER ISOLATION</div>
+    <h1>Hands-on <em>Lab Guide</em></h1>
+    <div class="header-meta-row">
+      <span class="tag tag-zia">ZIA</span>
+      <span class="tag tag-zpa">ZPA</span>
+      <span class="tag tag-arch">SSL · Smart Isolation · URL Filtering · Cloud App · Sandbox · BYOD</span>
+      <span class="tag tag-weight">11 Labs</span>
+      <span class="tag tag-ro">Read-Only Portals</span>
+    </div>
+  </div>
+</header>
+
+<!-- CONFIG PANEL -->
+<div class="config-panel" id="config-panel">
+  <div class="config-toggle-row" onclick="toggleConfig()">
+    <div style="display:flex;align-items:center;gap:0;">
+      <span class="config-toggle-title">⚙ Lab Configuration</span>
+      <span class="config-toggle-summary" id="config-toggle-summary"></span>
+    </div>
+    <button class="config-toggle-btn" id="config-toggle-btn" onclick="event.stopPropagation();toggleConfig()">
+      <span class="chevron">▲</span> Collapse
+    </button>
+  </div>
+  <div class="config-body">
+    <div class="config-grid">
+      <div class="config-field">
+        <label for="admin-user-input">ZIA/ZPA Admin User ID</label>
+        <div class="config-field-row">
+          <input type="text" id="admin-user-input" placeholder="admin@thezerotrustexchange.com" autocomplete="off">
+          <button class="config-copy-btn" onclick="copyConfigField('admin-user-input', this)">⎘</button>
+        </div>
+      </div>
+      <div class="config-field">
+        <label for="pass-input">Session Password</label>
+        <div class="config-field-row">
+          <input type="text" id="pass-input" placeholder="(from Lab Access Instructions)" autocomplete="off">
+          <button class="config-copy-btn" onclick="copyConfigField('pass-input', this)">⎘</button>
+        </div>
+      </div>
+      <div class="config-field">
+        <label for="mkt-user-input">Marketing Test User</label>
+        <div class="config-field-row">
+          <input type="text" id="mkt-user-input" placeholder="ptcb57-MKT@thezerotrustexchange.com" autocomplete="off">
+          <button class="config-copy-btn" onclick="copyConfigField('mkt-user-input', this)">⎘</button>
+        </div>
+      </div>
+      <div class="config-field">
+        <label for="con-user-input">Contractor Test User</label>
+        <div class="config-field-row">
+          <input type="text" id="con-user-input" placeholder="ptcb57-CON@thezerotrustexchange.com" autocomplete="off">
+          <button class="config-copy-btn" onclick="copyConfigField('con-user-input', this)">⎘</button>
+        </div>
+      </div>
+      <div class="config-actions">
+        <button class="config-btn" onclick="saveConfig()">Save</button>
+        <button class="config-btn secondary" onclick="clearConfig()">Clear</button>
+      </div>
+    </div>
+    <div class="config-derived">
+      <span><strong>ZIA Portal:</strong> <code>https://admin.zscalerthree.net</code></span>
+      <span><strong>ZPA Portal:</strong> <code>https://admin.private.zscaler.com</code></span>
+      <span><strong>User Portal:</strong> <code>https://userportal.thezerotrustexchange.com</code></span>
+    </div>
+  </div>
+</div>
+
+<!-- LAB NAV -->
+<div class="lab-nav">
+  <a class="lab-nav-tab" href="#lab1">Lab 1</a>
+  <a class="lab-nav-tab" href="#lab2">Lab 2</a>
+  <a class="lab-nav-tab" href="#lab3">Lab 3</a>
+  <a class="lab-nav-tab" href="#lab4">Lab 4</a>
+  <a class="lab-nav-tab" href="#lab5">Lab 5</a>
+  <a class="lab-nav-tab" href="#lab6">Lab 6</a>
+  <a class="lab-nav-tab" href="#lab7">Lab 7</a>
+  <a class="lab-nav-tab" href="#lab8">Lab 8</a>
+  <a class="lab-nav-tab" href="#lab9">Lab 9</a>
+  <a class="lab-nav-tab" href="#lab10">Lab 10</a>
+  <a class="lab-nav-tab" href="#lab11">Lab 11</a>
+</div>
+
+<!-- PROGRESS RIBBON -->
+<div class="progress-ribbon">
+  <span class="progress-label">PROGRESS</span>
+  <span class="progress-count"><span id="prog-done">0</span>%</span>
+  <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
+</div>
+
+<main>
+
+<div class="intro-block">
+  <h2>About this lab guide</h2>
+  <p>Explore Zscaler Browser Isolation (BI) in depth — cyberthreat protection, data protection, secure BYOD access, and private app isolation. Labs use the Client PC VM for end-user testing and the ZIA/ZPA Admin Portals (read-only) for policy review. Connect ZCC on the Client PC using the Marketing test user at the start.</p>
+  <table class="creds-table">
+    <thead><tr><th>Account</th><th>Username</th><th>Password</th><th>Portal</th></tr></thead>
+    <tbody>
+      <tr><td>ZIA/ZPA Admin</td><td><code class="var-admin-user">&lt;ZIA/ZPA Admin User ID&gt;</code></td><td><code><span class="var var-pass">&lt;Session Password&gt;</span></code></td><td><code>https://admin.zscalerthree.net</code></td></tr>
+      <tr><td>Marketing Test User</td><td><code class="var-mkt-user">&lt;Marketing Test User&gt;</code></td><td><code><span class="var var-pass">&lt;Session Password&gt;</span></code></td><td>Client PC / User Portal</td></tr>
+      <tr><td>Contractor Test User</td><td><code class="var-con-user">&lt;Contractor Test User&gt;</code></td><td><code><span class="var var-pass">&lt;Session Password&gt;</span></code></td><td>User Portal / Lab 10–11</td></tr>
+      <tr><td>ZPA Admin Portal</td><td><code class="var-admin-user">&lt;ZIA/ZPA Admin User ID&gt;</code></td><td><code><span class="var var-pass">&lt;Session Password&gt;</span></code></td><td><code>https://admin.private.zscaler.com</code></td></tr>
+      <tr><td>Gitlab (Lab 11)</td><td><code>z-se</code></td><td><code>SE@Zscal3r</code></td><td><code>gitlab.thezerotrustexchange.com</code></td></tr>
+    </tbody>
+  </table>
+  <div class="callout callout-warn" style="margin-top:14px;">
+    <div class="callout-header"><div class="callout-icon">!</div>INITIAL SETUP — DO FIRST</div>
+    On the <strong>Client PC VM</strong>, login to Zscaler Client Connector as the Marketing test user (<code class="var-mkt-user">&lt;Marketing Test User&gt;</code> / <span class="var var-pass">&lt;Session Password&gt;</span>). Confirm Private Access and Internet Security show <strong>ON</strong>. Verify traffic routes via Zscaler by visiting <code>http://ip.zscaler.com</code>.
+  </div>
+</div>
+
+<details class="all-questions-panel" id="all-questions-panel">
+  <summary class="all-questions-toggle">
+    <span class="all-questions-title">My <em>Questions</em></span>
+    <span class="all-questions-total" id="all-questions-total"></span>
+    <span class="all-questions-chevron">›</span>
+  </summary>
+  <div class="all-questions-body">
+    <p class="all-questions-empty" id="all-questions-empty">No questions yet — use the questions section at the end of each lab to add them.</p>
+    <div id="all-questions-list"></div>
+  </div>
+</details>
+
+<div class="expand-controls">
+  <button class="expand-btn" onclick="expandAll()">Expand all</button>
+  <button class="expand-btn" onclick="collapseAll()">Collapse all</button>
+</div>
+
+
+<!-- ═══ LAB 1 ═══ -->
+<details class="lab" id="lab1">
+  <summary>
+    <div class="lab-num">01</div>
+    <div class="lab-title">
+      <div class="lab-title-name">Securing Access to Internet</div>
+      <div class="lab-title-meta">SSL Inspection · ZIA Policies · Zscaler Root CA · Prerequisite for BI</div>
+    </div>
+    <div class="lab-chevron">›</div>
+  </summary>
+  <div class="lab-body">
+    <div class="scenario-block">
+      <div class="scenario-block-label">OVERVIEW</div>
+      <div class="scenario-block-text">SSL inspection is a prerequisite for Browser Isolation — without it, HTTPS traffic cannot be redirected to the isolation container. Review the existing SSL policies and verify that Zscaler is decrypting traffic on the Client PC.</div>
+    </div>
+    <div class="objectives">
+      <div class="objectives-label">OBJECTIVES</div>
+      <ul>
+        <li>Understand why SSL Inspection is required before Browser Isolation can function</li>
+        <li>Review existing SSL Inspection policies and exemptions in the ZIA Admin Portal</li>
+        <li>Confirm Zscaler is decrypting HTTPS traffic by inspecting the Zscaler Intermediate Root CA certificate</li>
+      </ul>
+    </div>
+    <details class="task">
+      <summary><div class="task-num">1.1</div><div class="task-title">Review SSL Inspection Policy &amp; Verify SSL Decryption</div><div class="task-chevron">›</div></summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>Open a browser and go to the ZIA Admin Portal: <code>https://admin.zscalerthree.net</code>
+            <ul class="substeps">
+              <li>Admin User ID: <code class="var-admin-user">&lt;ZIA/ZPA Admin User ID&gt;</code></li>
+              <li>Session Password: <code><span class="var var-pass">&lt;Session Password&gt;</span></code></li>
+            </ul>
+          </li>
+          <li>Navigate to <span class="path">Policy &gt; SSL Inspection</span> — review examples of SSL policies
+            <ul class="substeps">
+              <li>Note default policies: <strong>Office 365 One Click</strong> and <strong>Zscaler Recommended Exemptions</strong></li>
+              <li>Click the icon for any policy to explore its settings</li>
+            </ul>
+          </li>
+          <li>On the <strong>Client PC VM</strong>, open a browser → go to <code>https://www.microsoft.com</code></li>
+          <li>View the certificate (click the lock icon in the address bar → More Information)
+            <ul class="substeps"><li>Confirm the certificate is signed by <strong>Zscaler Intermediate Root CA</strong> — SSL inspection is active</li></ul>
+          </li>
+        </ol>
+        <div class="callout callout-note">
+          <div class="callout-header"><div class="callout-icon">★</div>NOTE</div>
+          Viewing certificates varies by browser. Look for the lock icon → Connection is secure → Certificate details.
+        </div>
+      </div>
+    </details>
+    <div class="lab-takeaway">
+      <div class="lab-takeaway-label">WHY THIS MATTERS</div>
+      <p class="lab-takeaway-text">SSL inspection is the foundation every Browser Isolation deployment builds on. In production, a missing or misconfigured SSL policy is the single most common reason isolation policies fail to fire — without decryption, Zscaler cannot inspect HTTPS traffic and cannot redirect it to an isolation container.</p>
+    </div>
+    <details class="lab-questions" id="q-lab1">
+      <summary><span class="lab-questions-icon">?</span> MY QUESTIONS <span class="lab-questions-count" id="q-count-lab1"></span><span class="lab-questions-chevron">›</span></summary>
+      <div class="lab-questions-body"><textarea class="lab-questions-input" id="q-input-lab1" placeholder="Type any questions to follow up later…" rows="3"></textarea></div>
+    </details>
+  </div>
+</details>
+
+
+<!-- ═══ LAB 2 ═══ -->
+<details class="lab" id="lab2">
+  <summary>
+    <div class="lab-num">02</div>
+    <div class="lab-title">
+      <div class="lab-title-name">Managing Browser Isolation Basics</div>
+      <div class="lab-title-meta">Isolation Profiles · Security Controls · Banners · ZIA &amp; ZPA Profiles</div>
+    </div>
+    <div class="lab-chevron">›</div>
+  </summary>
+  <div class="lab-body">
+    <div class="scenario-block">
+      <div class="scenario-block-label">OVERVIEW</div>
+      <div class="scenario-block-text">Browser Isolation configuration requires two steps: creating Isolation Profiles (which define how and where a user is isolated — region, security controls, certificates, cookies, PAC files, banners) and creating Policies that reference those profiles.</div>
+    </div>
+    <div class="objectives">
+      <div class="objectives-label">PROFILE SETTINGS</div>
+      <ul>
+        <li><strong>Region:</strong> which geographic region serves the isolation container</li>
+        <li><strong>Security Controls:</strong> upload/download, clipboard, print, read-only, watermark</li>
+        <li><strong>Root Certificates:</strong> which CAs the isolation browser trusts</li>
+        <li><strong>Cookie Persistence:</strong> persist across sessions or not</li>
+        <li><strong>PAC File:</strong> applied to the isolated browser</li>
+        <li><strong>User Experience:</strong> isolation banner displayed, isolation mode (native vs Browser-in-Browser)</li>
+      </ul>
+    </div>
+
+    <details class="task">
+      <summary><div class="task-num">2.1</div><div class="task-title">Create Isolation Profiles</div><div class="task-chevron">›</div></summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>In the ZIA Admin Portal, navigate to <span class="path">Administration &gt; Browser Isolation</span> → scroll through the list of pre-created isolation profiles</li>
+          <li>Click the icon for any profile (e.g. <strong>TZTE Render Only</strong>):
+            <ul class="substeps">
+              <li>Click <strong>Next</strong> → review <strong>Company Settings</strong>: PAC file and Root Certificates applied to the isolation browser</li>
+              <li>Click <strong>Next</strong> → review <strong>Security</strong> settings and <strong>Regions</strong></li>
+              <li>Click <strong>Next</strong> → review the <strong>Isolation Experience</strong> page, especially the banner referenced in this profile</li>
+              <li>Click <strong>Close</strong></li>
+            </ul>
+          </li>
+          <li>Click the <strong>Isolation Banner</strong> tab → review the configured banners (referenced in each profile's Isolation Experience section)</li>
+        </ol>
+        <div class="callout callout-tip">
+          <div class="callout-header"><div class="callout-icon">→</div>ZPA PROFILES</div>
+          ZIA and ZPA Isolation Profiles are mutually exclusive. ZIA profiles can only be used in ZIA policies; ZPA profiles only in ZPA policies. To view ZPA profiles: login to the ZPA Admin Portal → <span class="path">Configuration &amp; Control &gt; Browser Isolation &gt; Isolation Profiles</span>.
+        </div>
+      </div>
+    </details>
+    <div class="lab-takeaway">
+      <div class="lab-takeaway-label">WHY THIS MATTERS</div>
+      <p class="lab-takeaway-text">Isolation Profiles are the reusable building blocks that let security teams enforce least privilege on web browsing. Rather than a binary allow/block, organisations can craft a profile per use case — full read-only isolation for contractors, clipboard access for power users, print-only for compliance-sensitive content — without creating separate policies for every scenario.</p>
+    </div>
+    <details class="lab-questions" id="q-lab2">
+      <summary><span class="lab-questions-icon">?</span> MY QUESTIONS <span class="lab-questions-count" id="q-count-lab2"></span><span class="lab-questions-chevron">›</span></summary>
+      <div class="lab-questions-body"><textarea class="lab-questions-input" id="q-input-lab2" placeholder="Type any questions to follow up later…" rows="3"></textarea></div>
+    </details>
+  </div>
+</details>
+
+
+<!-- ═══ LAB 3 ═══ -->
+<details class="lab" id="lab3">
+  <summary>
+    <div class="lab-num">03</div>
+    <div class="lab-title">
+      <div class="lab-title-name">Managing One-Click Smart Browser Isolation</div>
+      <div class="lab-title-meta">AI/ML Detection · Smart Isolate · Suspicious URLs · Read-Only Mode</div>
+    </div>
+    <div class="lab-chevron">›</div>
+  </summary>
+  <div class="lab-body">
+    <div class="scenario-block">
+      <div class="scenario-block-label">OVERVIEW</div>
+      <div class="scenario-block-text">Smart Browser Isolation automatically isolates potentially malicious web content using AI/ML — no manual URL category configuration required. It identifies suspicious sites, decrypts them via SSL inspection, and presents a pixel stream in a remote isolated browser.</div>
+    </div>
+    <div class="objectives">
+      <div class="objectives-label">OBJECTIVES</div>
+      <ul>
+        <li>Review the one-click AI/ML Smart Isolation setting and associated profile in ZIA</li>
+        <li>Access a suspicious test URL and confirm it opens in a read-only isolation session</li>
+        <li>Verify that text input is blocked, confirming the Render Only profile is enforced</li>
+      </ul>
+    </div>
+
+    <details class="task">
+      <summary><div class="task-num">3.1</div><div class="task-title">Configure Smart Browser Isolation</div><div class="task-chevron">›</div></summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>Navigate to <span class="path">Policy &gt; Secure Browsing &gt; Smart Isolate</span></li>
+          <li>Review the <strong>Enable AI/ML based Smart Browser Isolation</strong> one-click setting</li>
+          <li>Verify the Isolation Profile selected is <strong>TZTE Render Only</strong>
+            <ul class="substeps"><li>This profile has <strong>Read Only</strong> enabled — users cannot type into isolated pages</li></ul>
+          </li>
+        </ol>
+      </div>
+    </details>
+
+    <details class="task">
+      <summary><div class="task-num">3.2</div><div class="task-title">Test Smart Browser Isolation</div><div class="task-chevron">›</div></summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>On the <strong>Client PC VM</strong>, go to: <code>https://www.fakebankstatement.co.uk</code>
+            <ul class="substeps"><li>The webpage opens in isolation with a banner: <em>"This page is rendered in read-only isolation mode"</em></li></ul>
+          </li>
+          <li>Click the icon in the <strong>bottom right corner</strong> of the browser window → view the isolation browser's URL bar</li>
+          <li>Click the button for additional information → confirm the <strong>Isolation Profile</strong> name in use</li>
+          <li>Verify Read-Only is enforced:
+            <ul class="substeps">
+              <li>Click <strong>ORDER NOW</strong> → click <strong>Bank Statements Order Form</strong></li>
+              <li>Scroll to the <strong>Email</strong> field and try to type — no text input is possible</li>
+            </ul>
+          </li>
+        </ol>
+      </div>
+    </details>
+    <div class="lab-takeaway">
+      <div class="lab-takeaway-label">WHY THIS MATTERS</div>
+      <p class="lab-takeaway-text">Zero-day phishing sites are registered daily and often appear legitimate for hours before blocklists catch them. Smart Isolation's AI/ML layer gives organisations a proactive defence that doesn't rely on reputation databases — suspicious pages are sandboxed automatically before the user can interact, reducing dwell time and endpoint exposure without any manual policy work.</p>
+    </div>
+    <details class="lab-questions" id="q-lab3">
+      <summary><span class="lab-questions-icon">?</span> MY QUESTIONS <span class="lab-questions-count" id="q-count-lab3"></span><span class="lab-questions-chevron">›</span></summary>
+      <div class="lab-questions-body"><textarea class="lab-questions-input" id="q-input-lab3" placeholder="Type any questions to follow up later…" rows="3"></textarea></div>
+    </details>
+  </div>
+</details>
+
+
+<!-- ═══ LAB 4 ═══ -->
+<details class="lab" id="lab4">
+  <summary>
+    <div class="lab-num">04</div>
+    <div class="lab-title">
+      <div class="lab-title-name">Using Isolate Action in URL Filtering Policies</div>
+      <div class="lab-title-meta">URL Filtering · Isolate Action · Copy-Print-Watermark Profile · News &amp; Media</div>
+    </div>
+    <div class="lab-chevron">›</div>
+  </summary>
+  <div class="lab-body">
+    <div class="scenario-block">
+      <div class="scenario-block-label">OVERVIEW</div>
+      <div class="scenario-block-text">The Isolate action in URL Filtering goes beyond Allow/Block — it lets users access sites productively while containing risk in a cloud browser. Configured URL categories are isolated using the selected profile's security controls.</div>
+    </div>
+    <div class="objectives">
+      <div class="objectives-label">OBJECTIVES</div>
+      <ul>
+        <li>Locate URL Filtering policies configured with Isolate as the action</li>
+        <li>Access BBC News in isolation and observe the Copy-Print-Watermark profile in action</li>
+        <li>Verify copy-from-isolation is allowed while paste-into-isolation is blocked</li>
+      </ul>
+    </div>
+
+    <details class="task">
+      <summary><div class="task-num">4.1</div><div class="task-title">Configure URL Filtering Policies with Isolate as Action</div><div class="task-chevron">›</div></summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>In the ZIA Admin Portal, navigate to <span class="path">Policy &gt; URL &amp; Cloud Application Control &gt; URL Filtering Policy</span></li>
+          <li>Review the configured URL filtering policies — look for a policy isolating <strong>News, Sports, and Media</strong> categories</li>
+        </ol>
+      </div>
+    </details>
+
+    <details class="task">
+      <summary><div class="task-num">4.2</div><div class="task-title">Test Isolate as an Action in URL Filtering Policies</div><div class="task-chevron">›</div></summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>On the <strong>Client PC VM</strong>, go to <code>https://www.bbc.com</code>
+            <ul class="substeps"><li>The site loads in isolation using the <strong>Copy-Print-Watermark</strong> profile</li></ul>
+          </li>
+          <li>With this profile you can:
+            <ul class="substeps">
+              <li><strong>Copy</strong> from isolation to your local computer ✓</li>
+              <li><strong>Print</strong> the page ✓</li>
+              <li>See a <strong>watermark</strong> on the isolated session ✓</li>
+              <li><strong>Copy from local to isolation</strong> is disabled ✗</li>
+            </ul>
+          </li>
+          <li>Verify you cannot paste local clipboard text into the isolated page</li>
+        </ol>
+        <div class="callout callout-note">
+          <div class="callout-header"><div class="callout-icon">★</div>NOTE</div>
+          If prompted to grant clipboard access, click <strong>Allow</strong>.
+        </div>
+      </div>
+    </details>
+    <div class="lab-takeaway">
+      <div class="lab-takeaway-label">WHY THIS MATTERS</div>
+      <p class="lab-takeaway-text">News and media sites carry legitimate content but also serve ads from third-party networks that regularly host drive-by downloads — a common ransomware delivery vector. Isolating these URL categories lets organisations permit access without exposing endpoints to scripts or executables embedded in ad networks, while still allowing users to copy and print content they legitimately need.</p>
+    </div>
+    <details class="lab-questions" id="q-lab4">
+      <summary><span class="lab-questions-icon">?</span> MY QUESTIONS <span class="lab-questions-count" id="q-count-lab4"></span><span class="lab-questions-chevron">›</span></summary>
+      <div class="lab-questions-body"><textarea class="lab-questions-input" id="q-input-lab4" placeholder="Type any questions to follow up later…" rows="3"></textarea></div>
+    </details>
+  </div>
+</details>
+
+
+<!-- ═══ LAB 5 ═══ -->
+<details class="lab" id="lab5">
+  <summary>
+    <div class="lab-num">05</div>
+    <div class="lab-title">
+      <div class="lab-title-name">Using Isolate Action in Cloud Application Control Policies</div>
+      <div class="lab-title-meta">Cloud App Control · Consumer / Online Shopping · Watermark · Text Input Allowed</div>
+    </div>
+    <div class="lab-chevron">›</div>
+  </summary>
+  <div class="lab-body">
+    <div class="scenario-block">
+      <div class="scenario-block-label">OVERVIEW</div>
+      <div class="scenario-block-text">Isolate can also be the action in Cloud App Control policies — providing app-specific isolation controls beyond URL category. Traffic hitting these policies is rendered in an isolated browser using the configured profile.</div>
+    </div>
+    <div class="objectives">
+      <div class="objectives-label">OBJECTIVES</div>
+      <ul>
+        <li>Review the Consumer / Online Shopping Cloud App Control policy configured with Isolate as the action</li>
+        <li>Access Costco in isolation and confirm the page is watermarked with copy/print disabled</li>
+        <li>Verify text input remains functional despite the restrictive profile settings</li>
+      </ul>
+    </div>
+
+    <details class="task">
+      <summary><div class="task-num">5.1</div><div class="task-title">Configure Cloud App Control Policies with Isolate as Action</div><div class="task-chevron">›</div></summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>Navigate to <span class="path">Policy &gt; URL &amp; Cloud Application Control &gt; Cloud App Control Policy</span></li>
+          <li>Scroll through the list of configured Cloud App Control policies</li>
+          <li>Review the settings for the <strong>Consumer / Online Shopping</strong> policy</li>
+        </ol>
+      </div>
+    </details>
+
+    <details class="task">
+      <summary><div class="task-num">5.2</div><div class="task-title">Test Isolate as an Action in Cloud App Control Policies</div><div class="task-chevron">›</div></summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>On the <strong>Client PC VM</strong>, open a new browser window and go to <code>https://www.costco.com</code></li>
+          <li>Verify the isolation controls for this profile:
+            <ul class="substeps">
+              <li>Copy / paste / print / render Office files: <strong>disabled</strong> ✗</li>
+              <li>Page is <strong>watermarked</strong></li>
+              <li>Text input on the page: <strong>allowed</strong> ✓</li>
+            </ul>
+          </li>
+        </ol>
+      </div>
+    </details>
+    <div class="lab-takeaway">
+      <div class="lab-takeaway-label">WHY THIS MATTERS</div>
+      <p class="lab-takeaway-text">Consumer apps on corporate networks introduce both shadow IT risk and data leakage potential. Applying Isolate at the Cloud App Control level — rather than just the URL category — gives security teams app-specific granularity. A user can browse a competitor's pricing in isolation without being able to copy data out or upload internal files in, regardless of what URL category the site falls under.</p>
+    </div>
+    <details class="lab-questions" id="q-lab5">
+      <summary><span class="lab-questions-icon">?</span> MY QUESTIONS <span class="lab-questions-count" id="q-count-lab5"></span><span class="lab-questions-chevron">›</span></summary>
+      <div class="lab-questions-body"><textarea class="lab-questions-input" id="q-input-lab5" placeholder="Type any questions to follow up later…" rows="3"></textarea></div>
+    </details>
+  </div>
+</details>
+
+
+<!-- ═══ LAB 6 ═══ -->
+<details class="lab" id="lab6">
+  <summary>
+    <div class="lab-num">06</div>
+    <div class="lab-title">
+      <div class="lab-title-name">Inspecting Cloud Browser Isolation Logs</div>
+      <div class="lab-title-meta">Web Insights · Road Warrior · Cloud Browser · Log Filtering</div>
+    </div>
+    <div class="lab-chevron">›</div>
+  </summary>
+  <div class="lab-body">
+    <div class="scenario-block">
+      <div class="scenario-block-label">OVERVIEW</div>
+      <div class="scenario-block-text">Isolation traffic appears in Web Insights under two location categories: <strong>Road Warrior</strong> (the user's device request) and <strong>Cloud Browser</strong> (activity inside the isolation container). Together they give the full picture of an isolated session.</div>
+    </div>
+    <div class="objectives">
+      <div class="objectives-label">OBJECTIVES</div>
+      <ul>
+        <li>Filter Web Insights logs by the Road Warrior location to find the initial BBC News request</li>
+        <li>Add the Cloud Browser location filter to see activity logged inside the isolation container</li>
+        <li>Understand how the two log categories combine to represent a complete isolated session</li>
+      </ul>
+    </div>
+
+    <details class="task">
+      <summary><div class="task-num">6.1</div><div class="task-title">Review Log Details</div><div class="task-chevron">›</div></summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>In the ZIA Admin Portal, navigate to <span class="path">Analytics &gt; Web Insights</span> → click <strong>Logs</strong></li>
+          <li>Set Timeframe to <strong>Current Day</strong> (or the period when you completed tests)</li>
+          <li>Click <strong>Add Filter</strong> → scroll down → select <strong>Location</strong> → choose <strong>Road Warrior</strong> → Done</li>
+          <li>Click <strong>Add Filter</strong> → type <code>URL Search</code> → change Domain to <strong>Host</strong> → operator: <strong>Contains</strong> → type <code>bbc.com</code></li>
+          <li>Click <strong>Apply Filters</strong> → review the log entries
+            <ul class="substeps"><li>You should see <code>bbc.com</code> allowed for isolation with the <strong>Copy-Print-Watermark</strong> profile</li></ul>
+          </li>
+          <li>Now add <strong>Cloud Browser</strong> to the Location filter to see the full picture:
+            <ul class="substeps">
+              <li>Edit the Location filter → also select <strong>Cloud Browser</strong> → Apply Filters</li>
+              <li>The logs now show: initial request (Road Warrior) → isolation container launched (Cloud Browser) → all activity inside isolation logged</li>
+            </ul>
+          </li>
+        </ol>
+      </div>
+    </details>
+    <div class="lab-takeaway">
+      <div class="lab-takeaway-label">WHY THIS MATTERS</div>
+      <p class="lab-takeaway-text">Without dual-location logging, a SOC analyst investigating an incident would only see the initial request — not what happened inside the isolation session. The Road Warrior / Cloud Browser log chain is the evidentiary record proving what was accessed and confirming no data crossed the network boundary, often a mandatory audit trail under PCI-DSS, SOC 2, or GDPR compliance frameworks.</p>
+    </div>
+    <details class="lab-questions" id="q-lab6">
+      <summary><span class="lab-questions-icon">?</span> MY QUESTIONS <span class="lab-questions-count" id="q-count-lab6"></span><span class="lab-questions-chevron">›</span></summary>
+      <div class="lab-questions-body"><textarea class="lab-questions-input" id="q-input-lab6" placeholder="Type any questions to follow up later…" rows="3"></textarea></div>
+    </details>
+  </div>
+</details>
+
+
+<!-- ═══ LAB 7 ═══ -->
+<details class="lab" id="lab7">
+  <summary>
+    <div class="lab-num">07</div>
+    <div class="lab-title">
+      <div class="lab-title-name">Applying Document Isolation Controls</div>
+      <div class="lab-title-meta">Document Viewing · Protected Storage · Print Only Profile · PDF Rendering</div>
+    </div>
+    <div class="lab-chevron">›</div>
+  </summary>
+  <div class="lab-body">
+    <div class="scenario-block">
+      <div class="scenario-block-label">OVERVIEW</div>
+      <div class="scenario-block-text">Browser Isolation can render, transfer, download, view, and print web pages and documents without exposing the organisation to zero-day risk. Files are converted to PDF in the isolation container and held in <strong>Protected Storage</strong> — a temporary secure area for the duration of the session.</div>
+    </div>
+    <div class="objectives">
+      <div class="objectives-label">OBJECTIVES</div>
+      <ul>
+        <li>Review the Print Only isolation profile and its document security controls</li>
+        <li>Download a DOC file from the internet into Protected Storage within the isolation session</li>
+        <li>Render the document as a flattened PDF and confirm print is allowed while local download is blocked</li>
+      </ul>
+    </div>
+
+    <details class="task">
+      <summary><div class="task-num">7.1</div><div class="task-title">Enable Document Viewing and Security Controls for Your Isolation Profile</div><div class="task-chevron">›</div></summary>
+      <div class="task-body">
+        <div class="task-desc">Review the Print Only isolation profile to understand document viewing and security control settings.</div>
+        <ol class="steps">
+          <li>Navigate to <span class="path">Administration &gt; Browser Isolation</span></li>
+          <li>Click the icon next to the <strong>Print Only</strong> profile → review the configuration:
+            <ul class="substeps">
+              <li>On the <strong>Security</strong> tab, scroll down to review text input settings and Office file viewing settings</li>
+            </ul>
+          </li>
+          <li>Confirm this profile's controls:
+            <ul class="substeps">
+              <li>Copy / paste / upload / download: <strong>disabled</strong> ✗</li>
+              <li>Page is <strong>Read-Only</strong>, Office file rendering allowed, <strong>watermarked</strong></li>
+              <li><strong>Print</strong> is allowed ✓</li>
+            </ul>
+          </li>
+        </ol>
+      </div>
+    </details>
+
+    <details class="task">
+      <summary><div class="task-num">7.2</div><div class="task-title">Test Document Viewing in Isolation</div><div class="task-chevron">›</div></summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>On the <strong>Client PC VM</strong>, go to: <code>https://file-examples.com/index.php/sample-documents-download/sample-doc-download/</code></li>
+          <li>Verify the site opens in isolation</li>
+          <li>Click <strong>DOWNLOAD SAMPLE DOC FILE</strong> for the 100kB DOC file
+            <ul class="substeps"><li>The file downloads to the <strong>Protected Storage</strong> of the isolation session</li></ul>
+          </li>
+          <li>Click the file to render it as a <strong>PDF</strong> within the isolated session</li>
+          <li>Check Protected Storage — click the icon in the upper-right corner of the isolation session to see the downloaded file</li>
+          <li>Try to print the file using the isolation print controls</li>
+        </ol>
+        <div class="callout callout-note">
+          <div class="callout-header"><div class="callout-icon">★</div>NOTE</div>
+          Isolation converts multiple document formats (DOC, DOCX, XLSX, PDF, etc.) into PDF for safe viewing inside the container. Protected Storage is purged when the session ends.
+        </div>
+      </div>
+    </details>
+    <div class="lab-takeaway">
+      <div class="lab-takeaway-label">WHY THIS MATTERS</div>
+      <p class="lab-takeaway-text">Malicious Office documents — macros, embedded OLE objects, polymorphic VBA — remain the most common enterprise malware delivery method. Rendering all documents as flattened PDFs inside isolation neutralises this entire attack category at the container level: users keep their productivity while the threat surface is completely eliminated, with no endpoint ever executing document-borne code.</p>
+    </div>
+    <details class="lab-questions" id="q-lab7">
+      <summary><span class="lab-questions-icon">?</span> MY QUESTIONS <span class="lab-questions-count" id="q-count-lab7"></span><span class="lab-questions-chevron">›</span></summary>
+      <div class="lab-questions-body"><textarea class="lab-questions-input" id="q-input-lab7" placeholder="Type any questions to follow up later…" rows="3"></textarea></div>
+    </details>
+  </div>
+</details>
+
+
+<!-- ═══ LAB 8 ═══ -->
+<details class="lab" id="lab8">
+  <summary>
+    <div class="lab-num">08</div>
+    <div class="lab-title">
+      <div class="lab-title-name">Protecting against Zero Day Threats — Document Isolation + Cloud Sandbox</div>
+      <div class="lab-title-meta">Sandbox Integration · Quarantine &amp; Isolate · Protected Storage · Verdict · Web Insights</div>
+    </div>
+    <div class="lab-chevron">›</div>
+  </summary>
+  <div class="lab-body">
+    <div class="scenario-block">
+      <div class="scenario-block-label">OVERVIEW</div>
+      <div class="scenario-block-text">Browser Isolation integrates with Zscaler Cloud Sandbox. When a potentially malicious document is downloaded, it is immediately rendered as a flattened PDF in isolation while Sandbox analysis runs in parallel. If the verdict is benign, the user can download the original. If malicious, only the flattened PDF is available.</div>
+    </div>
+    <div class="objectives">
+      <div class="objectives-label">OBJECTIVES</div>
+      <ul>
+        <li>Review the Quarantine and Isolate action configured in the Sandbox policy</li>
+        <li>Observe an XLSM file placed in Protected Storage while Sandbox analysis runs in parallel</li>
+        <li>Confirm the file becomes downloadable after a benign verdict and review the full Sandbox report</li>
+      </ul>
+    </div>
+
+    <details class="task">
+      <summary><div class="task-num">8.1</div><div class="task-title">Enable Cloud Sandbox + Isolation</div><div class="task-chevron">›</div></summary>
+      <div class="task-body">
+        <div class="task-desc">Review the isolation profile and sandbox policy that enable the Quarantine and Isolate workflow.</div>
+        <ol class="steps">
+          <li>Navigate to <span class="path">Administration &gt; Browser Isolation</span> → scroll to the <strong>TZTE Download and Copy</strong> profile → verify that <strong>Isolation to local computer — Sandbox Scanned</strong> is enabled</li>
+          <li>Navigate to <span class="path">Policy &gt; Sandbox</span> → click the icon next to <strong>Sandbox Isolation</strong></li>
+          <li>Review the document file types configured for <strong>Quarantine and Isolate</strong> on first-time file sightings
+            <ul class="substeps"><li>The Quarantine and Isolate action applies to document file types only</li></ul>
+          </li>
+        </ol>
+        <div class="callout callout-note">
+          <div class="callout-header"><div class="callout-icon">★</div>NOTE</div>
+          The Sandbox Scanned option in the Isolation Profile is only visible to accounts with full (not read-only) admin access. As a read-only admin you are reviewing the configured state.
+        </div>
+      </div>
+    </details>
+
+    <details class="task">
+      <summary><div class="task-num">8.2</div><div class="task-title">Test the Configuration</div><div class="task-chevron">›</div></summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>On the <strong>Client PC VM</strong>, navigate to: <code>https://securitytest.zsdemo.com/passwordless/browser-isolation.php</code></li>
+          <li>Click the icon in the upper-right corner of the isolation session → click to view <strong>Protected Storage</strong></li>
+          <li>Note the XLSM file in Protected Storage — view it as a flattened PDF while Sandbox analysis runs:
+            <ul class="substeps">
+              <li>Semi-closed circle = Sandbox analysis <strong>in progress</strong></li>
+              <li>Green shield = file is <strong>safe</strong> and available to download</li>
+            </ul>
+          </li>
+          <li>Once the verdict is benign, download the original file to your local computer</li>
+          <li>Review logs: navigate to <span class="path">Analytics &gt; Web Insights</span> → Logs → add filters for <code class="var-mkt-user">&lt;Marketing Test User&gt;</code> and URL containing <code>securitytest.zsdemo.com</code> → Apply Filters</li>
+          <li>Click the 3 dots (upper right) → <strong>Select All</strong> or search for the <strong>MD5</strong> field</li>
+          <li>Click the link in the MD5 column → view the <strong>Sandbox Detail Report</strong> → scroll through the full analysis</li>
+        </ol>
+      </div>
+    </details>
+    <div class="lab-takeaway">
+      <div class="lab-takeaway-label">WHY THIS MATTERS</div>
+      <p class="lab-takeaway-text">The Quarantine and Isolate workflow solves the zero-hour file problem: at first sight, no file can be conclusively classified. Instead of forcing a binary allow/block decision and stalling the user on a quarantine page, they get immediate safe access to a rendered version while analysis runs in parallel — eliminating both risk and the productivity disruption of waiting for a sandbox verdict.</p>
+    </div>
+    <details class="lab-questions" id="q-lab8">
+      <summary><span class="lab-questions-icon">?</span> MY QUESTIONS <span class="lab-questions-count" id="q-count-lab8"></span><span class="lab-questions-chevron">›</span></summary>
+      <div class="lab-questions-body"><textarea class="lab-questions-input" id="q-input-lab8" placeholder="Type any questions to follow up later…" rows="3"></textarea></div>
+    </details>
+  </div>
+</details>
+
+
+<!-- ═══ LAB 9 ═══ -->
+<details class="lab" id="lab9">
+  <summary>
+    <div class="lab-num">09</div>
+    <div class="lab-title">
+      <div class="lab-title-name">Managing Browser-In-Browser Isolation Experience</div>
+      <div class="lab-title-meta">Browser-in-Browser · Editable URL Bar · ZIA Policy Enforcement · SOC Use Case</div>
+    </div>
+    <div class="lab-chevron">›</div>
+  </summary>
+  <div class="lab-body">
+    <div class="scenario-block">
+      <div class="scenario-block-label">OVERVIEW</div>
+      <div class="scenario-block-text">Browser-in-Browser (BiB) provides the full isolated browser UI with an editable URL bar — designed for SOC analysts and incident response teams who need to investigate arbitrary URLs in a safe container. ZIA policies still apply inside the isolation session.</div>
+    </div>
+    <div class="objectives">
+      <div class="objectives-label">OBJECTIVES</div>
+      <ul>
+        <li>Review the TZTE BiB profile and confirm the Browser-in-Browser experience is enabled</li>
+        <li>Access a sports site and confirm the editable URL bar is visible inside the isolation session</li>
+        <li>Navigate to a blocked URL from within isolation and verify ZIA policies still enforce</li>
+      </ul>
+    </div>
+
+    <details class="task">
+      <summary><div class="task-num">9.1</div><div class="task-title">Enable Browser-In-Browser for Your Isolation Profile</div><div class="task-chevron">›</div></summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>Navigate to <span class="path">Administration &gt; Browser Isolation</span></li>
+          <li>Click the icon next to <strong>TZTE BiB</strong> to review its settings</li>
+          <li>Click <strong>Next</strong> repeatedly until the <strong>Isolation Experience</strong> tab is visible</li>
+          <li>Confirm the configurable options: <strong>Native browser experience</strong> and <strong>Browser-in-browser experience</strong> — the latter is configured for this profile → click <strong>Close</strong></li>
+        </ol>
+      </div>
+    </details>
+
+    <details class="task">
+      <summary><div class="task-num">9.2</div><div class="task-title">Test the Configuration</div><div class="task-chevron">›</div></summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>On the <strong>Client PC VM</strong>, try accessing <code>https://skysports.com</code> or any sports website
+            <ul class="substeps"><li>The original URL bar of the isolated browser is visible — this is Browser-in-Browser mode</li></ul>
+          </li>
+          <li>Verify ZIA policies still enforce inside isolation:
+            <ul class="substeps">
+              <li>In the isolated browser URL bar, type <code>www.gambling.com</code> and navigate to it</li>
+              <li>You should see a ZIA block page — ZIA enforces all policies on traffic from isolated browsers</li>
+            </ul>
+          </li>
+          <li>Explore other options next to the URL bar (e.g. click the icon to open new tabs within the isolated browser)</li>
+          <li>Optionally review the <strong>Isolate Sports</strong> policy: <span class="path">Policy &gt; URL &amp; Cloud App Control &gt; URL Filtering Policy</span></li>
+        </ol>
+      </div>
+    </details>
+    <div class="lab-takeaway">
+      <div class="lab-takeaway-label">WHY THIS MATTERS</div>
+      <p class="lab-takeaway-text">SOC analysts and threat hunters routinely need to visit malicious URLs as part of active investigations — something impossible to do safely on a standard workstation. Browser-in-Browser provides a full sandboxed browser UI so analysts can explore suspicious domains without compromising their device. ZIA enforcement inside BiB also prevents accidental pivot to further malicious infrastructure during an investigation.</p>
+    </div>
+    <details class="lab-questions" id="q-lab9">
+      <summary><span class="lab-questions-icon">?</span> MY QUESTIONS <span class="lab-questions-count" id="q-count-lab9"></span><span class="lab-questions-chevron">›</span></summary>
+      <div class="lab-questions-body"><textarea class="lab-questions-input" id="q-input-lab9" placeholder="Type any questions to follow up later…" rows="3"></textarea></div>
+    </details>
+  </div>
+</details>
+
+
+<!-- ═══ LAB 10 ═══ -->
+<details class="lab" id="lab10">
+  <summary>
+    <div class="lab-num">10</div>
+    <div class="lab-title">
+      <div class="lab-title-name">Securing SaaS Access from BYO/Unmanaged Devices — User Portal 2.0</div>
+      <div class="lab-title-meta">ZPA · User Portal 2.0 · M365 · BYOD · IdP Conditional Access · CNAME · Isolation</div>
+    </div>
+    <div class="lab-chevron">›</div>
+  </summary>
+  <div class="lab-body">
+    <div class="scenario-block">
+      <div class="scenario-block-label">OVERVIEW</div>
+      <div class="scenario-block-text">ZPA User Portal 2.0 provides frictionless, agent-less access to sanctioned SaaS applications from BYO/unmanaged devices through Browser Isolation. No Client Connector needed — traffic routes through Zscaler's cloud via ZPA to enforce data controls.</div>
+    </div>
+    <div class="objectives">
+      <div class="objectives-label">CONFIGURATION STEPS COVERED</div>
+      <ul>
+        <li>Create Isolation Profile in ZPA with Internet Traffic Forwarding via ZIA</li>
+        <li>Create SaaS Application Segment (M365)</li>
+        <li>Create Access and Isolation Policies</li>
+        <li>Publish M365 link to the User Portal</li>
+        <li>Configure DNS CNAME records</li>
+        <li>Configure IdP conditional access</li>
+      </ul>
+    </div>
+
+    <details class="task">
+      <summary><div class="task-num">10.1</div><div class="task-title">Create Isolation Profile and Enable Internet Traffic Forwarding via ZIA</div><div class="task-chevron">›</div></summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>Open the ZPA Admin Portal: <code>https://admin.private.zscaler.com</code>
+            <ul class="substeps">
+              <li>Admin User ID: <code class="var-admin-user">&lt;ZIA/ZPA Admin User ID&gt;</code></li>
+              <li>Session Password: <code><span class="var var-pass">&lt;Session Password&gt;</span></code></li>
+            </ul>
+          </li>
+          <li>Navigate to <span class="path">Configuration &amp; Control &gt; Browser Isolation &gt; Isolation Profile</span></li>
+          <li>Click the icon next to <strong>TZTE BYOD Restricted</strong> → click <strong>Next</strong> → on the Company Settings tab, scroll to <strong>TRAFFIC FORWARDED TO ZIA</strong>
+            <ul class="substeps"><li>This shows the ZIA tenant details and default PAC file — internet traffic uses ZIA; ZPA private app traffic uses ZPA</li></ul>
+          </li>
+          <li>Click <strong>Cancel</strong></li>
+        </ol>
+      </div>
+    </details>
+
+    <details class="task">
+      <summary><div class="task-num">10.2</div><div class="task-title">Add SaaS Application in Application Segment</div><div class="task-chevron">›</div></summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>Navigate to <span class="path">Resource Management &gt; Application Management &gt; Application Segments</span></li>
+          <li>Click the icon next to the <strong>M365</strong> segment → review its configuration</li>
+          <li>Verify that the ZPA hostname alias routes traffic correctly:
+            <ul class="substeps"><li><code>office.thezerotrustexchange.com</code> → <code>myapps.microsoft.com</code></li></ul>
+          </li>
+        </ol>
+      </div>
+    </details>
+
+    <details class="task">
+      <summary><div class="task-num">10.3</div><div class="task-title">Create Access and Isolation Policies</div><div class="task-chevron">›</div></summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>Navigate to <span class="path">Policy &gt; Access Policy</span> → click the icon next to <strong>BYOD Apps Access</strong>
+            <ul class="substeps"><li>Verify users are granted access to specified apps via Web Browser or Client Connector → click <strong>Cancel</strong></li></ul>
+          </li>
+          <li>Navigate to <span class="path">Policy &gt; Isolation Policy</span> → click the icon next to <strong>Isolate BYOD</strong>
+            <ul class="substeps"><li>Verify the <strong>TZTE BYOD Restricted</strong> profile is applied → click <strong>Cancel</strong></li></ul>
+          </li>
+        </ol>
+      </div>
+    </details>
+
+    <details class="task">
+      <summary><div class="task-num">10.4</div><div class="task-title">Publish M365 Link to the User Portal</div><div class="task-chevron">›</div></summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>Navigate to <span class="path">Resource Management &gt; User Portal &gt; Portal Links</span></li>
+          <li>Click the icon next to the <strong>M365</strong> link → verify the domain is <code>office.thezerotrustexchange.com</code> (the Application Segment from Task 10.2) → this is what users see at the User Portal</li>
+        </ol>
+      </div>
+    </details>
+
+    <details class="task">
+      <summary><div class="task-num">10.5</div><div class="task-title">Create DNS Configuration (CNAME Records)</div><div class="task-chevron">›</div></summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>Navigate to <span class="path">Resource Management &gt; Application Management &gt; Browser Access</span></li>
+          <li>Click the icon next to <code>office.thezerotrustexchange.com</code> → review configuration → click <strong>Cancel</strong></li>
+          <li>Click the CNAME icon for <code>office.thezerotrustexchange.com</code> → note the CNAME mapping:
+            <ul class="substeps"><li><code>office.thezerotrustexchange.com</code> → <code>35735.288257305596657664.h.p.zpa-app.net</code></li></ul>
+          </li>
+        </ol>
+        <div class="callout callout-note">
+          <div class="callout-header"><div class="callout-icon">★</div>NOTE</div>
+          In your own environment, you would create this CNAME in your domain registrar/DNS provider. The values shown are lab-specific.
+        </div>
+      </div>
+    </details>
+
+    <details class="task">
+      <summary><div class="task-num">10.6</div><div class="task-title">Configure IdP Conditional Access &amp; Test</div><div class="task-chevron">›</div></summary>
+      <div class="task-body">
+        <div class="task-desc">IdP conditional access can require managed devices for SaaS access. For BYOD, an IP-based condition allows access only when traffic comes from Zscaler's network — enforcing isolation for unmanaged devices.</div>
+        <ol class="steps">
+          <li>On the <strong>Client PC VM</strong>, open Zscaler Client Connector → click <strong>Log Out</strong> → click <strong>Continue</strong></li>
+          <li>Open a new browser tab → go to <code>https://www.office.com/login</code> → login with Contractor credentials:
+            <ul class="substeps">
+              <li>Username: <code class="var-con-user">&lt;Contractor Test User&gt;</code> / <code><span class="var var-pass">&lt;Session Password&gt;</span></code></li>
+              <li>Access will be <strong>denied</strong> — the device is no longer behind Zscaler, so IdP conditional access blocks it</li>
+            </ul>
+          </li>
+          <li>Now access via the User Portal (routes traffic through ZPA):
+            <ul class="substeps">
+              <li>Go to <code>https://userportal.thezerotrustexchange.com/</code></li>
+              <li>Login as Contractor: <code class="var-con-user">&lt;Contractor Test User&gt;</code> / <code><span class="var var-pass">&lt;Session Password&gt;</span></code></li>
+              <li>Click the <strong>M365</strong> tile</li>
+              <li>Login again when prompted: <code class="var-con-user">&lt;Contractor Test User&gt;</code> / <code><span class="var var-pass">&lt;Session Password&gt;</span></code></li>
+              <li>MS Office loads inside the <strong>TZTE BYOD Restricted</strong> isolation profile ✓</li>
+            </ul>
+          </li>
+        </ol>
+      </div>
+    </details>
+    <div class="lab-takeaway">
+      <div class="lab-takeaway-label">WHY THIS MATTERS</div>
+      <p class="lab-takeaway-text">BYOD and contractor access is one of the hardest problems in enterprise security — agents cannot be installed on personal devices, but data controls still need to apply. The ZPA User Portal + isolation combination solves this without any client software: IdP conditional access routes unmanaged users through Zscaler's cloud, where isolation enforces copy and download controls before traffic ever reaches the SaaS application.</p>
+    </div>
+    <details class="lab-questions" id="q-lab10">
+      <summary><span class="lab-questions-icon">?</span> MY QUESTIONS <span class="lab-questions-count" id="q-count-lab10"></span><span class="lab-questions-chevron">›</span></summary>
+      <div class="lab-questions-body"><textarea class="lab-questions-input" id="q-input-lab10" placeholder="Type any questions to follow up later…" rows="3"></textarea></div>
+    </details>
+  </div>
+</details>
+
+
+<!-- ═══ LAB 11 ═══ -->
+<details class="lab" id="lab11">
+  <summary>
+    <div class="lab-num">11</div>
+    <div class="lab-title">
+      <div class="lab-title-name">Securing Access to Private Applications from Unmanaged Devices — ZPA Isolation</div>
+      <div class="lab-title-meta">ZPA · Browser Access · Isolation Policy · User Portal · Gitlab · Render Only</div>
+    </div>
+    <div class="lab-chevron">›</div>
+  </summary>
+  <div class="lab-body">
+    <div class="scenario-block">
+      <div class="scenario-block-label">OVERVIEW</div>
+      <div class="scenario-block-text">ZPA Browser Access extends zero-trust access to private web applications for unmanaged devices — without a Client Connector. Combined with ZPA Isolation Policies, data exfiltration controls (upload/download, clipboard) are enforced even on BYO devices accessing internal apps.</div>
+    </div>
+    <div class="objectives">
+      <div class="objectives-label">OBJECTIVES</div>
+      <ul>
+        <li>Review ZPA Browser Access, isolation policy, and User Portal configuration for the Gitlab private app</li>
+        <li>Access Gitlab via the User Portal without Client Connector and confirm it opens in isolation</li>
+        <li>Verify the TZTE ZPA Render Only profile blocks copy and download inside the session</li>
+      </ul>
+    </div>
+
+    <details class="task">
+      <summary><div class="task-num">11.1</div><div class="task-title">Configure Isolation Policies in ZPA</div><div class="task-chevron">›</div></summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>In the ZPA Admin Portal, navigate to <span class="path">Resource Management &gt; Application Management &gt; Browser Access</span></li>
+          <li>Click the icon for <code>gitlab.thezerotrustexchange.com</code> → verify the CNAME and wildcard certificate (<code>*.thezerotrustexchange.com</code>) associated with the application</li>
+          <li>Navigate to <span class="path">Policy &gt; Isolation Policy</span> → click the icon next to <strong>Isolate - Render Only</strong> → review its configuration → click <strong>Cancel</strong></li>
+          <li>Navigate to <span class="path">Resource Management &gt; User Portal &gt; User Portals</span> → review the configuration of <strong>The Zero Trust Exchange User Portal</strong></li>
+          <li>Navigate to <span class="path">Resource Management &gt; User Portal &gt; Portal Links</span> → review the Gitlab entry confirming it is configured for Browser Access and Isolation</li>
+        </ol>
+      </div>
+    </details>
+
+    <details class="task">
+      <summary><div class="task-num">11.2</div><div class="task-title">Test Isolation Policies to Isolate Private Applications</div><div class="task-chevron">›</div></summary>
+      <div class="task-body">
+        <div class="task-desc">Access the private Gitlab app via the User Portal as an unmanaged user (logged out of ZCC).</div>
+        <ol class="steps">
+          <li>Ensure you are <strong>logged out</strong> of Zscaler Client Connector on the Client PC VM</li>
+          <li>Verify DNS resolution for the private app:
+            <span class="cmd no-prompt">nslookup gitlab.thezerotrustexchange.com</span>
+            Confirm the hostname resolves to the CNAME seen in task 11.1
+          </li>
+          <li>Go to the User Portal: <code>https://userportal.thezerotrustexchange.com</code>
+            <ul class="substeps">
+              <li>Login with Marketing credentials: <code class="var-mkt-user">&lt;Marketing Test User&gt;</code> / <code><span class="var var-pass">&lt;Session Password&gt;</span></code></li>
+              <li>Verify the <strong>Gitlab</strong> tile is visible — linked to <code>gitlab.thezerotrustexchange.com</code></li>
+            </ul>
+          </li>
+          <li>Click the <strong>Gitlab</strong> tile → the isolated Gitlab page loads in the browser
+            <ul class="substeps"><li>Login with: username <code>z-se</code> / password <code>SE@Zscal3r</code></li></ul>
+          </li>
+          <li>Verify isolation controls are enforced:
+            <ul class="substeps">
+              <li>Cannot copy content from the isolated page to local computer ✗</li>
+              <li>Cannot download files from the isolated app ✗</li>
+            </ul>
+          </li>
+          <li>To confirm the isolation profile in use, switch to the ZPA Admin Portal → <span class="path">Configuration &amp; Controls &gt; Browser Isolation &gt; Isolation Profiles</span> → click the icon next to <strong>TZTE ZPA Render Only</strong> → review the Security tab confirming file transfer, copy &amp; paste, and print are all disabled</li>
+        </ol>
+      </div>
+    </details>
+    <div class="lab-takeaway">
+      <div class="lab-takeaway-label">WHY THIS MATTERS</div>
+      <p class="lab-takeaway-text">Developers and contractors who need access to internal tools like Gitlab represent a significant data exfiltration risk — source code and proprietary IP are high-value targets. ZPA Browser Access + isolation eliminates the need for VPN credentials or agents: the private app is fully usable in the browser session, but isolation controls at the data layer ensure code and content cannot be extracted to the contractor's device.</p>
+    </div>
+    <details class="lab-questions" id="q-lab11">
+      <summary><span class="lab-questions-icon">?</span> MY QUESTIONS <span class="lab-questions-count" id="q-count-lab11"></span><span class="lab-questions-chevron">›</span></summary>
+      <div class="lab-questions-body"><textarea class="lab-questions-input" id="q-input-lab11" placeholder="Type any questions to follow up later…" rows="3"></textarea></div>
+    </details>
+  </div>
+</details>
+
+</main>
+
+<footer>
+  <div class="footer-left">ZDDC<span>.</span></div>
+  <div class="footer-right">EDU-233 · Zscaler Browser Isolation · Self-Guided Lab Guide</div>
+</footer>
+
+<script>
+/* ── CONFIG PANEL COLLAPSE ── */
+function toggleConfig() {
+  const panel = document.getElementById('config-panel');
+  const btn   = document.getElementById('config-toggle-btn');
+  const collapsed = panel.classList.toggle('collapsed');
+  btn.innerHTML = collapsed
+    ? '<span class="chevron" style="transform:rotate(180deg);display:inline-block;">▲</span> Expand'
+    : '<span class="chevron">▲</span> Collapse';
+}
+function updateToggleSummary() {
+  const user = document.getElementById('admin-user-input').value.trim();
+  document.getElementById('config-toggle-summary').textContent = user ? `— ${user}` : '';
+}
+
+/* ── CONFIG ENGINE ── */
+const STORAGE_KEY = 'edu233-lab-config';
+
+function loadConfig() {
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) {
+      const cfg = JSON.parse(saved);
+      document.getElementById('admin-user-input').value = cfg.adminUser || '';
+      document.getElementById('pass-input').value       = cfg.pass      || '';
+      document.getElementById('mkt-user-input').value   = cfg.mktUser   || '';
+      document.getElementById('con-user-input').value   = cfg.conUser   || '';
+    }
+  } catch (e) {}
+  applyAll();
+}
+
+function saveConfig() {
+  const cfg = {
+    adminUser: document.getElementById('admin-user-input').value.trim(),
+    pass:      document.getElementById('pass-input').value.trim(),
+    mktUser:   document.getElementById('mkt-user-input').value.trim(),
+    conUser:   document.getElementById('con-user-input').value.trim(),
+  };
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(cfg)); } catch (e) {}
+  applyAll();
+  updateToggleSummary();
+  flashSaved();
+}
+
+function clearConfig() {
+  ['admin-user-input','pass-input','mkt-user-input','con-user-input']
+    .forEach(id => document.getElementById(id).value = '');
+  try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
+  applyAll();
+  updateToggleSummary();
+}
+
+function flashSaved() {
+  const btn = document.querySelector('.config-btn');
+  const orig = btn.textContent;
+  btn.textContent = '✓ Saved';
+  btn.style.background = 'var(--green)'; btn.style.color = 'white';
+  setTimeout(() => { btn.textContent = orig; btn.style.background = ''; btn.style.color = ''; }, 1200);
+}
+
+function applyAll() {
+  const adminUser = document.getElementById('admin-user-input').value.trim();
+  const pass      = document.getElementById('pass-input').value.trim();
+  const mktUser   = document.getElementById('mkt-user-input').value.trim();
+  const conUser   = document.getElementById('con-user-input').value.trim();
+
+  document.querySelectorAll('.var-admin-user').forEach(el => { el.textContent = adminUser || '<ZIA/ZPA Admin User ID>'; });
+  document.querySelectorAll('.var-mkt-user').forEach(el => { el.textContent = mktUser || '<Marketing Test User>'; });
+  document.querySelectorAll('.var-con-user').forEach(el => { el.textContent = conUser || '<Contractor Test User>'; });
+  document.querySelectorAll('.var-pass').forEach(el => {
+    if (pass) { el.textContent = pass; el.classList.add('filled'); }
+    else { el.textContent = '<Session Password>'; el.classList.remove('filled'); }
+  });
+}
+
+/* ── EXPAND / COLLAPSE ALL ── */
+function expandAll()  { document.querySelectorAll('details').forEach(d => d.open = true); }
+function collapseAll(){ document.querySelectorAll('details').forEach(d => d.open = false); }
+
+/* ── LIVE INPUT WIRING ── */
+['admin-user-input','pass-input','mkt-user-input','con-user-input'].forEach(id => {
+  document.getElementById(id).addEventListener('input', applyAll);
+  document.getElementById(id).addEventListener('input', updateToggleSummary);
+});
+
+loadConfig();
+updateToggleSummary();
+
+/* ── SMOOTH SCROLL FOR LAB NAV ── */
+document.querySelectorAll('.lab-nav-tab').forEach(tab => {
+  tab.addEventListener('click', e => {
+    e.preventDefault();
+    const target = document.getElementById(tab.getAttribute('href').slice(1));
+    if (target) { target.open = true; window.scrollTo({ top: target.getBoundingClientRect().top + window.scrollY - 100, behavior: 'smooth' }); }
+  });
+});
+
+/* ── TASK PROGRESS TRACKING ── */
+const PROG_KEY = 'edu233-progress';
+function loadProg() { try { return JSON.parse(localStorage.getItem(PROG_KEY)) || {}; } catch { return {}; } }
+function saveProg(s) { try { localStorage.setItem(PROG_KEY, JSON.stringify(s)); } catch {} }
+
+function updateProgress(state) {
+  const tasks = document.querySelectorAll('details.task');
+  let done = 0;
+  tasks.forEach(t => { if (state[taskKey(t)]) done++; });
+  const pct = tasks.length ? Math.round((done / tasks.length) * 100) : 0;
+  document.getElementById('prog-done').textContent = pct;
+  const fill = document.getElementById('progress-fill');
+  fill.style.width = pct + '%';
+  fill.classList.toggle('all-done', done === tasks.length && tasks.length > 0);
+  document.querySelectorAll('details.lab').forEach(lab => {
+    const labTasks = lab.querySelectorAll('details.task');
+    const allDone = labTasks.length > 0 && [...labTasks].every(t => !!state[taskKey(t)]);
+    const tab = document.querySelector(`.lab-nav-tab[href="#${lab.id}"]`);
+    if (tab) tab.classList.toggle('lab-nav-done', allDone);
+  });
+}
+
+function taskKey(el) {
+  const num = el.querySelector('.task-num');
+  return 'task-' + (num ? num.textContent.trim() : Math.random());
+}
+
+function injectTaskCheckboxes() {
+  const state = loadProg();
+  document.querySelectorAll('details.task').forEach(task => {
+    const summary = task.querySelector(':scope > summary');
+    if (!summary || summary.querySelector('.task-check')) return;
+    const key = taskKey(task);
+    const wrap = document.createElement('div'); wrap.className = 'task-check-wrap';
+    const cb = document.createElement('input');
+    cb.type = 'checkbox'; cb.className = 'task-check'; cb.checked = !!state[key];
+    if (cb.checked) task.classList.add('task-done');
+    cb.addEventListener('click', e => {
+      e.stopPropagation(); state[key] = cb.checked;
+      task.classList.toggle('task-done', cb.checked);
+      saveProg(state); updateProgress(state);
+    });
+    wrap.appendChild(cb);
+    summary.insertBefore(wrap, summary.querySelector('.task-chevron'));
+  });
+  updateProgress(state);
+}
+
+injectTaskCheckboxes();
+
+/* ── COPY BUTTONS ── */
+function copyToClipboard(text, btn, isBlock) {
+  navigator.clipboard.writeText(text).then(() => {
+    btn.classList.add('copied');
+    btn.textContent = isBlock ? '✓ copied' : '✓';
+    setTimeout(() => { btn.classList.remove('copied'); btn.textContent = isBlock ? 'copy' : '⎘'; }, 1500);
+  });
+}
+
+function injectCopyButtons() {
+  document.querySelectorAll('.cmd').forEach(cmd => {
+    const wrap = document.createElement('div'); wrap.className = 'cmd-wrap';
+    cmd.parentNode.insertBefore(wrap, cmd); wrap.appendChild(cmd);
+    const btn = document.createElement('button'); btn.className = 'copy-btn'; btn.textContent = 'copy';
+    btn.addEventListener('click', () => copyToClipboard(cmd.textContent.trim(), btn, true));
+    wrap.appendChild(btn);
+  });
+  document.querySelectorAll('.substeps li code, .steps li code, .creds-table td code').forEach(code => {
+    if (code.closest('.callout') || code.closest('.cmd-wrap')) return;
+    const initialText = code.textContent.trim();
+    if (initialText.length < 2 || /^(Ctrl|Cmd|Alt)\+/.test(initialText)) return;
+    const btn = document.createElement('button'); btn.className = 'copy-inline'; btn.title = 'Copy'; btn.textContent = '⎘';
+    btn.addEventListener('click', e => { e.stopPropagation(); copyToClipboard(code.textContent.trim(), btn, false); });
+    code.after(btn);
+  });
+}
+
+injectCopyButtons();
+
+/* ── CONFIG FIELD COPY ── */
+function copyConfigField(inputId, btn) {
+  const val = document.getElementById(inputId).value.trim();
+  if (!val) return;
+  navigator.clipboard.writeText(val).then(() => {
+    btn.classList.add('copied'); btn.textContent = '✓';
+    setTimeout(() => { btn.classList.remove('copied'); btn.textContent = '⎘'; }, 1500);
+  });
+}
+
+/* ── LAB NOTES ── */
+const NOTES_KEY = 'edu233-lab-notes';
+function loadNotes() { try { return JSON.parse(localStorage.getItem(NOTES_KEY)) || {}; } catch { return {}; } }
+function saveNotes(n) { try { localStorage.setItem(NOTES_KEY, JSON.stringify(n)); } catch {} }
+function injectLabNotes() {
+  const saved = loadNotes();
+  document.querySelectorAll('details.lab').forEach(lab => {
+    const anchor = lab.querySelector('.objectives') || lab.querySelector('.scenario-block');
+    if (!anchor) return;
+    const block = document.createElement('div');
+    block.className = 'lab-notes';
+    const label = document.createElement('div');
+    label.className = 'lab-notes-label';
+    label.textContent = 'NOTES';
+    const ta = document.createElement('textarea');
+    ta.className = 'lab-notes-input';
+    ta.placeholder = 'Add your notes here…';
+    ta.rows = 2;
+    ta.value = saved[lab.id] || '';
+    ta.addEventListener('input', () => {
+      const n = loadNotes(); n[lab.id] = ta.value; saveNotes(n);
+    });
+    block.appendChild(label);
+    block.appendChild(ta);
+    anchor.after(block);
+  });
+}
+injectLabNotes();
+
+/* ── LAB QUESTIONS ── */
+const Q_STORE = 'edu233-questions';
+const LAB_LABELS = {
+  lab1:  'Lab 1 — Securing Access to Internet (SSL Inspection)',
+  lab2:  'Lab 2 — Configuring Isolation Profiles',
+  lab3:  'Lab 3 — Smart Browser Isolation',
+  lab4:  'Lab 4 — URL Filtering + Isolate Action',
+  lab5:  'Lab 5 — Cloud App Control + Isolate Action',
+  lab6:  'Lab 6 — Log Streams — Isolation Session Logging',
+  lab7:  'Lab 7 — Document Protection',
+  lab8:  'Lab 8 — Sandbox + Quarantine & Isolate',
+  lab9:  'Lab 9 — Browser-in-Browser',
+  lab10: 'Lab 10 — Secure BYOD / Agentless Access',
+  lab11: 'Lab 11 — Private App Isolation',
+};
+function loadQs() { try { return JSON.parse(localStorage.getItem(Q_STORE)) || {}; } catch { return {}; } }
+function saveQs(q) { try { localStorage.setItem(Q_STORE, JSON.stringify(q)); } catch {} }
+function escHtml(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function updateQCount(labId, text) {
+  const el = document.getElementById('q-count-' + labId);
+  if (!el) return;
+  const n = text.trim() ? text.trim().split('\n').filter(l => l.trim()).length : 0;
+  el.textContent = n > 0 ? n + (n === 1 ? ' Q' : ' Qs') : '';
+}
+function renderAllQs() {
+  const list  = document.getElementById('all-questions-list');
+  const empty = document.getElementById('all-questions-empty');
+  const total = document.getElementById('all-questions-total');
+  if (!list) return;
+  const q = loadQs();
+  let html = '', hasAny = false, count = 0;
+  for (let i = 1; i <= 11; i++) {
+    const id = 'lab' + i, text = (q[id] || '').trim();
+    if (!text) continue;
+    hasAny = true; count++;
+    html += `<div class="all-questions-entry"><div class="all-questions-lab-label">${LAB_LABELS[id]}</div><div class="all-questions-text">${escHtml(text)}</div></div>`;
+  }
+  list.innerHTML = html;
+  if (empty) empty.style.display = hasAny ? 'none' : '';
+  if (total) total.textContent = count > 0 ? count + (count === 1 ? ' lab' : ' labs') : '';
+}
+function initQs() {
+  const q = loadQs();
+  document.querySelectorAll('.lab-questions-input').forEach(ta => {
+    const labId = ta.id.replace('q-input-', '');
+    ta.value = q[labId] || '';
+    updateQCount(labId, ta.value);
+    ta.addEventListener('input', () => {
+      const cur = loadQs(); cur[labId] = ta.value;
+      saveQs(cur); updateQCount(labId, ta.value); renderAllQs();
+    });
+  });
+  renderAllQs();
+}
+initQs();
+</script>
+
+</body>
+</html>

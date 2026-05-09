@@ -1,0 +1,1156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- CUSTOMIZE: page title -->
+<title>EDU-XXX — Hands-on Lab Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;0,700;1,400&family=Epilogue:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   ZDTE Lab Guide — Embedded Stylesheet
+   ============================================================ */
+:root {
+  --cream: #fef9f0;
+  --cream-dark: #f5eddb;
+  --ink: #1a1209;
+  --ink-soft: #5a4a35;
+  --ink-muted: #8a7660;
+  --orange: #ff6b35;
+  --orange-light: #fff3ec;
+  --orange-border: #ffd5c0;
+  --amber-light: #fffbe6;
+  --green: #3a7d44;
+  --green-light: #edf7ee;
+  --green-border: #b2dfb4;
+  --purple: #5c35cc;
+  --purple-light: #ece8ff;
+  --purple-border: #c8bbff;
+  --blue-light: #e8f0fb;
+  --blue-border: #b3ccf0;
+  --blue: #1a6bcc;
+  --red-light: #fce8e8;
+  --red-border: #f7c1c1;
+  --red: #a32d2d;
+  --border: #ede5d8;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Epilogue', sans-serif; background: var(--cream); color: var(--ink); min-height: 100vh; }
+
+/* ── HEADER ── */
+header { padding: 40px 60px 28px; border-bottom: 1px solid var(--border); display: flex; align-items: flex-start; justify-content: space-between; gap: 32px; background: var(--cream); }
+.header-left { flex: 1; }
+.day-badge { display: inline-flex; align-items: center; gap: 6px; background: var(--ink); color: var(--cream); padding: 5px 14px; border-radius: 20px; font-size: 11px; letter-spacing: 0.1em; margin-bottom: 14px; }
+.day-badge-dot { width: 5px; height: 5px; background: var(--orange); border-radius: 50%; }
+h1 { font-family: 'Fraunces', serif; font-size: 42px; font-weight: 700; line-height: 1.0; color: var(--ink); margin-bottom: 10px; }
+h1 em { font-style: italic; font-weight: 400; color: var(--orange); }
+.header-meta-row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-top: 14px; }
+.tag { padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 500; border: 1px solid; display: inline-block; }
+.tag-zia    { background: var(--blue-light);   color: var(--blue);   border-color: var(--blue-border); }
+.tag-zpa    { background: var(--green-light);  color: var(--green);  border-color: var(--green-border); }
+.tag-zdx    { background: var(--purple-light); color: var(--purple); border-color: var(--purple-border); }
+.tag-arch   { background: var(--amber-light);  color: #a07c00;       border-color: #ffe680; }
+.tag-weight { background: var(--orange-light); color: #cc4a18;       border-color: var(--orange-border); }
+.tag-sdc    { background: var(--purple-light); color: var(--purple); border-color: var(--purple-border); }
+.tag-ro     { background: var(--red-light);    color: var(--red);    border-color: var(--red-border); }
+
+/* ── CONFIG PANEL ── */
+.config-panel { background: var(--ink); color: var(--cream); padding: 0 60px; position: sticky; top: 0; z-index: 200; border-bottom: 2px solid var(--orange); box-shadow: 0 4px 12px rgba(26,18,9,0.18); }
+.config-toggle-row { display: flex; align-items: center; justify-content: space-between; padding: 10px 0; cursor: pointer; user-select: none; }
+.config-toggle-title { font-size: 10px; letter-spacing: 0.16em; color: var(--orange); font-weight: 600; text-transform: uppercase; }
+.config-toggle-summary { font-size: 11px; color: #b8a18a; margin-left: 16px; font-family: 'JetBrains Mono', monospace; }
+.config-toggle-btn { background: none; border: 1px solid #3a3020; border-radius: 6px; color: #7a6a55; font-size: 11px; padding: 3px 10px; cursor: pointer; font-family: 'Epilogue', sans-serif; letter-spacing: 0.06em; transition: color 0.15s, border-color 0.15s; display: flex; align-items: center; gap: 5px; }
+.config-toggle-btn:hover { color: var(--orange); border-color: var(--orange); }
+.config-toggle-btn .chevron { transition: transform 0.25s ease; display: inline-block; }
+.config-panel.collapsed .config-toggle-btn .chevron { transform: rotate(180deg); }
+.config-body { overflow: hidden; max-height: 400px; transition: max-height 0.3s ease, opacity 0.25s ease, padding 0.25s ease; opacity: 1; padding-bottom: 18px; }
+.config-panel.collapsed .config-body { max-height: 0; opacity: 0; padding-bottom: 0; }
+.config-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; align-items: end; }
+.config-field { display: flex; flex-direction: column; gap: 6px; }
+.config-field label { font-size: 10px; letter-spacing: 0.14em; color: var(--orange); font-weight: 600; text-transform: uppercase; }
+.config-field input { background: #2a2010; color: var(--cream); border: 1px solid #3a3020; border-radius: 8px; padding: 9px 12px; font-size: 13px; font-family: 'JetBrains Mono', monospace; transition: border-color 0.15s, background 0.15s; }
+.config-field input:focus { outline: none; border-color: var(--orange); background: #1f1608; }
+.config-field input::placeholder { color: #7a6a55; font-style: italic; }
+.config-derived { display: flex; flex-wrap: wrap; gap: 16px; margin-top: 12px; padding-top: 12px; border-top: 1px solid #2a2010; font-size: 11px; color: #b8a18a; }
+.config-derived span { display: inline-flex; gap: 6px; align-items: center; }
+.config-derived strong { color: var(--orange); font-weight: 500; letter-spacing: 0.04em; }
+.config-derived code { background: #2a2010; color: var(--cream); padding: 2px 8px; border-radius: 4px; font-family: 'JetBrains Mono', monospace; font-size: 11px; }
+.config-field-row { display: flex; gap: 6px; align-items: center; }
+.config-field-row input { flex: 1; min-width: 0; }
+.config-copy-btn { flex-shrink: 0; background: #2a2010; border: 1px solid #5a4a35; color: #7a6a55; border-radius: 6px; padding: 0 9px; font-size: 11px; cursor: pointer; font-family: 'JetBrains Mono', monospace; height: 38px; transition: color 0.15s, border-color 0.15s, background 0.15s; }
+.config-copy-btn:hover { color: var(--orange); border-color: var(--orange); background: #3a3020; }
+.config-copy-btn.copied { background: var(--green); color: #fff !important; border-color: var(--green); }
+.config-actions { display: flex; gap: 8px; }
+.config-btn { background: var(--orange); color: var(--ink); border: none; border-radius: 8px; padding: 9px 14px; font-size: 11px; font-weight: 600; letter-spacing: 0.06em; cursor: pointer; font-family: 'Epilogue', sans-serif; transition: background 0.15s; }
+.config-btn:hover { background: #ff8a5c; }
+.config-btn.secondary { background: #3a3020; color: var(--cream); }
+.config-btn.secondary:hover { background: #4a4030; }
+
+/* ── VARIABLES (dynamic placeholders) ── */
+.var { background: var(--orange-light); color: #cc4a18; border: 1px dashed var(--orange-border); padding: 1px 6px; border-radius: 4px; font-family: 'JetBrains Mono', monospace; font-size: 0.92em; font-weight: 500; }
+.var.filled { background: var(--green-light); color: var(--green); border: 1px solid var(--green-border); }
+
+/* ── LAB NAV ── */
+.lab-nav { padding: 12px 60px; background: var(--cream-dark); border-bottom: 1px solid var(--border); display: flex; gap: 6px; overflow-x: auto; position: sticky; top: 0; z-index: 100; }
+.lab-nav-tab { padding: 8px 14px; font-size: 11px; font-weight: 600; color: var(--ink-soft); letter-spacing: 0.06em; border-radius: 16px; cursor: pointer; white-space: nowrap; background: var(--cream); border: 1px solid var(--border); text-decoration: none; transition: all 0.15s; }
+.lab-nav-tab:hover { background: var(--orange-light); border-color: var(--orange-border); color: var(--orange); }
+.lab-nav-tab.capstone { background: var(--ink); color: var(--orange); border-color: var(--orange); }
+.lab-nav-tab.lab-nav-done { background: var(--purple-light); border-color: var(--purple-border); color: var(--purple); }
+.lab-nav-tab.lab-nav-done::after { content: ' ✓'; font-size: 10px; }
+
+/* ── PROGRESS RIBBON ── */
+.progress-ribbon { background: var(--cream-dark); border-bottom: 1px solid var(--border); padding: 10px 60px; display: flex; align-items: center; gap: 14px; position: sticky; top: 0; z-index: 50; }
+.progress-label { font-size: 10px; letter-spacing: 0.14em; color: var(--ink-muted); font-weight: 600; white-space: nowrap; }
+.progress-count { font-size: 13px; font-weight: 700; color: var(--ink); white-space: nowrap; }
+.progress-count span { color: var(--orange); }
+.progress-track { flex: 1; background: var(--border); border-radius: 8px; height: 8px; overflow: hidden; min-width: 60px; }
+.progress-fill { height: 100%; background: var(--orange); border-radius: 8px; transition: width 0.4s ease; width: 0%; }
+.progress-fill.all-done { background: var(--purple); }
+
+main { padding: 36px 60px 60px; max-width: 1200px; margin: 0 auto; }
+
+/* ── INTRO BLOCK ── */
+.intro-block { background: var(--cream-dark); border: 1px solid var(--border); border-radius: 14px; padding: 22px 26px; margin-bottom: 28px; }
+.intro-block h2 { font-family: 'Fraunces', serif; font-size: 22px; margin-bottom: 12px; color: var(--ink); }
+.intro-block p { font-size: 13px; color: var(--ink-soft); line-height: 1.7; margin-bottom: 8px; }
+
+/* ── CREDENTIALS TABLE ── */
+.creds-table { width: 100%; border-collapse: collapse; font-size: 12px; margin: 12px 0 4px; background: var(--cream); border-radius: 10px; overflow: hidden; }
+.creds-table th { background: var(--ink); color: var(--cream); padding: 8px 12px; text-align: left; font-weight: 500; font-size: 10px; letter-spacing: 0.08em; }
+.creds-table td { padding: 8px 12px; border-bottom: 1px solid var(--border); color: var(--ink-soft); }
+.creds-table tr:last-child td { border-bottom: none; }
+.creds-table code { font-size: 11px; }
+
+/* ── LAB (collapsible) ── */
+.lab { background: var(--cream); border: 1px solid var(--border); border-radius: 14px; margin-bottom: 14px; overflow: hidden; }
+.lab > summary { list-style: none; padding: 18px 24px; cursor: pointer; display: flex; align-items: center; gap: 16px; background: var(--cream); transition: background 0.15s; }
+.lab > summary::-webkit-details-marker { display: none; }
+.lab > summary:hover { background: var(--orange-light); }
+.lab[open] > summary { background: var(--ink); color: var(--cream); border-bottom: 1px solid var(--border); }
+.lab-num { flex-shrink: 0; width: 44px; height: 44px; border-radius: 10px; background: var(--ink); color: var(--orange); display: flex; align-items: center; justify-content: center; font-family: 'Fraunces', serif; font-weight: 700; font-size: 17px; }
+.lab[open] > summary .lab-num { background: var(--orange); color: var(--ink); }
+.lab.capstone-lab .lab-num { background: var(--orange); color: var(--ink); }
+.lab.capstone-lab[open] > summary .lab-num { background: var(--ink); color: var(--orange); }
+.lab-title { flex: 1; }
+.lab-title-name { font-family: 'Fraunces', serif; font-size: 18px; font-weight: 600; color: inherit; line-height: 1.3; }
+.lab-title-meta { font-size: 11px; color: var(--ink-muted); letter-spacing: 0.06em; margin-top: 3px; }
+.lab[open] > summary .lab-title-meta { color: #b8a18a; }
+.lab-chevron { flex-shrink: 0; font-size: 14px; color: var(--ink-muted); transition: transform 0.2s; }
+.lab[open] > summary .lab-chevron { transform: rotate(90deg); color: var(--orange); }
+.lab-body { padding: 22px 26px 26px; }
+
+/* ── SCENARIO BLOCK ── */
+.scenario-block { background: var(--orange-light); border-left: 3px solid var(--orange); padding: 14px 18px; border-radius: 0 10px 10px 0; margin-bottom: 16px; }
+.scenario-block-label { font-size: 10px; font-weight: 700; letter-spacing: 0.14em; color: var(--orange); margin-bottom: 6px; }
+.scenario-block-text { font-size: 13px; color: #7a3010; line-height: 1.7; }
+
+/* ── OBJECTIVES ── */
+.objectives { margin-bottom: 16px; }
+.objectives-label { font-size: 10px; font-weight: 700; letter-spacing: 0.14em; color: var(--ink-muted); margin-bottom: 8px; }
+.objectives ul { list-style: none; padding-left: 0; }
+.objectives li { font-size: 13px; color: var(--ink-soft); padding: 4px 0 4px 22px; position: relative; line-height: 1.6; }
+.objectives li::before { content: '✓'; position: absolute; left: 0; color: var(--green); font-weight: 700; }
+.lab-time { display: inline-block; background: var(--cream-dark); color: var(--ink-soft); font-size: 11px; padding: 4px 10px; border-radius: 12px; margin-bottom: 18px; border: 1px solid var(--border); }
+.lab-time::before { content: '⏱'; margin-right: 5px; }
+
+/* ── TASK (nested collapsible) ── */
+.task { background: #fff; border: 1px solid var(--border); border-radius: 10px; margin-bottom: 10px; overflow: hidden; }
+.task > summary { list-style: none; padding: 12px 16px; cursor: pointer; display: flex; align-items: center; gap: 12px; transition: background 0.15s; }
+.task > summary::-webkit-details-marker { display: none; }
+.task > summary:hover { background: var(--cream-dark); }
+.task[open] > summary { background: var(--cream-dark); border-bottom: 1px solid var(--border); }
+.task-num { flex-shrink: 0; font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 600; color: var(--orange); background: var(--orange-light); padding: 3px 8px; border-radius: 5px; border: 1px solid var(--orange-border); }
+.task-title { flex: 1; font-size: 14px; font-weight: 500; color: var(--ink); }
+.task-chevron { flex-shrink: 0; font-size: 12px; color: var(--ink-muted); transition: transform 0.2s; }
+.task[open] > summary .task-chevron { transform: rotate(90deg); color: var(--orange); }
+.task-body { padding: 16px 18px 18px; }
+.task-desc { font-size: 13px; color: var(--ink-soft); line-height: 1.7; margin-bottom: 12px; font-style: italic; }
+
+/* ── STEPS ── */
+.steps { list-style: none; counter-reset: step; }
+.steps > li { counter-increment: step; position: relative; padding: 10px 0 10px 38px; font-size: 13px; color: var(--ink); line-height: 1.7; border-bottom: 1px dashed var(--border); }
+.steps > li:last-child { border-bottom: none; }
+.steps > li::before { content: counter(step); position: absolute; left: 0; top: 10px; width: 26px; height: 26px; border-radius: 50%; background: var(--ink); color: var(--orange); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; font-family: 'JetBrains Mono', monospace; }
+.steps ul, .steps ol { margin-top: 6px; padding-left: 22px; list-style: disc; color: var(--ink-soft); }
+.steps ul ul, .steps ol ul { list-style: circle; }
+.steps li li { padding: 3px 0; font-size: 13px; border: none; }
+.steps li li::before { content: none; }
+.steps strong { color: var(--ink); font-weight: 600; }
+.substeps { list-style: disc; padding-left: 22px; margin-top: 6px; color: var(--ink-soft); }
+.substeps li { font-size: 13px; padding: 3px 0; line-height: 1.6; }
+.substeps ul { list-style: circle; padding-left: 22px; margin-top: 4px; }
+
+/* ── INLINE CODE ── */
+code { background: var(--cream-dark); padding: 1px 6px; border-radius: 4px; font-family: 'JetBrains Mono', monospace; font-size: 0.88em; color: var(--ink); border: 1px solid var(--border); }
+.path { font-family: 'JetBrains Mono', monospace; font-size: 0.9em; color: var(--blue); background: var(--blue-light); padding: 1px 6px; border-radius: 4px; border: 1px solid var(--blue-border); }
+
+/* ── COMMAND BOX ── */
+.cmd { background: var(--ink); color: #d9cfbf; border-radius: 8px; padding: 10px 14px; font-family: 'JetBrains Mono', monospace; font-size: 12px; line-height: 1.7; margin: 8px 0; display: block; border-left: 3px solid var(--orange); overflow-x: auto; }
+.cmd::before { content: '$'; color: var(--orange); margin-right: 8px; font-weight: 700; }
+.cmd.no-prompt::before { content: ''; margin: 0; }
+
+/* ── JSON BLOCK ── */
+.json-block { background: #1a1209; color: #d9cfbf; padding: 12px 16px; border-radius: 8px; font-family: 'JetBrains Mono', monospace; font-size: 12px; line-height: 1.6; margin: 8px 0; border-left: 3px solid var(--orange); white-space: pre; overflow-x: auto; }
+.json-block .k { color: #ffb38a; }
+.json-block .s { color: #a8d99e; }
+
+/* ── CALLOUTS ── */
+.callout { border-radius: 10px; padding: 12px 16px; margin: 10px 0; border: 1px solid; font-size: 12px; line-height: 1.7; }
+.callout-header { display: flex; align-items: center; gap: 6px; font-size: 10px; font-weight: 700; letter-spacing: 0.12em; margin-bottom: 6px; }
+.callout-icon { width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; flex-shrink: 0; }
+.callout-note { background: var(--amber-light); border-color: #ffe680; color: #7a5c00; }
+.callout-note .callout-header { color: #a07c00; }
+.callout-note .callout-icon  { background: #ffe680; color: #a07c00; }
+.callout-tip { background: var(--blue-light); border-color: var(--blue-border); color: #153d7a; }
+.callout-tip .callout-header { color: var(--blue); }
+.callout-tip .callout-icon  { background: var(--blue-border); color: var(--blue); }
+.callout-warn { background: var(--red-light); border-color: var(--red-border); color: #7a1f1f; }
+.callout-warn .callout-header { color: var(--red); }
+.callout-warn .callout-icon  { background: var(--red-border); color: var(--red); }
+
+/* ── COMPARE TABLE ── */
+.compare-table { width: 100%; border-collapse: collapse; font-size: 12px; margin: 10px 0; }
+.compare-table th { background: var(--ink); color: var(--cream); padding: 8px 12px; text-align: left; font-weight: 500; font-size: 10px; letter-spacing: 0.08em; }
+.compare-table th:first-child { border-radius: 8px 0 0 0; }
+.compare-table th:last-child { border-radius: 0 8px 0 0; }
+.compare-table td { padding: 8px 12px; border-bottom: 1px solid var(--border); color: var(--ink-soft); vertical-align: top; line-height: 1.6; }
+.compare-table tr:nth-child(even) td { background: var(--cream-dark); }
+
+/* ── CAPSTONE BLOCK ── */
+.capstone-section { background: var(--orange-light); border: 1px solid var(--orange-border); border-radius: 10px; padding: 14px 18px; margin-bottom: 12px; }
+.capstone-section-label { font-size: 10px; font-weight: 700; letter-spacing: 0.14em; color: var(--orange); margin-bottom: 6px; }
+.capstone-section ul { list-style: disc; padding-left: 22px; }
+.capstone-section li { font-size: 13px; color: #7a3010; line-height: 1.6; padding: 2px 0; }
+.capstone-section a { color: var(--blue); text-decoration: underline; word-break: break-all; }
+
+/* ── TAKEAWAY ── */
+.lab-takeaway { margin-top: 18px; padding: 12px 18px; background: var(--cream-dark); border-radius: 8px; border-left: 3px solid var(--ink-muted); }
+.lab-takeaway-label { font-size: 10px; font-weight: 700; letter-spacing: 0.14em; color: var(--ink-muted); margin-bottom: 6px; }
+.lab-takeaway-text { font-size: 13px; color: var(--ink-soft); line-height: 1.7; }
+
+/* ── LAB NOTES ── */
+.lab-notes { margin-bottom: 16px; }
+.lab-notes-label { font-size: 10px; font-weight: 700; letter-spacing: 0.14em; color: var(--ink-muted); margin-bottom: 6px; }
+.lab-notes-input { width: 100%; min-height: 62px; border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; font-family: 'Epilogue', sans-serif; font-size: 13px; color: var(--ink-soft); background: var(--cream); resize: vertical; line-height: 1.6; transition: border-color 0.15s; }
+.lab-notes-input:focus { outline: none; border-color: var(--orange); }
+.lab-notes-input::placeholder { color: var(--ink-muted); font-style: italic; }
+
+/* ── LAB QUESTIONS ── */
+.lab-questions { border-top: 1px dashed var(--border); margin-top: 16px; }
+.lab-questions > summary { list-style: none; padding: 10px 0 6px; cursor: pointer; display: flex; align-items: center; gap: 8px; font-size: 10px; font-weight: 700; letter-spacing: 0.12em; color: var(--ink-muted); user-select: none; }
+.lab-questions > summary::-webkit-details-marker { display: none; }
+.lab-questions > summary:hover { color: var(--orange); }
+.lab-questions-count { background: var(--purple-light); color: var(--purple); border: 1px solid var(--purple-border); border-radius: 10px; padding: 1px 7px; font-size: 10px; font-weight: 700; margin-left: 4px; }
+.lab-questions-count:empty { display: none; }
+.lab-questions-chevron { margin-left: auto; font-size: 11px; transition: transform 0.2s; }
+.lab-questions[open] > summary .lab-questions-chevron { transform: rotate(90deg); }
+.lab-questions-body { padding: 8px 0 2px; }
+.lab-questions-input { width: 100%; min-height: 80px; border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; font-family: 'Epilogue', sans-serif; font-size: 13px; color: var(--ink-soft); background: var(--cream); resize: vertical; line-height: 1.6; transition: border-color 0.15s; }
+.lab-questions-input:focus { outline: none; border-color: var(--orange); }
+.lab-questions-input::placeholder { color: var(--ink-muted); font-style: italic; }
+
+/* ── ALL QUESTIONS PANEL ── */
+.all-questions-panel { background: var(--cream-dark); border: 1px solid var(--border); border-radius: 14px; margin-bottom: 28px; overflow: hidden; }
+.all-questions-toggle { list-style: none; padding: 18px 26px; cursor: pointer; display: flex; align-items: center; gap: 10px; user-select: none; transition: background 0.15s; }
+.all-questions-toggle::-webkit-details-marker { display: none; }
+.all-questions-toggle:hover { background: var(--orange-light); }
+.all-questions-title { font-family: 'Fraunces', serif; font-size: 20px; font-weight: 600; flex: 1; }
+.all-questions-title em { font-style: italic; font-weight: 400; color: var(--orange); }
+.all-questions-total { background: var(--purple-light); color: var(--purple); border: 1px solid var(--purple-border); border-radius: 10px; padding: 2px 9px; font-size: 11px; font-weight: 700; }
+.all-questions-total:empty { display: none; }
+.all-questions-chevron { font-size: 16px; color: var(--ink-muted); transition: transform 0.2s; }
+.all-questions-panel[open] .all-questions-chevron { transform: rotate(90deg); }
+.all-questions-body { padding: 16px 26px 20px; border-top: 1px solid var(--border); }
+.all-questions-empty { font-size: 13px; color: var(--ink-muted); font-style: italic; }
+.all-questions-entry { margin-bottom: 14px; padding-bottom: 14px; border-bottom: 1px dashed var(--border); }
+.all-questions-entry:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+.all-questions-lab-label { font-size: 10px; font-weight: 700; letter-spacing: 0.12em; color: var(--orange); margin-bottom: 5px; }
+.all-questions-text { font-size: 13px; color: var(--ink-soft); line-height: 1.7; white-space: pre-wrap; }
+
+/* ── EXPAND CONTROLS ── */
+.expand-controls { display: flex; gap: 8px; margin-bottom: 14px; justify-content: flex-end; }
+.expand-btn { background: var(--cream-dark); border: 1px solid var(--border); color: var(--ink-soft); padding: 6px 12px; border-radius: 16px; font-size: 11px; font-weight: 500; letter-spacing: 0.04em; cursor: pointer; font-family: 'Epilogue', sans-serif; transition: all 0.15s; }
+.expand-btn:hover { background: var(--orange-light); color: var(--orange); border-color: var(--orange-border); }
+
+/* ── TASK CHECKBOXES ── */
+.task-check-wrap { display: flex; align-items: center; margin-right: 4px; flex-shrink: 0; }
+.task-check { appearance: none; -webkit-appearance: none; width: 18px; height: 18px; border-radius: 5px; border: 2px solid var(--border); background: transparent; cursor: pointer; position: relative; flex-shrink: 0; transition: background 0.15s, border-color 0.15s; }
+.task-check:checked { background: transparent; border-color: var(--green); }
+.task-check:checked::after { content: '✓'; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: var(--green); font-size: 11px; font-weight: 700; line-height: 1; }
+.task.task-done > summary .task-num { background: var(--green-light); color: var(--green); border-color: var(--green-border); }
+
+/* ── LAB INTRO ROW (image right, scenario+objectives left) ── */
+.lab-intro-row { display: flex; gap: 20px; align-items: flex-start; margin-bottom: 16px; }
+.lab-intro-left { flex: 1; min-width: 0; }
+.lab-intro-right { flex-shrink: 0; width: 300px; transition: width 0.4s ease; }
+.lab-intro-right img { width: 100%; border-radius: 10px; display: block; cursor: zoom-in; }
+.lab-intro-row.img-expanded { flex-direction: column; }
+.lab-intro-row.img-expanded .lab-intro-right { order: -1; width: 100%; }
+.lab-intro-row.img-expanded .lab-intro-left { order: 1; }
+.lab-intro-row.img-expanded .lab-intro-right img { cursor: zoom-out; }
+
+/* ── COPY BUTTONS ── */
+.cmd-wrap { position: relative; display: block; margin: 8px 0; }
+.cmd-wrap .cmd { margin: 0; }
+.cmd-wrap .json-block { margin: 0; }
+.copy-btn { position: absolute; top: 8px; right: 8px; background: #2a2010; border: 1px solid #5a4a35; color: #7a6a55; border-radius: 5px; padding: 2px 8px; font-size: 10px; font-weight: 600; cursor: pointer; font-family: 'Epilogue', sans-serif; letter-spacing: 0.08em; opacity: 0; transition: opacity 0.15s, background 0.15s, color 0.15s; line-height: 1.6; }
+.cmd-wrap:hover .copy-btn { opacity: 1; }
+.copy-btn:hover { background: #3a3020; color: var(--orange); border-color: var(--orange); }
+.copy-btn.copied { background: var(--green); color: #fff !important; border-color: var(--green-border); opacity: 1 !important; }
+.copy-inline { display: inline-flex; align-items: center; background: none; border: 1px solid transparent; color: var(--ink-muted); font-size: 9px; cursor: pointer; padding: 0 3px; margin-left: 2px; vertical-align: middle; border-radius: 3px; line-height: 1.4; font-family: 'JetBrains Mono', monospace; opacity: 0.4; transition: opacity 0.15s, color 0.15s, border-color 0.15s, background 0.15s; }
+.copy-inline:hover { opacity: 1; color: var(--orange); border-color: var(--orange-border); background: var(--orange-light); }
+.copy-inline.copied { color: var(--green) !important; border-color: var(--green-border) !important; background: var(--green-light) !important; opacity: 1 !important; }
+
+/* ── FOOTER ── */
+footer { padding: 20px 60px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; background: var(--cream-dark); }
+.footer-left { font-family: 'Fraunces', serif; font-size: 16px; font-weight: 700; }
+.footer-left span { color: var(--orange); }
+.footer-right { font-size: 11px; color: var(--ink-muted); letter-spacing: 0.06em; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 900px) {
+  header { padding: 24px 20px 20px; flex-direction: column; }
+  .config-panel { padding: 0 20px; }
+  .progress-ribbon { padding: 10px 20px; }
+  .lab-nav { padding: 10px 20px; }
+  main { padding: 24px 20px 40px; }
+  footer { padding: 20px; flex-direction: column; gap: 8px; text-align: center; }
+  h1 { font-size: 32px; }
+  .lab-intro-row { flex-direction: column; }
+  .lab-intro-right { width: 100%; }
+}
+@media print {
+  .config-panel, .lab-nav, .expand-controls, .progress-ribbon { display: none; }
+  details { open: true; }
+  details > summary { background: #f5eddb !important; }
+  .lab, .task { break-inside: avoid; }
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════════════
+     HEADER — CUSTOMIZE: badge text, h1 subtitle, tags
+     ═══════════════════════════════════════════════════════════ -->
+<header>
+  <div class="header-left">
+    <div class="day-badge">
+      <span class="day-badge-dot"></span>
+      EDU-XXX · COURSE TITLE HERE
+    </div>
+    <h1>Hands-on <em>Lab Guide</em></h1>
+    <div class="header-meta-row">
+      <!-- Pick the tags that apply. Available: tag-zia, tag-zpa, tag-zdx, tag-arch, tag-weight, tag-sdc, tag-ro -->
+      <span class="tag tag-zia">ZIA</span>
+      <span class="tag tag-zpa">ZPA</span>
+      <span class="tag tag-zdx">ZDX</span>
+      <span class="tag tag-arch">Feature · Feature · Feature</span>
+      <span class="tag tag-weight">N Labs</span>
+    </div>
+  </div>
+</header>
+
+<!-- ═══════════════════════════════════════════════════════════
+     CONFIG PANEL — CUSTOMIZE: fields, derived values
+     Add/remove .config-field blocks as needed.
+     Each input id must match the JS saveConfig/loadConfig/applyAll below.
+     ═══════════════════════════════════════════════════════════ -->
+<div class="config-panel" id="config-panel">
+  <div class="config-toggle-row" onclick="toggleConfig()">
+    <div style="display:flex;align-items:center;gap:0;">
+      <span class="config-toggle-title">⚙ Lab Configuration</span>
+      <span class="config-toggle-summary" id="config-toggle-summary"></span>
+    </div>
+    <button class="config-toggle-btn" id="config-toggle-btn" onclick="event.stopPropagation();toggleConfig()">
+      <span class="chevron">▲</span> Collapse
+    </button>
+  </div>
+  <div class="config-body" id="config-body">
+    <div class="config-grid">
+
+      <!-- Field: Student FQDN (common to Skytap-based labs) -->
+      <div class="config-field">
+        <label for="fqdn-input">Student FQDN</label>
+        <div class="config-field-row">
+          <input type="text" id="fqdn-input" placeholder="zs9901.safemarch.com" autocomplete="off">
+          <button class="config-copy-btn" onclick="copyConfigField('fqdn-input', this)">⎘</button>
+        </div>
+      </div>
+
+      <!-- Field: Session Password (present in all labs) -->
+      <div class="config-field">
+        <label for="pass-input">Session Password</label>
+        <div class="config-field-row">
+          <input type="text" id="pass-input" placeholder="(from Lab Access Instructions)" autocomplete="off">
+          <button class="config-copy-btn" onclick="copyConfigField('pass-input', this)">⎘</button>
+        </div>
+      </div>
+
+      <!-- OPTIONAL: add more fields as needed, e.g.:
+      <div class="config-field">
+        <label for="admin-user-input">Admin User ID</label>
+        <div class="config-field-row">
+          <input type="text" id="admin-user-input" placeholder="admin@tenant.com" autocomplete="off">
+          <button class="config-copy-btn" onclick="copyConfigField('admin-user-input', this)">⎘</button>
+        </div>
+      </div>
+      -->
+
+      <div class="config-actions">
+        <button class="config-btn" onclick="saveConfig()">Save</button>
+        <button class="config-btn secondary" onclick="clearConfig()">Clear</button>
+      </div>
+    </div>
+
+    <!-- CUSTOMIZE: derived values shown below the fields -->
+    <div class="config-derived" id="config-derived">
+      <span><strong>Student admin:</strong> <code id="d-student">student@&lt;Student FQDN&gt;</code><button class="config-copy-btn" onclick="copyDerived('d-student',this)">⎘</button></span>
+      <span><strong>Student ID:</strong> <code id="d-id">&lt;Student ID&gt;</code><button class="config-copy-btn" onclick="copyDerived('d-id',this)">⎘</button></span>
+    </div>
+  </div><!-- /config-body -->
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     LAB NAV — CUSTOMIZE: add/remove tabs to match lab count.
+     Add class="capstone" to the final tab if there's a capstone.
+     ═══════════════════════════════════════════════════════════ -->
+<div class="lab-nav">
+  <a class="lab-nav-tab" href="#lab1">Lab 1</a>
+  <a class="lab-nav-tab" href="#lab2">Lab 2</a>
+  <a class="lab-nav-tab" href="#lab3">Lab 3</a>
+  <!-- Add more tabs as needed -->
+  <!-- <a class="lab-nav-tab capstone" href="#labN">★ Capstone</a> -->
+</div>
+
+<!-- Progress ribbon — no changes needed -->
+<div class="progress-ribbon">
+  <span class="progress-label">PROGRESS</span>
+  <span class="progress-count"><span id="prog-done">0</span>%</span>
+  <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
+</div>
+
+<main>
+
+<!-- ═══════════════════════════════════════════════════════════
+     INTRO BLOCK — CUSTOMIZE: description, topology, creds table
+     ═══════════════════════════════════════════════════════════ -->
+<div class="intro-block">
+  <h2>About this lab guide</h2>
+  <p>Brief description of what this course covers and what students will be able to do by the end.</p>
+  <p><strong>Lab Topology:</strong> Describe VMs, network layout, and any shared tenants used.</p>
+
+  <table class="creds-table">
+    <thead><tr><th>VM / User</th><th>Username</th><th>Password</th><th>IP / Notes</th></tr></thead>
+    <tbody>
+      <tr>
+        <td>Corp: Client PC</td>
+        <td><code>student</code></td>
+        <td><code>Admin-123!</code></td>
+        <td>Joined to AD</td>
+      </tr>
+      <tr>
+        <td>Student admin</td>
+        <td><code class="d-username-student">student@&lt;Student FQDN&gt;</code></td>
+        <td>Session Password</td>
+        <td>From Lab Access Instructions</td>
+      </tr>
+      <!-- Add more credential rows as needed -->
+    </tbody>
+  </table>
+</div>
+
+<!-- All Questions panel — no changes needed -->
+<details class="all-questions-panel" id="all-questions-panel">
+  <summary class="all-questions-toggle">
+    <span class="all-questions-title">My <em>Questions</em></span>
+    <span class="all-questions-total" id="all-questions-total"></span>
+    <span class="all-questions-chevron">›</span>
+  </summary>
+  <div class="all-questions-body">
+    <p class="all-questions-empty" id="all-questions-empty">No questions yet — use the questions section at the end of each lab to add them.</p>
+    <div id="all-questions-list"></div>
+  </div>
+</details>
+
+<div class="expand-controls">
+  <button class="expand-btn" onclick="expandAll()">Expand all</button>
+  <button class="expand-btn" onclick="collapseAll()">Collapse all</button>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════════════
+     LAB ENTRIES — CUSTOMIZE: duplicate this block for each lab.
+
+     Lab structure:
+       <details class="lab" id="labN">
+         <summary> — lab number + title + meta
+         <div class="lab-body">
+           .scenario-block  — SCENARIO / OVERVIEW text
+           .objectives ul   — bullet list of what students will do
+           <details class="task"> — one per task (1.1, 1.2, …)
+           .lab-takeaway    — WHY THIS MATTERS (optional)
+           <details class="lab-questions"> — student questions textarea
+     ═══════════════════════════════════════════════════════════ -->
+
+<!-- LAB 1 — standard lab structure -->
+<details class="lab" id="lab1">
+  <summary>
+    <div class="lab-num">01</div>
+    <div class="lab-title">
+      <div class="lab-title-name">Lab Title Here</div>
+      <div class="lab-title-meta">⏱ 15 minutes · Topic A · Topic B</div>
+    </div>
+    <div class="lab-chevron">›</div>
+  </summary>
+  <div class="lab-body">
+
+    <div class="scenario-block">
+      <div class="scenario-block-label">SCENARIO</div>
+      <div class="scenario-block-text">Describe the business scenario or problem the student is solving in this lab.</div>
+    </div>
+
+    <div class="objectives">
+      <div class="objectives-label">OBJECTIVES</div>
+      <ul>
+        <li>First objective</li>
+        <li>Second objective</li>
+        <li>Third objective</li>
+      </ul>
+    </div>
+
+    <!-- TASK 1.1 -->
+    <details class="task">
+      <summary>
+        <div class="task-num">1.1</div>
+        <div class="task-title">Task Title</div>
+        <div class="task-chevron">›</div>
+      </summary>
+      <div class="task-body">
+        <p class="task-desc">Optional italic description of what this task accomplishes.</p>
+        <ol class="steps">
+          <li>Navigate to <strong>Admin Portal</strong> → <strong>Section</strong> → <strong>Sub-section</strong>.</li>
+          <li>Click <strong>Add</strong> and fill in the following:
+            <ul class="substeps">
+              <li><strong>Name:</strong> <code>example-value</code></li>
+              <li><strong>Type:</strong> select <strong>Option</strong></li>
+            </ul>
+          </li>
+          <li>Run the following command on the Client PC:
+            <code class="cmd">ping -c 4 8.8.8.8</code>
+          </li>
+          <li>Verify the expected result appears.</li>
+        </ol>
+        <!-- TIP callout example -->
+        <div class="callout callout-tip">
+          <div class="callout-header"><div class="callout-icon">→</div>TIP</div>
+          Helpful tip about this step or a common gotcha.
+        </div>
+      </div>
+    </details>
+
+    <!-- TASK 1.2 -->
+    <details class="task">
+      <summary>
+        <div class="task-num">1.2</div>
+        <div class="task-title">Second Task Title</div>
+        <div class="task-chevron">›</div>
+      </summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>Step one.</li>
+          <li>Step two. Use <span class="var var-fqdn">&lt;Student FQDN&gt;</span> where prompted.</li>
+          <li>Step three.
+            <ul class="substeps">
+              <li>Sub-step A</li>
+              <li>Sub-step B</li>
+            </ul>
+          </li>
+        </ol>
+        <!-- WARN callout example -->
+        <div class="callout callout-warn">
+          <div class="callout-header"><div class="callout-icon">!</div>WARNING</div>
+          Something students must not do or a destructive action to avoid.
+        </div>
+      </div>
+    </details>
+
+    <div class="lab-takeaway">
+      <div class="lab-takeaway-label">WHY THIS MATTERS</div>
+      <p class="lab-takeaway-text">Explanation of why this lab skill matters in a real-world deployment context.</p>
+    </div>
+
+    <details class="lab-questions" id="q-lab1">
+      <summary><span class="lab-questions-icon">?</span> MY QUESTIONS <span class="lab-questions-count" id="q-count-lab1"></span><span class="lab-questions-chevron">›</span></summary>
+      <div class="lab-questions-body"><textarea class="lab-questions-input" id="q-input-lab1" placeholder="Type any questions to follow up later…" rows="3"></textarea></div>
+    </details>
+
+  </div>
+</details>
+
+
+<!-- LAB 2 — duplicate and renumber for each additional lab -->
+<details class="lab" id="lab2">
+  <summary>
+    <div class="lab-num">02</div>
+    <div class="lab-title">
+      <div class="lab-title-name">Second Lab Title</div>
+      <div class="lab-title-meta">⏱ 20 minutes · Feature · Feature</div>
+    </div>
+    <div class="lab-chevron">›</div>
+  </summary>
+  <div class="lab-body">
+
+    <div class="scenario-block">
+      <div class="scenario-block-label">SCENARIO</div>
+      <div class="scenario-block-text">Scenario description for lab 2.</div>
+    </div>
+
+    <div class="objectives">
+      <div class="objectives-label">OBJECTIVES</div>
+      <ul>
+        <li>Objective one</li>
+        <li>Objective two</li>
+      </ul>
+    </div>
+
+    <details class="task">
+      <summary>
+        <div class="task-num">2.1</div>
+        <div class="task-title">Task Title</div>
+        <div class="task-chevron">›</div>
+      </summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>Step one.</li>
+          <li>Step two.</li>
+        </ol>
+      </div>
+    </details>
+
+    <div class="lab-takeaway">
+      <div class="lab-takeaway-label">WHY THIS MATTERS</div>
+      <p class="lab-takeaway-text">Takeaway text for lab 2.</p>
+    </div>
+
+    <details class="lab-questions" id="q-lab2">
+      <summary><span class="lab-questions-icon">?</span> MY QUESTIONS <span class="lab-questions-count" id="q-count-lab2"></span><span class="lab-questions-chevron">›</span></summary>
+      <div class="lab-questions-body"><textarea class="lab-questions-input" id="q-input-lab2" placeholder="Type any questions to follow up later…" rows="3"></textarea></div>
+    </details>
+
+  </div>
+</details>
+
+
+<!-- OPTIONAL CAPSTONE LAB — add class="capstone-lab" -->
+<!-- CUSTOMIZE: renumber id="labN", task numbers, and lab-questions ids -->
+<!--
+<details class="lab capstone-lab" id="lab3">
+  <summary>
+    <div class="lab-num">★</div>
+    <div class="lab-title">
+      <div class="lab-title-name">Capstone — Apply Best Practices</div>
+      <div class="lab-title-meta">Open-ended · All Domains</div>
+    </div>
+    <div class="lab-chevron">›</div>
+  </summary>
+  <div class="lab-body">
+
+    <div class="scenario-block">
+      <div class="scenario-block-label">CAPSTONE OVERVIEW</div>
+      <div class="scenario-block-text">Independent challenge: apply everything you've learned to solve a real-world scenario without step-by-step guidance.</div>
+    </div>
+
+    <details class="task">
+      <summary>
+        <div class="task-num">3.1</div>
+        <div class="task-title">Challenge Title</div>
+        <div class="task-chevron">›</div>
+      </summary>
+      <div class="task-body">
+        <div class="capstone-section">
+          <div class="capstone-section-label">CONFIGURATION REQUIREMENTS</div>
+          <ul>
+            <li>Requirement one</li>
+            <li>Requirement two</li>
+          </ul>
+        </div>
+        <div class="capstone-section">
+          <div class="capstone-section-label">TESTING REQUIREMENTS</div>
+          <ul>
+            <li>How to verify the configuration works</li>
+          </ul>
+        </div>
+        <div class="capstone-section">
+          <div class="capstone-section-label">CONFIGURATION HINTS</div>
+          <ul>
+            <li>Where to look in the portal</li>
+            <li>Key settings to check</li>
+          </ul>
+        </div>
+        <div class="capstone-section">
+          <div class="capstone-section-label">WHERE TO GET HELP</div>
+          <ul>
+            <li><a href="https://help.zscaler.com/" target="_blank" rel="noreferrer">help.zscaler.com article title</a></li>
+          </ul>
+        </div>
+      </div>
+    </details>
+
+    <details class="lab-questions" id="q-lab3">
+      <summary><span class="lab-questions-icon">?</span> MY QUESTIONS <span class="lab-questions-count" id="q-count-lab3"></span><span class="lab-questions-chevron">›</span></summary>
+      <div class="lab-questions-body"><textarea class="lab-questions-input" id="q-input-lab3" placeholder="Type any questions to follow up later…" rows="3"></textarea></div>
+    </details>
+
+  </div>
+</details>
+-->
+
+</main>
+
+<!-- CUSTOMIZE: course code and subtitle in footer -->
+<footer>
+  <div class="footer-left">EDU-XXX<span>.</span></div>
+  <div class="footer-right">Course Title · Hands-on Lab Guide · Month YYYY Rev X.X</div>
+</footer>
+
+<script>
+/* ── CONFIG PANEL COLLAPSE ── */
+function toggleConfig() {
+  const panel = document.getElementById('config-panel');
+  const btn   = document.getElementById('config-toggle-btn');
+  const collapsed = panel.classList.toggle('collapsed');
+  btn.innerHTML = collapsed
+    ? '<span class="chevron" style="transform:rotate(180deg);display:inline-block;">▲</span> Expand'
+    : '<span class="chevron">▲</span> Collapse';
+}
+
+function updateToggleSummary() {
+  const fqdn = document.getElementById('fqdn-input')?.value.trim();
+  const summary = document.getElementById('config-toggle-summary');
+  if (summary) summary.textContent = fqdn ? `— ${fqdn}` : '';
+}
+
+/* ── CONFIG PERSISTENCE
+   CUSTOMIZE: change STORAGE_KEY to 'eduXXX-lab-config' for each course.
+   Update the field IDs in loadConfig/saveConfig/clearConfig to match your config fields.
+   ── */
+const STORAGE_KEY = 'eduXXX-lab-config';
+
+function loadConfig() {
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) {
+      const cfg = JSON.parse(saved);
+      /* CUSTOMIZE: map saved keys to input element IDs */
+      if (document.getElementById('fqdn-input')) document.getElementById('fqdn-input').value = cfg.fqdn || '';
+      if (document.getElementById('pass-input')) document.getElementById('pass-input').value = cfg.pass || '';
+      /* Add more fields here as needed:
+      if (document.getElementById('admin-user-input')) document.getElementById('admin-user-input').value = cfg.adminUser || '';
+      */
+    }
+  } catch (e) {}
+  applyAll();
+}
+
+function saveConfig() {
+  /* CUSTOMIZE: collect all config field values */
+  const cfg = {
+    fqdn: document.getElementById('fqdn-input')?.value.trim() || '',
+    pass: document.getElementById('pass-input')?.value.trim() || '',
+    /* Add more fields here:
+    adminUser: document.getElementById('admin-user-input')?.value.trim() || '',
+    */
+  };
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(cfg)); } catch (e) {}
+  applyAll();
+  flashSaved();
+}
+
+function clearConfig() {
+  /* CUSTOMIZE: list all input IDs to clear */
+  ['fqdn-input', 'pass-input'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = '';
+  });
+  try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
+  applyAll();
+}
+
+function flashSaved() {
+  const btn = document.querySelector('.config-btn');
+  const orig = btn.textContent;
+  btn.textContent = '✓ Saved';
+  btn.style.background = 'var(--green)';
+  btn.style.color = 'white';
+  setTimeout(() => { btn.textContent = orig; btn.style.background = ''; btn.style.color = ''; }, 1200);
+}
+
+/* ── APPLY CONFIG TO PAGE
+   CUSTOMIZE: update var selectors and derived-value logic to match your config fields.
+
+   .var-fqdn   → elements that display <Student FQDN>
+   .var-pass   → elements that display <Session Password>
+   .var-id     → elements that display <Student ID>
+   Add more .var-XXX selectors as needed.
+
+   The .d-username-student class on <code> tags in the creds table is auto-filled.
+   ── */
+function applyAll() {
+  const fqdn = document.getElementById('fqdn-input')?.value.trim() || '';
+  const pass = document.getElementById('pass-input')?.value.trim() || '';
+  const studentId = fqdn ? fqdn.split('.')[0] : '';
+
+  /* Student FQDN placeholders */
+  document.querySelectorAll('.var-fqdn').forEach(el => {
+    if (fqdn) { el.textContent = fqdn; el.classList.add('filled'); }
+    else { el.textContent = '<Student FQDN>'; el.classList.remove('filled'); }
+  });
+
+  /* Student ID placeholders */
+  document.querySelectorAll('.var-id').forEach(el => {
+    if (studentId) { el.textContent = studentId; el.classList.add('filled'); }
+    else { el.textContent = '<Student ID>'; el.classList.remove('filled'); }
+  });
+
+  /* Session Password placeholders */
+  document.querySelectorAll('.var-pass').forEach(el => {
+    if (pass) { el.textContent = pass; el.classList.add('filled'); }
+    else { el.textContent = '<Session Password>'; el.classList.remove('filled'); }
+  });
+
+  /* CUSTOMIZE: add more var selectors here, e.g.:
+  const adminUser = document.getElementById('admin-user-input')?.value.trim() || '';
+  document.querySelectorAll('.var-admin-user').forEach(el => {
+    if (adminUser) { el.textContent = adminUser; el.classList.add('filled'); }
+    else { el.textContent = '<Admin User ID>'; el.classList.remove('filled'); }
+  });
+  */
+
+  /* Derived usernames — update .d-username-* elements in creds table */
+  const studentUser = fqdn ? `student@${fqdn}` : 'student@<Student FQDN>';
+  document.querySelectorAll('.d-username-student').forEach(el => el.textContent = studentUser);
+
+  /* Derived panel strip */
+  const dStudent = document.getElementById('d-student');
+  const dId = document.getElementById('d-id');
+  if (dStudent) dStudent.textContent = studentUser;
+  if (dId) dId.textContent = studentId || '<Student ID>';
+
+  /* CUSTOMIZE: add more derived values, e.g.:
+  const dLogin = document.getElementById('d-login');
+  if (dLogin) dLogin.textContent = studentId ? `${studentId}safemarch.zslogin.net` : '<Student ID>safemarch.zslogin.net';
+  */
+}
+
+function expandAll() { document.querySelectorAll('details').forEach(d => d.open = true); }
+function collapseAll() { document.querySelectorAll('details').forEach(d => d.open = false); }
+
+/* Register live-update listeners for all config input IDs */
+['fqdn-input', 'pass-input' /* add more IDs here */].forEach(id => {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.addEventListener('input', applyAll);
+  el.addEventListener('input', updateToggleSummary);
+});
+
+loadConfig();
+updateToggleSummary();
+
+/* ── TASK PROGRESS TRACKING
+   CUSTOMIZE: change PROG_KEY to 'eduXXX-progress' for each course.
+   ── */
+const PROG_KEY = 'eduXXX-progress';
+
+function loadProg() {
+  try { return JSON.parse(localStorage.getItem(PROG_KEY)) || {}; } catch { return {}; }
+}
+function saveProg(s) {
+  try { localStorage.setItem(PROG_KEY, JSON.stringify(s)); } catch {}
+}
+
+function updateProgress(state) {
+  const tasks = document.querySelectorAll('details.task');
+  const total = tasks.length;
+  let done = 0;
+  tasks.forEach(task => { if (state[taskKey(task)]) done++; });
+  const pct = total ? Math.round((done / total) * 100) : 0;
+  const progDone = document.getElementById('prog-done');
+  const fill = document.getElementById('progress-fill');
+  if (progDone) progDone.textContent = pct;
+  if (fill) {
+    fill.style.width = pct + '%';
+    fill.classList.toggle('all-done', done === total && total > 0);
+  }
+  document.querySelectorAll('details.lab').forEach(lab => {
+    const labTasks = lab.querySelectorAll('details.task');
+    const allDone = labTasks.length > 0 && [...labTasks].every(t => !!state[taskKey(t)]);
+    const tab = document.querySelector(`.lab-nav-tab[href="#${lab.id}"]`);
+    if (tab) tab.classList.toggle('lab-nav-done', allDone);
+  });
+}
+
+function taskKey(taskEl) {
+  const num = taskEl.querySelector('.task-num');
+  return 'task-' + (num ? num.textContent.trim() : taskEl.id || Math.random());
+}
+
+function injectTaskCheckboxes() {
+  const state = loadProg();
+  document.querySelectorAll('details.task').forEach(task => {
+    const summary = task.querySelector(':scope > summary');
+    if (!summary || summary.querySelector('.task-check')) return;
+    const key = taskKey(task);
+    const wrap = document.createElement('div');
+    wrap.className = 'task-check-wrap';
+    const cb = document.createElement('input');
+    cb.type = 'checkbox';
+    cb.className = 'task-check';
+    cb.checked = !!state[key];
+    if (cb.checked) task.classList.add('task-done');
+    cb.addEventListener('click', e => {
+      e.stopPropagation();
+      state[key] = cb.checked;
+      task.classList.toggle('task-done', cb.checked);
+      saveProg(state);
+      updateProgress(state);
+    });
+    wrap.appendChild(cb);
+    const chevron = summary.querySelector('.task-chevron');
+    summary.insertBefore(wrap, chevron);
+  });
+  updateProgress(state);
+}
+
+injectTaskCheckboxes();
+
+/* ── LAB IMAGE INJECTION (optional)
+   CUSTOMIZE: populate LAB_IMAGES with src/alt for each lab that has an image.
+   Leave src empty to skip image injection for that lab.
+   Images are inserted as a side panel next to the scenario/objectives.
+   ── */
+const LAB_IMAGES = {
+  /* CUSTOMIZE: replace 'eduXXX' with course folder name */
+  lab1: { src: '../images/labs/eduXXX/lab-01-title.png', alt: 'Descriptive alt text for lab 1 illustration' },
+  lab2: { src: '../images/labs/eduXXX/lab-02-title.png', alt: 'Descriptive alt text for lab 2 illustration' },
+  /* Add more entries as needed, or remove this block entirely if no images */
+};
+
+function injectImageSlots() {
+  Object.entries(LAB_IMAGES).forEach(([labId, img]) => {
+    if (!img.src) return;
+    const lab = document.getElementById(labId);
+    if (!lab) return;
+    const body = lab.querySelector('.lab-body');
+    if (!body) return;
+    const scenario   = body.querySelector('.scenario-block');
+    const objectives = body.querySelector('.objectives');
+    const row   = document.createElement('div');
+    row.className = 'lab-intro-row';
+    const left  = document.createElement('div');
+    left.className = 'lab-intro-left';
+    if (scenario)   left.appendChild(scenario);
+    if (objectives) left.appendChild(objectives);
+    const right = document.createElement('div');
+    right.className = 'lab-intro-right';
+    right.innerHTML = `<img src="${img.src}" alt="${img.alt || ''}">`;
+    row.appendChild(left);
+    row.appendChild(right);
+    body.insertBefore(row, body.firstChild);
+  });
+}
+
+injectImageSlots();
+
+/* ── IMAGE EXPAND (click to zoom) ── */
+function initImageZoom() {
+  document.querySelectorAll('.lab-intro-right img').forEach(img => {
+    img.addEventListener('click', () => {
+      const row   = img.closest('.lab-intro-row');
+      const right = img.closest('.lab-intro-right');
+      if (row.classList.contains('img-expanded')) {
+        right.style.width = '300px';
+        right.addEventListener('transitionend', function done() {
+          right.removeEventListener('transitionend', done);
+          right.style.width = '';
+          row.classList.remove('img-expanded');
+        }, { once: true });
+      } else {
+        row.classList.add('img-expanded');
+      }
+    });
+  });
+}
+initImageZoom();
+
+/* ── COPY BUTTONS (auto-injected on .cmd and .json-block) ── */
+function copyToClipboard(text, btn, isBlock) {
+  navigator.clipboard.writeText(text).then(() => {
+    btn.classList.add('copied');
+    btn.textContent = isBlock ? '✓ copied' : '✓';
+    setTimeout(() => {
+      btn.classList.remove('copied');
+      btn.textContent = isBlock ? 'copy' : '⎘';
+    }, 1500);
+  });
+}
+
+function injectCopyButtons() {
+  document.querySelectorAll('.cmd, .json-block').forEach(cmd => {
+    const wrap = document.createElement('div');
+    wrap.className = 'cmd-wrap';
+    cmd.parentNode.insertBefore(wrap, cmd);
+    wrap.appendChild(cmd);
+    const btn = document.createElement('button');
+    btn.className = 'copy-btn';
+    btn.textContent = 'copy';
+    btn.addEventListener('click', () => copyToClipboard(cmd.textContent.trim(), btn, true));
+    wrap.appendChild(btn);
+  });
+  document.querySelectorAll('.substeps li code, .steps li code, .creds-table td code, .capstone-section li code').forEach(code => {
+    if (code.closest('.callout') || code.closest('.cmd-wrap')) return;
+    const initialText = code.textContent.trim();
+    if (initialText.length < 2) return;
+    if (/^(Ctrl|Cmd|Alt)\+/.test(initialText)) return;
+    const btn = document.createElement('button');
+    btn.className = 'copy-inline';
+    btn.title = 'Copy';
+    btn.textContent = '⎘';
+    btn.addEventListener('click', e => {
+      e.stopPropagation();
+      copyToClipboard(code.textContent.trim(), btn, false);
+    });
+    code.after(btn);
+  });
+}
+
+injectCopyButtons();
+
+/* ── CONFIG FIELD COPY ── */
+function copyConfigField(inputId, btn) {
+  const val = document.getElementById(inputId)?.value.trim();
+  if (!val) return;
+  navigator.clipboard.writeText(val).then(() => {
+    btn.classList.add('copied'); btn.textContent = '✓';
+    setTimeout(() => { btn.classList.remove('copied'); btn.textContent = '⎘'; }, 1500);
+  });
+}
+
+function copyDerived(elId, btn) {
+  const val = document.getElementById(elId)?.textContent.trim();
+  if (!val || val.startsWith('<')) return;
+  navigator.clipboard.writeText(val).then(() => {
+    btn.classList.add('copied'); btn.textContent = '✓';
+    setTimeout(() => { btn.classList.remove('copied'); btn.textContent = '⎘'; }, 1500);
+  });
+}
+
+/* ── LAB NOTES (per-lab textarea, auto-saved to localStorage)
+   CUSTOMIZE: change NOTES_KEY to 'eduXXX-lab-notes' for each course.
+   ── */
+const NOTES_KEY = 'eduXXX-lab-notes';
+function loadNotes() { try { return JSON.parse(localStorage.getItem(NOTES_KEY)) || {}; } catch { return {}; } }
+function saveNotes(n) { try { localStorage.setItem(NOTES_KEY, JSON.stringify(n)); } catch {} }
+
+function injectLabNotes() {
+  const saved = loadNotes();
+  document.querySelectorAll('details.lab').forEach(lab => {
+    const anchor = lab.querySelector('.objectives') || lab.querySelector('.scenario-block');
+    if (!anchor) return;
+    const block = document.createElement('div');
+    block.className = 'lab-notes';
+    const label = document.createElement('div');
+    label.className = 'lab-notes-label';
+    label.textContent = 'NOTES';
+    const ta = document.createElement('textarea');
+    ta.className = 'lab-notes-input';
+    ta.placeholder = 'Add your notes here…';
+    ta.rows = 2;
+    ta.value = saved[lab.id] || '';
+    ta.addEventListener('input', () => {
+      const n = loadNotes(); n[lab.id] = ta.value; saveNotes(n);
+    });
+    block.appendChild(label);
+    block.appendChild(ta);
+    anchor.after(block);
+  });
+}
+
+injectLabNotes();
+
+/* ── LAB QUESTIONS (per-lab textarea + aggregated panel)
+   CUSTOMIZE:
+   1. Change Q_STORE to 'eduXXX-questions'
+   2. Update LAB_LABELS with the actual lab IDs and names
+   3. Update the loop limit in renderAllQs to match total lab count
+   ── */
+const Q_STORE = 'eduXXX-questions';
+const LAB_LABELS = {
+  /* CUSTOMIZE: one entry per lab */
+  lab1: 'Lab 1 — Lab Title Here',
+  lab2: 'Lab 2 — Second Lab Title',
+  /* Add more entries to match your lab count */
+};
+
+function loadQs() { try { return JSON.parse(localStorage.getItem(Q_STORE)) || {}; } catch { return {}; } }
+function saveQs(q) { try { localStorage.setItem(Q_STORE, JSON.stringify(q)); } catch {} }
+function escHtml(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+function updateQCount(labId, text) {
+  const el = document.getElementById('q-count-' + labId);
+  if (!el) return;
+  const n = text.trim() ? text.trim().split('\n').filter(l => l.trim()).length : 0;
+  el.textContent = n > 0 ? n + (n === 1 ? ' Q' : ' Qs') : '';
+}
+
+function renderAllQs() {
+  const list  = document.getElementById('all-questions-list');
+  const empty = document.getElementById('all-questions-empty');
+  const total = document.getElementById('all-questions-total');
+  if (!list) return;
+  const q = loadQs();
+  let html = '', hasAny = false, count = 0;
+  /* CUSTOMIZE: update the loop limit (i <= N) to match total lab count */
+  for (let i = 1; i <= 2; i++) {
+    const id = 'lab' + i, text = (q[id] || '').trim();
+    if (!text) continue;
+    hasAny = true; count++;
+    html += `<div class="all-questions-entry"><div class="all-questions-lab-label">${LAB_LABELS[id] || id}</div><div class="all-questions-text">${escHtml(text)}</div></div>`;
+  }
+  list.innerHTML = html;
+  if (empty) empty.style.display = hasAny ? 'none' : '';
+  if (total) total.textContent = count > 0 ? count + (count === 1 ? ' lab' : ' labs') : '';
+}
+
+function initQs() {
+  const q = loadQs();
+  document.querySelectorAll('.lab-questions-input').forEach(ta => {
+    const labId = ta.id.replace('q-input-', '');
+    ta.value = q[labId] || '';
+    updateQCount(labId, ta.value);
+    ta.addEventListener('input', () => {
+      const cur = loadQs(); cur[labId] = ta.value;
+      saveQs(cur); updateQCount(labId, ta.value); renderAllQs();
+    });
+  });
+  renderAllQs();
+}
+
+initQs();
+
+/* ── LAB NAV SMOOTH SCROLL ── */
+document.querySelectorAll('.lab-nav-tab').forEach(tab => {
+  tab.addEventListener('click', (e) => {
+    e.preventDefault();
+    const id = tab.getAttribute('href').slice(1);
+    const target = document.getElementById(id);
+    if (target) {
+      target.open = true;
+      const top = target.getBoundingClientRect().top + window.scrollY - 100;
+      window.scrollTo({ top, behavior: 'smooth' });
+    }
+  });
+});
+</script>
+
+</body>
+</html>

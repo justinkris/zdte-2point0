@@ -1,0 +1,1980 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EDU-310 — ZDX Operationalization Lab Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;0,700;1,400&family=Epilogue:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --cream: #fef9f0; --cream-dark: #f5eddb; --ink: #1a1209; --ink-soft: #5a4a35; --ink-muted: #8a7660;
+  --orange: #ff6b35; --orange-light: #fff3ec; --orange-border: #ffd5c0;
+  --amber-light: #fffbe6;
+  --green: #3a7d44; --green-light: #edf7ee; --green-border: #b2dfb4;
+  --purple: #5c35cc; --purple-light: #ece8ff; --purple-border: #c8bbff;
+  --blue-light: #e8f0fb; --blue-border: #b3ccf0; --blue: #1a6bcc;
+  --red-light: #fce8e8; --red-border: #f7c1c1; --red: #a32d2d;
+  --border: #ede5d8;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Epilogue', sans-serif; background: var(--cream); color: var(--ink); min-height: 100vh; }
+header { padding: 40px 60px 28px; border-bottom: 1px solid var(--border); display: flex; align-items: flex-start; justify-content: space-between; gap: 32px; background: var(--cream); }
+.header-left { flex: 1; }
+.day-badge { display: inline-flex; align-items: center; gap: 6px; background: var(--ink); color: var(--cream); padding: 5px 14px; border-radius: 20px; font-size: 11px; letter-spacing: 0.1em; margin-bottom: 14px; }
+.day-badge-dot { width: 5px; height: 5px; background: var(--orange); border-radius: 50%; }
+h1 { font-family: 'Fraunces', serif; font-size: 42px; font-weight: 700; line-height: 1.0; color: var(--ink); margin-bottom: 10px; }
+h1 em { font-style: italic; font-weight: 400; color: var(--orange); }
+.header-meta-row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-top: 14px; }
+.tag { padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 500; border: 1px solid; display: inline-block; }
+.tag-zdx  { background: var(--purple-light); color: var(--purple); border-color: var(--purple-border); }
+.tag-arch { background: var(--amber-light);  color: #a07c00; border-color: #ffe680; }
+.tag-weight { background: var(--orange-light); color: #cc4a18; border-color: var(--orange-border); }
+.tag-ro   { background: var(--red-light); color: var(--red); border-color: var(--red-border); }
+
+/* CONFIG PANEL */
+.config-panel { background: var(--ink); color: var(--cream); padding: 0 60px; position: sticky; top: 0; z-index: 200; border-bottom: 2px solid var(--orange); box-shadow: 0 4px 12px rgba(26,18,9,0.18); }
+.config-toggle-row { display: flex; align-items: center; justify-content: space-between; padding: 10px 0; cursor: pointer; user-select: none; }
+.config-toggle-title { font-size: 10px; letter-spacing: 0.16em; color: var(--orange); font-weight: 600; text-transform: uppercase; }
+.config-toggle-summary { font-size: 11px; color: #b8a18a; margin-left: 16px; font-family: 'JetBrains Mono', monospace; }
+.config-toggle-btn { background: none; border: 1px solid #3a3020; border-radius: 6px; color: #7a6a55; font-size: 11px; padding: 3px 10px; cursor: pointer; font-family: 'Epilogue', sans-serif; letter-spacing: 0.06em; transition: color 0.15s, border-color 0.15s; display: flex; align-items: center; gap: 5px; }
+.config-toggle-btn:hover { color: var(--orange); border-color: var(--orange); }
+.config-toggle-btn .chevron { transition: transform 0.25s ease; display: inline-block; }
+.config-panel.collapsed .config-toggle-btn .chevron { transform: rotate(180deg); }
+.config-body { overflow: hidden; max-height: 300px; transition: max-height 0.3s ease, opacity 0.25s ease, padding 0.25s ease; opacity: 1; padding-bottom: 18px; }
+.config-panel.collapsed .config-body { max-height: 0; opacity: 0; padding-bottom: 0; }
+.config-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; align-items: end; }
+.config-field { display: flex; flex-direction: column; gap: 6px; }
+.config-field label { font-size: 10px; letter-spacing: 0.14em; color: var(--orange); font-weight: 600; text-transform: uppercase; }
+.config-field input { background: #2a2010; color: var(--cream); border: 1px solid #3a3020; border-radius: 8px; padding: 9px 12px; font-size: 13px; font-family: 'JetBrains Mono', monospace; transition: border-color 0.15s; }
+.config-field input:focus { outline: none; border-color: var(--orange); background: #1f1608; }
+.config-field input::placeholder { color: #7a6a55; font-style: italic; }
+.config-actions { display: flex; gap: 8px; }
+.config-btn { background: var(--orange); color: var(--ink); border: none; border-radius: 8px; padding: 9px 14px; font-size: 11px; font-weight: 600; letter-spacing: 0.06em; cursor: pointer; font-family: 'Epilogue', sans-serif; transition: background 0.15s; }
+.config-btn:hover { background: #ff8a5c; }
+.config-btn.secondary { background: #3a3020; color: var(--cream); }
+.config-btn.secondary:hover { background: #4a4030; }
+
+/* VARIABLES */
+.var { background: var(--orange-light); color: #cc4a18; border: 1px dashed var(--orange-border); padding: 1px 6px; border-radius: 4px; font-family: 'JetBrains Mono', monospace; font-size: 0.92em; font-weight: 500; }
+.var.filled { background: var(--green-light); color: var(--green); border: 1px solid var(--green-border); }
+
+/* LAB NAV */
+.lab-nav { padding: 12px 60px; background: var(--cream-dark); border-bottom: 1px solid var(--border); display: flex; gap: 6px; overflow-x: auto; position: sticky; top: 0; z-index: 100; }
+.lab-nav-tab { padding: 8px 14px; font-size: 11px; font-weight: 600; color: var(--ink-soft); letter-spacing: 0.06em; border-radius: 16px; cursor: pointer; white-space: nowrap; background: var(--cream); border: 1px solid var(--border); text-decoration: none; transition: all 0.15s; }
+.lab-nav-tab:hover { background: var(--orange-light); border-color: var(--orange-border); color: var(--orange); }
+.lab-nav-tab.lab-nav-done { background: var(--purple-light); border-color: var(--purple-border); color: var(--purple); }
+.lab-nav-tab.lab-nav-done::after { content: ' ✓'; font-size: 10px; }
+
+/* PROGRESS RIBBON */
+.progress-ribbon { background: var(--cream-dark); border-bottom: 1px solid var(--border); padding: 10px 60px; display: flex; align-items: center; gap: 14px; position: sticky; top: 0; z-index: 50; }
+.progress-label { font-size: 10px; letter-spacing: 0.14em; color: var(--ink-muted); font-weight: 600; white-space: nowrap; }
+.progress-count { font-size: 13px; font-weight: 700; color: var(--ink); white-space: nowrap; }
+.progress-count span { color: var(--orange); }
+.progress-track { flex: 1; background: var(--border); border-radius: 8px; height: 8px; overflow: hidden; min-width: 60px; }
+.progress-fill { height: 100%; background: var(--orange); border-radius: 8px; transition: width 0.4s ease; width: 0%; }
+.progress-fill.all-done { background: var(--purple); }
+
+main { padding: 36px 60px 60px; max-width: 1200px; margin: 0 auto; }
+
+/* INTRO */
+.intro-block { background: var(--cream-dark); border: 1px solid var(--border); border-radius: 14px; padding: 22px 26px; margin-bottom: 28px; }
+.intro-block h2 { font-family: 'Fraunces', serif; font-size: 22px; margin-bottom: 12px; color: var(--ink); }
+.intro-block p { font-size: 13px; color: var(--ink-soft); line-height: 1.7; margin-bottom: 8px; }
+
+/* CREDS TABLE */
+.creds-table { width: 100%; border-collapse: collapse; font-size: 12px; margin: 12px 0 4px; background: var(--cream); border-radius: 10px; overflow: hidden; }
+.creds-table th { background: var(--ink); color: var(--cream); padding: 8px 12px; text-align: left; font-weight: 500; font-size: 10px; letter-spacing: 0.08em; }
+.creds-table td { padding: 8px 12px; border-bottom: 1px solid var(--border); color: var(--ink-soft); }
+.creds-table tr:last-child td { border-bottom: none; }
+.creds-table code { font-size: 11px; }
+
+/* LAB */
+.lab { background: var(--cream); border: 1px solid var(--border); border-radius: 14px; margin-bottom: 14px; overflow: hidden; }
+.lab > summary { list-style: none; padding: 18px 24px; cursor: pointer; display: flex; align-items: center; gap: 16px; background: var(--cream); transition: background 0.15s; }
+.lab > summary::-webkit-details-marker { display: none; }
+.lab > summary:hover { background: var(--orange-light); }
+.lab[open] > summary { background: var(--ink); color: var(--cream); border-bottom: 1px solid var(--border); }
+.lab-num { flex-shrink: 0; width: 44px; height: 44px; border-radius: 10px; background: var(--ink); color: var(--orange); display: flex; align-items: center; justify-content: center; font-family: 'Fraunces', serif; font-weight: 700; font-size: 17px; }
+.lab[open] > summary .lab-num { background: var(--orange); color: var(--ink); }
+.lab-title { flex: 1; }
+.lab-title-name { font-family: 'Fraunces', serif; font-size: 18px; font-weight: 600; color: inherit; line-height: 1.3; }
+.lab-title-meta { font-size: 11px; color: var(--ink-muted); letter-spacing: 0.06em; margin-top: 3px; }
+.lab[open] > summary .lab-title-meta { color: #b8a18a; }
+.lab-chevron { flex-shrink: 0; font-size: 14px; color: var(--ink-muted); transition: transform 0.2s; }
+.lab[open] > summary .lab-chevron { transform: rotate(90deg); color: var(--orange); }
+.lab-body { padding: 22px 26px 26px; }
+
+/* SCENARIO */
+.scenario-block { background: var(--orange-light); border-left: 3px solid var(--orange); padding: 14px 18px; border-radius: 0 10px 10px 0; margin-bottom: 16px; }
+.scenario-block-label { font-size: 10px; font-weight: 700; letter-spacing: 0.14em; color: var(--orange); margin-bottom: 6px; }
+.scenario-block-text { font-size: 13px; color: #7a3010; line-height: 1.7; }
+.scenario-user-row { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px; }
+.scenario-user-pill { background: var(--ink); color: var(--cream); padding: 4px 12px; border-radius: 20px; font-size: 11px; font-family: 'JetBrains Mono', monospace; }
+.scenario-user-pill span { color: var(--orange); }
+
+/* OBJECTIVES */
+.objectives { margin-bottom: 16px; }
+.objectives-label { font-size: 10px; font-weight: 700; letter-spacing: 0.14em; color: var(--ink-muted); margin-bottom: 8px; }
+.objectives ul { list-style: none; padding-left: 0; }
+.objectives li { font-size: 13px; color: var(--ink-soft); padding: 4px 0 4px 22px; position: relative; line-height: 1.6; }
+.objectives li::before { content: '✓'; position: absolute; left: 0; color: var(--green); font-weight: 700; }
+
+/* TASK */
+.task { background: #fff; border: 1px solid var(--border); border-radius: 10px; margin-bottom: 10px; overflow: hidden; }
+.task > summary { list-style: none; padding: 12px 16px; cursor: pointer; display: flex; align-items: center; gap: 12px; transition: background 0.15s; }
+.task > summary::-webkit-details-marker { display: none; }
+.task > summary:hover { background: var(--cream-dark); }
+.task[open] > summary { background: var(--cream-dark); border-bottom: 1px solid var(--border); }
+.task-num { flex-shrink: 0; font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 600; color: var(--orange); background: var(--orange-light); padding: 3px 8px; border-radius: 5px; border: 1px solid var(--orange-border); }
+.task-title { flex: 1; font-size: 14px; font-weight: 500; color: var(--ink); }
+.task-chevron { flex-shrink: 0; font-size: 12px; color: var(--ink-muted); transition: transform 0.2s; }
+.task[open] > summary .task-chevron { transform: rotate(90deg); color: var(--orange); }
+.task-body { padding: 16px 18px 18px; }
+.task-desc { font-size: 13px; color: var(--ink-soft); line-height: 1.7; margin-bottom: 12px; font-style: italic; }
+
+/* TASK CHECKBOXES */
+.task-check-wrap { display: flex; align-items: center; margin-right: 4px; flex-shrink: 0; }
+.task-check { appearance: none; -webkit-appearance: none; width: 18px; height: 18px; border-radius: 5px; border: 2px solid var(--border); background: transparent; cursor: pointer; position: relative; flex-shrink: 0; transition: background 0.15s, border-color 0.15s; }
+.task-check:checked { background: transparent; border-color: var(--green); }
+.task-check:checked::after { content: '✓'; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: var(--green); font-size: 11px; font-weight: 700; line-height: 1; }
+.task.task-done > summary .task-num { background: var(--green-light); color: var(--green); border-color: var(--green-border); }
+
+/* STEPS */
+.steps { list-style: none; counter-reset: step; }
+.steps > li { counter-increment: step; position: relative; padding: 10px 0 10px 38px; font-size: 13px; color: var(--ink); line-height: 1.7; border-bottom: 1px dashed var(--border); }
+.steps > li:last-child { border-bottom: none; }
+.steps > li::before { content: counter(step); position: absolute; left: 0; top: 10px; width: 26px; height: 26px; border-radius: 50%; background: var(--ink); color: var(--orange); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; font-family: 'JetBrains Mono', monospace; }
+.steps strong { color: var(--ink); font-weight: 600; }
+.substeps { list-style: disc; padding-left: 22px; margin-top: 6px; color: var(--ink-soft); }
+.substeps li { font-size: 13px; padding: 3px 0; line-height: 1.6; }
+.substeps ul { list-style: circle; padding-left: 22px; margin-top: 4px; }
+
+/* CODE */
+code { background: var(--cream-dark); padding: 1px 6px; border-radius: 4px; font-family: 'JetBrains Mono', monospace; font-size: 0.88em; color: var(--ink); border: 1px solid var(--border); }
+.path { font-family: 'JetBrains Mono', monospace; font-size: 0.9em; color: var(--blue); background: var(--blue-light); padding: 1px 6px; border-radius: 4px; border: 1px solid var(--blue-border); }
+.cmd { background: var(--ink); color: #d9cfbf; border-radius: 8px; padding: 10px 14px; font-family: 'JetBrains Mono', monospace; font-size: 12px; line-height: 1.7; margin: 8px 0; display: block; border-left: 3px solid var(--orange); overflow-x: auto; }
+.cmd.no-prompt::before { content: none; }
+
+/* CALLOUTS */
+.callout { border-radius: 10px; padding: 12px 16px; margin: 10px 0; border: 1px solid; font-size: 12px; line-height: 1.7; }
+.callout-header { display: flex; align-items: center; gap: 6px; font-size: 10px; font-weight: 700; letter-spacing: 0.12em; margin-bottom: 6px; }
+.callout-icon { width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; flex-shrink: 0; }
+.callout-note { background: var(--amber-light); border-color: #ffe680; color: #7a5c00; }
+.callout-note .callout-header { color: #a07c00; }
+.callout-note .callout-icon { background: #ffe680; color: #a07c00; }
+.callout-tip { background: var(--blue-light); border-color: var(--blue-border); color: #153d7a; }
+.callout-tip .callout-header { color: var(--blue); }
+.callout-tip .callout-icon { background: var(--blue-border); color: var(--blue); }
+.callout-warn { background: var(--red-light); border-color: var(--red-border); color: #7a1f1f; }
+.callout-warn .callout-header { color: var(--red); }
+.callout-warn .callout-icon { background: var(--red-border); color: var(--red); }
+
+/* TAKEAWAY */
+.lab-takeaway { margin-top: 18px; padding: 12px 18px; background: var(--cream-dark); border-radius: 8px; border-left: 3px solid var(--ink-muted); }
+.lab-takeaway-label { font-size: 10px; font-weight: 700; letter-spacing: 0.14em; color: var(--ink-muted); margin-bottom: 6px; }
+.lab-takeaway-text { font-size: 13px; color: var(--ink-soft); line-height: 1.7; }
+
+/* LAB NOTES */
+.lab-notes { margin-bottom: 16px; }
+.lab-notes-label { font-size: 10px; font-weight: 700; letter-spacing: 0.14em; color: var(--ink-muted); margin-bottom: 6px; }
+.lab-notes-input { width: 100%; min-height: 62px; border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; font-family: 'Epilogue', sans-serif; font-size: 13px; color: var(--ink-soft); background: var(--cream); resize: vertical; line-height: 1.6; transition: border-color 0.15s; }
+.lab-notes-input:focus { outline: none; border-color: var(--orange); }
+.lab-notes-input::placeholder { color: var(--ink-muted); font-style: italic; }
+
+/* LAB QUESTIONS */
+.lab-questions { border-top: 1px dashed var(--border); margin-top: 16px; }
+.lab-questions > summary { list-style: none; padding: 10px 0 6px; cursor: pointer; display: flex; align-items: center; gap: 8px; font-size: 10px; font-weight: 700; letter-spacing: 0.12em; color: var(--ink-muted); user-select: none; }
+.lab-questions > summary::-webkit-details-marker { display: none; }
+.lab-questions > summary:hover { color: var(--orange); }
+.lab-questions-count { background: var(--purple-light); color: var(--purple); border: 1px solid var(--purple-border); border-radius: 10px; padding: 1px 7px; font-size: 10px; font-weight: 700; margin-left: 4px; }
+.lab-questions-count:empty { display: none; }
+.lab-questions-chevron { margin-left: auto; font-size: 11px; transition: transform 0.2s; }
+.lab-questions[open] > summary .lab-questions-chevron { transform: rotate(90deg); }
+.lab-questions-body { padding: 8px 0 2px; }
+.lab-questions-input { width: 100%; min-height: 80px; border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; font-family: 'Epilogue', sans-serif; font-size: 13px; color: var(--ink-soft); background: var(--cream); resize: vertical; line-height: 1.6; transition: border-color 0.15s; }
+.lab-questions-input:focus { outline: none; border-color: var(--orange); }
+.lab-questions-input::placeholder { color: var(--ink-muted); font-style: italic; }
+
+/* ALL QUESTIONS PANEL */
+.all-questions-panel { background: var(--cream-dark); border: 1px solid var(--border); border-radius: 14px; margin-bottom: 28px; overflow: hidden; }
+.all-questions-toggle { list-style: none; padding: 18px 26px; cursor: pointer; display: flex; align-items: center; gap: 10px; user-select: none; transition: background 0.15s; }
+.all-questions-toggle::-webkit-details-marker { display: none; }
+.all-questions-toggle:hover { background: var(--orange-light); }
+.all-questions-title { font-family: 'Fraunces', serif; font-size: 20px; font-weight: 600; flex: 1; }
+.all-questions-title em { font-style: italic; font-weight: 400; color: var(--orange); }
+.all-questions-total { background: var(--purple-light); color: var(--purple); border: 1px solid var(--purple-border); border-radius: 10px; padding: 2px 9px; font-size: 11px; font-weight: 700; }
+.all-questions-total:empty { display: none; }
+.all-questions-chevron { font-size: 16px; color: var(--ink-muted); transition: transform 0.2s; }
+.all-questions-panel[open] .all-questions-chevron { transform: rotate(90deg); }
+.all-questions-body { padding: 16px 26px 20px; border-top: 1px solid var(--border); }
+.all-questions-empty { font-size: 13px; color: var(--ink-muted); font-style: italic; }
+.all-questions-entry { margin-bottom: 14px; padding-bottom: 14px; border-bottom: 1px dashed var(--border); }
+.all-questions-entry:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+.all-questions-lab-label { font-size: 10px; font-weight: 700; letter-spacing: 0.12em; color: var(--orange); margin-bottom: 5px; }
+.all-questions-text { font-size: 13px; color: var(--ink-soft); line-height: 1.7; white-space: pre-wrap; }
+
+.config-field-row { display: flex; gap: 6px; align-items: center; }
+.config-field-row input { flex: 1; min-width: 0; }
+.config-copy-btn { flex-shrink: 0; background: #2a2010; border: 1px solid #5a4a35; color: #7a6a55; border-radius: 6px; padding: 0 9px; font-size: 11px; cursor: pointer; font-family: 'JetBrains Mono', monospace; height: 38px; transition: color 0.15s, border-color 0.15s, background 0.15s; }
+.config-copy-btn:hover { color: var(--orange); border-color: var(--orange); background: #3a3020; }
+.config-copy-btn.copied { background: var(--green); color: #fff !important; border-color: var(--green); }
+
+/* EXPAND CONTROLS */
+.expand-controls { display: flex; gap: 8px; margin-bottom: 14px; justify-content: flex-end; }
+.expand-btn { background: var(--cream-dark); border: 1px solid var(--border); color: var(--ink-soft); padding: 6px 12px; border-radius: 16px; font-size: 11px; font-weight: 500; letter-spacing: 0.04em; cursor: pointer; font-family: 'Epilogue', sans-serif; transition: all 0.15s; }
+.expand-btn:hover { background: var(--orange-light); color: var(--orange); border-color: var(--orange-border); }
+
+/* COPY BUTTONS */
+.cmd-wrap { position: relative; display: block; margin: 8px 0; }
+.cmd-wrap .cmd { margin: 0; }
+.copy-btn { position: absolute; top: 8px; right: 8px; background: #2a2010; border: 1px solid #5a4a35; color: #7a6a55; border-radius: 5px; padding: 2px 8px; font-size: 10px; font-weight: 600; cursor: pointer; font-family: 'Epilogue', sans-serif; letter-spacing: 0.08em; opacity: 0; transition: opacity 0.15s, background 0.15s, color 0.15s; line-height: 1.6; }
+.cmd-wrap:hover .copy-btn { opacity: 1; }
+.copy-btn:hover { background: #3a3020; color: var(--orange); border-color: var(--orange); }
+.copy-btn.copied { background: var(--green); color: #fff !important; border-color: var(--green-border); opacity: 1 !important; }
+.copy-inline { display: inline-flex; align-items: center; background: none; border: 1px solid transparent; color: var(--ink-muted); font-size: 9px; cursor: pointer; padding: 0 3px; margin-left: 2px; vertical-align: middle; border-radius: 3px; line-height: 1.4; font-family: 'JetBrains Mono', monospace; opacity: 0.4; transition: opacity 0.15s, color 0.15s, border-color 0.15s, background 0.15s; }
+.copy-inline:hover { opacity: 1; color: var(--orange); border-color: var(--orange-border); background: var(--orange-light); }
+.copy-inline.copied { color: var(--green) !important; border-color: var(--green-border) !important; background: var(--green-light) !important; opacity: 1 !important; }
+
+footer { padding: 20px 60px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; background: var(--cream-dark); }
+.footer-left { font-family: 'Fraunces', serif; font-size: 16px; font-weight: 700; }
+.footer-left span { color: var(--orange); }
+.footer-right { font-size: 11px; color: var(--ink-muted); letter-spacing: 0.06em; }
+
+@media (max-width: 900px) {
+  header { padding: 24px 20px 20px; flex-direction: column; }
+  .config-panel { padding: 0 20px; }
+  .progress-ribbon { padding: 10px 20px; }
+  .lab-nav { padding: 10px 20px; }
+  main { padding: 24px 20px 40px; }
+  footer { padding: 20px; flex-direction: column; gap: 8px; text-align: center; }
+  h1 { font-size: 32px; }
+}
+@media print { .config-panel, .lab-nav, .expand-controls, .progress-ribbon { display: none; } details[open] { break-inside: avoid; } }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-left">
+    <div class="day-badge"><span class="day-badge-dot"></span>EDU-310 · ZDX OPERATIONALIZATION</div>
+    <h1>Hands-on <em>Lab Guide</em></h1>
+    <div class="header-meta-row">
+      <span class="tag tag-zdx">ZDX</span>
+      <span class="tag tag-arch">Troubleshooting · Analytics · Copilot · Hosted Monitoring</span>
+      <span class="tag tag-weight">14 Labs</span>
+      <span class="tag tag-ro">Read-Only Portal</span>
+    </div>
+  </div>
+</header>
+
+<!-- CONFIG PANEL -->
+<div class="config-panel" id="config-panel">
+  <div class="config-toggle-row" onclick="toggleConfig()">
+    <div style="display:flex;align-items:center;gap:0;">
+      <span class="config-toggle-title">⚙ Lab Configuration</span>
+      <span class="config-toggle-summary" id="config-toggle-summary"></span>
+    </div>
+    <button class="config-toggle-btn" id="config-toggle-btn" onclick="event.stopPropagation();toggleConfig()">
+      <span class="chevron">▲</span> Collapse
+    </button>
+  </div>
+  <div class="config-body">
+    <div class="config-grid">
+      <div class="config-field">
+        <label for="admin-user-input">ZDX Admin User ID</label>
+        <div class="config-field-row">
+          <input type="text" id="admin-user-input" placeholder="admin@thezerotrustexchange.com" autocomplete="off">
+          <button class="config-copy-btn" onclick="copyConfigField('admin-user-input', this)">⎘</button>
+        </div>
+      </div>
+      <div class="config-field">
+        <label for="pass-input">Session Password</label>
+        <div class="config-field-row">
+          <input type="text" id="pass-input" placeholder="(from Lab Access Instructions)" autocomplete="off">
+          <button class="config-copy-btn" onclick="copyConfigField('pass-input', this)">⎘</button>
+        </div>
+      </div>
+      <div class="config-field">
+        <label for="portal-input">ZDX Admin Portal URL</label>
+        <div class="config-field-row">
+          <input type="text" id="portal-input" placeholder="https://admin.zdxcloud.net/" autocomplete="off">
+          <button class="config-copy-btn" onclick="copyConfigField('portal-input', this)">⎘</button>
+        </div>
+      </div>
+      <div class="config-actions">
+        <button class="config-btn" onclick="saveConfig()">Save</button>
+        <button class="config-btn secondary" onclick="clearConfig()">Clear</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- LAB NAV -->
+<div class="lab-nav">
+  <a class="lab-nav-tab" href="#lab1">Lab 1</a>
+  <a class="lab-nav-tab" href="#lab2">Lab 2</a>
+  <a class="lab-nav-tab" href="#lab3">Lab 3</a>
+  <a class="lab-nav-tab" href="#lab4">Lab 4</a>
+  <a class="lab-nav-tab" href="#lab5">Lab 5</a>
+  <a class="lab-nav-tab" href="#lab6">Lab 6</a>
+  <a class="lab-nav-tab" href="#lab7">Lab 7</a>
+  <a class="lab-nav-tab" href="#lab8">Lab 8</a>
+  <a class="lab-nav-tab" href="#lab9">Lab 9</a>
+  <a class="lab-nav-tab" href="#lab10">Lab 10</a>
+  <a class="lab-nav-tab" href="#lab11">Lab 11</a>
+  <a class="lab-nav-tab" href="#lab12">Lab 12</a>
+  <a class="lab-nav-tab" href="#lab13">Lab 13</a>
+  <a class="lab-nav-tab" href="#lab14">Lab 14</a>
+</div>
+
+<!-- PROGRESS RIBBON -->
+<div class="progress-ribbon">
+  <span class="progress-label">PROGRESS</span>
+  <span class="progress-count"><span id="prog-done">0</span>%</span>
+  <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
+</div>
+
+<main>
+
+<div class="intro-block">
+  <h2>About this lab guide</h2>
+  <p>Build skills to get the most from Zscaler Digital Experience (ZDX) — monitoring digital experiences from the end-user perspective, optimising performance, and rapidly troubleshooting application, network, and device issues. This is a <strong>read-only</strong> self-guided lab against a shared demo portal.</p>
+  <p><strong>Lab Access:</strong> Use your ZDX Admin credentials to log in at the portal URL below. You can access the portal from the Skytap Virtual Browser or directly from your own machine.</p>
+  <table class="creds-table">
+    <thead><tr><th>Credential</th><th>Value</th></tr></thead>
+    <tbody>
+      <tr><td>ZDX Admin User ID</td><td><code class="d-admin-user"><span class="var var-admin-user">&lt;ZDX Admin User ID&gt;</span></code></td></tr>
+      <tr><td>Session Password</td><td><code><span class="var var-pass">&lt;Session Password&gt;</span></code></td></tr>
+      <tr><td>ZDX Admin Portal</td><td><code><span class="var var-portal">https://admin.zdxcloud.net/</span></code></td></tr>
+    </tbody>
+  </table>
+  <div class="callout callout-warn" style="margin-top:14px;">
+    <div class="callout-header"><div class="callout-icon">!</div>READ-ONLY ACCESS</div>
+    You are assigned a Read-Only Administrator role. You can explore all dashboards and reports but cannot modify configuration. This role limitation is intentional and affects what you see in some portal sections.
+  </div>
+</div>
+
+<details class="all-questions-panel" id="all-questions-panel">
+  <summary class="all-questions-toggle">
+    <span class="all-questions-title">My <em>Questions</em></span>
+    <span class="all-questions-total" id="all-questions-total"></span>
+    <span class="all-questions-chevron">›</span>
+  </summary>
+  <div class="all-questions-body">
+    <p class="all-questions-empty" id="all-questions-empty">No questions yet — use the questions section at the end of each lab to add them.</p>
+    <div id="all-questions-list"></div>
+  </div>
+</details>
+
+<div class="expand-controls">
+  <button class="expand-btn" onclick="expandAll()">Expand all</button>
+  <button class="expand-btn" onclick="collapseAll()">Collapse all</button>
+</div>
+
+
+<!-- ═══════════════ LAB 1 ═══════════════ -->
+<details class="lab" id="lab1">
+  <summary>
+    <div class="lab-num">01</div>
+    <div class="lab-title">
+      <div class="lab-title-name">Navigating the ZDX Admin Portal</div>
+      <div class="lab-title-meta">Dashboards · Applications · Users · Root Cause Analysis · Call Quality · Inventory · Deep Tracing · Alerts</div>
+    </div>
+    <div class="lab-chevron">›</div>
+  </summary>
+  <div class="lab-body">
+    <div class="scenario-block">
+      <div class="scenario-block-label">LAB OVERVIEW</div>
+      <div class="scenario-block-text">Familiarise yourself with the ZDX Admin Portal UI — dashboards, reports, and menu functions. Follow the step-by-step tasks or explore on your own. After this lab you will apply your knowledge to real troubleshooting scenarios in Labs 2–11.</div>
+    </div>
+    <div class="objectives">
+      <div class="objectives-label">OBJECTIVES</div>
+      <ul>
+        <li>View ZDX Dashboards (Performance Overview, Incidents, Self Service)</li>
+        <li>View Applications Overview and User Overview dashboards</li>
+        <li>Use the ZDX Y-Engine for Automated Root Cause Analysis</li>
+        <li>View Microsoft Teams Call Quality dashboards</li>
+        <li>Browse Software and Device Inventory reports</li>
+        <li>View Deep Tracing results and active Alerts</li>
+      </ul>
+    </div>
+
+    <details class="task">
+      <summary><div class="task-num">1.1</div><div class="task-title">View ZDX Dashboard</div><div class="task-chevron">›</div></summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>Launch the ZDX Admin Portal — open <code><span class="var var-portal">https://admin.zdxcloud.net/</span></code> in your browser:
+            <ul class="substeps">
+              <li>Admin User ID: <code><span class="var var-admin-user">&lt;ZDX Admin User ID&gt;</span></code></li>
+              <li>Session Password: <code><span class="var var-pass">&lt;Session Password&gt;</span></code></li>
+              <li>Click <strong>Sign In</strong></li>
+            </ul>
+          </li>
+          <li>Explore the <strong>Performance Overview</strong> widgets:
+            <ul class="substeps">
+              <li>At the top, select <strong>24 Hours</strong> from the dropdown</li>
+              <li>Scroll through the Most Impacted Applications list and click any app to update the map view</li>
+              <li>Use <strong>+</strong> / <strong>–</strong> controls to zoom the map (or Ctrl + mouse wheel)</li>
+              <li>Click <strong>Draw Fence</strong> → draw a rectangle around a geographic area → click <strong>Filter Selection</strong></li>
+              <li>Click any point in a graph for more details</li>
+              <li>Click <strong>Add Another Application</strong> and select one from the dropdown</li>
+              <li>Click <strong>Reset</strong> on the map, then try the <strong>Geolocations</strong> filter at the top → Apply → view reports → Reset</li>
+            </ul>
+          </li>
+          <li>Explore <strong>Incidents Overview</strong>:
+            <ul class="substeps">
+              <li>Navigate to <span class="path">Dashboard &gt; Incidents Overview</span></li>
+              <li>Scroll to the <strong>Incidents by Epicenters</strong> map, click a marker and select an incident</li>
+              <li>Click <strong>View Incident Details</strong> and review the metrics</li>
+            </ul>
+          </li>
+          <li>Explore <strong>Self Service Overview</strong>:
+            <ul class="substeps">
+              <li>Navigate to <span class="path">Dashboard &gt; Self Service Overview</span></li>
+              <li>Review summary graphs for notifications in the selected timeframe</li>
+              <li>Click to see details for a specific notification</li>
+            </ul>
+          </li>
+        </ol>
+      </div>
+    </details>
+
+    <details class="task">
+      <summary><div class="task-num">1.2</div><div class="task-title">View Applications Overview Dashboard</div><div class="task-chevron">›</div></summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>From the main menu, select <strong>Applications</strong></li>
+          <li>Sort the applications table by <strong>ZDX Score Trend</strong></li>
+          <li>Click the application with the lowest ZDX Score</li>
+          <li>In the ZDX Score Over Time graph, drag to zoom in on a period with significant change → click <strong>Zoom out</strong></li>
+          <li>Scroll down to view Page Fetch Time graph and most impacted Departments, Regions, and Zscaler Locations</li>
+          <li>View information about the application's configured probes</li>
+        </ol>
+      </div>
+    </details>
+
+    <details class="task">
+      <summary><div class="task-num">1.3</div><div class="task-title">View User Overview Dashboard</div><div class="task-chevron">›</div></summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>From the main menu, select <strong>Users</strong> → select an application from the dropdown → click <strong>Apply</strong></li>
+          <li>Under <strong>ZDX Score User Distribution</strong>, toggle between Poor / Okay / Good to update the user table</li>
+          <li>Select a user with <strong>Poor</strong> or <strong>Okay</strong> performance → review device info (OS, IP)</li>
+          <li>Click <strong>View More Device Details</strong> → explore Hardware, Network, and Software tabs → Done</li>
+          <li>Review <strong>Web Probe Metrics</strong>:
+            <ul class="substeps">
+              <li>Scroll to Web Probe Metrics graphs</li>
+              <li>Click on a graph spike to see details (Page Fetch Time, Server Response Time, etc.)</li>
+            </ul>
+          </li>
+          <li>Review <strong>Cloud Path Probe Metrics</strong>:
+            <ul class="substeps">
+              <li>View the Cloud Path graph for Latency and Packet Loss</li>
+              <li>Scroll to the <strong>Hop View</strong> → expand the leg with the highest differential latency (shown in orange)</li>
+              <li>Mouse-over hops for details; click <strong>Command Line View</strong> to identify high-loss hops</li>
+            </ul>
+          </li>
+          <li>Review <strong>Device Health</strong>:
+            <ul class="substeps">
+              <li>Customise the graphs (e.g. unselect Disk)</li>
+              <li>Click a graph point for CPU Usage details and Most Impacted Processes</li>
+              <li>Under <strong>User Device Events</strong>, mouse-over a timeline dot to view event details</li>
+            </ul>
+          </li>
+        </ol>
+      </div>
+    </details>
+
+    <details class="task">
+      <summary><div class="task-num">1.4</div><div class="task-title">View Automated Root Cause Analysis</div><div class="task-chevron">›</div></summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>From the main menu, select <strong>Search</strong> → type <code>Curtis Hardwick</code> → press Enter → click the user name → select an application → Apply</li>
+          <li>In the ZDX Score Over Time graph, click a point with a Poor score → click <strong>Analyze Score</strong> → review the root cause analysis table</li>
+          <li>Scroll through Web Probe Metrics, Cloud Path view, and Device Health to confirm the analysis</li>
+          <li>Drag the slider to select a time range → click <strong>Analyze Range</strong> → review results → provide feedback using the buttons</li>
+          <li>Click <strong>Compare to</strong> → select <strong>Same time 1 day ago</strong> → scroll through side-by-side comparison graphs and identify key differences</li>
+        </ol>
+      </div>
+    </details>
+
+    <details class="task">
+      <summary><div class="task-num">1.5</div><div class="task-title">View Call Quality Dashboards</div><div class="task-chevron">›</div></summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>Navigate to <span class="path">Applications &gt; Microsoft Teams Call Quality</span></li>
+          <li>Scroll through the Overview reports → click the <strong>Meetings</strong> tab → view the list of recent meetings</li>
+          <li>Click a meeting name or icon → review Meeting Details and participant overview</li>
+          <li>Click the icon for one user → in Sessions and User Devices, click a user name</li>
+          <li>Scroll down to <strong>Meeting Monitoring Metrics</strong> → click a graph point for details</li>
+          <li>Scroll to the <strong>Cloud Path</strong> section → review hop latency data between end user and Teams Transport Relay URL</li>
+        </ol>
+      </div>
+    </details>
+
+    <details class="task">
+      <summary><div class="task-num">1.6</div><div class="task-title">View Inventory Dashboards</div><div class="task-chevron">›</div></summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>Navigate to <span class="path">Inventory &gt; Software Overview</span>:
+            <ul class="substeps">
+              <li>Mouse-over application tiles to see installation counts</li>
+              <li>Click any tile (e.g. <strong>Microsoft Edge</strong>) → review details → click an app name → review device/user list</li>
+              <li>Click the eye icon for a device to see version history; click a username to view their installed software</li>
+            </ul>
+          </li>
+          <li>Navigate to <span class="path">Inventory &gt; Device Overview</span>:
+            <ul class="substeps">
+              <li>View device count and total active users</li>
+              <li>Click any tile → click a device name → review Hardware, Network, and Software details</li>
+            </ul>
+          </li>
+        </ol>
+      </div>
+    </details>
+
+    <details class="task">
+      <summary><div class="task-num">1.7</div><div class="task-title">View Deep Tracing Results</div><div class="task-chevron">›</div></summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>Navigate to <span class="path">Administration &gt; Deep Tracing</span></li>
+          <li>In the History table, click the icon for a previously captured session</li>
+          <li>Scroll through the report data → click an unusual spike or drop in any graph for details including most impacted software processes</li>
+          <li>Close the Deep Tracing session results window</li>
+        </ol>
+      </div>
+    </details>
+
+    <details class="task">
+      <summary><div class="task-num">1.8</div><div class="task-title">View Alerts</div><div class="task-chevron">›</div></summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>Navigate to <strong>Alerts</strong> from the main menu</li>
+          <li>Review the total count of alerts and number of impacted devices, geolocations, and applications</li>
+          <li>With <strong>Ongoing Alerts</strong> tab selected, click the icon for an ongoing alert → scroll through details → return to Alerts Overview</li>
+          <li>Click the <strong>Alert History</strong> tab → view details for a completed alert</li>
+        </ol>
+      </div>
+    </details>
+    <div class="lab-takeaway">
+      <div class="lab-takeaway-label">WHY THIS MATTERS</div>
+      <p class="lab-takeaway-text">Familiarity with the ZDX portal layout is the prerequisite for every troubleshooting workflow — engineers who know where dashboards, RCA, deep traces, and alerts live can navigate to the right data in seconds rather than minutes during an active incident. In digital experience monitoring, time to data directly equals time to resolution.</p>
+    </div>
+    <details class="lab-questions" id="q-lab1">
+      <summary><span class="lab-questions-icon">?</span> MY QUESTIONS <span class="lab-questions-count" id="q-count-lab1"></span><span class="lab-questions-chevron">›</span></summary>
+      <div class="lab-questions-body"><textarea class="lab-questions-input" id="q-input-lab1" placeholder="Type any questions to follow up later…" rows="3"></textarea></div>
+    </details>
+  </div>
+</details>
+
+
+<!-- ═══════════════ LAB 2 ═══════════════ -->
+<details class="lab" id="lab2">
+  <summary>
+    <div class="lab-num">02</div>
+    <div class="lab-title">
+      <div class="lab-title-name">Troubleshooting Poor WiFi</div>
+      <div class="lab-title-meta">WiFi Signal · SSID Change · Y-Engine · Hop View · Device Events</div>
+    </div>
+    <div class="lab-chevron">›</div>
+  </summary>
+  <div class="lab-body">
+    <div class="scenario-block">
+      <div class="scenario-block-label">PROBLEM STATEMENT</div>
+      <div class="scenario-block-text">A user reports frequent disconnections, slow internet speeds, and difficulty completing work tasks. Initial indications point to poor WiFi but details are vague. Use ZDX to pinpoint the exact root cause.</div>
+      <div class="scenario-user-row">
+        <span class="scenario-user-pill"><span>User:</span> Curtis Hardwick</span>
+        <span class="scenario-user-pill"><span>Device:</span> PC-Curtis-WiFi</span>
+        <span class="scenario-user-pill"><span>Timeframe:</span> Last 48 Hours</span>
+      </div>
+    </div>
+    <div class="objectives">
+      <div class="objectives-label">OBJECTIVES</div>
+      <ul>
+        <li>Filter ZDX Score and application data for the user over the incident period</li>
+        <li>Use the Y-Engine Analyze Score to identify impacting factors</li>
+        <li>Compare Cloud Path data before and after ZDX score degradation</li>
+        <li>View Device Events associated with ZDX score changes</li>
+        <li>Identify SSID change as root cause</li>
+      </ul>
+    </div>
+
+    <details class="task">
+      <summary><div class="task-num">2.1</div><div class="task-title">View User ZDX Score for an Application</div><div class="task-chevron">›</div></summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>Click <strong>User Search</strong> → type <code>Curtis Hardwick</code> → click the user name in results</li>
+          <li>Select time period: <strong>48 Hours</strong></li>
+          <li>Select an application (e.g. <strong>Salesforce Lightning</strong>)</li>
+          <li>View the ZDX Score Over Time graph — observe that the score fluctuates frequently between Good and Poor</li>
+        </ol>
+      </div>
+    </details>
+
+    <details class="task">
+      <summary><div class="task-num">2.2</div><div class="task-title">Analyze Poor ZDX Score Interval</div><div class="task-chevron">›</div></summary>
+      <div class="task-body">
+        <div class="task-desc">Zoom in on a Poor score period and use the Y-Engine to identify likely contributing factors. Results vary — explore different data points.</div>
+        <ol class="steps">
+          <li>In the ZDX Score Over Time graph, click and drag to zoom in on a period where the score is Poor (ensure the selection includes time before and after the drop)</li>
+          <li>Click on a point with a Poor score → click <strong>Analyze Score</strong> (takes a few seconds)</li>
+          <li>Review the results table: <em>"The following factors might have impacted the ZDX score"</em>
+            <ul class="substeps">
+              <li>In this example: Low Wifi Signal + Suboptimal Wifi after connecting to <code>3Com_Wifi</code> SSID</li>
+            </ul>
+          </li>
+        </ol>
+        <div class="callout callout-note">
+          <div class="callout-header"><div class="callout-icon">★</div>NOTE</div>
+          Traffic is simulated — your results will differ from examples. Repeat against different data points to explore varying conditions.
+        </div>
+      </div>
+    </details>
+
+    <details class="task">
+      <summary><div class="task-num">2.3</div><div class="task-title">Compare Poor Score to Last Known Good</div><div class="task-chevron">›</div></summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>Click <strong>Compare to</strong> for the selected point → select <strong>Last known good score</strong></li>
+          <li>Examine the key differences, particularly:
+            <ul class="substeps">
+              <li>ZDX Score value</li>
+              <li>WiFi identifier (SSID change: <code>Google_Nest</code> → <code>3Com_Wifi</code>)</li>
+              <li>Client-Egress Latency</li>
+            </ul>
+          </li>
+        </ol>
+      </div>
+    </details>
+
+    <details class="task">
+      <summary><div class="task-num">2.4</div><div class="task-title">Isolate High Latency Hop</div><div class="task-chevron">›</div></summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>Click <strong>← Compare ZDX Scores</strong> to return to the user report</li>
+          <li>Zoom in again on a Poor ZDX Score period</li>
+          <li>Scroll down to the <strong>Cloud Path</strong> graph — note the shift from low to high latency when the score drops to Poor</li>
+          <li>Examine the <strong>Hop View</strong> below the graph — it shows each detected hop and its latency
+            <ul class="substeps">
+              <li>Example: the first hop (device → local gateway) accounts for 319ms of 339ms total — that is the bottleneck</li>
+              <li>If data is missing (network was lost), pick a different time point where data appears in the graph</li>
+            </ul>
+          </li>
+        </ol>
+      </div>
+    </details>
+
+    <details class="task">
+      <summary><div class="task-num">2.5</div><div class="task-title">View User Device Events Associated with Score Changes</div><div class="task-chevron">›</div></summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>Scroll to the bottom of the page to view the <strong>User Device Events</strong> timeline</li>
+          <li>Mouse-over the dot on the <strong>Network</strong> timeline at the time the ZDX Score dropped to Poor — view the Network Interface pop-up</li>
+          <li>Scroll through the data to identify what changed (look for a value in the <strong>New Value</strong> field)
+            <ul class="substeps">
+              <li>Example: SSID change from <code>Google_Nest</code> to <code>3Com_Wifi</code></li>
+            </ul>
+          </li>
+          <li>Mouse-over the dot when the score returned to Good — confirm the SSID switched back to <code>Google_Nest</code></li>
+        </ol>
+      </div>
+    </details>
+    <div class="lab-takeaway">
+      <div class="lab-takeaway-label">WHY THIS MATTERS</div>
+      <p class="lab-takeaway-text">WiFi issues account for a disproportionate share of user experience complaints, yet traditional IT monitoring tools only see layer-3 and above — they cannot detect SSID roaming, signal degradation, or channel congestion. ZDX correlates WiFi metrics with ZDX Score drops so engineers can present the evidence to end users and network teams rather than falling back on "works on my machine."</p>
+    </div>
+    <details class="lab-questions" id="q-lab2">
+      <summary><span class="lab-questions-icon">?</span> MY QUESTIONS <span class="lab-questions-count" id="q-count-lab2"></span><span class="lab-questions-chevron">›</span></summary>
+      <div class="lab-questions-body"><textarea class="lab-questions-input" id="q-input-lab2" placeholder="Type any questions to follow up later…" rows="3"></textarea></div>
+    </details>
+  </div>
+</details>
+
+
+<!-- ═══════════════ LAB 3 ═══════════════ -->
+<details class="lab" id="lab3">
+  <summary>
+    <div class="lab-num">03</div>
+    <div class="lab-title">
+      <div class="lab-title-name">Troubleshooting End User Device — High CPU</div>
+      <div class="lab-title-meta">CPU Performance · Process Monitoring · Device Health · Y-Engine</div>
+    </div>
+    <div class="lab-chevron">›</div>
+  </summary>
+  <div class="lab-body">
+    <div class="scenario-block">
+      <div class="scenario-block-label">PROBLEM STATEMENT</div>
+      <div class="scenario-block-text">A user is experiencing sporadic slow device performance with periods of poor application access followed by short periods of good response. The service desk has escalated to your team.</div>
+      <div class="scenario-user-row">
+        <span class="scenario-user-pill"><span>User:</span> Barry Bogdown</span>
+        <span class="scenario-user-pill"><span>Device:</span> Barry-PC</span>
+        <span class="scenario-user-pill"><span>Timeframe:</span> Last 48 Hours</span>
+      </div>
+    </div>
+    <div class="objectives">
+      <div class="objectives-label">OBJECTIVES</div>
+      <ul>
+        <li>Confirm the repeating pattern of poor/good performance from ZDX Score data</li>
+        <li>Use Y-Engine to identify Device CPU High as root cause</li>
+        <li>Examine Page Fetch Time to quantify the impact</li>
+        <li>Identify the specific process (Adobe Premiere Pro) causing CPU saturation</li>
+      </ul>
+    </div>
+
+    <details class="task">
+      <summary><div class="task-num">3.1</div><div class="task-title">View User ZDX Score for an Application</div><div class="task-chevron">›</div></summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>Search for user <code>Barry Bogdown</code> → select device <strong>Barry-PC</strong> → set time period to <strong>48 Hours</strong></li>
+          <li>Observe the ZDX Score — the repeating pattern of poor then good performance confirms the user's report</li>
+        </ol>
+      </div>
+    </details>
+
+    <details class="task">
+      <summary><div class="task-num">3.2</div><div class="task-title">Analyze Poor ZDX Score Interval</div><div class="task-chevron">›</div></summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>Select an interactive application (e.g. <strong>Microsoft Teams Web App</strong>) → zoom in on a Poor score period</li>
+          <li>Click the point where the score first drops to Poor → click <strong>Analyze Score</strong></li>
+          <li>Review the <em>"factors that might have impacted the ZDX score"</em> table
+            <ul class="substeps"><li>Expected: <strong>Device CPU High</strong> is the top factor</li></ul>
+          </li>
+        </ol>
+      </div>
+    </details>
+
+    <details class="task">
+      <summary><div class="task-num">3.3</div><div class="task-title">View Quantitative User Experience Metrics</div><div class="task-chevron">›</div></summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>Scroll down to the <strong>Web Probe Metrics</strong> section</li>
+          <li>Examine the <strong>Page Fetch Time</strong> graph — click a point at the time of the ZDX Score drop
+            <ul class="substeps"><li>Example: PFT = 5633ms vs PFT Baseline of 701ms — an 8× slowdown</li></ul>
+          </li>
+        </ol>
+      </div>
+    </details>
+
+    <details class="task">
+      <summary><div class="task-num">3.4</div><div class="task-title">View Device Health — CPU Usage Data</div><div class="task-chevron">›</div></summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>Scroll to the <strong>Device Health</strong> section → view CPU Usage at the time of the score drop (example: 100%)</li>
+          <li>Click the cursor line to see <strong>Most Impacted Processes</strong>
+            <ul class="substeps"><li>Expected: <strong>Adobe Premiere Pro.exe</strong> responsible for the CPU spike</li></ul>
+          </li>
+          <li>Scroll to <strong>Top Processes by CPU Incidents</strong> graph — confirm the application with highest CPU usage</li>
+        </ol>
+      </div>
+    </details>
+    <div class="lab-takeaway">
+      <div class="lab-takeaway-label">WHY THIS MATTERS</div>
+      <p class="lab-takeaway-text">High CPU is a device-health issue that manifests as poor application performance — and without endpoint telemetry, it looks exactly like a network or application problem. ZDX's device health data eliminates a common mis-escalation path: rather than spending hours investigating application servers or network paths, engineers can immediately identify and hand off a device-level issue to the endpoint team.</p>
+    </div>
+    <details class="lab-questions" id="q-lab3">
+      <summary><span class="lab-questions-icon">?</span> MY QUESTIONS <span class="lab-questions-count" id="q-count-lab3"></span><span class="lab-questions-chevron">›</span></summary>
+      <div class="lab-questions-body"><textarea class="lab-questions-input" id="q-input-lab3" placeholder="Type any questions to follow up later…" rows="3"></textarea></div>
+    </details>
+  </div>
+</details>
+
+
+<!-- ═══════════════ LAB 4 ═══════════════ -->
+<details class="lab" id="lab4">
+  <summary>
+    <div class="lab-num">04</div>
+    <div class="lab-title">
+      <div class="lab-title-name">Troubleshooting Slow DNS Response</div>
+      <div class="lab-title-meta">DNS Performance · Page Fetch Time · Y-Engine · Root Cause</div>
+    </div>
+    <div class="lab-chevron">›</div>
+  </summary>
+  <div class="lab-body">
+    <div class="scenario-block">
+      <div class="scenario-block-label">PROBLEM STATEMENT</div>
+      <div class="scenario-block-text">A user reports consistently poor experience when accessing SaaS apps. Zoom calls are fine once connected, but anything web-based is very slow.</div>
+      <div class="scenario-user-row">
+        <span class="scenario-user-pill"><span>User:</span> Linda Lucas</span>
+        <span class="scenario-user-pill"><span>Device:</span> LINDA-PC-ROUTE5</span>
+        <span class="scenario-user-pill"><span>Timeframe:</span> Last 48 Hours</span>
+      </div>
+    </div>
+    <div class="objectives">
+      <div class="objectives-label">OBJECTIVES</div>
+      <ul>
+        <li>Confirm consistently poor ZDX scores for all applications</li>
+        <li>Analyze the Page Fetch Time breakdown to identify DNS as the bottleneck</li>
+        <li>Use the Y-Engine to confirm High DNS as root cause</li>
+      </ul>
+    </div>
+
+    <details class="task">
+      <summary><div class="task-num">4.1</div><div class="task-title">View User ZDX Score Over Time</div><div class="task-chevron">›</div></summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>Search for user <code>Linda Lucas</code> → select device <strong>LINDA-PC-ROUTE5</strong> → set time period to <strong>48 Hours</strong></li>
+          <li>Observe: ZDX score is consistently Poor across all applications (13/100 or lower) for the entire interval</li>
+        </ol>
+      </div>
+    </details>
+
+    <details class="task">
+      <summary><div class="task-num">4.2</div><div class="task-title">Analyze High Page Fetch Time</div><div class="task-chevron">›</div></summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>Scroll down to the <strong>Web Probe Metrics</strong> section</li>
+          <li>Analyze the Page Fetch Time graph — note the range of values (example: ~1000ms to ~3000ms)</li>
+          <li>Click a point on the graph:
+            <ul class="substeps">
+              <li>Compare PFT (e.g. 1790ms) against PFT Baseline (e.g. 516ms)</li>
+              <li>Note the <strong>DNS Resolve Time</strong> breakdown — in this example DNS accounts for the majority of total Page Fetch Time, with high fluctuation</li>
+            </ul>
+          </li>
+        </ol>
+      </div>
+    </details>
+
+    <details class="task">
+      <summary><div class="task-num">4.3</div><div class="task-title">Use Y-Engine to Determine Root Cause</div><div class="task-chevron">›</div></summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>Scroll back to the ZDX Score Over Time graph → click <strong>Analyze Score</strong></li>
+          <li>Review the factors table:
+            <ul class="substeps">
+              <li>Expected: <strong>High DNS</strong> is the most likely root cause, Confidence Level 100%</li>
+              <li>Note the DNS Server IP shown in User Devices for further isolation</li>
+            </ul>
+          </li>
+        </ol>
+      </div>
+    </details>
+    <div class="lab-takeaway">
+      <div class="lab-takeaway-label">WHY THIS MATTERS</div>
+      <p class="lab-takeaway-text">DNS resolution time is invisible to most monitoring tools yet adds latency to every single network request — a slow DNS server can make a fast application feel broken. ZDX's ability to isolate DNS as the root cause with 100% confidence, and identify the specific DNS server IP, gives engineers the precise evidence needed to escalate to network or ISP teams without ambiguity.</p>
+    </div>
+    <details class="lab-questions" id="q-lab4">
+      <summary><span class="lab-questions-icon">?</span> MY QUESTIONS <span class="lab-questions-count" id="q-count-lab4"></span><span class="lab-questions-chevron">›</span></summary>
+      <div class="lab-questions-body"><textarea class="lab-questions-input" id="q-input-lab4" placeholder="Type any questions to follow up later…" rows="3"></textarea></div>
+    </details>
+  </div>
+</details>
+
+
+<!-- ═══════════════ LAB 5 ═══════════════ -->
+<details class="lab" id="lab5">
+  <summary>
+    <div class="lab-num">05</div>
+    <div class="lab-title">
+      <div class="lab-title-name">Troubleshooting Slow Network Router (Hop)</div>
+      <div class="lab-title-meta">Network Latency · Cloud Path · Hop Isolation · Score Comparison</div>
+    </div>
+    <div class="lab-chevron">›</div>
+  </summary>
+  <div class="lab-body">
+    <div class="scenario-block">
+      <div class="scenario-block-label">PROBLEM STATEMENT</div>
+      <div class="scenario-block-text">A user reports very poor experience when accessing SaaS apps. The problem appears randomly and sometimes seems to resolve on its own.</div>
+      <div class="scenario-user-row">
+        <span class="scenario-user-pill"><span>User:</span> Quincy Martin</span>
+        <span class="scenario-user-pill"><span>Device:</span> QUINCY-PC</span>
+        <span class="scenario-user-pill"><span>Timeframe:</span> Last 48 Hours</span>
+      </div>
+    </div>
+    <div class="objectives">
+      <div class="objectives-label">OBJECTIVES</div>
+      <ul>
+        <li>Confirm sporadic SaaS application performance from ZDX Score data</li>
+        <li>Analyze high Page Fetch Time patterns</li>
+        <li>Identify the high-latency hop in the Cloud Path</li>
+        <li>Drill into hop details to isolate the specific router IP</li>
+        <li>Confirm root cause using the ZDX Score comparison tool</li>
+      </ul>
+    </div>
+
+    <details class="task">
+      <summary><div class="task-num">5.1</div><div class="task-title">Confirm Sporadic SaaS Application Performance</div><div class="task-chevron">›</div></summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>Search for user <code>Quincy Martin</code> → select device <strong>QUINCY-PC</strong> → set time period to <strong>48 Hours</strong></li>
+          <li>Select a SaaS application (e.g. <strong>ServiceNow</strong>) → view ZDX Score Over Time</li>
+          <li>Observe the score fluctuating frequently between Good and Poor — confirming the sporadic report</li>
+        </ol>
+      </div>
+    </details>
+
+    <details class="task">
+      <summary><div class="task-num">5.2</div><div class="task-title">Analyze High Page Fetch Time</div><div class="task-chevron">›</div></summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>Scroll to <strong>Web Probe Metrics</strong> → analyze the Page Fetch Time graph for patterns</li>
+          <li>Observe: PFT is below baseline (green line) for periods, then suddenly spikes — corresponding to Poor ZDX Score drops</li>
+          <li>Note: both <strong>DNS Resolve Time</strong> and <strong>Server Response Time</strong> increase together — pointing to overall end-to-end latency rather than a specific service issue</li>
+        </ol>
+      </div>
+    </details>
+
+    <details class="task">
+      <summary><div class="task-num">5.3</div><div class="task-title">Identify High Latency Cloud Path Link</div><div class="task-chevron">›</div></summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>Scroll to the <strong>Cloud Path</strong> section → select a point when End-End latency is high</li>
+          <li>Examine the latency metrics for each path segment:
+            <ul class="substeps"><li>Example: Client-Egress contributes 496ms of the overall 551ms end-end latency</li></ul>
+          </li>
+        </ol>
+      </div>
+    </details>
+
+    <details class="task">
+      <summary><div class="task-num">5.4</div><div class="task-title">Analyze High Hop Latency</div><div class="task-chevron">›</div></summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>Scroll to the <strong>Hop View</strong> → locate the high-latency link (example: Client-Egress at 496ms)</li>
+          <li>Click the magnifying glass icon to expand the hop details
+            <ul class="substeps"><li>Example: high latency isolated between Client Gateway <code>10.1.2.1</code> and next hop router <code>10.0.0.254</code></li></ul>
+          </li>
+        </ol>
+      </div>
+    </details>
+
+    <details class="task">
+      <summary><div class="task-num">5.5</div><div class="task-title">Confirm Key Differences with ZDX Score Comparison</div><div class="task-chevron">›</div></summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>Scroll back to ZDX Score Over Time → click a Poor score point → click <strong>Compare to</strong> → select <strong>Last known good score</strong></li>
+          <li>Review the Key Differences table — note higher Client-Egress Latency confirming the router as root cause</li>
+          <li>Click <strong>View Detailed Cloud Path</strong> for a direct Hop View comparison → Close</li>
+          <li>Click <strong>← Compare ZDX Scores</strong> to return</li>
+        </ol>
+      </div>
+    </details>
+    <div class="lab-takeaway">
+      <div class="lab-takeaway-label">WHY THIS MATTERS</div>
+      <p class="lab-takeaway-text">Network router and hop-level latency is one of the leading causes of application slowness that neither the application team nor the end user can explain — it lives in the middle-mile between the device and the cloud. ZDX's hop-by-hop visibility gives engineers the specific router IP and latency delta needed to open a ticket with an ISP or internal network team backed by objective data rather than user anecdote.</p>
+    </div>
+    <details class="lab-questions" id="q-lab5">
+      <summary><span class="lab-questions-icon">?</span> MY QUESTIONS <span class="lab-questions-count" id="q-count-lab5"></span><span class="lab-questions-chevron">›</span></summary>
+      <div class="lab-questions-body"><textarea class="lab-questions-input" id="q-input-lab5" placeholder="Type any questions to follow up later…" rows="3"></textarea></div>
+    </details>
+  </div>
+</details>
+
+
+<!-- ═══════════════ LAB 6 ═══════════════ -->
+<details class="lab" id="lab6">
+  <summary>
+    <div class="lab-num">06</div>
+    <div class="lab-title">
+      <div class="lab-title-name">Analyzing Call Quality</div>
+      <div class="lab-title-meta">Microsoft Teams · MOS Score · Audio Latency · Cloud Path</div>
+    </div>
+    <div class="lab-chevron">›</div>
+  </summary>
+  <div class="lab-body">
+    <div class="scenario-block">
+      <div class="scenario-block-label">PROBLEM STATEMENT</div>
+      <div class="scenario-block-text">A user reports poor call quality and overall meeting experience on Teams meetings. The issue is sporadic, making it difficult for the service desk to troubleshoot.</div>
+      <div class="scenario-user-row">
+        <span class="scenario-user-pill"><span>User:</span> Grady Archie</span>
+        <span class="scenario-user-pill"><span>Device:</span> GRADY-PC</span>
+        <span class="scenario-user-pill"><span>Timeframe:</span> Last 48 Hours</span>
+      </div>
+    </div>
+    <div class="objectives">
+      <div class="objectives-label">OBJECTIVES</div>
+      <ul>
+        <li>View the Microsoft Teams Call Quality trend</li>
+        <li>Drill into a specific meeting and examine audio metrics</li>
+        <li>Identify low MOS Score and high audio latency as drivers</li>
+        <li>Isolate the source of audio latency using Cloud Path Hop View</li>
+      </ul>
+    </div>
+
+    <details class="task">
+      <summary><div class="task-num">6.1</div><div class="task-title">View Microsoft Teams Call Quality Trend</div><div class="task-chevron">›</div></summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>Click <strong>Applications</strong> → note the ZDX Score Trend for <strong>Microsoft Teams Call Quality</strong>
+            <ul class="substeps"><li>Expected: Poor score (e.g. 22/100)</li></ul>
+          </li>
+        </ol>
+      </div>
+    </details>
+
+    <details class="task">
+      <summary><div class="task-num">6.2</div><div class="task-title">Examine Meeting Metrics</div><div class="task-chevron">›</div></summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>Click the <strong>Meetings</strong> tab — note that metrics show gaps for periods with no active calls</li>
+          <li>Click and drag to zoom in on a specific meeting time period</li>
+          <li>Click a Meeting ID → review Meeting Details and participant overview</li>
+          <li>Click a user to drill into their device details</li>
+          <li>Check User Devices to find the device with <strong>Microsoft Teams Call Quality</strong> in the Applications list — in some cases a user has multiple devices</li>
+        </ol>
+      </div>
+    </details>
+
+    <details class="task">
+      <summary><div class="task-num">6.3</div><div class="task-title">Locate Meeting Issues</div><div class="task-chevron">›</div></summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>Scroll to <strong>Meeting Monitoring Metrics</strong> → click a data point to see metric values</li>
+          <li>Examine:
+            <ul class="substeps">
+              <li><strong>Audio MOS Score</strong> — example: 2.06 (in) / 2.0 (out) — Poor quality</li>
+              <li><strong>Audio Latency</strong> — example: 640ms in/out — high latency driving poor audio</li>
+            </ul>
+          </li>
+        </ol>
+      </div>
+    </details>
+
+    <details class="task">
+      <summary><div class="task-num">6.4</div><div class="task-title">Locate Source of Audio Latency</div><div class="task-chevron">›</div></summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>Scroll to the <strong>Cloud Path</strong> section of the report</li>
+          <li>Examine the Hop View to locate the hop contributing the most latency:
+            <ul class="substeps"><li>Example: the hop between GRADY-PC and local Gateway <code>10.1.2.1</code> accounts for 569ms of the 640ms total — this is the root cause</li></ul>
+          </li>
+        </ol>
+      </div>
+    </details>
+    <div class="lab-takeaway">
+      <div class="lab-takeaway-label">WHY THIS MATTERS</div>
+      <p class="lab-takeaway-text">Call quality complaints are notoriously hard to reproduce and document because they are subjective and transient. ZDX's MOS score history, audio latency data, and cloud path details convert a "my Teams calls are choppy" ticket into a timestamped, quantified record that changes the conversation with both end users and network vendors — moving from subjective complaints to contractual SLA conversations.</p>
+    </div>
+    <details class="lab-questions" id="q-lab6">
+      <summary><span class="lab-questions-icon">?</span> MY QUESTIONS <span class="lab-questions-count" id="q-count-lab6"></span><span class="lab-questions-chevron">›</span></summary>
+      <div class="lab-questions-body"><textarea class="lab-questions-input" id="q-input-lab6" placeholder="Type any questions to follow up later…" rows="3"></textarea></div>
+    </details>
+  </div>
+</details>
+
+
+<!-- ═══════════════ LAB 7 ═══════════════ -->
+<details class="lab" id="lab7">
+  <summary>
+    <div class="lab-num">07</div>
+    <div class="lab-title">
+      <div class="lab-title-name">Device Startup &amp; Software Reliability — Intune Integration</div>
+      <div class="lab-title-meta">Endpoint Analytics · Microsoft Intune · Boot Time · Software Crashes</div>
+    </div>
+    <div class="lab-chevron">›</div>
+  </summary>
+  <div class="lab-body">
+    <div class="scenario-block">
+      <div class="scenario-block-label">PROBLEM STATEMENT</div>
+      <div class="scenario-block-text">A user is frustrated with their PC's overall performance. Chrome crashes frequently and restarts are sometimes slow. ZDX integrates with Microsoft Intune Endpoint Analytics to surface this data.</div>
+      <div class="scenario-user-row">
+        <span class="scenario-user-pill"><span>User:</span> Joni Sherman</span>
+        <span class="scenario-user-pill"><span>Device:</span> ZPM-JONI-SHERMA</span>
+        <span class="scenario-user-pill"><span>Timeframe:</span> Last 48 Hours</span>
+      </div>
+    </div>
+    <div class="objectives">
+      <div class="objectives-label">OBJECTIVES</div>
+      <ul>
+        <li>Identify chrome.exe CPU spike via Device Health</li>
+        <li>Access Endpoint Analytics from the User Devices section</li>
+        <li>Review Startup Performance boot and sign-in history</li>
+        <li>Review Software Reliability events (crashes) over the last 14 days</li>
+      </ul>
+    </div>
+
+    <details class="task">
+      <summary><div class="task-num">7.1</div><div class="task-title">Analyze CPU Usage</div><div class="task-chevron">›</div></summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>Search for user <code>Joni Sherman</code> → scroll to <strong>Device Health</strong></li>
+          <li>Click a point of high CPU Usage to see <strong>Most Impacted Processes</strong>
+            <ul class="substeps"><li>Expected: <code>chrome.exe</code> using 94% CPU — impacting overall machine performance</li></ul>
+          </li>
+        </ol>
+      </div>
+    </details>
+
+    <details class="task">
+      <summary><div class="task-num">7.2</div><div class="task-title">View Endpoint Analytics</div><div class="task-chevron">›</div></summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>Scroll back to <strong>User Devices</strong> section → click <strong>View Endpoint Analytics</strong></li>
+          <li>Examine the category scores:
+            <ul class="substeps">
+              <li><strong>Startup Performance:</strong> example 96/100 — acceptable</li>
+              <li><strong>Software Reliability:</strong> example 46/100 — low</li>
+            </ul>
+          </li>
+        </ol>
+      </div>
+    </details>
+
+    <details class="task">
+      <summary><div class="task-num">7.3</div><div class="task-title">Examine Startup Performance</div><div class="task-chevron">›</div></summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>Ensure the <strong>Startup Performance</strong> tab is selected</li>
+          <li>Review Boot History and Sign-in History graphs for excessive boot or sign-in times
+            <ul class="substeps">
+              <li>Example: average ~9 seconds to reach sign-in screen — no unusual boots. One sign-in of ~35 seconds on 3 May</li>
+            </ul>
+          </li>
+        </ol>
+      </div>
+    </details>
+
+    <details class="task">
+      <summary><div class="task-num">7.4</div><div class="task-title">Review Software Reliability Events</div><div class="task-chevron">›</div></summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>Click the <strong>Software Reliability</strong> tab</li>
+          <li>Note the frequency of events in the <strong>Software Events Over Last 14 Days</strong> bar chart</li>
+          <li>Review the Software Events table for crash details
+            <ul class="substeps"><li>Expected: Chrome and Edge crashing frequently, especially in the first 3 days</li></ul>
+          </li>
+        </ol>
+      </div>
+    </details>
+    <div class="lab-takeaway">
+      <div class="lab-takeaway-label">WHY THIS MATTERS</div>
+      <p class="lab-takeaway-text">Device startup time and software reliability are the bookends of the employee experience — a slow boot makes every morning frustrating, and a crashing browser makes every afternoon unproductive. Integrating Intune device health with ZDX experience data closes the gap between what IT sees in device management and what users actually experience day-to-day, enabling proactive remediation before tickets pile up.</p>
+    </div>
+    <details class="lab-questions" id="q-lab7">
+      <summary><span class="lab-questions-icon">?</span> MY QUESTIONS <span class="lab-questions-count" id="q-count-lab7"></span><span class="lab-questions-chevron">›</span></summary>
+      <div class="lab-questions-body"><textarea class="lab-questions-input" id="q-input-lab7" placeholder="Type any questions to follow up later…" rows="3"></textarea></div>
+    </details>
+  </div>
+</details>
+
+
+<!-- ═══════════════ LAB 8 ═══════════════ -->
+<details class="lab" id="lab8">
+  <summary>
+    <div class="lab-num">08</div>
+    <div class="lab-title">
+      <div class="lab-title-name">Incident Monitoring on the Incidents Dashboard</div>
+      <div class="lab-title-meta">Incident Detection · AI/ML Analytics · Epicenters · Multi-User Issues</div>
+    </div>
+    <div class="lab-chevron">›</div>
+  </summary>
+  <div class="lab-body">
+    <div class="scenario-block">
+      <div class="scenario-block-label">LAB OVERVIEW</div>
+      <div class="scenario-block-text">The Incidents Dashboard uses AI/ML to detect issues affecting multiple users across four areas: Wi-Fi, Last Mile ISP, Zscaler Data Center, and Application. Proactively monitor and investigate these before they escalate.</div>
+    </div>
+    <div class="objectives">
+      <div class="objectives-label">OBJECTIVES</div>
+      <ul>
+        <li>View the Incidents Overview dashboard and incident counts</li>
+        <li>View incidents by Epicenters on the map</li>
+        <li>Drill into a specific incident and review key metrics</li>
+        <li>Identify impacted users and WiFi Access Point performance data</li>
+      </ul>
+    </div>
+
+    <details class="task">
+      <summary><div class="task-num">8.1</div><div class="task-title">View Incidents Dashboard</div><div class="task-chevron">›</div></summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>Navigate to <span class="path">Dashboard &gt; Incidents Overview</span></li>
+          <li>Note the number of Wi-Fi Incidents reported in the selected time range</li>
+        </ol>
+      </div>
+    </details>
+
+    <details class="task">
+      <summary><div class="task-num">8.2</div><div class="task-title">Identify Incident Epicenters</div><div class="task-chevron">›</div></summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>Scroll to the <strong>Incidents by Epicenters</strong> map</li>
+          <li>Note the location of the incident markers (example: Columbus, Ohio)</li>
+          <li>Click an incident marker → view the expanded breakdown of individual incident types at that epicenter</li>
+        </ol>
+      </div>
+    </details>
+
+    <details class="task">
+      <summary><div class="task-num">8.3</div><div class="task-title">View Incident Details</div><div class="task-chevron">›</div></summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>Click one of the incidents → view its Start and End times → click <strong>View Incident Details</strong></li>
+          <li>In the new window, review:
+            <ul class="substeps">
+              <li>SSID details</li>
+              <li>Impacted Users by Geolocations</li>
+              <li>Top Impacted Users</li>
+            </ul>
+          </li>
+          <li>Scroll to <strong>Key Metrics</strong> over the incident period:
+            <ul class="substeps">
+              <li>Low ZDX Score drop</li>
+              <li>High Maximum Wi-Fi Access Point Latency with large spikes</li>
+            </ul>
+          </li>
+        </ol>
+      </div>
+    </details>
+    <div class="lab-takeaway">
+      <div class="lab-takeaway-label">WHY THIS MATTERS</div>
+      <p class="lab-takeaway-text">Traditional IT monitoring is reactive — a ticket is raised, triaged, and eventually resolved. ZDX's AI-grouped incidents change this model by automatically correlating individual score drops across users and locations into named incidents with epicentres, cutting the investigation phase from hours to minutes and enabling proactive communication before the help desk is flooded with calls about the same issue.</p>
+    </div>
+    <details class="lab-questions" id="q-lab8">
+      <summary><span class="lab-questions-icon">?</span> MY QUESTIONS <span class="lab-questions-count" id="q-count-lab8"></span><span class="lab-questions-chevron">›</span></summary>
+      <div class="lab-questions-body"><textarea class="lab-questions-input" id="q-input-lab8" placeholder="Type any questions to follow up later…" rows="3"></textarea></div>
+    </details>
+  </div>
+</details>
+
+
+<!-- ═══════════════ LAB 9 ═══════════════ -->
+<details class="lab" id="lab9">
+  <summary>
+    <div class="lab-num">09</div>
+    <div class="lab-title">
+      <div class="lab-title-name">Monitoring Self Service Notifications</div>
+      <div class="lab-title-meta">Self Service · ZCC Notifications · User Feedback · CPU Alerts · WiFi Alerts</div>
+    </div>
+    <div class="lab-chevron">›</div>
+  </summary>
+  <div class="lab-body">
+    <div class="scenario-block">
+      <div class="scenario-block-label">LAB OVERVIEW</div>
+      <div class="scenario-block-text">ZDX Self Service sends notifications to users via Zscaler Client Connector when CPU or WiFi issues are detected, enabling self-resolution without involving the service desk. The Self Service Dashboard summarises notification activity and user feedback.</div>
+    </div>
+    <div class="objectives">
+      <div class="objectives-label">OBJECTIVES</div>
+      <ul>
+        <li>View the end-user self service experience (animation)</li>
+        <li>View the Self Service Dashboard and notification totals</li>
+        <li>Review user feedback statistics</li>
+        <li>Drill into a notification to view device health at that moment</li>
+      </ul>
+    </div>
+
+    <details class="task">
+      <summary><div class="task-num">9.1</div><div class="task-title">View End User Self Service Demonstration</div><div class="task-chevron">›</div></summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>Click the <strong>End User Self Service Demonstration</strong> link — it opens an animated GIF in a new tab showing the full notification flow</li>
+          <li>Note the activities shown:
+            <ul class="substeps">
+              <li>Notification of High Resource Consumption appears in the Windows tray via the Zscaler app</li>
+              <li>User opens ZCC → views the Notifications page</li>
+              <li>User clicks <strong>Learn More</strong> → sees details and recommended actions</li>
+              <li>User provides feedback on whether recommendations were helpful</li>
+            </ul>
+          </li>
+          <li>Close the tab and return to the lab</li>
+        </ol>
+      </div>
+    </details>
+
+    <details class="task">
+      <summary><div class="task-num">9.2</div><div class="task-title">View Self Service Dashboard</div><div class="task-chevron">›</div></summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>Navigate to <span class="path">Dashboard &gt; Self Service Dashboard</span></li>
+          <li>View the <strong>Total Notifications Sent</strong> count — if none visible, select a longer time interval</li>
+        </ol>
+      </div>
+    </details>
+
+    <details class="task">
+      <summary><div class="task-num">9.3</div><div class="task-title">View User Feedback Summary</div><div class="task-chevron">›</div></summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>View the <strong>Users Found Notifications Helpful</strong> count</li>
+          <li>Mouse-over the information icon to see the tooltip explaining the percentage value and trend</li>
+        </ol>
+      </div>
+    </details>
+
+    <details class="task">
+      <summary><div class="task-num">9.4</div><div class="task-title">View User Device Health for a Notification</div><div class="task-chevron">›</div></summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>Click a Username in the table for a <strong>System High CPU</strong> notification type — the view switches to a user report for that time period</li>
+          <li>Scroll to the <strong>Device Health</strong> section</li>
+          <li>View the <strong>Top Processes by CPU Incidents</strong> chart</li>
+          <li>Click the application with the highest CPU usage to see a trend display for that process</li>
+        </ol>
+      </div>
+    </details>
+    <div class="lab-takeaway">
+      <div class="lab-takeaway-label">WHY THIS MATTERS</div>
+      <p class="lab-takeaway-text">Self Service Notifications shift the first-level triage burden from IT to end users — rather than raising a ticket, users get proactive alerts about their device and connectivity health with guidance to self-resolve. For IT, this reduces low-priority ticket volume; for users, it converts unexplained slowness into actionable steps, improving perceived responsiveness of IT without adding headcount.</p>
+    </div>
+    <details class="lab-questions" id="q-lab9">
+      <summary><span class="lab-questions-icon">?</span> MY QUESTIONS <span class="lab-questions-count" id="q-count-lab9"></span><span class="lab-questions-chevron">›</span></summary>
+      <div class="lab-questions-body"><textarea class="lab-questions-input" id="q-input-lab9" placeholder="Type any questions to follow up later…" rows="3"></textarea></div>
+    </details>
+  </div>
+</details>
+
+
+<!-- ═══════════════ LAB 10 ═══════════════ -->
+<details class="lab" id="lab10">
+  <summary>
+    <div class="lab-num">10</div>
+    <div class="lab-title">
+      <div class="lab-title-name">Sharing ZDX Snapshots</div>
+      <div class="lab-title-meta">Report Sharing · Snapshots · View-Only Access · Obfuscation</div>
+    </div>
+    <div class="lab-chevron">›</div>
+  </summary>
+  <div class="lab-body">
+    <div class="scenario-block">
+      <div class="scenario-block-label">LAB OVERVIEW</div>
+      <div class="scenario-block-text">ZDX Snapshots capture the current state of a report page and generate a view-only URL that anyone can access without logging in to the ZDX Admin Portal. Useful for sharing metrics with users or managers without granting portal access.</div>
+    </div>
+    <div class="objectives">
+      <div class="objectives-label">OBJECTIVES</div>
+      <ul>
+        <li>Prepare a user report from the Self Service Dashboard</li>
+        <li>Generate a snapshot with obfuscation enabled and copy the URL</li>
+        <li>Manage snapshots (view list, delete)</li>
+      </ul>
+    </div>
+
+    <details class="task">
+      <summary><div class="task-num">10.1</div><div class="task-title">Prepare User Report</div><div class="task-chevron">›</div></summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>Navigate to <span class="path">Dashboard &gt; Self Service Dashboard</span></li>
+          <li>Click a username in the user table at the bottom of the dashboard</li>
+        </ol>
+      </div>
+    </details>
+
+    <details class="task">
+      <summary><div class="task-num">10.2</div><div class="task-title">Generate Report Snapshot &amp; Copy URL</div><div class="task-chevron">›</div></summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>Scroll to the top of the user report → click <strong>Share</strong></li>
+          <li>Enter snapshot details:
+            <ul class="substeps">
+              <li>Name: <code>Student &lt;Student ID&gt;</code> (use your Student ID or any unique value)</li>
+              <li>Valid for: <strong>2 hours</strong></li>
+              <li>Obfuscate Data: <strong>Checked (green)</strong></li>
+            </ul>
+          </li>
+          <li>Click <strong>Next</strong> → click <strong>Copy URL</strong> → click <strong>Close</strong></li>
+          <li>Optionally open a new tab, paste the URL, and verify the snapshot is accessible without login</li>
+        </ol>
+      </div>
+    </details>
+
+    <details class="task">
+      <summary><div class="task-num">10.3</div><div class="task-title">Manage ZDX Snapshots</div><div class="task-chevron">›</div></summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>Navigate to <span class="path">Analytics &gt; ZDX Snapshots</span></li>
+          <li>Use the Search bar to find the snapshot you just created</li>
+          <li>Click the Trash icon to delete the snapshot</li>
+        </ol>
+      </div>
+    </details>
+    <div class="lab-takeaway">
+      <div class="lab-takeaway-label">WHY THIS MATTERS</div>
+      <p class="lab-takeaway-text">Cross-team troubleshooting is slowed by the need to grant full portal access to external parties — network vendors, application owners, or managed service teams who need specific data but should not have admin rights. ZDX Snapshots provide read-only, time-bounded views of exactly the data needed, with optional obfuscation to protect privacy, accelerating escalations without compromising security posture.</p>
+    </div>
+    <details class="lab-questions" id="q-lab10">
+      <summary><span class="lab-questions-icon">?</span> MY QUESTIONS <span class="lab-questions-count" id="q-count-lab10"></span><span class="lab-questions-chevron">›</span></summary>
+      <div class="lab-questions-body"><textarea class="lab-questions-input" id="q-input-lab10" placeholder="Type any questions to follow up later…" rows="3"></textarea></div>
+    </details>
+  </div>
+</details>
+
+
+<!-- ═══════════════ LAB 11 ═══════════════ -->
+<details class="lab" id="lab11">
+  <summary>
+    <div class="lab-num">11</div>
+    <div class="lab-title">
+      <div class="lab-title-name">ZDX Copilot</div>
+      <div class="lab-title-meta">AI Assistant · Product Knowledge · Troubleshooting · Network Issues · WiFi</div>
+    </div>
+    <div class="lab-chevron">›</div>
+  </summary>
+  <div class="lab-body">
+    <div class="scenario-block">
+      <div class="scenario-block-label">LAB OVERVIEW</div>
+      <div class="scenario-block-text">ZDX Copilot is an AI-powered conversational assistant built on LLM architecture. It can answer product questions, troubleshoot user and network issues by querying ZDX data, and identify root causes that would be hard to find manually. No customer data is used for model training.</div>
+    </div>
+    <div class="objectives">
+      <div class="objectives-label">OBJECTIVES</div>
+      <ul>
+        <li>Use Copilot for product knowledge questions</li>
+        <li>Troubleshoot a device issue (Barry — High CPU)</li>
+        <li>Troubleshoot a network issue (Quincy — High Hop Latency)</li>
+        <li>Troubleshoot a WiFi issue (Curtis — Low WiFi Signal)</li>
+      </ul>
+    </div>
+
+    <details class="task">
+      <summary><div class="task-num">11.1</div><div class="task-title">Using Copilot for Product Knowledge Questions</div><div class="task-chevron">›</div></summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>Click the <strong>Copilot</strong> icon in the left panel</li>
+          <li>Enter a product knowledge question, for example:
+            <span class="cmd no-prompt">How do I configure ZDX Hosted Monitoring?</span>
+          </li>
+          <li>Review the answer and the sources Copilot used to gather the information</li>
+          <li>Create a <strong>new session</strong> in Copilot and ask a troubleshooting question:
+            <span class="cmd no-prompt">Troubleshoot device issues for Barry in the last 3 hours</span>
+          </li>
+          <li>Review the response — navigate to <span class="path">Device Performance &gt; Top Processes By CPU Incidents</span> to verify: <code>Adobe Premiere Pro.exe</code> at ~98.8% CPU</li>
+        </ol>
+      </div>
+    </details>
+
+    <details class="task">
+      <summary><div class="task-num">11.2</div><div class="task-title">Understanding Network Issues using Copilot</div><div class="task-chevron">›</div></summary>
+      <div class="task-body">
+        <div class="task-desc">Copilot can automatically pinpoint the exact hop with high latency — a task that is hard for a helpdesk analyst to do manually.</div>
+        <ol class="steps">
+          <li>Open Copilot and enter:
+            <span class="cmd no-prompt">Troubleshoot network issues for Quincy in the last 3 hours</span>
+          </li>
+          <li>Review the response — Copilot should identify:
+            <ul class="substeps">
+              <li>High latency between Client <code>10.1.2.1</code> and hop <code>10.1.3.2</code></li>
+              <li>Client to hop <code>10.0.0.254</code> — approximately 402ms</li>
+            </ul>
+          </li>
+        </ol>
+      </div>
+    </details>
+
+    <details class="task">
+      <summary><div class="task-num">11.3</div><div class="task-title">Wi-Fi Issue using Copilot</div><div class="task-chevron">›</div></summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>Enter the following query in Copilot:
+            <span class="cmd no-prompt">Troubleshoot the network issue for Curtis for the last 4 hours</span>
+          </li>
+          <li>Observe the root cause — Copilot should identify <strong>Low Wi-Fi Signal</strong></li>
+          <li>Verify by navigating to <span class="path">Device Performance &gt; Wi-Fi Signal</span> to confirm the finding</li>
+        </ol>
+      </div>
+    </details>
+    <div class="lab-takeaway">
+      <div class="lab-takeaway-label">WHY THIS MATTERS</div>
+      <p class="lab-takeaway-text">ZDX Copilot lowers the expertise barrier for complex troubleshooting by letting engineers query the platform in natural language instead of navigating menus and building filters manually. For organisations without dedicated ZDX specialists, Copilot means any IT engineer can get to the same root cause analysis that previously required deep platform familiarity — reducing the skill bottleneck during incident response.</p>
+    </div>
+    <details class="lab-questions" id="q-lab11">
+      <summary><span class="lab-questions-icon">?</span> MY QUESTIONS <span class="lab-questions-count" id="q-count-lab11"></span><span class="lab-questions-chevron">›</span></summary>
+      <div class="lab-questions-body"><textarea class="lab-questions-input" id="q-input-lab11" placeholder="Type any questions to follow up later…" rows="3"></textarea></div>
+    </details>
+  </div>
+</details>
+
+
+<!-- ═══════════════ LAB 12 ═══════════════ -->
+<details class="lab" id="lab12">
+  <summary>
+    <div class="lab-num">12</div>
+    <div class="lab-title">
+      <div class="lab-title-name">ZDX Hosted Monitoring</div>
+      <div class="lab-title-meta">Hosted Probes · Web Monitoring · Cloud Path · SLA · Page Fetch Time</div>
+    </div>
+    <div class="lab-chevron">›</div>
+  </summary>
+  <div class="lab-body">
+    <div class="scenario-block">
+      <div class="scenario-block-label">LAB OVERVIEW</div>
+      <div class="scenario-block-text">Zscaler Hosted Monitoring runs Web and Cloud Path probes directly from Zscaler data centers to application endpoints — providing SLA monitoring independent of end-user devices. Explore probe configuration and the hosted monitoring reports.</div>
+    </div>
+    <div class="objectives">
+      <div class="objectives-label">OBJECTIVES</div>
+      <ul>
+        <li>View the configuration of Hosted Monitoring probe collections</li>
+        <li>Review hosted monitoring reports for web probes (PFT, DNS, SSL) and network probes (latency, packet loss)</li>
+        <li>Use scatter graph and run details to analyse per-location performance</li>
+      </ul>
+    </div>
+
+    <details class="task">
+      <summary><div class="task-num">12.1</div><div class="task-title">View Configuration of Hosted Monitoring</div><div class="task-chevron">›</div></summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>Navigate to <span class="path">Configuration &gt; Zscaler Hosted Probes</span></li>
+          <li>Click any collection (e.g. <strong>Apps</strong>) to view probes across locations</li>
+          <li>Click the view icon on any probe to see its configuration — review:
+            <ul class="substeps">
+              <li>Probe Type (Web Probe / Cloud Path Probe)</li>
+              <li>Destination URL, Zscaler hosted locations, any configured alerts</li>
+            </ul>
+          </li>
+          <li>Click <strong>Next</strong> through the wizard steps to view Protocol, Run Frequency, Hop count, Interval, Timeout, and Zscaler Hosted Locations</li>
+          <li>Click <strong>Next</strong> again to see any alert configuration</li>
+        </ol>
+      </div>
+    </details>
+
+    <details class="task">
+      <summary><div class="task-num">12.2</div><div class="task-title">View Hosted Monitoring Reports</div><div class="task-chevron">›</div></summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>Navigate to <span class="path">Analytics &gt; Zscaler Hosted Monitoring</span></li>
+          <li>In the left pane, review collections: SLA, Network, Apps, API, Websites — filter by Zscaler hosted location; default shows last 30 days</li>
+          <li>Select a web probe (e.g. <strong>Box (Web)</strong> from SLA) → view the Availability and Page Fetch Time graphs (line or scatter view)</li>
+          <li>In the PFT line graph:
+            <ul class="substeps">
+              <li>Observe PFT per Zscaler hosted location</li>
+              <li>Click any graph point to view the Page Fetch Time value</li>
+              <li>Use the dropdown to add additional metrics (e.g. DNS)</li>
+            </ul>
+          </li>
+          <li>Switch to <strong>scatter graph</strong> for Page Fetch Time → select a data point → click <strong>View Details</strong> to see per-location run metrics:
+            <ul class="substeps">
+              <li>Redirect Time, DNS, TCP, SSL Handshake, Server Response Time (TTFB), Page Fetch Time</li>
+              <li>Per-URL redirect information with Response Codes and timing distributions</li>
+            </ul>
+          </li>
+          <li>Select a network probe (e.g. <strong>Box (Network)</strong> from SLA) → view End-to-End Latency → add Packet Loss via the dropdown</li>
+        </ol>
+      </div>
+    </details>
+    <div class="lab-takeaway">
+      <div class="lab-takeaway-label">WHY THIS MATTERS</div>
+      <p class="lab-takeaway-text">User device probes only show performance from where users actually are — when all users are offline or in a single location, ZDX Hosted Monitoring provides continuous synthetic measurements from Zscaler's global cloud. This separates ISP and application-side issues from user-side problems, and provides 24/7 availability monitoring that is independent of any single user's device or location.</p>
+    </div>
+    <details class="lab-questions" id="q-lab12">
+      <summary><span class="lab-questions-icon">?</span> MY QUESTIONS <span class="lab-questions-count" id="q-count-lab12"></span><span class="lab-questions-chevron">›</span></summary>
+      <div class="lab-questions-body"><textarea class="lab-questions-input" id="q-input-lab12" placeholder="Type any questions to follow up later…" rows="3"></textarea></div>
+    </details>
+  </div>
+</details>
+
+
+<!-- ═══════════════ LAB 13 ═══════════════ -->
+<details class="lab" id="lab13">
+  <summary>
+    <div class="lab-num">13</div>
+    <div class="lab-title">
+      <div class="lab-title-name">Understanding Data Explorer</div>
+      <div class="lab-title-meta">Custom Reports · Metrics Comparison · Geolocation · Data Visualisation</div>
+    </div>
+    <div class="lab-chevron">›</div>
+  </summary>
+  <div class="lab-body">
+    <div class="scenario-block">
+      <div class="scenario-block-label">LAB OVERVIEW</div>
+      <div class="scenario-block-text">Data Explorer allows you to create and customise views of applications and metrics — comparing performance across multiple apps and geolocations in a single interface. A powerful tool for identifying trends and correlating data across your organisation.</div>
+    </div>
+    <div class="objectives">
+      <div class="objectives-label">OBJECTIVES</div>
+      <ul>
+        <li>Access Data Explorer and view existing reports</li>
+        <li>Compare ZDX Score, Page Fetch Time, and DNS across multiple applications</li>
+        <li>View data aggregated by geolocation</li>
+      </ul>
+    </div>
+
+    <details class="task">
+      <summary><div class="task-num">13.1</div><div class="task-title">Access and Explore Data Explorer</div><div class="task-chevron">›</div></summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>Navigate to <span class="path">Analytics &gt; Data Explorer</span></li>
+          <li>Click the eye icon on an existing report to view it</li>
+          <li>Edit the report to include specific applications, metrics, and grouping options — choose aggregation type (average, median, or maximum) and display format (chart or table)</li>
+          <li>Compare <strong>ZDX Score</strong>, <strong>Page Fetch Time</strong>, and <strong>Packet Loss</strong> for <code>Outlook</code> and <code>SharePoint Online</code></li>
+          <li>Add <strong>DNS Time</strong> to the view — observe whether slow DNS resolution is contributing to high Page Fetch Time</li>
+          <li>Omit Outlook and add <strong>ServiceNow</strong> — compare ZDX Score and DNS Time for SharePoint Online and ServiceNow
+            <ul class="substeps"><li>Expected: high DNS Time correlates with lower average ZDX Score for both apps</li></ul>
+          </li>
+          <li>Switch to <strong>tabular view</strong> grouped by <strong>Geolocation</strong> to see average ZDX Score per location — useful for understanding device counts or user counts per site without manual cross-team data requests</li>
+        </ol>
+      </div>
+    </details>
+    <div class="lab-takeaway">
+      <div class="lab-takeaway-label">WHY THIS MATTERS</div>
+      <p class="lab-takeaway-text">Default ZDX dashboards are optimised for real-time troubleshooting, but Data Explorer is the tool for identifying patterns and trends over time — the kind of analysis that answers questions like "which applications have degraded consistently over the last quarter?" or "which site has the worst average experience for remote workers?" Custom analytics enable capacity planning and service improvement decisions that reactive monitoring cannot support.</p>
+    </div>
+    <details class="lab-questions" id="q-lab13">
+      <summary><span class="lab-questions-icon">?</span> MY QUESTIONS <span class="lab-questions-count" id="q-count-lab13"></span><span class="lab-questions-chevron">›</span></summary>
+      <div class="lab-questions-body"><textarea class="lab-questions-input" id="q-input-lab13" placeholder="Type any questions to follow up later…" rows="3"></textarea></div>
+    </details>
+  </div>
+</details>
+
+
+<!-- ═══════════════ LAB 14 ═══════════════ -->
+<details class="lab" id="lab14">
+  <summary>
+    <div class="lab-num">14</div>
+    <div class="lab-title">
+      <div class="lab-title-name">Understanding the Wi-Fi Dashboard</div>
+      <div class="lab-title-meta">WiFi Access Points · Device Connectivity · Geolocation Analysis · Poor AP Detection</div>
+    </div>
+    <div class="lab-chevron">›</div>
+  </summary>
+  <div class="lab-body">
+    <div class="scenario-block">
+      <div class="scenario-block-label">LAB OVERVIEW</div>
+      <div class="scenario-block-text">The ZDX Wi-Fi Dashboard monitors the performance of Wi-Fi access points and connected devices using existing user and device WiFi data — helping identify underperforming APs in specific locations before they generate widespread user complaints.</div>
+    </div>
+    <div class="objectives">
+      <div class="objectives-label">OBJECTIVES</div>
+      <ul>
+        <li>Access the Wi-Fi Dashboard and explore the map view</li>
+        <li>Drill into a region to view Access Point details and active users</li>
+        <li>Identify a Poor-category AP and review its performance metrics</li>
+        <li>Logout of the ZDX Admin Portal</li>
+      </ul>
+    </div>
+
+    <details class="task">
+      <summary><div class="task-num">14.1</div><div class="task-title">Accessing the Wi-Fi Dashboard</div><div class="task-chevron">›</div></summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>Navigate to <span class="path">Dashboard &gt; Wi-Fi Dashboard</span></li>
+          <li>Filter access points and devices using the available filter options — Wi-Fi Performance is grouped by Geolocation by default</li>
+          <li>Hover or click the green dot for a region → view Access Point details → click <strong>View Access Points</strong> (also available as a List View)</li>
+          <li>Click <strong>View Details</strong> for an Access Point in the <strong>Poor</strong> category → review:
+            <ul class="substeps">
+              <li>AP details and performance metrics</li>
+              <li>List of active users connected to that AP</li>
+            </ul>
+          </li>
+        </ol>
+      </div>
+    </details>
+
+    <details class="task">
+      <summary><div class="task-num">14.2</div><div class="task-title">Logout of ZDX Admin Portal</div><div class="task-chevron">›</div></summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>Click <strong>My Profile</strong> in the ZDX Admin Portal (top right or left panel)</li>
+          <li>Click <strong>Logout</strong></li>
+        </ol>
+        <div class="callout callout-tip">
+          <div class="callout-header"><div class="callout-icon">→</div>COURSE COMPLETE</div>
+          This is the final lab. Return to the course page in Skilljar to complete the quiz and be marked complete.
+        </div>
+      </div>
+    </details>
+    <div class="lab-takeaway">
+      <div class="lab-takeaway-label">WHY THIS MATTERS</div>
+      <p class="lab-takeaway-text">Access point performance is invisible to user-level monitoring — a single overloaded or failing AP can degrade the experience of dozens of users in a building while individual troubleshooting sessions look inconclusive. The Wi-Fi Dashboard aggregates AP-level health data across all user devices, enabling site-level and AP-level performance analysis that drives physical infrastructure decisions rather than just software or configuration changes.</p>
+    </div>
+    <details class="lab-questions" id="q-lab14">
+      <summary><span class="lab-questions-icon">?</span> MY QUESTIONS <span class="lab-questions-count" id="q-count-lab14"></span><span class="lab-questions-chevron">›</span></summary>
+      <div class="lab-questions-body"><textarea class="lab-questions-input" id="q-input-lab14" placeholder="Type any questions to follow up later…" rows="3"></textarea></div>
+    </details>
+  </div>
+</details>
+
+</main>
+
+<footer>
+  <div class="footer-left">ZDDC<span>.</span></div>
+  <div class="footer-right">EDU-310 · ZDX Operationalization · Self-Guided Lab Guide</div>
+</footer>
+
+<script>
+/* ── CONFIG PANEL COLLAPSE ── */
+function toggleConfig() {
+  const panel = document.getElementById('config-panel');
+  const btn   = document.getElementById('config-toggle-btn');
+  const collapsed = panel.classList.toggle('collapsed');
+  btn.innerHTML = collapsed
+    ? '<span class="chevron" style="transform:rotate(180deg);display:inline-block;">▲</span> Expand'
+    : '<span class="chevron">▲</span> Collapse';
+}
+function updateToggleSummary() {
+  const user = document.getElementById('admin-user-input').value.trim();
+  document.getElementById('config-toggle-summary').textContent = user ? `— ${user}` : '';
+}
+
+/* ── CONFIG ENGINE ── */
+const STORAGE_KEY = 'edu310-lab-config';
+
+function loadConfig() {
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) {
+      const cfg = JSON.parse(saved);
+      document.getElementById('admin-user-input').value = cfg.adminUser || '';
+      document.getElementById('pass-input').value       = cfg.pass      || '';
+      document.getElementById('portal-input').value     = cfg.portal    || '';
+    }
+  } catch (e) {}
+  applyAll();
+}
+
+function saveConfig() {
+  const cfg = {
+    adminUser: document.getElementById('admin-user-input').value.trim(),
+    pass:      document.getElementById('pass-input').value.trim(),
+    portal:    document.getElementById('portal-input').value.trim(),
+  };
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(cfg)); } catch (e) {}
+  applyAll();
+  updateToggleSummary();
+  flashSaved();
+}
+
+function clearConfig() {
+  ['admin-user-input','pass-input','portal-input'].forEach(id => document.getElementById(id).value = '');
+  try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
+  applyAll();
+  updateToggleSummary();
+}
+
+function flashSaved() {
+  const btn = document.querySelector('.config-btn');
+  const orig = btn.textContent;
+  btn.textContent = '✓ Saved';
+  btn.style.background = 'var(--green)';
+  btn.style.color = 'white';
+  setTimeout(() => { btn.textContent = orig; btn.style.background = ''; btn.style.color = ''; }, 1200);
+}
+
+function applyAll() {
+  const adminUser = document.getElementById('admin-user-input').value.trim();
+  const pass      = document.getElementById('pass-input').value.trim();
+  const portal    = document.getElementById('portal-input').value.trim();
+
+  document.querySelectorAll('.var-admin-user').forEach(el => {
+    if (adminUser) { el.textContent = adminUser; el.classList.add('filled'); }
+    else { el.textContent = '<ZDX Admin User ID>'; el.classList.remove('filled'); }
+  });
+  document.querySelectorAll('.var-pass').forEach(el => {
+    if (pass) { el.textContent = pass; el.classList.add('filled'); }
+    else { el.textContent = '<Session Password>'; el.classList.remove('filled'); }
+  });
+  document.querySelectorAll('.var-portal').forEach(el => {
+    if (portal) { el.textContent = portal; el.classList.add('filled'); }
+    else { el.textContent = 'https://admin.zdxcloud.net/'; el.classList.remove('filled'); }
+  });
+  document.querySelectorAll('.d-admin-user').forEach(el => el.textContent = adminUser || '<ZDX Admin User ID>');
+}
+
+/* ── EXPAND / COLLAPSE ALL ── */
+function expandAll()  { document.querySelectorAll('details').forEach(d => d.open = true); }
+function collapseAll(){ document.querySelectorAll('details').forEach(d => d.open = false); }
+
+/* ── LIVE INPUT WIRING ── */
+['admin-user-input','pass-input','portal-input'].forEach(id => {
+  document.getElementById(id).addEventListener('input', applyAll);
+  document.getElementById(id).addEventListener('input', updateToggleSummary);
+});
+
+loadConfig();
+updateToggleSummary();
+
+/* ── SMOOTH SCROLL FOR LAB NAV ── */
+document.querySelectorAll('.lab-nav-tab').forEach(tab => {
+  tab.addEventListener('click', e => {
+    e.preventDefault();
+    const id = tab.getAttribute('href').slice(1);
+    const target = document.getElementById(id);
+    if (target) {
+      target.open = true;
+      const top = target.getBoundingClientRect().top + window.scrollY - 100;
+      window.scrollTo({ top, behavior: 'smooth' });
+    }
+  });
+});
+
+/* ── TASK PROGRESS TRACKING ── */
+const PROG_KEY = 'edu310-progress';
+function loadProg() { try { return JSON.parse(localStorage.getItem(PROG_KEY)) || {}; } catch { return {}; } }
+function saveProg(s) { try { localStorage.setItem(PROG_KEY, JSON.stringify(s)); } catch {} }
+
+function updateProgress(state) {
+  const tasks = document.querySelectorAll('details.task');
+  const total = tasks.length;
+  let done = 0;
+  tasks.forEach(t => { if (state[taskKey(t)]) done++; });
+  const pct = total ? Math.round((done / total) * 100) : 0;
+  document.getElementById('prog-done').textContent = pct;
+  const fill = document.getElementById('progress-fill');
+  fill.style.width = pct + '%';
+  fill.classList.toggle('all-done', done === total && total > 0);
+  document.querySelectorAll('details.lab').forEach(lab => {
+    const labTasks = lab.querySelectorAll('details.task');
+    const allDone = labTasks.length > 0 && [...labTasks].every(t => !!state[taskKey(t)]);
+    const tab = document.querySelector(`.lab-nav-tab[href="#${lab.id}"]`);
+    if (tab) tab.classList.toggle('lab-nav-done', allDone);
+  });
+}
+
+function taskKey(taskEl) {
+  const num = taskEl.querySelector('.task-num');
+  return 'task-' + (num ? num.textContent.trim() : Math.random());
+}
+
+function injectTaskCheckboxes() {
+  const state = loadProg();
+  document.querySelectorAll('details.task').forEach(task => {
+    const summary = task.querySelector(':scope > summary');
+    if (!summary || summary.querySelector('.task-check')) return;
+    const key = taskKey(task);
+    const wrap = document.createElement('div');
+    wrap.className = 'task-check-wrap';
+    const cb = document.createElement('input');
+    cb.type = 'checkbox'; cb.className = 'task-check'; cb.checked = !!state[key];
+    if (cb.checked) task.classList.add('task-done');
+    cb.addEventListener('click', e => {
+      e.stopPropagation();
+      state[key] = cb.checked;
+      task.classList.toggle('task-done', cb.checked);
+      saveProg(state); updateProgress(state);
+    });
+    wrap.appendChild(cb);
+    summary.insertBefore(wrap, summary.querySelector('.task-chevron'));
+  });
+  updateProgress(state);
+}
+
+injectTaskCheckboxes();
+
+/* ── COPY BUTTONS ── */
+function copyToClipboard(text, btn, isBlock) {
+  navigator.clipboard.writeText(text).then(() => {
+    btn.classList.add('copied');
+    btn.textContent = isBlock ? '✓ copied' : '✓';
+    setTimeout(() => {
+      btn.classList.remove('copied');
+      btn.textContent = isBlock ? 'copy' : '⎘';
+    }, 1500);
+  });
+}
+
+function injectCopyButtons() {
+  document.querySelectorAll('.cmd').forEach(cmd => {
+    const wrap = document.createElement('div');
+    wrap.className = 'cmd-wrap';
+    cmd.parentNode.insertBefore(wrap, cmd);
+    wrap.appendChild(cmd);
+    const btn = document.createElement('button');
+    btn.className = 'copy-btn';
+    btn.textContent = 'copy';
+    btn.addEventListener('click', () => copyToClipboard(cmd.textContent.trim(), btn, true));
+    wrap.appendChild(btn);
+  });
+
+  document.querySelectorAll('.substeps li code, .steps li code, .creds-table td code').forEach(code => {
+    if (code.closest('.callout') || code.closest('.cmd-wrap')) return;
+    const initialText = code.textContent.trim();
+    if (initialText.length < 2) return;
+    if (/^(Ctrl|Cmd|Alt)\+/.test(initialText)) return;
+    const btn = document.createElement('button');
+    btn.className = 'copy-inline';
+    btn.title = 'Copy';
+    btn.textContent = '⎘';
+    btn.addEventListener('click', e => {
+      e.stopPropagation();
+      copyToClipboard(code.textContent.trim(), btn, false);
+    });
+    code.after(btn);
+  });
+}
+
+injectCopyButtons();
+
+/* ── CONFIG FIELD COPY ── */
+function copyConfigField(inputId, btn) {
+  const val = document.getElementById(inputId).value.trim();
+  if (!val) return;
+  navigator.clipboard.writeText(val).then(() => {
+    btn.classList.add('copied'); btn.textContent = '✓';
+    setTimeout(() => { btn.classList.remove('copied'); btn.textContent = '⎘'; }, 1500);
+  });
+}
+
+/* ── LAB NOTES ── */
+const NOTES_KEY = 'edu310-lab-notes';
+function loadNotes() { try { return JSON.parse(localStorage.getItem(NOTES_KEY)) || {}; } catch { return {}; } }
+function saveNotes(n) { try { localStorage.setItem(NOTES_KEY, JSON.stringify(n)); } catch {} }
+function injectLabNotes() {
+  const saved = loadNotes();
+  document.querySelectorAll('details.lab').forEach(lab => {
+    const anchor = lab.querySelector('.objectives') || lab.querySelector('.scenario-block');
+    if (!anchor) return;
+    const block = document.createElement('div');
+    block.className = 'lab-notes';
+    const label = document.createElement('div');
+    label.className = 'lab-notes-label';
+    label.textContent = 'NOTES';
+    const ta = document.createElement('textarea');
+    ta.className = 'lab-notes-input';
+    ta.placeholder = 'Add your notes here…';
+    ta.rows = 2;
+    ta.value = saved[lab.id] || '';
+    ta.addEventListener('input', () => {
+      const n = loadNotes(); n[lab.id] = ta.value; saveNotes(n);
+    });
+    block.appendChild(label);
+    block.appendChild(ta);
+    anchor.after(block);
+  });
+}
+injectLabNotes();
+
+/* ── LAB QUESTIONS ── */
+const Q_STORE = 'edu310-questions';
+const LAB_LABELS = {
+  lab1:  'Lab 1 — Navigating the ZDX Admin Portal',
+  lab2:  'Lab 2 — Troubleshooting Poor WiFi',
+  lab3:  'Lab 3 — Troubleshooting End User Device — High CPU',
+  lab4:  'Lab 4 — Troubleshooting Slow DNS Response',
+  lab5:  'Lab 5 — Troubleshooting Slow Network Router (Hop)',
+  lab6:  'Lab 6 — Analyzing Call Quality',
+  lab7:  'Lab 7 — Device Startup & Software Reliability — Intune Integration',
+  lab8:  'Lab 8 — Incident Monitoring on the Incidents Dashboard',
+  lab9:  'Lab 9 — Monitoring Self Service Notifications',
+  lab10: 'Lab 10 — Sharing ZDX Snapshots',
+  lab11: 'Lab 11 — ZDX Copilot',
+  lab12: 'Lab 12 — ZDX Hosted Monitoring',
+  lab13: 'Lab 13 — Understanding Data Explorer',
+  lab14: 'Lab 14 — Understanding the Wi-Fi Dashboard',
+};
+function loadQs() { try { return JSON.parse(localStorage.getItem(Q_STORE)) || {}; } catch { return {}; } }
+function saveQs(q) { try { localStorage.setItem(Q_STORE, JSON.stringify(q)); } catch {} }
+function escHtml(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function updateQCount(labId, text) {
+  const el = document.getElementById('q-count-' + labId);
+  if (!el) return;
+  const n = text.trim() ? text.trim().split('\n').filter(l => l.trim()).length : 0;
+  el.textContent = n > 0 ? n + (n === 1 ? ' Q' : ' Qs') : '';
+}
+function renderAllQs() {
+  const list  = document.getElementById('all-questions-list');
+  const empty = document.getElementById('all-questions-empty');
+  const total = document.getElementById('all-questions-total');
+  if (!list) return;
+  const q = loadQs();
+  let html = '', hasAny = false, count = 0;
+  for (let i = 1; i <= 14; i++) {
+    const id = 'lab' + i, text = (q[id] || '').trim();
+    if (!text) continue;
+    hasAny = true; count++;
+    html += `<div class="all-questions-entry"><div class="all-questions-lab-label">${LAB_LABELS[id]}</div><div class="all-questions-text">${escHtml(text)}</div></div>`;
+  }
+  list.innerHTML = html;
+  if (empty) empty.style.display = hasAny ? 'none' : '';
+  if (total) total.textContent = count > 0 ? count + (count === 1 ? ' lab' : ' labs') : '';
+}
+function initQs() {
+  const q = loadQs();
+  document.querySelectorAll('.lab-questions-input').forEach(ta => {
+    const labId = ta.id.replace('q-input-', '');
+    ta.value = q[labId] || '';
+    updateQCount(labId, ta.value);
+    ta.addEventListener('input', () => {
+      const cur = loadQs(); cur[labId] = ta.value;
+      saveQs(cur); updateQCount(labId, ta.value); renderAllQs();
+    });
+  });
+  renderAllQs();
+}
+initQs();
+</script>
+
+</body>
+</html>
