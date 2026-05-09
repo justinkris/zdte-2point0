@@ -1,0 +1,51 @@
+EDU-202 Lab Guide — AI Image Prompts
+All images: 1200×628px, simple cartoon style, bold outlines, flat illustration, cream and orange palette.
+================================================================================
+
+Lab 1 — Virtual Lab Environment
+Simple cartoon style, 1200×628px, bold outlines, flat illustration, cream and orange palette. A cheerful admin at a desk launches a Skytap environment — a cloud shelf above holds three miniature monitors labelled "Client PC", "Win Svr", and "App Connector", each blinking on with a green power light. A login screen in the foreground shows a ZIdentity badge and a glowing padlock.
+
+Lab 2 — ZIdentity User Creation
+Simple cartoon style, 1200×628px, bold outlines, flat illustration, cream and orange palette. An admin at a portal screen clicks "Add User", creating a profile card labelled "JOE". On a nearby phone, the Zscaler Client Connector app shows three green tiles: ZIA, ZPA, ZDX — all lit up. A small key icon passes from the admin to Joe's profile card.
+
+Lab 3 — ZPA Browser Access (HVAC 3rd Party)
+Simple cartoon style, 1200×628px, bold outlines, flat illustration, cream and orange palette. An HVAC technician in a hard hat sits at a laptop outside a building. A glowing browser window floats in the cloud, connecting through a "ZPA" gateway cloud to an internal dashboard labelled "HVAC Console". An App Connector box inside the building acts as the bridge. No VPN anywhere.
+
+Lab 4 — Log Streaming to SIEM
+Simple cartoon style, 1200×628px, bold outlines, flat illustration, cream and orange palette. Log entries (small paper scrolls with text lines) flow out of a ZPA cloud through a dedicated pipe labelled "Log Streaming Connector" into a server rack labelled "SIEM". An admin opens an SSH terminal window on the SIEM screen showing a live log feed scrolling.
+
+Lab 5 — Firewall Policies
+Simple cartoon style, 1200×628px, bold outlines, flat illustration, cream and orange palette. A cartoon firewall wall (brick wall with small flames) with a bouncer holding a clipboard. ICMP ping packets (envelope with ping waves) and SSH packets (a key icon) are on the VIP list and waved through with a thumbs-up. A UDP packet is turned away with a red X. Label on wall: "DEFAULT BLOCK".
+
+Lab 6 — SSL Inspection
+Simple cartoon style, 1200×628px, bold outlines, flat illustration, cream and orange palette. A Zscaler security guard stands in the middle of a network path, opening a padlocked envelope, reading its contents, re-sealing it with a Zscaler intermediate certificate stamp, then passing it along. Left: a user laptop. Right: the internet globe. The guard holds a certificate badge.
+
+Lab 7 — Sandbox File Inspection
+Simple cartoon style, 1200×628px, bold outlines, flat illustration, cream and orange palette. A suspicious file download (a box with a parachute and a question mark) floats down from the internet and gets placed by a robot arm into a glass quarantine chamber. Inside the chamber, a magnifying glass inspects the file. Label: "QUARANTINE". A blocked second download attempt shows a large red stop sign.
+
+Lab 8 — Browser Isolation
+Simple cartoon style, 1200×628px, bold outlines, flat illustration, cream and orange palette. A user at their desk views a risky website displayed inside a thick glass isolation box floating in the cloud. Around the glass box: a crossed-out clipboard (no copy/paste), crossed-out download arrow, crossed-out camera. Only pixels safely stream to the user's monitor. Label on box: "RENDER ONLY".
+
+Lab 9 — Deception / Active Defense
+Simple cartoon style, 1200×628px, bold outlines, flat illustration, cream and orange palette. A sneaky hacker in a dark hoodie approaches a glowing server labelled "DECOY" with a bright neon honeypot sign. The moment the hacker touches it, a giant alarm bell rings overhead and a "THREAT DETECTED" alert pops up on a security operations screen in the background.
+
+Lab 10 — DLP: Block Credit Card Numbers
+Simple cartoon style, 1200×628px, bold outlines, flat illustration, cream and orange palette. A cartoon document (paper envelope) printed with visible credit card numbers tries to pass through a gateway. A DLP guard holds up a red STOP sign. The document is labelled "PDF with CCN", with card digits blocked by orange redaction bars. A second unsearchable PDF icon is also being stopped at the gate.
+
+Lab 11 — ZWA Incident Management
+Simple cartoon style, 1200×628px, bold outlines, flat illustration, cream and orange palette. A DLP incident ticket rides a conveyor belt. One robotic arm stamps it "NOTIFY" (an email envelope flies out). Another stamps it "ESCALATE" (upward arrow). A third stamps it "RESOLVED" (green checkmark). Above the belt: a workflow diagram with branching arrows and decision diamonds. Label: "ZWA".
+
+Lab 12 — Risk360 / MITRE ATT&CK Coverage
+Simple cartoon style, 1200×628px, bold outlines, flat illustration, cream and orange palette. A security analyst stands before a giant grid map labelled "MITRE ATT&CK". Green shields mark covered techniques, orange warning flags mark misconfigured areas, red zones mark gaps. A "NIST CSF" badge pins to the corner. The analyst holds a clipboard with a risk score gauge showing improvement.
+
+Lab 13 — ZDX Custom App Monitoring
+Simple cartoon style, 1200×628px, bold outlines, flat illustration, cream and orange palette. A mail server labelled "Mail_Server" is connected to two small probe robots — one sends a web test packet labelled "Web Probe" and another traces a glowing path through network nodes labelled "Cloud Path Probe". A ZDX dashboard in the background shows latency graphs and green health scores.
+
+Lab 14 — ZDX Alerts & Diagnostics
+Simple cartoon style, 1200×628px, bold outlines, flat illustration, cream and orange palette. A ZDX dashboard shows alert lights turning red when a latency graph crosses a threshold line. A spotlight beam labelled "DEEP TRACE" follows one specific user-device icon through a network path of connected nodes. A privacy badge with a lock labelled "User Privacy: Enabled" appears in the corner, unlocking the trace.
+
+Lab 15 — OneAPI / OAuth 2.0
+Simple cartoon style, 1200×628px, bold outlines, flat illustration, cream and orange palette. A developer holds a Postman letter envelope and stands at a gateway labelled "OneAPI". A golden OAuth 2.0 token key unlocks the gate. Behind the gate: ZCC, ZPA, and ZIA service icons. The developer's request creates a new "ZPA App Connector Group" box that pops into existence with a sparkle.
+
+Lab 16 — Capstone Project
+Simple cartoon style, 1200×628px, bold outlines, flat illustration, cream and orange palette. A student sits at an exam desk with 5 challenge cards arranged in a row: Identity (person icon), Access Control (shield), Cyberthreat (bug with X), Data Protection (padlocked document), Automation (gear with robot). A graduation cap and trophy sit in the background. A "PASS / FAIL" scorecard rests on the desk corner.

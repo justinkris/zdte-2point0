@@ -1,0 +1,36 @@
+EDU-233 Lab Guide — AI Image Prompts
+All images: 1200×628px, simple cartoon style, bold outlines, flat illustration, cream and orange palette.
+================================================================================
+
+Lab 1 — Securing Access to Internet (SSL Inspection)
+Simple cartoon style, 1200×628px, bold outlines, flat illustration, cream and orange palette. A Zscaler security guard opens and inspects an HTTPS envelope flowing between a laptop and a website. The certificate on the envelope switches from the original site cert to "Zscaler Intermediate Root CA". A ZIA Admin Portal screen in the background shows a list of SSL Inspection policies. Label: "SSL INSPECTION — PREREQUISITE FOR BROWSER ISOLATION".
+
+Lab 2 — Browser Isolation Basics (Isolation Profiles)
+Simple cartoon style, 1200×628px, bold outlines, flat illustration, cream and orange palette. An admin views a list of Isolation Profiles in the ZIA Admin Portal: "TZTE Render Only", "Copy-Print-Watermark", "Print Only". A callout panel shows the profile settings tabs: Region, Security Controls (upload/download/clipboard/print toggles), Root Certificates, and Isolation Experience. A "RENDER ONLY" glass box is highlighted on the right. Label: "ISOLATION PROFILES".
+
+Lab 3 — Smart Browser Isolation (AI/ML)
+Simple cartoon style, 1200×628px, bold outlines, flat illustration, cream and orange palette. A user navigates to a suspicious website (skull-and-crossbones URL bar). An AI/ML brain icon intercepts the request, and the site opens inside a glass "RENDER ONLY" isolation box with a warning banner at the top: "This page is isolated — Read Only Mode". A text field on the page has a strikethrough showing no text input is possible. Label: "SMART BROWSER ISOLATION".
+
+Lab 4 — URL Filtering with Isolate Action
+Simple cartoon style, 1200×628px, bold outlines, flat illustration, cream and orange palette. A user visits BBC News. A URL Filtering policy screen shows "News and Media → ISOLATE" action with the "Copy-Print-Watermark" profile selected. The BBC page opens inside a glass isolation box. Icons around the box show: clipboard allowed (copy from isolation to local), print allowed, watermark stamp visible on the page. Label: "URL FILTERING — ISOLATE ACTION".
+
+Lab 5 — Cloud App Control with Isolate Action
+Simple cartoon style, 1200×628px, bold outlines, flat illustration, cream and orange palette. A user visits Costco (shopping cart icon). A Cloud App Control policy shows "Consumer / Online Shopping → ISOLATE". The Costco page opens in a glass isolation box with a watermark. Icons show no copy/paste/print but text input is allowed (keyboard icon with green checkmark). Label: "CLOUD APP CONTROL — ISOLATE ACTION".
+
+Lab 6 — Browser Isolation Logs
+Simple cartoon style, 1200×628px, bold outlines, flat illustration, cream and orange palette. A ZIA Admin Portal Web Insights Logs screen shows filtered entries for "bbc.com". Two log categories appear: "Road Warrior" (user's device request to BBC) and "Cloud Browser" (isolation container loading BBC). Arrows connect the two showing the full flow. A filter panel is visible with Location and URL Search filters applied. Label: "ISOLATION LOGS — ROAD WARRIOR & CLOUD BROWSER".
+
+Lab 7 — Document Isolation Controls
+Simple cartoon style, 1200×628px, bold outlines, flat illustration, cream and orange palette. A user in a glass isolation browser clicks a DOWNLOAD button on a file-examples website. The DOC file drops into a "Protected Storage" safe icon inside the isolation session and is instantly rendered as a PDF for viewing. A print icon is green (allowed) while download to local and copy icons are red (blocked). Label: "DOCUMENT ISOLATION — PROTECTED STORAGE".
+
+Lab 8 — Document File Isolation + Cloud Sandbox
+Simple cartoon style, 1200×628px, bold outlines, flat illustration, cream and orange palette. A suspicious XLSM file floats down from the internet. A Zscaler shield intercepts it, places it into both a glass isolation box (flattened PDF view available immediately) AND a Cloud Sandbox scanner simultaneously. The Sandbox shows a spinning analysis indicator. When complete, a green shield appears and the user can download the original. Label: "SANDBOX + ISOLATION — QUARANTINE & ISOLATE".
+
+Lab 9 — Browser-in-Browser Isolation
+Simple cartoon style, 1200×628px, bold outlines, flat illustration, cream and orange palette. Inside a glass isolation box, a full browser UI is visible — including an editable URL address bar showing "skysports.com". The user types "www.gambling.com" in the isolation URL bar but sees a ZIA block page. A label below the URL bar reads "Browser-in-Browser Mode". ZIA policies are shown enforcing even inside isolation. Label: "BROWSER-IN-BROWSER — EDITABLE URL BAR".
+
+Lab 10 — BYOD/Unmanaged Devices via User Portal 2.0 (ZPA)
+Simple cartoon style, 1200×628px, bold outlines, flat illustration, cream and orange palette. An unmanaged personal laptop (no ZCC icon) opens a ZPA User Portal page showing an M365 tile. Clicking it routes traffic through Zscaler's cloud via ZPA, opening Microsoft Office inside a glass isolation box. An IdP Conditional Access sign shows "Access denied from unmanaged device → Allowed via Zscaler". Label: "BYOD USER PORTAL 2.0 — ZPA ISOLATION".
+
+Lab 11 — Private App Access from Unmanaged Devices (ZPA Isolation)
+Simple cartoon style, 1200×628px, bold outlines, flat illustration, cream and orange palette. An unmanaged laptop (no ZCC) connects to a Gitlab server through a ZPA Browser Access gateway (showing CNAME: gitlab.thezerotrustexchange.com). The Gitlab page opens inside a "TZTE ZPA Render Only" glass isolation box. No copy/paste/download icons visible. A User Portal page on the left shows the Gitlab tile. Label: "ZPA ISOLATION — PRIVATE APP BROWSER ACCESS".

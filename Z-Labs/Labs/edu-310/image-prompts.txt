@@ -1,0 +1,45 @@
+EDU-310 Lab Guide — AI Image Prompts
+All images: 1200×628px, simple cartoon style, bold outlines, flat illustration, cream and orange palette.
+================================================================================
+
+Lab 1 — Navigating the ZDX Admin Portal
+Simple cartoon style, 1200×628px, bold outlines, flat illustration, cream and orange palette. A friendly admin character sits at a wide dashboard screen showing multiple ZDX panels: a world map with coloured ZDX Score pins, an applications list with scores, alerts panel, and inventory widgets. Small icons around the screen label each section: "Applications", "Users", "Incidents", "Deep Tracing", "Alerts". Label: "ZDX ADMIN PORTAL".
+
+Lab 2 — Troubleshooting Poor WiFi
+Simple cartoon style, 1200×628px, bold outlines, flat illustration, cream and orange palette. A user at a laptop (labelled "Curtis Hardwick") sits in an office showing weak WiFi signal bars. A ZDX Score graph in the background fluctuates between green GOOD and red POOR. A Hop View diagram shows high latency on the first hop between the device and local gateway. An SSID switch event (3Com_Wifi icon) is highlighted as the root cause. Label: "POOR WIFI — SSID CHANGE".
+
+Lab 3 — Troubleshooting High CPU
+Simple cartoon style, 1200×628px, bold outlines, flat illustration, cream and orange palette. A user ("Barry Bogdown") at a PC with a CPU temperature gauge in the red zone. A ZDX Device Health chart shows CPU usage at 100%. A process list zooms in showing "Adobe Premiere Pro.exe — 97% CPU" highlighted in red. The ZDX Score drops sharply on a graph above. Label: "HIGH CPU — ROOT CAUSE IDENTIFIED".
+
+Lab 4 — Troubleshooting Slow DNS Response
+Simple cartoon style, 1200×628px, bold outlines, flat illustration, cream and orange palette. A user ("Linda Lucas") at a laptop with a clock showing long wait times. A Page Fetch Time breakdown chart shows "DNS Resolve Time" taking up most of the bar in orange, dwarfing the Server Response Time. A Y-Engine AI analysis panel shows "HIGH DNS — 100% CONFIDENCE" as the root cause. A DNS server IP address is circled. Label: "SLOW DNS RESPONSE".
+
+Lab 5 — Troubleshooting Slow Network Router (Hop)
+Simple cartoon style, 1200×628px, bold outlines, flat illustration, cream and orange palette. A network path diagram (Cloud Path Hop View) shows a user PC connecting through routers to the cloud. One hop between a Gateway at 10.1.2.1 and router 10.0.0.254 is highlighted in orange with "496ms" latency label. ZDX Score comparison panels show "POOR" vs "GOOD" side by side. Label: "SLOW NETWORK HOP ISOLATED".
+
+Lab 6 — Analyzing Call Quality
+Simple cartoon style, 1200×628px, bold outlines, flat illustration, cream and orange palette. A user ("Grady Archie") on a Microsoft Teams video call with a poor audio signal icon (waves breaking up). A dashboard shows Audio MOS Score of 2.06 in red and Audio Latency 640ms. A Hop View diagram highlights the first hop from the PC to the local gateway (10.1.2.1) contributing 569ms of latency in orange. Label: "TEAMS CALL QUALITY — LOW MOS".
+
+Lab 7 — Device Startup & Software Reliability (Intune)
+Simple cartoon style, 1200×628px, bold outlines, flat illustration, cream and orange palette. A user ("Joni Sherman") looking frustrated at a slow-booting laptop. A Microsoft Intune Endpoint Analytics panel shows "Software Reliability: 46/100" in amber. A Software Events chart shows Chrome and Edge crash icons across multiple days. A CPU Usage chart shows "chrome.exe 94%". Label: "INTUNE ENDPOINT ANALYTICS".
+
+Lab 8 — Incident Monitoring Dashboard
+Simple cartoon style, 1200×628px, bold outlines, flat illustration, cream and orange palette. A world map (ZDX Incidents Dashboard) shows multiple incident markers clustered in a city area (Columbus, Ohio). One marker expands into WiFi, ISP, and Application incident type icons. An AI/ML brain icon feeds detection data into the incident list. An incident detail panel shows "Low ZDX Score", "High WiFi Access Point Latency" metrics. Label: "INCIDENTS OVERVIEW — AI DETECTION".
+
+Lab 9 — Self Service Notifications
+Simple cartoon style, 1200×628px, bold outlines, flat illustration, cream and orange palette. A Windows taskbar notification pops up from the Zscaler Client Connector icon: "High Resource Consumption Detected". The user opens ZCC and sees a Notifications page with a "Learn More" button. A "Was this helpful?" thumbs up/down feedback card appears. The admin sees the Self Service Dashboard with notification counts and user feedback stats. Label: "SELF SERVICE NOTIFICATIONS".
+
+Lab 10 — Sharing ZDX Snapshots
+Simple cartoon style, 1200×628px, bold outlines, flat illustration, cream and orange palette. An admin clicks a "Share" button on a ZDX user report page. A dialog box appears with fields: "Name", "Valid for: 2 hours", "Obfuscate Data: enabled". A URL appears with a "Copy" button. The URL is shared via email (envelope icon) and opens as a read-only report page on a second device. Label: "ZDX SNAPSHOTS — SHARE WITHOUT LOGIN".
+
+Lab 11 — ZDX Copilot
+Simple cartoon style, 1200×628px, bold outlines, flat illustration, cream and orange palette. A friendly AI robot character sits beside a ZDX dashboard, with a chat interface open. The admin types: "Troubleshoot device issues for Barry in the last 3 hours" and the Copilot responds with a highlighted finding: "Adobe Premiere Pro.exe — 98.8% CPU". Another chat shows: "Troubleshoot network issue for Quincy" → "High latency: 10.1.2.1 to 10.0.0.254 — 402ms". Label: "ZDX COPILOT — AI ASSISTANT".
+
+Lab 12 — ZDX Hosted Monitoring
+Simple cartoon style, 1200×628px, bold outlines, flat illustration, cream and orange palette. A Zscaler cloud data center sends probe signals (web and cloud path probes) from multiple global locations to external application URLs (Box, Outlook, ServiceNow). A dashboard shows Page Fetch Time, DNS time, latency charts across locations. A scatter plot shows probe data points by Zscaler hosted location. Label: "HOSTED MONITORING — PROBES FROM ZDX CLOUD".
+
+Lab 13 — Understanding Data Explorer
+Simple cartoon style, 1200×628px, bold outlines, flat illustration, cream and orange palette. An admin builds a custom comparison chart in a Data Explorer interface: two applications (Outlook, SharePoint) shown side by side with ZDX Score, Page Fetch Time, and DNS metrics overlaid. A table view shows average ZDX Scores per geolocation. Drag-and-drop metric selectors float above the chart. Label: "DATA EXPLORER — CUSTOM ANALYTICS".
+
+Lab 14 — Understanding Wi-Fi Dashboard
+Simple cartoon style, 1200×628px, bold outlines, flat illustration, cream and orange palette. A ZDX WiFi Dashboard shows a world map with green and red dots marking Access Points by performance. A region expands to show an Access Point detail panel with connected users, SSID, channel, signal strength, and latency metrics. One AP is highlighted in red as "POOR". A list view shows the same data in table form. Label: "WI-FI DASHBOARD — ACCESS POINT HEALTH".

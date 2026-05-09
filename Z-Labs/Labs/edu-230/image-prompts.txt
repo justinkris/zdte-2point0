@@ -1,0 +1,27 @@
+EDU-230 Lab Guide — AI Image Prompts
+All images: 1200×628px, simple cartoon style, bold outlines, flat illustration, cream and orange palette.
+================================================================================
+
+Lab 1 — Security Posture on Unprotected vs Protected Device
+Simple cartoon style, 1200×628px, bold outlines, flat illustration, cream and orange palette. Split scene: LEFT side shows a user at a laptop with a cracked red shield, malware icon, phishing hook, and ransomware skull flying around, browser showing a failed security test with red X marks. RIGHT side shows the same user with a glowing Zscaler ZIA shield repelling all threats, browser showing green checkmarks. Bold label across the middle: "BEFORE vs AFTER ZSCALER".
+
+Lab 2 — SSL Inspection & Certificate Pinning
+Simple cartoon style, 1200×628px, bold outlines, flat illustration, cream and orange palette. A Zscaler security guard in the middle of a network path opens a padlocked HTTPS envelope, reads the contents, re-seals it with a Zscaler intermediate certificate stamp, and passes it along. A side panel shows a healthcare website receiving a "DO NOT INSPECT" bypass stamp. A third inset shows a certificate pinning error icon with a broken chain, then an SSL bypass rule being added to fix it.
+
+Lab 3 — DNS Security
+Simple cartoon style, 1200×628px, bold outlines, flat illustration, cream and orange palette. A DNS query arrow labelled "www.gambling.com" travels toward the internet but is intercepted by a Zscaler DNS inspector who stamps it "BLOCKED" with a red seal. A second arrow labelled "www.sdxcentral.com" passes through freely with a green checkmark. A command prompt window in the corner shows "nslookup" timing out for gambling.com. Label: "DNS CONTROL POLICY".
+
+Lab 4 — URL Filtering & Cloud App Control
+Simple cartoon style, 1200×628px, bold outlines, flat illustration, cream and orange palette. Left: BBC News and YouTube icons blocked by a red shield labelled "URL Filter". Centre: YouTube icon with a green checkmark showing Cloud App Control overrides URL filtering. Right: ChatGPT window with a text chat allowed (green) but a file upload rejected with a red X. A layered policy stack diagram above shows URL Filter at the bottom, Cloud App Control on top.
+
+Lab 5 — Browser Isolation & Smart Isolation
+Simple cartoon style, 1200×628px, bold outlines, flat illustration, cream and orange palette. Main scene: a user at their desk views a social networking website through a thick glass isolation box floating in the cloud — no copy/paste, no download, no upload icons around the box. Inset: an AI/ML brain icon with lightning bolt automatically isolating a suspicious URL with a padlock and "SMART ISOLATION" label. The glass box is labelled "RENDER ONLY".
+
+Lab 6 — ZPA Traffic Inspection via ZIA
+Simple cartoon style, 1200×628px, bold outlines, flat illustration, cream and orange palette. A user laptop connects through a ZPA Service Edge cloud to an internal Intranet server via an App Connector box. A ZIA Enforcement Node (magnifying glass icon) sits inside the ZPA tunnel pathway, scanning traffic. Arrows show the traffic path with an inspection point. Labels: "ZPA", "ZIA INSPECTION", "APP CONNECTOR", "INTRANET". Small green shield icons show the traffic is clean.
+
+Lab 7 — Sandbox File Inspection & Real-Time Alerts
+Simple cartoon style, 1200×628px, bold outlines, flat illustration, cream and orange palette. A suspicious file download (box with parachute and question mark) floats down from the internet, is grabbed by a Zscaler robot arm, placed into a glass quarantine chamber with "QUARANTINE" label. A forensic analysis panel shows "MALICIOUS — THREAT FOUND" stamp in red. An email alert notification pops up: "Sandbox Alert". A second download attempt hits a giant STOP sign labelled "BLOCKED".
+
+Lab 8 — Deception-Based Active Defense
+Simple cartoon style, 1200×628px, bold outlines, flat illustration, cream and orange palette. A sneaky hacker in a dark hoodie approaches a glowing fake server labelled "DECOY / HONEYPOT". The moment they type credentials into a login form, a giant alarm bell rings, and a ThreatParse investigation panel lights up showing the attacker's IP, username, and location on an attack map. SOC analysts point at the screen. Label: "DECEPTION-BASED ACTIVE DEFENSE".
