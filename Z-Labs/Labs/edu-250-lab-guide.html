@@ -1,0 +1,1176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EDU-250 — Security Operations Lab Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;0,700;1,400&family=Epilogue:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --cream: #fef9f0; --cream-dark: #f5eddb; --ink: #1a1209; --ink-soft: #5a4a35; --ink-muted: #8a7660;
+  --orange: #ff6b35; --orange-light: #fff3ec; --orange-border: #ffd5c0; --amber-light: #fffbe6;
+  --green: #3a7d44; --green-light: #edf7ee; --green-border: #b2dfb4;
+  --purple: #5c35cc; --purple-light: #ece8ff; --purple-border: #c8bbff;
+  --blue-light: #e8f0fb; --blue-border: #b3ccf0; --blue: #1a6bcc;
+  --red-light: #fce8e8; --red-border: #f7c1c1; --red: #a32d2d; --border: #ede5d8;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Epilogue', sans-serif; background: var(--cream); color: var(--ink); min-height: 100vh; }
+header { padding: 40px 60px 28px; border-bottom: 1px solid var(--border); display: flex; align-items: flex-start; justify-content: space-between; gap: 32px; background: var(--cream); }
+.header-left { flex: 1; }
+.day-badge { display: inline-flex; align-items: center; gap: 6px; background: var(--ink); color: var(--cream); padding: 5px 14px; border-radius: 20px; font-size: 11px; letter-spacing: 0.1em; margin-bottom: 14px; }
+.day-badge-dot { width: 5px; height: 5px; background: var(--orange); border-radius: 50%; }
+h1 { font-family: 'Fraunces', serif; font-size: 42px; font-weight: 700; line-height: 1.0; color: var(--ink); margin-bottom: 10px; }
+h1 em { font-style: italic; font-weight: 400; color: var(--orange); }
+.header-meta-row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-top: 14px; }
+.tag { padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 500; border: 1px solid; display: inline-block; }
+.tag-zia { background: var(--blue-light); color: var(--blue); border-color: var(--blue-border); }
+.tag-zdx { background: var(--purple-light); color: var(--purple); border-color: var(--purple-border); }
+.tag-arch { background: var(--amber-light); color: #a07c00; border-color: #ffe680; }
+.tag-weight { background: var(--orange-light); color: #cc4a18; border-color: var(--orange-border); }
+.tag-sdc { background: var(--purple-light); color: var(--purple); border-color: var(--purple-border); }
+.config-panel { background: var(--ink); color: var(--cream); padding: 0 60px; position: sticky; top: 0; z-index: 200; border-bottom: 2px solid var(--orange); box-shadow: 0 4px 12px rgba(26,18,9,0.18); }
+.config-toggle-row { display: flex; align-items: center; justify-content: space-between; padding: 10px 0; cursor: pointer; user-select: none; }
+.config-toggle-title { font-size: 10px; letter-spacing: 0.16em; color: var(--orange); font-weight: 600; text-transform: uppercase; }
+.config-toggle-summary { font-size: 11px; color: #b8a18a; margin-left: 16px; font-family: 'JetBrains Mono', monospace; }
+.config-toggle-btn { background: none; border: 1px solid #3a3020; border-radius: 6px; color: #7a6a55; font-size: 11px; padding: 3px 10px; cursor: pointer; font-family: 'Epilogue', sans-serif; letter-spacing: 0.06em; transition: color 0.15s, border-color 0.15s; display: flex; align-items: center; gap: 5px; }
+.config-toggle-btn:hover { color: var(--orange); border-color: var(--orange); }
+.config-toggle-btn .chevron { transition: transform 0.25s ease; display: inline-block; }
+.config-panel.collapsed .config-toggle-btn .chevron { transform: rotate(180deg); }
+.config-body { overflow: hidden; max-height: 400px; transition: max-height 0.3s ease, opacity 0.25s ease, padding 0.25s ease; opacity: 1; padding-bottom: 18px; }
+.config-panel.collapsed .config-body { max-height: 0; opacity: 0; padding-bottom: 0; }
+.config-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; align-items: end; }
+.config-field { display: flex; flex-direction: column; gap: 6px; }
+.config-field label { font-size: 10px; letter-spacing: 0.14em; color: var(--orange); font-weight: 600; text-transform: uppercase; }
+.config-field input { background: #2a2010; color: var(--cream); border: 1px solid #3a3020; border-radius: 8px; padding: 9px 12px; font-size: 13px; font-family: 'JetBrains Mono', monospace; transition: border-color 0.15s, background 0.15s; }
+.config-field input:focus { outline: none; border-color: var(--orange); background: #1f1608; }
+.config-field input::placeholder { color: #7a6a55; font-style: italic; }
+.config-derived { display: flex; flex-wrap: wrap; gap: 16px; margin-top: 12px; padding-top: 12px; border-top: 1px solid #2a2010; font-size: 11px; color: #b8a18a; }
+.config-derived span { display: inline-flex; gap: 6px; align-items: center; }
+.config-derived strong { color: var(--orange); font-weight: 500; }
+.config-derived code { background: #2a2010; color: var(--cream); padding: 2px 8px; border-radius: 4px; font-family: 'JetBrains Mono', monospace; font-size: 11px; }
+.config-field-row { display: flex; gap: 6px; align-items: center; }
+.config-field-row input { flex: 1; min-width: 0; }
+.config-copy-btn { flex-shrink: 0; background: #2a2010; border: 1px solid #5a4a35; color: #7a6a55; border-radius: 6px; padding: 0 9px; font-size: 11px; cursor: pointer; font-family: 'JetBrains Mono', monospace; height: 38px; transition: color 0.15s, border-color 0.15s, background 0.15s; }
+.config-copy-btn:hover { color: var(--orange); border-color: var(--orange); background: #3a3020; }
+.config-copy-btn.copied { background: var(--green); color: #fff !important; border-color: var(--green); }
+.config-actions { display: flex; gap: 8px; }
+.config-btn { background: var(--orange); color: var(--ink); border: none; border-radius: 8px; padding: 9px 14px; font-size: 11px; font-weight: 600; letter-spacing: 0.06em; cursor: pointer; font-family: 'Epilogue', sans-serif; transition: background 0.15s; }
+.config-btn:hover { background: #ff8a5c; }
+.config-btn.secondary { background: #3a3020; color: var(--cream); }
+.config-btn.secondary:hover { background: #4a4030; }
+.var { background: var(--orange-light); color: #cc4a18; border: 1px dashed var(--orange-border); padding: 1px 6px; border-radius: 4px; font-family: 'JetBrains Mono', monospace; font-size: 0.92em; font-weight: 500; }
+.var.filled { background: var(--green-light); color: var(--green); border: 1px solid var(--green-border); }
+.lab-nav { padding: 12px 60px; background: var(--cream-dark); border-bottom: 1px solid var(--border); display: flex; gap: 6px; overflow-x: auto; position: sticky; top: 0; z-index: 100; }
+.lab-nav-tab { padding: 8px 14px; font-size: 11px; font-weight: 600; color: var(--ink-soft); letter-spacing: 0.06em; border-radius: 16px; cursor: pointer; white-space: nowrap; background: var(--cream); border: 1px solid var(--border); text-decoration: none; transition: all 0.15s; }
+.lab-nav-tab:hover { background: var(--orange-light); border-color: var(--orange-border); color: var(--orange); }
+.lab-nav-tab.lab-nav-done { background: var(--purple-light); border-color: var(--purple-border); color: var(--purple); }
+.lab-nav-tab.lab-nav-done::after { content: ' ✓'; font-size: 10px; }
+.progress-ribbon { background: var(--cream-dark); border-bottom: 1px solid var(--border); padding: 10px 60px; display: flex; align-items: center; gap: 14px; position: sticky; top: 0; z-index: 50; }
+.progress-label { font-size: 10px; letter-spacing: 0.14em; color: var(--ink-muted); font-weight: 600; white-space: nowrap; }
+.progress-count { font-size: 13px; font-weight: 700; color: var(--ink); white-space: nowrap; }
+.progress-count span { color: var(--orange); }
+.progress-track { flex: 1; background: var(--border); border-radius: 8px; height: 8px; overflow: hidden; min-width: 60px; }
+.progress-fill { height: 100%; background: var(--orange); border-radius: 8px; transition: width 0.4s ease; width: 0%; }
+.progress-fill.all-done { background: var(--purple); }
+main { padding: 36px 60px 60px; max-width: 1200px; margin: 0 auto; }
+.intro-block { background: var(--cream-dark); border: 1px solid var(--border); border-radius: 14px; padding: 22px 26px; margin-bottom: 28px; }
+.intro-block h2 { font-family: 'Fraunces', serif; font-size: 22px; margin-bottom: 12px; color: var(--ink); }
+.intro-block p { font-size: 13px; color: var(--ink-soft); line-height: 1.7; margin-bottom: 8px; }
+.creds-table { width: 100%; border-collapse: collapse; font-size: 12px; margin: 12px 0 4px; background: var(--cream); border-radius: 10px; overflow: hidden; }
+.creds-table th { background: var(--ink); color: var(--cream); padding: 8px 12px; text-align: left; font-weight: 500; font-size: 10px; letter-spacing: 0.08em; }
+.creds-table td { padding: 8px 12px; border-bottom: 1px solid var(--border); color: var(--ink-soft); }
+.creds-table tr:last-child td { border-bottom: none; }
+.creds-table code { font-size: 11px; }
+.lab { background: var(--cream); border: 1px solid var(--border); border-radius: 14px; margin-bottom: 14px; overflow: hidden; }
+.lab > summary { list-style: none; padding: 18px 24px; cursor: pointer; display: flex; align-items: center; gap: 16px; background: var(--cream); transition: background 0.15s; }
+.lab > summary::-webkit-details-marker { display: none; }
+.lab > summary:hover { background: var(--orange-light); }
+.lab[open] > summary { background: var(--ink); color: var(--cream); border-bottom: 1px solid var(--border); }
+.lab-num { flex-shrink: 0; width: 44px; height: 44px; border-radius: 10px; background: var(--ink); color: var(--orange); display: flex; align-items: center; justify-content: center; font-family: 'Fraunces', serif; font-weight: 700; font-size: 17px; }
+.lab[open] > summary .lab-num { background: var(--orange); color: var(--ink); }
+.lab-title { flex: 1; }
+.lab-title-name { font-family: 'Fraunces', serif; font-size: 18px; font-weight: 600; color: inherit; line-height: 1.3; }
+.lab-title-meta { font-size: 11px; color: var(--ink-muted); letter-spacing: 0.06em; margin-top: 3px; }
+.lab[open] > summary .lab-title-meta { color: #b8a18a; }
+.lab-chevron { flex-shrink: 0; font-size: 14px; color: var(--ink-muted); transition: transform 0.2s; }
+.lab[open] > summary .lab-chevron { transform: rotate(90deg); color: var(--orange); }
+.lab-body { padding: 22px 26px 26px; }
+.scenario-block { background: var(--orange-light); border-left: 3px solid var(--orange); padding: 14px 18px; border-radius: 0 10px 10px 0; margin-bottom: 16px; }
+.scenario-block-label { font-size: 10px; font-weight: 700; letter-spacing: 0.14em; color: var(--orange); margin-bottom: 6px; }
+.scenario-block-text { font-size: 13px; color: #7a3010; line-height: 1.7; }
+.objectives { margin-bottom: 16px; }
+.objectives-label { font-size: 10px; font-weight: 700; letter-spacing: 0.14em; color: var(--ink-muted); margin-bottom: 8px; }
+.objectives ul { list-style: none; padding-left: 0; }
+.objectives li { font-size: 13px; color: var(--ink-soft); padding: 4px 0 4px 22px; position: relative; line-height: 1.6; }
+.objectives li::before { content: '✓'; position: absolute; left: 0; color: var(--green); font-weight: 700; }
+.task { background: #fff; border: 1px solid var(--border); border-radius: 10px; margin-bottom: 10px; overflow: hidden; }
+.task > summary { list-style: none; padding: 12px 16px; cursor: pointer; display: flex; align-items: center; gap: 12px; transition: background 0.15s; }
+.task > summary::-webkit-details-marker { display: none; }
+.task > summary:hover { background: var(--cream-dark); }
+.task[open] > summary { background: var(--cream-dark); border-bottom: 1px solid var(--border); }
+.task-num { flex-shrink: 0; font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 600; color: var(--orange); background: var(--orange-light); padding: 3px 8px; border-radius: 5px; border: 1px solid var(--orange-border); }
+.task-title { flex: 1; font-size: 14px; font-weight: 500; color: var(--ink); }
+.task-chevron { flex-shrink: 0; font-size: 12px; color: var(--ink-muted); transition: transform 0.2s; }
+.task[open] > summary .task-chevron { transform: rotate(90deg); color: var(--orange); }
+.task-body { padding: 16px 18px 18px; }
+.task-desc { font-size: 13px; color: var(--ink-soft); line-height: 1.7; margin-bottom: 12px; font-style: italic; }
+.steps { list-style: none; counter-reset: step; }
+.steps > li { counter-increment: step; position: relative; padding: 10px 0 10px 38px; font-size: 13px; color: var(--ink); line-height: 1.7; border-bottom: 1px dashed var(--border); }
+.steps > li:last-child { border-bottom: none; }
+.steps > li::before { content: counter(step); position: absolute; left: 0; top: 10px; width: 26px; height: 26px; border-radius: 50%; background: var(--ink); color: var(--orange); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; font-family: 'JetBrains Mono', monospace; }
+.steps strong { color: var(--ink); font-weight: 600; }
+.substeps { list-style: disc; padding-left: 22px; margin-top: 6px; color: var(--ink-soft); }
+.substeps li { font-size: 13px; padding: 3px 0; line-height: 1.6; }
+.substeps ul { list-style: circle; padding-left: 22px; margin-top: 4px; }
+code { background: var(--cream-dark); padding: 1px 6px; border-radius: 4px; font-family: 'JetBrains Mono', monospace; font-size: 0.88em; color: var(--ink); border: 1px solid var(--border); }
+.callout { border-radius: 10px; padding: 12px 16px; margin: 10px 0; border: 1px solid; font-size: 12px; line-height: 1.7; }
+.callout-header { display: flex; align-items: center; gap: 6px; font-size: 10px; font-weight: 700; letter-spacing: 0.12em; margin-bottom: 6px; }
+.callout-icon { width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; flex-shrink: 0; }
+.callout-note { background: var(--amber-light); border-color: #ffe680; color: #7a5c00; }
+.callout-note .callout-header { color: #a07c00; }
+.callout-note .callout-icon { background: #ffe680; color: #a07c00; }
+.callout-tip { background: var(--blue-light); border-color: var(--blue-border); color: #153d7a; }
+.callout-tip .callout-header { color: var(--blue); }
+.callout-tip .callout-icon { background: var(--blue-border); color: var(--blue); }
+.lab-takeaway { margin-top: 18px; padding: 12px 18px; background: var(--cream-dark); border-radius: 8px; border-left: 3px solid var(--ink-muted); }
+.lab-takeaway-label { font-size: 10px; font-weight: 700; letter-spacing: 0.14em; color: var(--ink-muted); margin-bottom: 6px; }
+.lab-takeaway-text { font-size: 13px; color: var(--ink-soft); line-height: 1.7; }
+.lab-notes { margin-bottom: 16px; }
+.lab-notes-label { font-size: 10px; font-weight: 700; letter-spacing: 0.14em; color: var(--ink-muted); margin-bottom: 6px; }
+.lab-notes-input { width: 100%; min-height: 62px; border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; font-family: 'Epilogue', sans-serif; font-size: 13px; color: var(--ink-soft); background: var(--cream); resize: vertical; line-height: 1.6; transition: border-color 0.15s; }
+.lab-notes-input:focus { outline: none; border-color: var(--orange); }
+.lab-notes-input::placeholder { color: var(--ink-muted); font-style: italic; }
+.lab-questions { border-top: 1px dashed var(--border); margin-top: 16px; }
+.lab-questions > summary { list-style: none; padding: 10px 0 6px; cursor: pointer; display: flex; align-items: center; gap: 8px; font-size: 10px; font-weight: 700; letter-spacing: 0.12em; color: var(--ink-muted); user-select: none; }
+.lab-questions > summary::-webkit-details-marker { display: none; }
+.lab-questions > summary:hover { color: var(--orange); }
+.lab-questions-count { background: var(--purple-light); color: var(--purple); border: 1px solid var(--purple-border); border-radius: 10px; padding: 1px 7px; font-size: 10px; font-weight: 700; margin-left: 4px; }
+.lab-questions-count:empty { display: none; }
+.lab-questions-chevron { margin-left: auto; font-size: 11px; transition: transform 0.2s; }
+.lab-questions[open] > summary .lab-questions-chevron { transform: rotate(90deg); }
+.lab-questions-body { padding: 8px 0 2px; }
+.lab-questions-input { width: 100%; min-height: 80px; border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; font-family: 'Epilogue', sans-serif; font-size: 13px; color: var(--ink-soft); background: var(--cream); resize: vertical; line-height: 1.6; transition: border-color 0.15s; }
+.lab-questions-input:focus { outline: none; border-color: var(--orange); }
+.lab-questions-input::placeholder { color: var(--ink-muted); font-style: italic; }
+.all-questions-panel { background: var(--cream-dark); border: 1px solid var(--border); border-radius: 14px; margin-bottom: 28px; overflow: hidden; }
+.all-questions-toggle { list-style: none; padding: 18px 26px; cursor: pointer; display: flex; align-items: center; gap: 10px; user-select: none; transition: background 0.15s; }
+.all-questions-toggle::-webkit-details-marker { display: none; }
+.all-questions-toggle:hover { background: var(--orange-light); }
+.all-questions-title { font-family: 'Fraunces', serif; font-size: 20px; font-weight: 600; flex: 1; }
+.all-questions-title em { font-style: italic; font-weight: 400; color: var(--orange); }
+.all-questions-total { background: var(--purple-light); color: var(--purple); border: 1px solid var(--purple-border); border-radius: 10px; padding: 2px 9px; font-size: 11px; font-weight: 700; }
+.all-questions-total:empty { display: none; }
+.all-questions-chevron { font-size: 16px; color: var(--ink-muted); transition: transform 0.2s; }
+.all-questions-panel[open] .all-questions-chevron { transform: rotate(90deg); }
+.all-questions-body { padding: 16px 26px 20px; border-top: 1px solid var(--border); }
+.all-questions-empty { font-size: 13px; color: var(--ink-muted); font-style: italic; }
+.all-questions-entry { margin-bottom: 14px; padding-bottom: 14px; border-bottom: 1px dashed var(--border); }
+.all-questions-entry:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+.all-questions-lab-label { font-size: 10px; font-weight: 700; letter-spacing: 0.12em; color: var(--orange); margin-bottom: 5px; }
+.all-questions-text { font-size: 13px; color: var(--ink-soft); line-height: 1.7; white-space: pre-wrap; }
+.expand-controls { display: flex; gap: 8px; margin-bottom: 14px; justify-content: flex-end; }
+.expand-btn { background: var(--cream-dark); border: 1px solid var(--border); color: var(--ink-soft); padding: 6px 12px; border-radius: 16px; font-size: 11px; font-weight: 500; cursor: pointer; font-family: 'Epilogue', sans-serif; transition: all 0.15s; }
+.expand-btn:hover { background: var(--orange-light); color: var(--orange); border-color: var(--orange-border); }
+.task-check-wrap { display: flex; align-items: center; margin-right: 4px; flex-shrink: 0; }
+.task-check { appearance: none; -webkit-appearance: none; width: 18px; height: 18px; border-radius: 5px; border: 2px solid var(--border); background: transparent; cursor: pointer; position: relative; flex-shrink: 0; transition: background 0.15s, border-color 0.15s; }
+.task-check:checked { border-color: var(--green); }
+.task-check:checked::after { content: '✓'; position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); color: var(--green); font-size: 11px; font-weight: 700; }
+.task.task-done > summary .task-num { background: var(--green-light); color: var(--green); border-color: var(--green-border); }
+.cmd-wrap { position: relative; display: block; margin: 8px 0; }
+.copy-btn { position: absolute; top: 8px; right: 8px; background: #2a2010; border: 1px solid #5a4a35; color: #7a6a55; border-radius: 5px; padding: 2px 8px; font-size: 10px; font-weight: 600; cursor: pointer; font-family: 'Epilogue', sans-serif; letter-spacing: 0.08em; opacity: 0; transition: opacity 0.15s, background 0.15s, color 0.15s; line-height: 1.6; }
+.cmd-wrap:hover .copy-btn { opacity: 1; }
+.copy-btn.copied { background: var(--green); color: #fff !important; border-color: var(--green-border); opacity: 1 !important; }
+.copy-inline { display: inline-flex; align-items: center; background: none; border: 1px solid transparent; color: var(--ink-muted); font-size: 9px; cursor: pointer; padding: 0 3px; margin-left: 2px; vertical-align: middle; border-radius: 3px; line-height: 1.4; font-family: 'JetBrains Mono', monospace; opacity: 0.4; transition: opacity 0.15s, color 0.15s; }
+.copy-inline:hover { opacity: 1; color: var(--orange); border-color: var(--orange-border); background: var(--orange-light); }
+.copy-inline.copied { color: var(--green) !important; border-color: var(--green-border) !important; background: var(--green-light) !important; opacity: 1 !important; }
+footer { padding: 20px 60px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; background: var(--cream-dark); }
+.footer-left { font-family: 'Fraunces', serif; font-size: 16px; font-weight: 700; }
+.footer-left span { color: var(--orange); }
+.footer-right { font-size: 11px; color: var(--ink-muted); letter-spacing: 0.06em; }
+@media (max-width: 900px) {
+  header, .config-panel, .progress-ribbon, .lab-nav, main, footer { padding-left: 20px; padding-right: 20px; }
+  h1 { font-size: 32px; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-left">
+    <div class="day-badge"><span class="day-badge-dot"></span> EDU-250 · SECURITY OPERATIONS</div>
+    <h1>Security <em>Operations</em></h1>
+    <div class="header-meta-row">
+      <span class="tag tag-zia">Risk360</span>
+      <span class="tag tag-sdc">SDC · Read-Only 1–6</span>
+      <span class="tag tag-zdx">UVM · Labs 7–8</span>
+      <span class="tag tag-arch">Deception · AEM · EASM</span>
+      <span class="tag tag-weight">8 Labs</span>
+    </div>
+  </div>
+</header>
+
+<div class="config-panel" id="config-panel">
+  <div class="config-toggle-row" onclick="toggleConfig()">
+    <div style="display:flex;align-items:center;gap:0;">
+      <span class="config-toggle-title">⚙ Lab Configuration</span>
+      <span class="config-toggle-summary" id="config-toggle-summary"></span>
+    </div>
+    <button class="config-toggle-btn" id="config-toggle-btn" onclick="event.stopPropagation();toggleConfig()">
+      <span class="chevron">▲</span> Collapse
+    </button>
+  </div>
+  <div class="config-body" id="config-body">
+    <div class="config-grid">
+      <div class="config-field">
+        <label for="fqdn-input">Student FQDN</label>
+        <div class="config-field-row">
+          <input type="text" id="fqdn-input" placeholder="zs9901.safemarch.com" autocomplete="off">
+          <button class="config-copy-btn" onclick="copyConfigField('fqdn-input',this)">⎘</button>
+        </div>
+      </div>
+      <div class="config-field">
+        <label for="pass-input">Session Password</label>
+        <div class="config-field-row">
+          <input type="text" id="pass-input" placeholder="(from Lab Access Instructions)" autocomplete="off">
+          <button class="config-copy-btn" onclick="copyConfigField('pass-input',this)">⎘</button>
+        </div>
+      </div>
+      <div class="config-field">
+        <label for="zia-admin-input">ZIA Admin User ID</label>
+        <div class="config-field-row">
+          <input type="text" id="zia-admin-input" placeholder="ptcb15-ADMIN@thezerotrustexchange.com" autocomplete="off">
+          <button class="config-copy-btn" onclick="copyConfigField('zia-admin-input',this)">⎘</button>
+        </div>
+      </div>
+      <div class="config-actions">
+        <button class="config-btn" onclick="saveConfig()">Save</button>
+        <button class="config-btn secondary" onclick="clearConfig()">Clear</button>
+      </div>
+    </div>
+    <div class="config-derived" id="config-derived">
+      <span><strong>Student admin:</strong> <code id="d-student">student@&lt;Student FQDN&gt;</code><button class="config-copy-btn" onclick="copyDerived('d-student',this)">⎘</button></span>
+      <span><strong>ZIA Admin Portal:</strong> <code>https://admin.zscalerthree.net</code></span>
+      <span><strong>SDC Portal:</strong> <code>https://sdc.zslogin.net</code></span>
+    </div>
+  </div>
+</div>
+
+<div class="lab-nav">
+  <a class="lab-nav-tab" href="#lab1">Lab 1</a>
+  <a class="lab-nav-tab" href="#lab2">Lab 2</a>
+  <a class="lab-nav-tab" href="#lab3">Lab 3</a>
+  <a class="lab-nav-tab" href="#lab4">Lab 4</a>
+  <a class="lab-nav-tab" href="#lab5">Lab 5</a>
+  <a class="lab-nav-tab" href="#lab6">Lab 6</a>
+  <a class="lab-nav-tab" href="#lab7">Lab 7</a>
+  <a class="lab-nav-tab" href="#lab8">Lab 8</a>
+</div>
+
+<div class="progress-ribbon">
+  <span class="progress-label">PROGRESS</span>
+  <span class="progress-count"><span id="prog-done">0</span>%</span>
+  <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
+</div>
+
+<main>
+
+<div class="intro-block">
+  <h2>About this lab guide</h2>
+  <p>This is the <strong>EDU-250 Security Operations</strong> hands-on lab guide. You will build practical skills in risk management using Risk360, Zscaler Deception, Unified Vulnerability Management (UVM), and Asset Exposure Management (AEM) — the platform tools for identifying, quantifying, and mitigating threats across your organization.</p>
+  <p><strong>Labs 1–6</strong> use the <strong>Zscaler Solutions Demo Centre (SDC)</strong> at <code>https://sdc.zslogin.net</code> as a <strong>Read-Only Administrator</strong>. <strong>Labs 7–8</strong> use the UVM portal with credentials from your Lab Access Instructions.</p>
+  <table class="creds-table">
+    <thead><tr><th>Credential</th><th>Value</th></tr></thead>
+    <tbody>
+      <tr><td>Session Password</td><td><code>7Z@uP)5c</code></td></tr>
+      <tr><td>ZIA Admin User ID</td><td><code>ptcb15-ADMIN@thezerotrustexchange.com</code></td></tr>
+      <tr><td>OT Username</td><td><code>ptcb15-OT@thezerotrustexchange.com</code></td></tr>
+      <tr><td>HR Department Username</td><td><code>ptcb15-HR@thezerotrustexchange.com</code></td></tr>
+      <tr><td>IT Department Username</td><td><code>ptcb15-IT@thezerotrustexchange.com</code></td></tr>
+      <tr><td>MKT Department Username</td><td><code>ptcb15-MKT@thezerotrustexchange.com</code></td></tr>
+      <tr><td>Contractor Username</td><td><code>ptcb15-CON@thezerotrustexchange.com</code></td></tr>
+      <tr><td>Sales Department Username</td><td><code>ptcb15-SALES@thezerotrustlab.com</code></td></tr>
+      <tr><td>ZIA Admin Portal URL</td><td><code>https://admin.zscalerthree.net</code></td></tr>
+    </tbody>
+  </table>
+</div>
+
+<details class="all-questions-panel" id="all-questions-panel">
+  <summary class="all-questions-toggle">
+    <span class="all-questions-title">My <em>Questions</em></span>
+    <span class="all-questions-total" id="all-questions-total"></span>
+    <span class="all-questions-chevron">›</span>
+  </summary>
+  <div class="all-questions-body">
+    <p class="all-questions-empty" id="all-questions-empty">No questions yet — use the questions section at the end of each lab to add them.</p>
+    <div id="all-questions-list"></div>
+  </div>
+</details>
+
+<div class="expand-controls">
+  <button class="expand-btn" onclick="expandAll()">Expand all</button>
+  <button class="expand-btn" onclick="collapseAll()">Collapse all</button>
+</div>
+
+<!-- LAB 1 -->
+<details class="lab" id="lab1">
+  <summary>
+    <div class="lab-num">01</div>
+    <div class="lab-title">
+      <div class="lab-title-name">Navigating to the Risk360 Portal</div>
+      <div class="lab-title-meta">Risk360 · Dashboard · Factors · SDC Read-Only</div>
+    </div>
+    <div class="lab-chevron">›</div>
+  </summary>
+  <div class="lab-body">
+    <div class="scenario-block">
+      <div class="scenario-block-label">SCENARIO</div>
+      <div class="scenario-block-text">Risk360 is a 360-degree risk management platform that provides holistic risk measurement, quantifies high-risk activities, and maps contributing factors to frameworks like MITRE and NIST. In this lab you will log in via the Solutions Demo Centre and explore the Risk360 Dashboard and Factors page.</div>
+    </div>
+    <div class="objectives">
+      <div class="objectives-label">OBJECTIVES</div>
+      <ul>
+        <li>Log in to the SDC and navigate to the Risk360 portal</li>
+        <li>Explore the Organizational Risk Score and Risk Score Trend</li>
+        <li>View Risk Events by Location and Contributing Factors by Entity</li>
+        <li>Analyse attack stages in the Factors tab and explore the Tree View</li>
+      </ul>
+    </div>
+    <details class="task">
+      <summary>
+        <div class="task-num">1.1</div>
+        <div class="task-title">View Risk360 Dashboard</div>
+        <div class="task-chevron">›</div>
+      </summary>
+      <div class="task-body">
+        <p class="task-desc">Familiarize yourself with Organizational Risk Score, Risk Score Trend, Risk Events by Location, and Contributing Factors by Entity.</p>
+        <ol class="steps">
+          <li>On the Corp: Client PC (or any browser), log in to the Solution Demo Centre at <code>https://sdc.zslogin.net</code> using your <strong>ZIA_ADMIN_USER_ID</strong> and <strong>Session Password</strong>.</li>
+          <li>Click the <strong>Risk360</strong> tile to navigate to the Risk360 portal.
+            <div class="callout callout-tip" style="margin-top:8px;"><div class="callout-header"><div class="callout-icon">→</div>TIP</div>You can connect directly from your local laptop — log in to <code>https://sdc.zslogin.net</code>, go to ZIdentity Dashboard, and use your SDC ADMIN_USER_ID.</div>
+          </li>
+          <li>Click the <strong>Dashboard</strong> tab in the left menu.</li>
+          <li>View the <strong>Organization Risk Score</strong> dashboard — it shows the Zscaler-computed risk score for your organization and the industry peer average, across 4 categories: External Attack Surface, Compromise, Lateral Propagation, and Data Loss. Severity ranges: Low (0–25), Medium (26–50), High (51–75), Critical (76–100).</li>
+          <li>In the <strong>Risk Score Trend</strong> tile, click <strong>Key Events</strong> to view the top 10 events impacting the risk score. Hover over any event to view the score change and contributing factors.
+            <div class="callout callout-note" style="margin-top:8px;"><div class="callout-header"><div class="callout-icon">i</div>NOTE</div>The Risk Score Trend graph shows the Zscaler-computed and industry peer average trend for the last 90 days.</div>
+          </li>
+          <li>In the <strong>Risk Events by Location</strong> tile, view the top risky locations. Hover over any specific location to view its details.</li>
+          <li>Navigate to the <strong>Factors</strong> tab in the left menu. Click each attack stage — <strong>External Attack Surface</strong>, <strong>Compromise</strong>, <strong>Lateral Propagation</strong>, <strong>Data Loss</strong> — to view the Factor, Category, and Risk Score for the past 30 days.
+            <div class="callout callout-note" style="margin-top:8px;"><div class="callout-header"><div class="callout-icon">i</div>NOTE</div>The Factors page lists contributing factors affecting your organization's risk score. Risk360 quantifies each by risk weight and maps them to MITRE, NIST, and integrations like CrowdStrike.</div>
+          </li>
+          <li>Under the <strong>Entity</strong> column, click entities affected by a factor (e.g. 3rd Parties, Applications, Workforce) to view their details.</li>
+          <li>Switch to the <strong>Tree View</strong> and explore the parameters — External Attack Surface, Compromise, Lateral Propagation, and Data Loss — by entities: Workforce, 3rd Parties, Applications, and Assets.</li>
+        </ol>
+      </div>
+    </details>
+    <div class="lab-takeaway">
+      <div class="lab-takeaway-label">WHY THIS MATTERS</div>
+      <p class="lab-takeaway-text">The Risk360 Dashboard gives security teams a unified, quantified view of organizational risk scored against industry peers. Understanding the Factors page helps prioritize remediation by showing which entities and attack stages drive the highest risk weight.</p>
+    </div>
+    <details class="lab-questions" id="q-lab1">
+      <summary><span>?</span> MY QUESTIONS <span class="lab-questions-count" id="q-count-lab1"></span><span class="lab-questions-chevron">›</span></summary>
+      <div class="lab-questions-body"><textarea class="lab-questions-input" id="q-input-lab1" placeholder="Type any questions to follow up later…" rows="3"></textarea></div>
+    </details>
+  </div>
+</details>
+
+<!-- LAB 2 -->
+<details class="lab" id="lab2">
+  <summary>
+    <div class="lab-num">02</div>
+    <div class="lab-title">
+      <div class="lab-title-name">View Reports in Risk360</div>
+      <div class="lab-title-meta">CISO Board · Attack Surface · Cybersecurity Maturity · SEC Disclosures</div>
+    </div>
+    <div class="lab-chevron">›</div>
+  </summary>
+  <div class="lab-body">
+    <div class="scenario-block">
+      <div class="scenario-block-label">SCENARIO</div>
+      <div class="scenario-block-text">Zscaler Risk360 provides detailed reports — CISO board slides, attack surface reports, and cybersecurity maturity assessments — that help organizations assess risk posture and assist with compliance and mitigation. In this lab you will navigate and explore each report type.</div>
+    </div>
+    <div class="objectives">
+      <div class="objectives-label">OBJECTIVES</div>
+      <ul>
+        <li>Navigate to the Reports page in Risk360</li>
+        <li>Review all available report categories</li>
+        <li>Understand the purpose and format of each report type</li>
+      </ul>
+    </div>
+    <details class="task">
+      <summary>
+        <div class="task-num">2.1</div>
+        <div class="task-title">View CISO Board Report, Attack Surface Report, Cybersecurity Maturity Assessment, SEC Disclosures</div>
+        <div class="task-chevron">›</div>
+      </summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>Click the <strong>Reports</strong> tab in the left panel of the Risk360 portal.</li>
+          <li>From the Reports page, view and download the available risk-related reports.</li>
+          <li>Click <strong>View All</strong> at the bottom of any category to see all reports for that type.</li>
+        </ol>
+        <div class="callout callout-note"><div class="callout-header"><div class="callout-icon">i</div>REPORT TYPES</div>
+          <ul style="margin:0;padding-left:18px;color:#7a5c00;">
+            <li><strong>CISO Board Slides:</strong> Board-ready PowerPoint slides quantifying how Risk360 measures and reduces risk. Generated weekly.</li>
+            <li><strong>Attack Surface Report:</strong> Details your organization's internet-exposed applications and servers and their possible exploitation.</li>
+            <li><strong>Cybersecurity Maturity Assessment:</strong> Holistic view of your zero-trust journey, generated by a custom Zscaler LLM.</li>
+            <li><strong>SEC Disclosures:</strong> Sample format for addressing the SEC's new cyber-risk reporting regulations.</li>
+            <li><strong>Miscellaneous:</strong> Risk management materials including board guidance on managing cyber risk.</li>
+          </ul>
+        </div>
+      </div>
+    </details>
+    <div class="lab-takeaway">
+      <div class="lab-takeaway-label">WHY THIS MATTERS</div>
+      <p class="lab-takeaway-text">Risk360's reporting suite bridges technical risk data and executive communication. CISO Board Slides and SEC Disclosures turn risk scores into business-language deliverables, reducing the time security teams spend preparing board-level materials.</p>
+    </div>
+    <details class="lab-questions" id="q-lab2">
+      <summary><span>?</span> MY QUESTIONS <span class="lab-questions-count" id="q-count-lab2"></span><span class="lab-questions-chevron">›</span></summary>
+      <div class="lab-questions-body"><textarea class="lab-questions-input" id="q-input-lab2" placeholder="Type any questions to follow up later…" rows="3"></textarea></div>
+    </details>
+  </div>
+</details>
+
+<!-- LAB 3 -->
+<details class="lab" id="lab3">
+  <summary>
+    <div class="lab-num">03</div>
+    <div class="lab-title">
+      <div class="lab-title-name">Viewing Assets in Risk360</div>
+      <div class="lab-title-meta">Asset Overview · Authentication Status · Risky Asset Inventory</div>
+    </div>
+    <div class="lab-chevron">›</div>
+  </summary>
+  <div class="lab-body">
+    <div class="scenario-block">
+      <div class="scenario-block-label">SCENARIO</div>
+      <div class="scenario-block-text">Asset-level risk in Risk360 aggregates and visualizes the total number of assets, highlights risky ones, and provides drilldowns to understand what's driving risk. In this lab you will explore the Assets page across all its views.</div>
+    </div>
+    <div class="objectives">
+      <div class="objectives-label">OBJECTIVES</div>
+      <ul>
+        <li>Navigate to the Assets page in Risk360</li>
+        <li>Explore the Risk Score (3D graph) and Location (world map) views</li>
+        <li>View the Distribution of Assets by Authentication Status</li>
+        <li>Inspect the Authenticated Assets chart and Risky Asset Inventory</li>
+      </ul>
+    </div>
+    <details class="task">
+      <summary>
+        <div class="task-num">3.1</div>
+        <div class="task-title">View Asset Page (Overview, Authentication Status, Authenticated Assets, Risky Asset Inventory)</div>
+        <div class="task-chevron">›</div>
+      </summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>Click the <strong>Assets</strong> tab in the left panel of the Risk360 portal.</li>
+          <li>In the <strong>Overview</strong> section, view your assets in both views:
+            <ul class="substeps">
+              <li><strong>Risk Score:</strong> A 3D graph with Risk Score, Asset Count, and Days. Colour codes: No Risk (0–1), Low (&gt;1–25), Medium (&gt;25–50), High (&gt;50–75), Critical (&gt;75–100).</li>
+              <li><strong>Location:</strong> World map showing assets by country. Hover to see asset count. Bubble size indicates relative count. The Top Risky Locations section (bottom-left) lists locations with the highest percentage of risky assets.</li>
+            </ul>
+          </li>
+          <li>View the <strong>Distribution of Assets by Authentication Status</strong> pie chart — shows the percentage split between authenticated and unauthenticated assets. Total count is shown at the center.</li>
+          <li>At the right, view the <strong>Authenticated Assets</strong> chart — shows types of assets visible in your organization's traffic with their count (authenticated assets only).</li>
+          <li>Scroll down to view the <strong>Risky Asset Inventory</strong> table — top 1,000 risky assets. For each asset: Asset ID, Private IP Address, Username, Asset Type, Authentication Status, Risk Score, Last Seen, Location.</li>
+          <li>Click any <strong>Asset ID</strong> to open its detailed page — Asset Risk Score, Asset Risk Score Trend, Asset Details, and Asset Location.</li>
+        </ol>
+      </div>
+    </details>
+    <div class="lab-takeaway">
+      <div class="lab-takeaway-label">WHY THIS MATTERS</div>
+      <p class="lab-takeaway-text">Asset-level risk lets security teams move beyond org-wide scores and prioritize remediation at the individual device level. The authentication status view immediately surfaces unauthenticated (shadow) assets that pose unquantified risk.</p>
+    </div>
+    <details class="lab-questions" id="q-lab3">
+      <summary><span>?</span> MY QUESTIONS <span class="lab-questions-count" id="q-count-lab3"></span><span class="lab-questions-chevron">›</span></summary>
+      <div class="lab-questions-body"><textarea class="lab-questions-input" id="q-input-lab3" placeholder="Type any questions to follow up later…" rows="3"></textarea></div>
+    </details>
+  </div>
+</details>
+
+<!-- LAB 4 -->
+<details class="lab" id="lab4">
+  <summary>
+    <div class="lab-num">04</div>
+    <div class="lab-title">
+      <div class="lab-title-name">Analyzing Risk with MITRE ATT&amp;CK and NIST CSF</div>
+      <div class="lab-title-meta">MITRE ATT&amp;CK · NIST CSF · TTP Mapping · Frameworks</div>
+    </div>
+    <div class="lab-chevron">›</div>
+  </summary>
+  <div class="lab-body">
+    <div class="scenario-block">
+      <div class="scenario-block-label">SCENARIO</div>
+      <div class="scenario-block-text">Risk360 maps your Zscaler protections to MITRE ATT&amp;CK and NIST CSF so you can see exactly which attack techniques are covered, which are misconfigured, and what can be changed to strengthen your security posture.</div>
+    </div>
+    <div class="objectives">
+      <div class="objectives-label">OBJECTIVES</div>
+      <ul>
+        <li>Navigate to the Frameworks section in Risk360</li>
+        <li>Explore the MITRE ATT&amp;CK coverage legend and TTP tiles</li>
+        <li>Drill into individual TTPs to view product mapping and Risk360 factor mapping</li>
+        <li>Repeat the exploration using NIST CSF</li>
+      </ul>
+    </div>
+    <details class="task">
+      <summary>
+        <div class="task-num">4.1</div>
+        <div class="task-title">Analyzing Risk — MITRE ATT&amp;CK Framework</div>
+        <div class="task-chevron">›</div>
+      </summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>Click <strong>Frameworks</strong> in the left menu. Navigate to <strong>MITRE ATT&amp;CK</strong>.</li>
+          <li>In the <strong>Legend</strong> section on the left, review:
+            <ul class="substeps">
+              <li><strong>Coverage:</strong> Donut chart showing the split between techniques covered by Zscaler and those not. The center shows total percentage coverage.</li>
+              <li><strong>Configurations:</strong> Number of correctly configured vs. misconfigured policies.</li>
+              <li>Use the arrow (top-right of the legend) to show or hide it.</li>
+            </ul>
+          </li>
+          <li>View the <strong>TTP Tiles</strong> on the right. Hover over any tile to see details. Click a tile (e.g. <em>Active Scanning</em>) to open the details drawer:
+            <ul class="substeps">
+              <li>Technique name, ID, and sub-technique coverage state</li>
+              <li><strong>Details:</strong> Link to the MITRE website</li>
+              <li><strong>MITRE Description</strong> and <strong>MITRE Category</strong> (Detect / Prevent / Remediate)</li>
+              <li><strong>Zscaler Comment:</strong> How Zscaler mitigates this technique</li>
+              <li><strong>TTP to Zscaler Product Mapping:</strong> Which Zscaler feature covers this TTP and whether it is licensed</li>
+              <li><strong>TTP to Risk360 Factor Mapping:</strong> Maps sub-techniques to Risk360 Factors with their current status</li>
+              <li><strong>Notes:</strong> Any notes you have added</li>
+            </ul>
+          </li>
+        </ol>
+      </div>
+    </details>
+    <details class="task">
+      <summary>
+        <div class="task-num">4.2</div>
+        <div class="task-title">Analyzing Risk with NIST CSF</div>
+        <div class="task-chevron">›</div>
+      </summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>From <strong>Frameworks</strong>, navigate to <strong>NIST CSF</strong>.</li>
+          <li>Review the Legend — Coverage and Configurations sections, same as MITRE.</li>
+          <li>View the TTP Tiles and hover to see details.</li>
+          <li>Click any TTP tile to open the drawer:
+            <ul class="substeps">
+              <li>Technique name, its <strong>NIST ID</strong>, and sub-technique state</li>
+              <li><strong>Details:</strong> Link to the NIST CSF PDF</li>
+              <li><strong>NIST Description</strong> and <strong>Zscaler Comment</strong></li>
+              <li><strong>TTP to Zscaler Product Mapping</strong> and licensing status</li>
+              <li><strong>TTP to Risk360 Factor Mapping</strong></li>
+            </ul>
+          </li>
+          <li>Explore Sub-Techniques to view sub-technique status, product mapping, and whether configurations are correctly set.</li>
+        </ol>
+      </div>
+    </details>
+    <div class="lab-takeaway">
+      <div class="lab-takeaway-label">WHY THIS MATTERS</div>
+      <p class="lab-takeaway-text">Mapping Zscaler protections to MITRE ATT&amp;CK and NIST CSF gives executives and auditors a recognised third-party framework to validate coverage — while giving engineers a direct line from misconfigured policies to the specific attack techniques they leave exposed.</p>
+    </div>
+    <details class="lab-questions" id="q-lab4">
+      <summary><span>?</span> MY QUESTIONS <span class="lab-questions-count" id="q-count-lab4"></span><span class="lab-questions-chevron">›</span></summary>
+      <div class="lab-questions-body"><textarea class="lab-questions-input" id="q-input-lab4" placeholder="Type any questions to follow up later…" rows="3"></textarea></div>
+    </details>
+  </div>
+</details>
+
+<!-- LAB 5 -->
+<details class="lab" id="lab5">
+  <summary>
+    <div class="lab-num">05</div>
+    <div class="lab-title">
+      <div class="lab-title-name">Understanding Financial Risk in Risk360</div>
+      <div class="lab-title-meta">Financial Summary · Monte Carlo Simulation · Breach Probability</div>
+    </div>
+    <div class="lab-chevron">›</div>
+  </summary>
+  <div class="lab-body">
+    <div class="scenario-block">
+      <div class="scenario-block-label">SCENARIO</div>
+      <div class="scenario-block-text">The Financial Risk page quantifies your organization's potential financial loss exposure based on its current risk score, models how Zscaler reduces that exposure, and shows which factors drive the highest financial impact.</div>
+    </div>
+    <div class="objectives">
+      <div class="objectives-label">OBJECTIVES</div>
+      <ul>
+        <li>Navigate to the Financial Risk page from the Organization Risk Score Dashboard</li>
+        <li>View Financial Summary and inherent vs. residual risk</li>
+        <li>Run the Monte Carlo Simulation for loss modelling</li>
+        <li>Analyse Average Yearly Exposure and Breach Probability</li>
+      </ul>
+    </div>
+    <details class="task">
+      <summary>
+        <div class="task-num">5.1</div>
+        <div class="task-title">Exploring the Financial Risk Page</div>
+        <div class="task-chevron">›</div>
+      </summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>On the Organization Risk Score Dashboard, hover over the <strong>$</strong> icon to view the Financial Risk, then click <strong>View Details</strong> to open the full Financial Risk page.</li>
+          <li>View the <strong>Financial Summary</strong> — the organization's risk-score-based financial exposure and the exposure without Zscaler. This section also estimates how much exposure can be reduced by implementing the recommended actions from the Top 10 Financial Contributing Factors section.</li>
+          <li>Click <strong>Monte Carlo Simulation</strong> (top-right) to simulate numerous random loss observations in terms of Inherent Risk, Residual Risk, and Average Yearly Loss.</li>
+          <li>View the <strong>Average Yearly Exposure</strong> bar graph — shows average yearly loss in millions of dollars for each risk parameter.</li>
+          <li>Scroll down to view the <strong>Breach Probability</strong> section — models the statistical likelihood of a breach given the current risk posture.</li>
+        </ol>
+      </div>
+    </details>
+    <div class="lab-takeaway">
+      <div class="lab-takeaway-label">WHY THIS MATTERS</div>
+      <p class="lab-takeaway-text">Financial quantification bridges the gap between security teams and the CFO/board. Monte Carlo simulation provides a statistically grounded range of outcomes rather than a single point estimate, making budget conversations more credible.</p>
+    </div>
+    <details class="lab-questions" id="q-lab5">
+      <summary><span>?</span> MY QUESTIONS <span class="lab-questions-count" id="q-count-lab5"></span><span class="lab-questions-chevron">›</span></summary>
+      <div class="lab-questions-body"><textarea class="lab-questions-input" id="q-input-lab5" placeholder="Type any questions to follow up later…" rows="3"></textarea></div>
+    </details>
+  </div>
+</details>
+
+<!-- LAB 6 -->
+<details class="lab" id="lab6">
+  <summary>
+    <div class="lab-num">06</div>
+    <div class="lab-title">
+      <div class="lab-title-name">Navigating the Deception Portal</div>
+      <div class="lab-title-meta">Investigate Dashboard · Events · Orchestrate · SIEM Integration</div>
+    </div>
+    <div class="lab-chevron">›</div>
+  </summary>
+  <div class="lab-body">
+    <div class="scenario-block">
+      <div class="scenario-block-label">SCENARIO</div>
+      <div class="scenario-block-text">Zscaler Deception deploys decoys across your network. When attackers interact with them, Deception generates high-fidelity, real-time alerts with full attacker context. In this lab you will explore the Investigate dashboard and Orchestrate menu.</div>
+    </div>
+    <div class="objectives">
+      <div class="objectives-label">OBJECTIVES</div>
+      <ul>
+        <li>Access the Deception portal via SDC and navigate to the Investigate dashboard</li>
+        <li>View the Alerts Area, Filters, Customization Options, and Timeline</li>
+        <li>Explore the Orchestrate menu — Rules, SIEM Integration, API Tokens, Containment, Service Connectors</li>
+      </ul>
+    </div>
+    <details class="task">
+      <summary>
+        <div class="task-num">6.1</div>
+        <div class="task-title">Viewing Events on the Investigate Dashboard</div>
+        <div class="task-chevron">›</div>
+      </summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>On the Corp: Client PC (or any browser), log in to the Solution Demo Centre at <code>https://sdc.zslogin.net</code> with your <strong>ZIA_ADMIN_USER_ID</strong> and <strong>Session Password</strong>.</li>
+          <li>Click the <strong>Deception</strong> tile to navigate to the Deception portal.</li>
+          <li>Click <strong>Investigate</strong> to open the event dashboard.
+            <div class="callout callout-note" style="margin-top:8px;"><div class="callout-header"><div class="callout-icon">i</div>NOTE</div>All events generated by deployed decoys are shown on the Investigate dashboard. When an attacker interacts with a decoy, Deception detects the threat, collects attacker intent data, and generates high-fidelity real-time alerts.</div>
+          </li>
+          <li>On the dashboard, view and interact with:
+            <ul class="substeps">
+              <li><strong>Alerts Area:</strong> Graphical representation of all events and connected components.</li>
+              <li><strong>Filters:</strong> Filter events using queries and predefined time ranges. Build complex queries using the purpose-built query language.</li>
+              <li><strong>Dashboard Customization Options:</strong> Filter by level of detail, threat level, decoy type, etc.</li>
+              <li><strong>Timeline:</strong> Manually filter events by time range.</li>
+            </ul>
+          </li>
+          <li>Click any event to view its details, then select a preferred action from the <strong>Actions</strong> menu: Containment (Zscaler or third-party), Mark as safe, Block attacker IP, or Delete attacker from dashboard.</li>
+        </ol>
+      </div>
+    </details>
+    <details class="task">
+      <summary>
+        <div class="task-num">6.2</div>
+        <div class="task-title">Explore Orchestrate Menu in Deception Dashboard</div>
+        <div class="task-chevron">›</div>
+      </summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>Navigate to <strong>Orchestrate &gt; Rules</strong> to view rules that automate workflows, notifications, and containment in response to threat detection.</li>
+          <li>View the rules list — for each rule: Priority, Name, Condition, Tasks, Types, Actions. Note the <strong>Pause Orchestration</strong> button.</li>
+          <li>Navigate to <strong>Orchestrate &gt; SIEM Integration</strong> to view integrated third-party SIEM solutions.</li>
+          <li>Navigate to <strong>Orchestrate &gt; API Tokens</strong> to manage API tokens for programmatic access — deploying decoys and managing event logs.</li>
+          <li>Navigate to <strong>Orchestrate &gt; Containment</strong> to view third-party security solutions for isolating active attackers with automated or manual containment.</li>
+          <li>Navigate to <strong>Orchestrate &gt; Service Connectors</strong> to view connectors that forward events and audit logs from the Deception Admin Portal to your SIEM.</li>
+        </ol>
+      </div>
+    </details>
+    <div class="lab-takeaway">
+      <div class="lab-takeaway-label">WHY THIS MATTERS</div>
+      <p class="lab-takeaway-text">Deception detects attackers who have bypassed perimeter controls — decoys generate near-zero false positives since legitimate users never touch them. The Orchestrate menu shows how automated containment and SIEM integration reduce attacker dwell time from days to minutes.</p>
+    </div>
+    <details class="lab-questions" id="q-lab6">
+      <summary><span>?</span> MY QUESTIONS <span class="lab-questions-count" id="q-count-lab6"></span><span class="lab-questions-chevron">›</span></summary>
+      <div class="lab-questions-body"><textarea class="lab-questions-input" id="q-input-lab6" placeholder="Type any questions to follow up later…" rows="3"></textarea></div>
+    </details>
+  </div>
+</details>
+
+<!-- LAB 7 -->
+<details class="lab" id="lab7">
+  <summary>
+    <div class="lab-num">07</div>
+    <div class="lab-title">
+      <div class="lab-title-name">Exploring Zscaler UVM</div>
+      <div class="lab-title-meta">Data Ingestion · Scoring · Findings · Tickets · Remediation · Dashboards</div>
+    </div>
+    <div class="lab-chevron">›</div>
+  </summary>
+  <div class="lab-body">
+    <div class="scenario-block">
+      <div class="scenario-block-label">SCENARIO</div>
+      <div class="scenario-block-text">Zscaler Unified Vulnerability Management (UVM) provides a holistic view of your organization's risk by ingesting data from multiple sources, applying custom scoring, and surfacing contextual findings. In this lab you will work through data ingestion, scoring customization, findings exploration, and remediation workflows including dashboards.</div>
+    </div>
+    <div class="objectives">
+      <div class="objectives-label">OBJECTIVES</div>
+      <ul>
+        <li>Ingest vulnerability data from multiple sources into UVM</li>
+        <li>Customize scoring to reflect your organization's risk context</li>
+        <li>Explore contextual findings, drill into details, and see how custom scoring changes severity</li>
+        <li>Operationalize findings into tickets and remediation workflows</li>
+        <li>Build and interpret Risk and Remediation dashboards</li>
+      </ul>
+    </div>
+    <details class="task">
+      <summary>
+        <div class="task-num">7.1</div>
+        <div class="task-title">Ingest Data from Many Different Sources</div>
+        <div class="task-chevron">›</div>
+      </summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>Access the UVM portal using the credentials provided in your Lab Access Instructions.</li>
+          <li>Navigate to <strong>Settings &gt; Data Sources</strong> to view the list of integrated connectors (e.g. Qualys, Tenable, CrowdStrike, Microsoft Defender).</li>
+          <li>Review ingested data — each connector normalizes severity and CVE data across tools into the unified finding store.</li>
+          <li>Verify that asset records have been populated and findings are linked to their respective assets.</li>
+        </ol>
+      </div>
+    </details>
+    <details class="task">
+      <summary>
+        <div class="task-num">7.2</div>
+        <div class="task-title">Customize Scoring to Meet Your Organization's Needs</div>
+        <div class="task-chevron">›</div>
+      </summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>Navigate to <strong>Settings &gt; Risk Scoring</strong>.</li>
+          <li>Review the risk-raising factors that can increase a score:
+            <ul class="substeps">
+              <li>Is the user or asset deemed risky?</li>
+              <li>Does the asset have PII?</li>
+              <li>Is it open to the Internet?</li>
+              <li>Is the asset considered a crown jewel?</li>
+              <li>Any other contextual information from your data sources</li>
+            </ul>
+          </li>
+          <li>Choose how much these factors will increase your risk score and save the configuration.</li>
+          <li>In the mitigating controls section, configure whether the vulnerable asset is protected by an EDR tool, WAF, or network security solution, and set how much these will decrease the risk score.</li>
+          <li>Observe how the custom scoring transforms raw CVSS scores into contextual business risk scores.</li>
+        </ol>
+      </div>
+    </details>
+    <details class="task">
+      <summary>
+        <div class="task-num">7.3</div>
+        <div class="task-title">Explore Findings</div>
+        <div class="task-chevron">›</div>
+      </summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>Click <strong>Findings</strong> in the left panel menu.</li>
+          <li>Explore all contextual findings — identify issues causing the most risk and look for common trends.</li>
+          <li>Type <code>Microsoft</code> in the search bar at the top, then press Enter to narrow the results.</li>
+          <li>Click on a finding, such as <em>The version of Microsoft Edge installed</em>.</li>
+          <li>View the comprehensive details: which tool reported the issue, when it was last seen, and which fix is needed.</li>
+          <li>Scroll down to view the <strong>Score Details</strong> — how your custom business context transformed the original CVSS severity into a contextual risk score.</li>
+        </ol>
+      </div>
+    </details>
+    <details class="task">
+      <summary>
+        <div class="task-num">7.4</div>
+        <div class="task-title">Operationalize Risk Findings</div>
+        <div class="task-chevron">›</div>
+      </summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>From the Findings list, select one or more high-priority findings.</li>
+          <li>Use the <strong>Actions</strong> menu to create a remediation ticket, assign it to an owner, and set a due date.</li>
+          <li>Review the ticket creation workflow — UVM integrates with ITSM tools (ServiceNow, Jira) to push tickets directly into existing workflows.</li>
+          <li>Observe how findings can be grouped by asset, CVE, or business unit to streamline bulk remediation assignments.</li>
+        </ol>
+      </div>
+    </details>
+    <details class="task">
+      <summary>
+        <div class="task-num">7.5</div>
+        <div class="task-title">Understanding Tickets</div>
+        <div class="task-chevron">›</div>
+      </summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>Navigate to the <strong>Tickets</strong> section in the left menu.</li>
+          <li>Review open tickets — view Status, Priority, Assignee, Due Date, and linked Findings.</li>
+          <li>Click into a ticket to view all associated findings, the impacted asset list, and remediation notes.</li>
+          <li>Observe how ticket status changes propagate back to the Findings view, marking remediated findings as resolved.</li>
+        </ol>
+      </div>
+    </details>
+    <details class="task">
+      <summary>
+        <div class="task-num">7.6</div>
+        <div class="task-title">Exploring Remediation Dashboard</div>
+        <div class="task-chevron">›</div>
+      </summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>Navigate to <strong>Dashboards &gt; Remediation</strong>.</li>
+          <li>View key metrics: Mean Time to Remediate (MTTR), open vs. closed ticket trend, and findings by severity over time.</li>
+          <li>Identify teams or asset owners with the most overdue tickets.</li>
+          <li>Use the date range filter to compare remediation velocity across time periods.</li>
+        </ol>
+      </div>
+    </details>
+    <details class="task">
+      <summary>
+        <div class="task-num">7.7</div>
+        <div class="task-title">Understanding Risk Dashboard</div>
+        <div class="task-chevron">›</div>
+      </summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>Navigate to <strong>Dashboards &gt; Risk</strong>.</li>
+          <li>Review the overall risk score trend over time, broken down by severity category.</li>
+          <li>Explore the top risky assets and top risky findings to identify the highest-impact items.</li>
+          <li>Note how custom scoring from Task 7.2 surfaces assets that raw CVSS scores alone would not have prioritized.</li>
+        </ol>
+      </div>
+    </details>
+    <details class="task">
+      <summary>
+        <div class="task-num">7.8</div>
+        <div class="task-title">Build Your Own Dashboard</div>
+        <div class="task-chevron">›</div>
+      </summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>Navigate to <strong>Dashboards</strong> and click <strong>New Dashboard</strong>.</li>
+          <li>Add widgets relevant to your role — for example: open critical findings, remediation SLA compliance, top 10 risky assets by business unit.</li>
+          <li>Arrange and resize widgets to create a view that matches your operational needs.</li>
+          <li>Save the dashboard and set it as your default view.</li>
+        </ol>
+      </div>
+    </details>
+    <div class="lab-takeaway">
+      <div class="lab-takeaway-label">WHY THIS MATTERS</div>
+      <p class="lab-takeaway-text">UVM closes the gap between vulnerability discovery and remediation at scale. By adding business context to raw CVSS scores and integrating with ITSM tools, security teams drive measurable risk reduction through accountable, time-bound workflows — rather than triaging spreadsheets.</p>
+    </div>
+    <details class="lab-questions" id="q-lab7">
+      <summary><span>?</span> MY QUESTIONS <span class="lab-questions-count" id="q-count-lab7"></span><span class="lab-questions-chevron">›</span></summary>
+      <div class="lab-questions-body"><textarea class="lab-questions-input" id="q-input-lab7" placeholder="Type any questions to follow up later…" rows="3"></textarea></div>
+    </details>
+  </div>
+</details>
+
+<!-- LAB 8 -->
+<details class="lab" id="lab8">
+  <summary>
+    <div class="lab-num">08</div>
+    <div class="lab-title">
+      <div class="lab-title-name">Exploring Zscaler Asset Exposure Management</div>
+      <div class="lab-title-meta">AEM · Asset Discovery · Findings · Inventory · Policies</div>
+    </div>
+    <div class="lab-chevron">›</div>
+  </summary>
+  <div class="lab-body">
+    <div class="scenario-block">
+      <div class="scenario-block-label">SCENARIO</div>
+      <div class="scenario-block-text">Zscaler Asset Exposure Management (AEM) provides visibility into your organization's external attack surface — discovering internet-facing assets, identifying exposures, and enabling continuous policy-driven monitoring of your attack surface.</div>
+    </div>
+    <div class="objectives">
+      <div class="objectives-label">OBJECTIVES</div>
+      <ul>
+        <li>Explore the Assets and Findings views in AEM</li>
+        <li>Navigate the Asset Inventory to identify exposed assets</li>
+        <li>Understand AEM Policies for continuous monitoring</li>
+      </ul>
+    </div>
+    <details class="task">
+      <summary>
+        <div class="task-num">8.1</div>
+        <div class="task-title">Understanding Assets and Findings</div>
+        <div class="task-chevron">›</div>
+      </summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>Access the AEM portal using your UVM credentials.</li>
+          <li>Navigate to <strong>Assets</strong> to view all discovered internet-facing assets. Click any asset to view: hostname, IP address, open ports, technologies, and risk score.</li>
+          <li>Navigate to <strong>Findings</strong> to view all identified exposures (e.g. open RDP, expired certificates, outdated software, misconfigurations).</li>
+          <li>Filter findings by severity and type. Click any finding to view its full details and remediation guidance.</li>
+        </ol>
+      </div>
+    </details>
+    <details class="task">
+      <summary>
+        <div class="task-num">8.2</div>
+        <div class="task-title">Understanding Asset Inventory</div>
+        <div class="task-chevron">›</div>
+      </summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>Navigate to the <strong>Asset Inventory</strong> view.</li>
+          <li>Explore the full inventory sorted by risk score. For each asset: type, technologies detected, open ports, findings count.</li>
+          <li>Use filters to narrow by asset type (web server, mail server, VPN gateway) or geography.</li>
+          <li>Identify any shadow IT assets not previously known to the security team.</li>
+          <li>Review the inventory summary to understand the breadth of your external attack surface.</li>
+        </ol>
+      </div>
+    </details>
+    <details class="task">
+      <summary>
+        <div class="task-num">8.3</div>
+        <div class="task-title">Understanding Policies</div>
+        <div class="task-chevron">›</div>
+      </summary>
+      <div class="task-body">
+        <ol class="steps">
+          <li>Navigate to <strong>Policies</strong> in the AEM portal.</li>
+          <li>Review existing policies. Each policy defines conditions that trigger alerts when assets violate a security standard (e.g. open port 3389 detected, certificate expiring within 30 days).</li>
+          <li>Click any policy to view its conditions, severity, and assets currently in violation.</li>
+          <li>Review how policies map to the overall asset risk score and surface violations as findings.</li>
+          <li>Observe how continuous policy monitoring detects new exposures as they appear — rather than relying on point-in-time scans.</li>
+        </ol>
+      </div>
+    </details>
+    <div class="lab-takeaway">
+      <div class="lab-takeaway-label">WHY THIS MATTERS</div>
+      <p class="lab-takeaway-text">You cannot protect what you cannot see. AEM discovers assets you don't know exist — acquired subsidiaries, forgotten staging servers, shadow IT — and continuously monitors them. Policy-driven alerting replaces manual periodic reviews with always-on detection.</p>
+    </div>
+    <details class="lab-questions" id="q-lab8">
+      <summary><span>?</span> MY QUESTIONS <span class="lab-questions-count" id="q-count-lab8"></span><span class="lab-questions-chevron">›</span></summary>
+      <div class="lab-questions-body"><textarea class="lab-questions-input" id="q-input-lab8" placeholder="Type any questions to follow up later…" rows="3"></textarea></div>
+    </details>
+  </div>
+</details>
+
+</main>
+
+<footer>
+  <div class="footer-left">EDU-250<span>.</span></div>
+  <div class="footer-right">Security Operations · Hands-on Lab Guide · July 2025 Rev 1.0</div>
+</footer>
+
+<script>
+function toggleConfig() {
+  const panel = document.getElementById('config-panel');
+  const btn   = document.getElementById('config-toggle-btn');
+  const collapsed = panel.classList.toggle('collapsed');
+  btn.innerHTML = collapsed
+    ? '<span class="chevron" style="transform:rotate(180deg);display:inline-block;">▲</span> Expand'
+    : '<span class="chevron">▲</span> Collapse';
+}
+function updateToggleSummary() {
+  const fqdn = document.getElementById('fqdn-input')?.value.trim();
+  const s = document.getElementById('config-toggle-summary');
+  if (s) s.textContent = fqdn ? `— ${fqdn}` : '';
+}
+const STORAGE_KEY = 'edu250-lab-config';
+function loadConfig() {
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) {
+      const c = JSON.parse(saved);
+      ['fqdn-input','pass-input','zia-admin-input'].forEach(id => {
+        const k = id.replace('-input','').replace('-','').replace('zia-admin','ziaAdmin');
+        if (document.getElementById(id)) document.getElementById(id).value = c[id.replace('-input','')] || c[id] || '';
+      });
+      if (document.getElementById('fqdn-input')) document.getElementById('fqdn-input').value = c.fqdn || '';
+      if (document.getElementById('pass-input')) document.getElementById('pass-input').value = c.pass || '';
+      if (document.getElementById('zia-admin-input')) document.getElementById('zia-admin-input').value = c.ziaAdmin || '';
+    }
+  } catch(e) {}
+  applyAll();
+}
+function saveConfig() {
+  const cfg = {
+    fqdn:     document.getElementById('fqdn-input')?.value.trim() || '',
+    pass:     document.getElementById('pass-input')?.value.trim() || '',
+    ziaAdmin: document.getElementById('zia-admin-input')?.value.trim() || '',
+  };
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(cfg)); } catch(e) {}
+  applyAll(); flashSaved();
+}
+function clearConfig() {
+  ['fqdn-input','pass-input','zia-admin-input'].forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
+  try { localStorage.removeItem(STORAGE_KEY); } catch(e) {}
+  applyAll();
+}
+function flashSaved() {
+  const btn = document.querySelector('.config-btn');
+  const orig = btn.textContent;
+  btn.textContent = '✓ Saved'; btn.style.background = 'var(--green)'; btn.style.color = 'white';
+  setTimeout(() => { btn.textContent = orig; btn.style.background = ''; btn.style.color = ''; }, 1200);
+}
+function applyAll() {
+  const fqdn = document.getElementById('fqdn-input')?.value.trim() || '';
+  const studentUser = fqdn ? `student@${fqdn}` : 'student@<Student FQDN>';
+  document.querySelectorAll('.d-username-student').forEach(el => el.textContent = studentUser);
+  const dStudent = document.getElementById('d-student');
+  if (dStudent) dStudent.textContent = studentUser;
+}
+function expandAll()  { document.querySelectorAll('details').forEach(d => d.open = true); }
+function collapseAll(){ document.querySelectorAll('details').forEach(d => d.open = false); }
+['fqdn-input','pass-input','zia-admin-input'].forEach(id => {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.addEventListener('input', applyAll);
+  el.addEventListener('input', updateToggleSummary);
+});
+loadConfig(); updateToggleSummary();
+
+const PROG_KEY = 'edu250-progress';
+function loadProg() { try { return JSON.parse(localStorage.getItem(PROG_KEY)) || {}; } catch { return {}; } }
+function saveProg(s) { try { localStorage.setItem(PROG_KEY, JSON.stringify(s)); } catch {} }
+function taskKey(t) { const n = t.querySelector('.task-num'); return 'task-' + (n ? n.textContent.trim() : Math.random()); }
+function updateProgress(state) {
+  const tasks = document.querySelectorAll('details.task');
+  const total = tasks.length; let done = 0;
+  tasks.forEach(t => { if (state[taskKey(t)]) done++; });
+  const pct = total ? Math.round((done/total)*100) : 0;
+  const pd = document.getElementById('prog-done'); const fill = document.getElementById('progress-fill');
+  if (pd) pd.textContent = pct;
+  if (fill) { fill.style.width = pct + '%'; fill.classList.toggle('all-done', done===total && total>0); }
+  document.querySelectorAll('details.lab').forEach(lab => {
+    const lt = lab.querySelectorAll('details.task');
+    const allDone = lt.length > 0 && [...lt].every(t => !!state[taskKey(t)]);
+    const tab = document.querySelector(`.lab-nav-tab[href="#${lab.id}"]`);
+    if (tab) tab.classList.toggle('lab-nav-done', allDone);
+  });
+}
+function injectTaskCheckboxes() {
+  const state = loadProg();
+  document.querySelectorAll('details.task').forEach(task => {
+    const summary = task.querySelector(':scope > summary');
+    if (!summary || summary.querySelector('.task-check')) return;
+    const key = taskKey(task);
+    const wrap = document.createElement('div'); wrap.className = 'task-check-wrap';
+    const cb = document.createElement('input'); cb.type = 'checkbox'; cb.className = 'task-check'; cb.checked = !!state[key];
+    if (cb.checked) task.classList.add('task-done');
+    cb.addEventListener('click', e => {
+      e.stopPropagation(); state[key] = cb.checked;
+      task.classList.toggle('task-done', cb.checked); saveProg(state); updateProgress(state);
+    });
+    wrap.appendChild(cb);
+    summary.insertBefore(wrap, summary.querySelector('.task-chevron'));
+  });
+  updateProgress(state);
+}
+injectTaskCheckboxes();
+
+function copyToClipboard(text, btn, isBlock) {
+  navigator.clipboard.writeText(text).then(() => {
+    btn.classList.add('copied'); btn.textContent = isBlock ? '✓ copied' : '✓';
+    setTimeout(() => { btn.classList.remove('copied'); btn.textContent = isBlock ? 'copy' : '⎘'; }, 1500);
+  });
+}
+function injectCopyButtons() {
+  document.querySelectorAll('.creds-table td code').forEach(code => {
+    if (code.textContent.trim().length < 2) return;
+    const btn = document.createElement('button'); btn.className = 'copy-inline'; btn.title = 'Copy'; btn.textContent = '⎘';
+    btn.addEventListener('click', e => { e.stopPropagation(); copyToClipboard(code.textContent.trim(), btn, false); });
+    code.after(btn);
+  });
+}
+injectCopyButtons();
+
+function copyConfigField(inputId, btn) {
+  const val = document.getElementById(inputId)?.value.trim();
+  if (!val) return;
+  navigator.clipboard.writeText(val).then(() => {
+    btn.classList.add('copied'); btn.textContent = '✓';
+    setTimeout(() => { btn.classList.remove('copied'); btn.textContent = '⎘'; }, 1500);
+  });
+}
+function copyDerived(elId, btn) {
+  const val = document.getElementById(elId)?.textContent.trim();
+  if (!val || val.startsWith('<')) return;
+  navigator.clipboard.writeText(val).then(() => {
+    btn.classList.add('copied'); btn.textContent = '✓';
+    setTimeout(() => { btn.classList.remove('copied'); btn.textContent = '⎘'; }, 1500);
+  });
+}
+
+const NOTES_KEY = 'edu250-lab-notes';
+function loadNotes() { try { return JSON.parse(localStorage.getItem(NOTES_KEY)) || {}; } catch { return {}; } }
+function saveNotes(n) { try { localStorage.setItem(NOTES_KEY, JSON.stringify(n)); } catch {} }
+function injectLabNotes() {
+  const saved = loadNotes();
+  document.querySelectorAll('details.lab').forEach(lab => {
+    const anchor = lab.querySelector('.objectives') || lab.querySelector('.scenario-block');
+    if (!anchor) return;
+    const block = document.createElement('div'); block.className = 'lab-notes';
+    const label = document.createElement('div'); label.className = 'lab-notes-label'; label.textContent = 'NOTES';
+    const ta = document.createElement('textarea'); ta.className = 'lab-notes-input'; ta.placeholder = 'Add your notes here…'; ta.rows = 2;
+    ta.value = saved[lab.id] || '';
+    ta.addEventListener('input', () => { const n = loadNotes(); n[lab.id] = ta.value; saveNotes(n); });
+    block.appendChild(label); block.appendChild(ta); anchor.after(block);
+  });
+}
+injectLabNotes();
+
+const Q_STORE = 'edu250-questions';
+const LAB_LABELS = {
+  lab1: 'Lab 1 — Navigating to the Risk360 Portal',
+  lab2: 'Lab 2 — View Reports in Risk360',
+  lab3: 'Lab 3 — Viewing Assets in Risk360',
+  lab4: 'Lab 4 — Analyzing Risk with MITRE ATT&CK and NIST CSF',
+  lab5: 'Lab 5 — Understanding Financial Risk in Risk360',
+  lab6: 'Lab 6 — Navigating the Deception Portal',
+  lab7: 'Lab 7 — Exploring Zscaler UVM',
+  lab8: 'Lab 8 — Exploring Zscaler Asset Exposure Management',
+};
+function loadQs() { try { return JSON.parse(localStorage.getItem(Q_STORE)) || {}; } catch { return {}; } }
+function saveQs(q) { try { localStorage.setItem(Q_STORE, JSON.stringify(q)); } catch {} }
+function escHtml(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function updateQCount(labId, text) {
+  const el = document.getElementById('q-count-' + labId); if (!el) return;
+  const n = text.trim() ? text.trim().split('\n').filter(l=>l.trim()).length : 0;
+  el.textContent = n > 0 ? n + (n===1?' Q':' Qs') : '';
+}
+function renderAllQs() {
+  const list = document.getElementById('all-questions-list');
+  const empty = document.getElementById('all-questions-empty');
+  const total = document.getElementById('all-questions-total');
+  if (!list) return;
+  const q = loadQs(); let html = '', hasAny = false, count = 0;
+  for (let i = 1; i <= 8; i++) {
+    const id = 'lab'+i, text = (q[id]||'').trim();
+    if (!text) continue;
+    hasAny = true; count++;
+    html += `<div class="all-questions-entry"><div class="all-questions-lab-label">${LAB_LABELS[id]||id}</div><div class="all-questions-text">${escHtml(text)}</div></div>`;
+  }
+  list.innerHTML = html;
+  if (empty) empty.style.display = hasAny ? 'none' : '';
+  if (total) total.textContent = count > 0 ? count+(count===1?' lab':' labs') : '';
+}
+function initQs() {
+  const q = loadQs();
+  document.querySelectorAll('.lab-questions-input').forEach(ta => {
+    const labId = ta.id.replace('q-input-','');
+    ta.value = q[labId] || ''; updateQCount(labId, ta.value);
+    ta.addEventListener('input', () => { const cur = loadQs(); cur[labId] = ta.value; saveQs(cur); updateQCount(labId, ta.value); renderAllQs(); });
+  });
+  renderAllQs();
+}
+initQs();
+
+document.querySelectorAll('.lab-nav-tab').forEach(tab => {
+  tab.addEventListener('click', e => {
+    e.preventDefault();
+    const id = tab.getAttribute('href').slice(1);
+    const target = document.getElementById(id);
+    if (target) { target.open = true; window.scrollTo({ top: target.getBoundingClientRect().top + window.scrollY - 100, behavior: 'smooth' }); }
+  });
+});
+</script>
+</body>
+</html>
