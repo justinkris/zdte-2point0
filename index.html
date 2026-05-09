@@ -74,11 +74,16 @@
 
   /* ── CARD GRID ── */
   .card-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
     gap: 28px;
     width: 100%;
     max-width: 1500px;
+  }
+  .cert-card {
+    flex: 0 0 calc(33.333% - 19px);
+    min-width: 260px;
   }
 
   /* ── CARD ── */
@@ -458,7 +463,8 @@
 
   /* ── RESPONSIVE ── */
   @media (max-width: 900px) {
-    .card-grid { grid-template-columns: 1fr; max-width: 460px; }
+    .card-grid { max-width: 460px; }
+    .cert-card { flex: 0 0 100%; min-width: unset; }
     h1 { font-size: 40px; }
     body { padding: 60px 24px; }
   }
